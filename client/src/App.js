@@ -1,11 +1,8 @@
 import React from "react";
+import Main from "./components/Main";
 
 const App = () => {
-    return (
-        <div>
-            <h1>I am alive</h1>
-        </div>
-    );
+    return <Main />;
 };
 
 export default App;
