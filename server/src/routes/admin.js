@@ -1,8 +1,9 @@
 const express = require("express");
-const Admin = require("../models/Admin");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {});
+router.get("/", (req, res) => {
+    res.send("This is the admin route");
+});
 
 module.exports = router;
