@@ -7,10 +7,10 @@ const App = () => {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/admin" component={Auth} />
-                <Route path="/mentor" component={Auth} />
-                <Route path="/mentee" component={Auth} />
-                <Route path="/" component={Main} />
+                <Route path="/" exact component={Main} />
+                <Route path="/admin" exact component={Auth} />
+                <Route path="/mentor" exact component={Auth} />
+                <Route path="/mentee" exact component={Auth} />
             </Switch>
         </BrowserRouter>
     );

@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+
+import { adminSignIn } from "../../actions/admin";
 
 const Auth = ({ location }) => {
     // state variables declaration
@@ -10,6 +14,8 @@ const Auth = ({ location }) => {
         password: "",
         confirmPassword: "",
     });
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     // functions to control the form
     const resetFields = () => {
@@ -37,7 +43,11 @@ const Auth = ({ location }) => {
     const handleSubmit = (e) => {
         // this function is used to handle the form submission
         e.preventDefault();
-        console.log(fields);
+        if (toggleLogin === false && location.state === "Admin") {
+            //signin the admin
+            console.log("Calling dispatch for admin signin");
+            dispatch(adminSignIn(fields, history));
+        }
         resetFields();
     };
 
