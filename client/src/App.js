@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Auth from "./components/auth/Auth";
 import Main from "./components/Main";
+import AdminDashboard from "./components/dashboard/AdminDashboard";
 
 const App = () => {
     return (
@@ -11,6 +12,7 @@ const App = () => {
                 <Route path="/admin" exact component={Auth} />
                 <Route path="/mentor" exact component={Auth} />
                 <Route path="/mentee" exact component={Auth} />
+                <Route path="/admin/dashboard" exact component={AdminDashboard} />
             </Switch>
         </BrowserRouter>
     );

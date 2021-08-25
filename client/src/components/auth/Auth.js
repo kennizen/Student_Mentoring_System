@@ -46,6 +46,7 @@ const Auth = ({ location }) => {
         if (toggleLogin === false && location.state === "Admin") {
             //signin the admin
             console.log("Calling dispatch for admin signin");
+            console.log(fields);
             dispatch(adminSignIn(fields, history));
         }
         resetFields();

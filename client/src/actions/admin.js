@@ -4,11 +4,13 @@ export const adminSignIn = (fields, history) => async (dispatch) => {
     try {
         console.log("inside try in admin actions");
 
-        const { authData } = await api.signIn(fields);
+        const { data } = await api.signIn(fields);
 
-        dispatch({ type: "SIGN_IN", authData });
+        console.log("authData", data);
 
-        console.log(authData);
+        dispatch({ type: "SIGN_IN", data });
+
+        history.push("/admin/dashboard");
     } catch (error) {
         console.log(error);
     }
