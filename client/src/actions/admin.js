@@ -2,14 +2,8 @@ import * as api from "../api/admin";
 
 export const adminSignIn = (fields, history) => async (dispatch) => {
     try {
-        console.log("inside try in admin actions");
-
         const { data } = await api.signIn(fields);
-
-        console.log("authData", data);
-
         dispatch({ type: "SIGN_IN", data });
-
         history.push("/admin/dashboard");
     } catch (error) {
         console.log(error);

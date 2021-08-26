@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Auth from "./components/auth/Auth";
 import Main from "./components/Main";
-import AdminDashboard from "./components/dashboard/AdminDashboard";
+import AdminDashboard from "./components/dashboard/adminDashboard/AdminDashboard";
 
 const App = () => {
     return (

@@ -1,7 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router";
 
 const Main = () => {
+    const user = localStorage.getItem("auth_token");
+    const history = useHistory();
+
+    // redirect the user to the previous url if user is present
+    if (user) {
+        history.goBack();
+    }
+
     return (
         <div className="bg-gray-100 h-screen flex flex-col items-center">
             <h1 className="mt-40 mb-24">Enter the system as a</h1>

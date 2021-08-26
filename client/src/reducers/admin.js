@@ -1,10 +1,11 @@
 const admin = (state = { auth_token: null }, action) => {
     switch (action.type) {
         case "SIGN_IN":
-            console.log("inside reducers of admin");
             localStorage.setItem("auth_token", action?.data?.auth_token);
-            const states = { ...state, auth_token: action?.data?.auth_token };
-            return states;
+            return { ...state, auth_token: action?.data?.auth_token };
+        case "LOGOUT":
+            localStorage.clear();
+            return { ...state, auth_token: null };
         default:
             return state;
     }
