@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
 
 const Main = () => {
-    const user = localStorage.getItem("auth_token");
+    const user = JSON.parse(localStorage.getItem("authData"));
     const history = useHistory();
 
-    // redirect the user to the previous url if user is present
-    if (user) {
-        history.goBack();
+    // redirect the user to the admin dashboard if user is present
+    if (user?.role === "ADMIN") {
+        history.push("/admin/dashboard");
     }
 
     return (

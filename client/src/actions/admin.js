@@ -9,3 +9,18 @@ export const adminSignIn = (fields, history) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const adminGetDetails = () => async (dispatch) => {
+    try {
+        const { data } = await api.fetchAdmin();
+        console.log("admin data", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+
+        dispatch({ type: "FETCH", data });
+    } catch (error) {
+        console.log(error);
+    }
+};

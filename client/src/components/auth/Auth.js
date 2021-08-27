@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -16,6 +16,13 @@ const Auth = ({ location }) => {
     });
     const dispatch = useDispatch();
     const history = useHistory();
+
+    // using use effect to prevent user from coming to auth through url
+    useEffect(() => {
+        if (location.state === undefined) {
+            history.goBack();
+        }
+    }, [location.state, history]);
 
     // functions to control the form
     const resetFields = () => {

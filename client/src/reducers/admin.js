@@ -1,11 +1,13 @@
-const admin = (state = { auth_token: null }, action) => {
+const admin = (state = { user: null }, action) => {
     switch (action.type) {
         case "SIGN_IN":
-            localStorage.setItem("auth_token", action?.data?.auth_token);
-            return { ...state, auth_token: action?.data?.auth_token };
+            localStorage.setItem("authData", JSON.stringify({ ...action?.data }));
+            return { ...state, user: action?.data };
+        case "FETCH":
+            return action.data;
         case "LOGOUT":
             localStorage.clear();
-            return { ...state, auth_token: null };
+            return { ...state, user: null };
         default:
             return state;
     }
