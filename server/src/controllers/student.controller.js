@@ -1,23 +1,23 @@
-const Mentor = require("../models/Mentor");
+const Student = require("../models/Student");
 const bcrypt = require("bcryptjs");
 const Response = require("../utils/response.utils");
 
 module.exports = {
-    // mentor login handler function
-    mentorLoginHandler: async (req, res) => {
+    // student login handler function
+    studentLoginHandler: async (req, res) => {
         try{
             const { email, password } =  req.body;
 
             if(!email && !password){
                 return res.status(400).send( Response.error("No email/password provided", {}) );
             }
-            const mentor = await Mentor.findByCredentials(email, password);
+            const student = await Student.findByCredentials(email, password);
 
-            if(!mentor){
+            if(!student){
                 return res.status(404).send( Response.notfound("404 Not found", {}));
             }
-            const token = await mentor.generateAuthToken();
-            res.send( Response.success("Login successful", { auth_token: token , role: "MENTOR"} ));
+            const token = await student.generateAuthToken();
+            res.send( Response.success("Login successful", { auth_token: token , role: "STUDENT"} ));
 
         }
         catch(err){
@@ -26,25 +26,25 @@ module.exports = {
         }
 } ,
 
-    // mentor signup handler
-    mentorSignupHandler: async (req, res) => {
+    // student signup handler
+    studentSignupHandler: async (req, res) => {
         try{
-            const { email, password, ConfirmPassword, name } = req.body;
+            const { email, password, confirmPassword, name } = req.body;
 
             if(!email || !password || !name){
                 return res.status(400).send(Response.badrequest("Malformed input", {} ));
             }
 
-            if(password != ConfirmPassword){
+            if(password != confirmPassword){
                 return res.status(400).send( Response.badrequest("Passwords doesn't match", {} ));
             }
 
-            const mentor = new Mentor();
-            mentor.email = email;
-            mentor.password = await bcrypt.hash(password, 8);
-            mentor.name = name;
-            mentor.save();
-            res.send(Response.success("Mentor created successfully", {} ));
+            const student = new Student();
+            student.email = email;
+            student.password = await bcrypt.hash(password, 8);
+            student.name = name;
+            student.save();
+            res.send(Response.success("Student created successfully", {} ));
         }
         catch(err){
             console.log(err);
@@ -57,8 +57,8 @@ module.exports = {
         }
     } ,
 
-    // mentor dashboard handler
-    mentorDashboardHandler: async (req, res) => {
+    // student dashboard handler
+    studentDashboardHandler: async (req, res) => {
         try{    
 
             res.send( Response.success("", { user: req.user} ) );

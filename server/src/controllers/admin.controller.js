@@ -1,6 +1,7 @@
 const Admin = require("../models/Admin");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
+const Response = require("../utils/response.utils");
 
 // env config
 dotenv.config();
@@ -11,29 +12,22 @@ module.exports = {
         try {
             const { email, password } = req.body;
 
-            console.log("Req body", req.body);
-
             if (!email || !password) {
                 // if email/pass does not exists
-                return res.status(400).send({ error: "Please provide valid email/password" });
+                return res.status(400).send(Response.badrequest("Please provide valid email/password", {}));
             }
 
             const admin = await Admin.findByCredentials(email, password);
-
-            // if (!admin) {
-            //     // if user not found
-            //     return res.status(404).send({ error: "Unable to login" });
-            // }
             const token = await admin.generateAuthToken();
+            res.send( Response.success("Login successful", { auth_token: token, role: 'ADMIN' } ));
 
-            res.send({ auth_token: token });
         } catch (err) {
             console.log(err);
-            res.status(500).send({ error: "Some error occured" });
+            res.status(500).send( Response.error("Some error occured", {})) ;
         }
     },
 
     adminDashboardHandler: (req, res) => {
-        res.send({ success: "Admin Dashboard" });
+        res.send( Response.success("" , { user: req.user } ));
     },
 };

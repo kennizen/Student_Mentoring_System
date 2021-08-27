@@ -1,9 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const fs = require("fs");
 const morgan = require("morgan");
-
-// routes
-const adminRoutes = require("./routes/admin");
 
 // mongoose config
 require("./config/mongoose");
@@ -15,9 +13,26 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }))
 
-app.use(morgan(":method :url :status :res[content-length] - :response-time ms"));
+/** server HTTP request logging
+ * :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"
+ * */ 
+//logging HTTP requests to logs/access.log file 
+app.use(morgan('combined', {
+    stream: fs.createWriteStream('./logs/access.log', {flags: 'a'})
+}));
+// logging to console
+app.use(morgan("dev"));
 
+// importing routes
+const adminRoutes = require("./routes/admin");
+const mentorRoutes = require("./routes/mentor");
+const studentRoutes = require("./routes/student");
+
+// setting routes
 app.use("/admin", adminRoutes);
+app.use("/mentor", mentorRoutes);
+app.use("/student", studentRoutes);
 
 app.listen(PORT, () => console.log(`server running on port ${PORT}`));

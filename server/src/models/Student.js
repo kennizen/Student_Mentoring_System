@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 //env config
 dotenv.config();
 
-const mentorSchema = new mongoose.Schema({
+const studentSchema = new mongoose.Schema({
     name:{
         type: String,
         required: true,
@@ -31,14 +31,6 @@ const mentorSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    department: {
-        type: String,
-        trim: true
-    },
-    designation: {
-        type: String,
-        trim: true
-    },
     tokens: [{
         token: {
         type: String,
@@ -52,14 +44,14 @@ const mentorSchema = new mongoose.Schema({
 
 
 // hiding sensitive info from user
-mentorSchema.methods.toJSON = function () {
-    const mentor = this;
-    const mentorObject = mentor.toObject();
+studentSchema.methods.toJSON = function () {
+    const student = this;
+    const studentObject = student.toObject();
 
-    delete mentorObject.password;
-    delete mentorObject.tokens;
+    delete studentObject.password;
+    delete studentObject.tokens;
 
-    return mentorObject;
+    return studentObject;
 };
 
 /**
@@ -67,32 +59,32 @@ mentorSchema.methods.toJSON = function () {
  * Model.methods are available on all instances of the Admin model.
  */
 // generate auth token function
-mentorSchema.methods.generateAuthToken = async function(){
-    const mentor = this;
-    const token = jwt.sign({ _id: mentor._id.toString(), role: 'MENTOR' }, process.env.JWT_SECRET, { expiresIn: '6h' });
-    // admin.tokens = admin.tokens.concat({ token });
-    mentor.tokens = {token}
-    await mentor.save();
+studentSchema.methods.generateAuthToken = async function(){
+    const student = this;
+    const token = jwt.sign({ _id: student._id.toString(), role: 'STUDENT' }, process.env.JWT_SECRET, { expiresIn: '6h' });
+    // student.tokens = student.tokens.concat({ token });
+    student.tokens = {token}
+    await student.save();
     return token;
 }
 
 /**    
  *   Model.Statics methods are available on the Model itself.  **/
 //custom login method for mentor 
-mentorSchema.statics.findByCredentials = async (email, password) => {
-    const mentor = await Mentor.findOne({ email })
+studentSchema.statics.findByCredentials = async (email, password) => {
+    const student = await Student.findOne({ email })
     
-    if(!mentor){
+    if(!student){
         throw new Error("Unable to login");
     }
-    const isMatch = await bcrypt.compare(password, mentor.password);
+    const isMatch = await bcrypt.compare(password, student.password);
     
     if(!isMatch){
         throw new Error("Unable to login");
     }
-    return mentor;
+    return student;
 }
 
-const Mentor = mongoose.model('Mentor', mentorSchema);
+const Student = mongoose.model('Student', studentSchema);
 
-module.exports = Mentor;
+module.exports = Student;
