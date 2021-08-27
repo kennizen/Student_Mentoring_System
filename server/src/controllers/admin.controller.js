@@ -26,7 +26,7 @@ module.exports = {
             // }
             const token = await admin.generateAuthToken();
 
-            res.send({ auth_token: token });
+            res.send({ auth_token: token, role: "ADMIN" }); // role added
         } catch (err) {
             console.log(err);
             res.status(500).send({ error: "Some error occured" });
@@ -34,6 +34,7 @@ module.exports = {
     },
 
     adminDashboardHandler: (req, res) => {
-        res.send({ success: "Admin Dashboard" });
+        console.log(req.user);
+        res.send({ user: req.user });
     },
 };
