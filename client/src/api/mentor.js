@@ -12,8 +12,12 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-export const signIn = (fields) => API.post("/admin/login", fields);
-export const fetchAdmin = () =>
-    API.get("/admin/dashboard").catch((error) => {
+export const signIn = (fields) => API.post("/mentor/login", fields);
+export const signUp = (fields) =>
+    API.post("/mentor/signup", fields).catch((error) => {
+        return error.response;
+    });
+export const fetchMentor = () =>
+    API.get("/mentor/dashboard").catch((error) => {
         return error.response;
     });

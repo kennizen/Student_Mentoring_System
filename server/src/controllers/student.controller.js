@@ -29,7 +29,7 @@ module.exports = {
     // student signup handler
     studentSignupHandler: async (req, res) => {
         try{
-            const { email, password, confirmPassword, name } = req.body;
+            const { email, password, confirmPassword, firstName, lastName } = req.body;
 
             if(!email || !password || !name){
                 return res.status(400).send(Response.badrequest("Malformed input", {} ));
@@ -42,7 +42,7 @@ module.exports = {
             const student = new Student();
             student.email = email;
             student.password = await bcrypt.hash(password, 8);
-            student.name = name;
+            student.name = firstName + lastName;
             await student.save();
             res.send(Response.success("Student created successfully", {} ));
         }

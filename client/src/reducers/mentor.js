@@ -1,11 +1,11 @@
-const admin = (state = { user: null }, action) => {
+const mentor = (state = { user: null }, action) => {
     switch (action.type) {
-        case "SIGN_IN_ADMIN":
+        case "SIGN_IN_MENTOR":
             localStorage.setItem("authData", JSON.stringify({ ...action?.data?.data }));
             return { ...state, user: action?.data?.data };
-        case "FETCH_ADMIN":
+        case "FETCH_MENTOR":
             return action.data;
-        case "LOGOUT_ADMIN":
+        case "LOGOUT_MENTOR":
             localStorage.clear();
             return { ...state, user: null };
         default:
@@ -13,4 +13,4 @@ const admin = (state = { user: null }, action) => {
     }
 };
 
-export default admin;
+export default mentor;

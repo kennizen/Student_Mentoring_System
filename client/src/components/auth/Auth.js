@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
 import { adminSignIn } from "../../actions/admin";
+import { mentorSignIn, mentorSignUp } from "../../actions/mentor";
 
 const Auth = ({ location }) => {
     // state variables declaration
@@ -14,6 +15,8 @@ const Auth = ({ location }) => {
         password: "",
         confirmPassword: "",
     });
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [isError, setIsError] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -36,6 +39,22 @@ const Auth = ({ location }) => {
         });
     };
 
+    const displaySuccessOrError = (val) => {
+        if (val) {
+            setIsSuccess(true);
+            setTimeout(() => {
+                setIsSuccess(false);
+                handleToggle();
+            }, 2000);
+        } else {
+            setIsError(true);
+            setTimeout(() => {
+                setIsError(false);
+                setFields({ ...fields, email: "" });
+            }, 5000);
+        }
+    };
+
     const handleToggle = () => {
         // this function is used to toggle between signin and signup
         setToggleLogin(!toggleLogin);
@@ -51,14 +70,24 @@ const Auth = ({ location }) => {
         // this function is used to handle the form submission
         e.preventDefault();
         if (toggleLogin === false && location.state === "Admin") {
-            //signin the admin
+            // signin the admin
             dispatch(adminSignIn(fields, history));
+        }
+        if (location.state === "Mentor") {
+            // signup mentor
+            if (toggleLogin === true) {
+                dispatch(mentorSignUp(fields, displaySuccessOrError));
+            } else {
+                dispatch(mentorSignIn(fields, history));
+            }
         }
         resetFields();
     };
 
     return (
         <div className="bg-gray-100 h-screen flex flex-col items-center justify-center">
+            <h1>{isSuccess && "acc created successfully login to continue"}</h1>
+            <h1>{isError && "Email already exist"}</h1>
             <h1 className="mb-10 text-center">{location.state}</h1>
             <div className="container bg-white sm:w-2/3 lg:w-4/12 py-5 px-10 rounded-lg shadow-lg">
                 <form className="font-semibold" onSubmit={handleSubmit}>
