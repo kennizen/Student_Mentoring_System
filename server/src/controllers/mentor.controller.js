@@ -41,7 +41,7 @@ module.exports = {
             mentor.email = email;
             mentor.password = await bcrypt.hash(password, 8);
             mentor.name = `${firstName} ${lastName}`;
-            mentor.save();
+            await mentor.save();
             res.send(Response.success("Mentor created successfully", {}));
         } catch (err) {
             console.log(err);

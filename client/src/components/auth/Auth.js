@@ -16,6 +16,7 @@ const Auth = ({ location }) => {
         confirmPassword: "",
     });
     const [isSuccess, setIsSuccess] = useState(false);
+    const [isError, setIsError] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -38,12 +39,20 @@ const Auth = ({ location }) => {
         });
     };
 
-    const displaySuccessOrError = () => {
-        setIsSuccess(true);
-        setTimeout(() => {
-            setIsSuccess(false);
-            handleToggle();
-        }, 2000);
+    const displaySuccessOrError = (val) => {
+        if (val) {
+            setIsSuccess(true);
+            setTimeout(() => {
+                setIsSuccess(false);
+                handleToggle();
+            }, 2000);
+        } else {
+            setIsError(true);
+            setTimeout(() => {
+                setIsError(false);
+                setFields({ ...fields, email: "" });
+            }, 5000);
+        }
     };
 
     const handleToggle = () => {
@@ -78,6 +87,7 @@ const Auth = ({ location }) => {
     return (
         <div className="bg-gray-100 h-screen flex flex-col items-center justify-center">
             <h1>{isSuccess && "acc created successfully login to continue"}</h1>
+            <h1>{isError && "Email already exist"}</h1>
             <h1 className="mb-10 text-center">{location.state}</h1>
             <div className="container bg-white sm:w-2/3 lg:w-4/12 py-5 px-10 rounded-lg shadow-lg">
                 <form className="font-semibold" onSubmit={handleSubmit}>
