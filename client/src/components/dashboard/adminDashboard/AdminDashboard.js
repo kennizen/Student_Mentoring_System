@@ -19,6 +19,8 @@ const AdminDashboard = () => {
     // accessing the redux store state
     const { data } = useSelector((state) => state.admin);
 
+    console.log("admin data in dashboard", data);
+
     // fetching the admin details
     useEffect(() => {
         dispatch(adminGetDetails(history));
@@ -54,7 +56,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="h-screen flex bg-gray-50">
-            {data === undefined ? <LoadingDashboard /> : <div></div>}
+            {!data && <LoadingDashboard />}
             <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
                 <div className="h-1/10 flex items-center justify-center">
                     <svg

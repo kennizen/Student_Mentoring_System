@@ -40,17 +40,17 @@ const Auth = ({ location }) => {
     };
 
     const displaySuccessOrError = (val) => {
-        if (val) {
+        if (val === 200) {
             setIsSuccess(true);
             setTimeout(() => {
                 setIsSuccess(false);
                 handleToggle();
             }, 2000);
-        } else {
+        } else if (val === 500) {
             setIsError(true);
+            setFields({ ...fields, email: "" });
             setTimeout(() => {
                 setIsError(false);
-                setFields({ ...fields, email: "" });
             }, 5000);
         }
     };

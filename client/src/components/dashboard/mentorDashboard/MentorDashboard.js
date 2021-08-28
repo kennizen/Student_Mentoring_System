@@ -17,7 +17,7 @@ const MentorDashboard = () => {
     // accessing the redux store state
     const { data } = useSelector((state) => state.mentor);
 
-    console.log("in mentor dashboard", data);
+    console.log("mentor data in dashboard", data);
 
     // fetching the admin details
     useEffect(() => {
@@ -54,7 +54,7 @@ const MentorDashboard = () => {
 
     return (
         <div className="h-screen flex bg-gray-50">
-            {data === undefined ? <LoadingDashboard /> : <div></div>}
+            {!data && <LoadingDashboard />}
             <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
                 <div className="h-1/10 flex items-center justify-center">
                     <svg

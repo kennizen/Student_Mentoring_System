@@ -15,10 +15,10 @@ export const mentorSignUp = (fields, displaySuccessOrError) => async (dispatch) 
         const { data } = await api.signUp(fields);
         console.log("mentor sign up data", data);
         if (data.code === 200) {
-            displaySuccessOrError(true);
+            displaySuccessOrError(200);
         }
         if (data.code === 500) {
-            displaySuccessOrError(false);
+            displaySuccessOrError(500);
         }
     } catch (error) {
         console.log(error);
