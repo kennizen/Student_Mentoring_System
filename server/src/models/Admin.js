@@ -59,7 +59,7 @@ adminSchema.methods.toJSON = function () {
 adminSchema.methods.generateAuthToken = async function () {
     const admin = this;
     const token = jwt.sign({ _id: admin._id.toString(), role: "ADMIN" }, process.env.JWT_SECRET, {
-        expiresIn: "6h",
+        expiresIn: "3h",
     });
     // admin.tokens = admin.tokens.concat({ token });
     admin.tokens = { token };

@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { adminGetDetails } from "../../../actions/admin";
+import { mentorGetDetails } from "../../../actions/mentor";
 import LoadingDashboard from "../../loading/LoadingDashboard";
-import Home from "./dashboardLinks/Home";
-import Profile from "./dashboardLinks/Profile";
 
-const AdminDashboard = () => {
+const MentorDashboard = () => {
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
@@ -17,11 +15,13 @@ const AdminDashboard = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     // accessing the redux store state
-    const { data } = useSelector((state) => state.admin);
+    const { data } = useSelector((state) => state.mentor);
+
+    console.log("in mentor dashboard", data);
 
     // fetching the admin details
     useEffect(() => {
-        dispatch(adminGetDetails(history));
+        dispatch(mentorGetDetails(history));
     }, [dispatch, history]);
 
     // function to chnage the tabs screens of the dashboard
@@ -48,7 +48,7 @@ const AdminDashboard = () => {
     // function to handle the logout
     const handleLogout = () => {
         // calling dispatch directly without an action call from the actions folder because we dont need any api to be called for loging out.
-        dispatch({ type: "LOGOUT_ADMIN" });
+        dispatch({ type: "LOGOUT_MENTOR" });
         history.push("/");
     };
 
@@ -71,7 +71,7 @@ const AdminDashboard = () => {
                             d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
                         />
                     </svg>
-                    <h1>Admin</h1>
+                    <h1>Mentor</h1>
                 </div>
                 <button
                     id="home"
@@ -166,7 +166,7 @@ const AdminDashboard = () => {
                         </svg>
                         <img
                             src={data?.user?.avatar?.url}
-                            alt="admin name"
+                            alt="avatar"
                             className="w-14 h-14 rounded-full"
                         />
                         <h4>{data?.user?.name}</h4>
@@ -174,12 +174,10 @@ const AdminDashboard = () => {
                 </div>
                 <div className="flex items-center justify-center">
                     {/* conditional rendering of the inner tab screens */}
-                    {route.home && <Home />}
-                    {route.profile && <Profile details={data.user} />}
                 </div>
             </div>
         </div>
     );
 };
 
-export default AdminDashboard;
+export default MentorDashboard;

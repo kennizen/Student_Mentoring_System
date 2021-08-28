@@ -34,7 +34,7 @@ const auth = async (req, res, next) => {
         }
 
         if (!user) {
-            return res.status(404).send( Response.notfound("", {} ));
+            return res.status(404).send(Response.notfound("404 Not Found", {}));
         }
 
         req.user = user;
@@ -42,7 +42,7 @@ const auth = async (req, res, next) => {
         next();
     } catch (error) {
         console.log(error);
-        res.status(401).send( Response.unauthorized("Unauthorized Access", {} ))
+        res.status(401).send(Response.unauthorized("Unauthorized Access", {}));
     }
 };
 
