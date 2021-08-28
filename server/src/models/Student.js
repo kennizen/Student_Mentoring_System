@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
+const Role = require("../utils/roles");
 
 //env config
 dotenv.config();
@@ -31,6 +32,10 @@ const studentSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    role: {
+        type: String,
+        default: Role.Student
+    },
     tokens: [{
         token: {
         type: String,
@@ -50,6 +55,7 @@ studentSchema.methods.toJSON = function () {
 
     delete studentObject.password;
     delete studentObject.tokens;
+    delete studentObject.role;
 
     return studentObject;
 };
@@ -61,7 +67,7 @@ studentSchema.methods.toJSON = function () {
 // generate auth token function
 studentSchema.methods.generateAuthToken = async function(){
     const student = this;
-    const token = jwt.sign({ _id: student._id.toString(), role: 'STUDENT' }, process.env.JWT_SECRET, { expiresIn: '6h' });
+    const token = jwt.sign({ _id: student._id.toString(), role: 'Student' }, process.env.JWT_SECRET, { expiresIn: '6h' });
     // student.tokens = student.tokens.concat({ token });
     student.tokens = {token}
     await student.save();
@@ -80,6 +86,7 @@ studentSchema.statics.findByCredentials = async (email, password) => {
     const isMatch = await bcrypt.compare(password, student.password);
     
     if(!isMatch){
+        console.log("Password error")
         throw new Error("Unable to login");
     }
     return student;

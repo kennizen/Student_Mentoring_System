@@ -8,7 +8,7 @@ module.exports = {
         try{
             const { email, password } =  req.body;
 
-            if(!email && !password){
+            if(!email || !password){
                 return res.status(400).send( Response.error("No email/password provided", {}) );
             }
             const student = await Student.findByCredentials(email, password);
@@ -43,14 +43,14 @@ module.exports = {
             student.email = email;
             student.password = await bcrypt.hash(password, 8);
             student.name = name;
-            student.save();
+            await student.save();
             res.send(Response.success("Student created successfully", {} ));
         }
         catch(err){
             console.log(err);
             
-            if(err.code == 11000){
-                res.status(500).send( Response.error("Email already exists", {} ));
+            if(err.code == "11000"){
+                return res.status(403).send( Response.forbidden("Email already exists", {} ));
             }
 
             res.status(500).send( Response.error("Some error occured", {} ));

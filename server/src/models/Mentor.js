@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
+const Role = require("../utils/roles");
 
 //env config
 dotenv.config();
@@ -39,6 +40,10 @@ const mentorSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    role: {
+        type: String,
+        default: Role.Mentor
+    },
     tokens: [{
         token: {
         type: String,
@@ -58,6 +63,7 @@ mentorSchema.methods.toJSON = function () {
 
     delete mentorObject.password;
     delete mentorObject.tokens;
+    delete mentorObject.role;
 
     return mentorObject;
 };
@@ -69,7 +75,7 @@ mentorSchema.methods.toJSON = function () {
 // generate auth token function
 mentorSchema.methods.generateAuthToken = async function(){
     const mentor = this;
-    const token = jwt.sign({ _id: mentor._id.toString(), role: 'MENTOR' }, process.env.JWT_SECRET, { expiresIn: '6h' });
+    const token = jwt.sign({ _id: mentor._id.toString(), role: 'Mentor' }, process.env.JWT_SECRET, { expiresIn: '6h' });
     // admin.tokens = admin.tokens.concat({ token });
     mentor.tokens = {token}
     await mentor.save();

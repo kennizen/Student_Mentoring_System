@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Role = require("../utils/roles");
 
 const adminSchema = new mongoose.Schema(
     {
@@ -26,6 +27,11 @@ const adminSchema = new mongoose.Schema(
             },
             id: String,
         },
+        role: {
+            type: String,
+            default: Role.Admin
+        }
+        ,
         tokens: [
             {
                 token: {
@@ -47,6 +53,7 @@ adminSchema.methods.toJSON = function () {
 
     delete adminObject.password;
     delete adminObject.tokens;
+    delete adminObject.role;
 
     return adminObject;
 };
@@ -58,8 +65,8 @@ adminSchema.methods.toJSON = function () {
 // generate auth token function
 adminSchema.methods.generateAuthToken = async function () {
     const admin = this;
-    const token = jwt.sign({ _id: admin._id.toString(), role: "ADMIN" }, process.env.JWT_SECRET, {
-        expiresIn: "6h",
+    const token = jwt.sign({ _id: admin._id.toString(), role: "Admin" }, process.env.JWT_SECRET, {
+        expiresIn: "3h",
     });
     // admin.tokens = admin.tokens.concat({ token });
     admin.tokens = { token };
