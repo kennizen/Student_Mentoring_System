@@ -4,6 +4,7 @@ import { useHistory } from "react-router";
 
 import { adminSignIn } from "../../actions/admin";
 import { mentorSignIn, mentorSignUp } from "../../actions/mentor";
+import { studentSignIn, studentSignUp } from "../../actions/student";
 
 const Auth = ({ location }) => {
     // state variables declaration
@@ -74,11 +75,21 @@ const Auth = ({ location }) => {
             dispatch(adminSignIn(fields, history));
         }
         if (location.state === "Mentor") {
-            // signup mentor
             if (toggleLogin === true) {
+                // signup mentor
                 dispatch(mentorSignUp(fields, displaySuccessOrError));
             } else {
+                // signin mentor
                 dispatch(mentorSignIn(fields, history));
+            }
+        }
+        if (location.state === "Mentee") {
+            if (toggleLogin === true) {
+                // signup mentee
+                dispatch(studentSignUp(fields, displaySuccessOrError));
+            } else {
+                // signin mentee
+                dispatch(studentSignIn(fields, history));
             }
         }
         resetFields();

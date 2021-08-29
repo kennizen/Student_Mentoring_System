@@ -2,30 +2,26 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { adminGetDetails } from "../../../actions/admin";
+import { studentGetDetails } from "../../../actions/student";
 import LoadingDashboard from "../../loading/LoadingDashboard";
-import Home from "./dashboardLinks/Home";
-import Profile from "./dashboardLinks/Profile";
-import ManageGroups from "./dashboardLinks/ManageGroups";
 
-const AdminDashboard = () => {
+const StudentDashboard = () => {
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
         profile: false,
-        manageGroups: false,
     });
     // setting the admin auth token
     const dispatch = useDispatch();
     const history = useHistory();
     // accessing the redux store state
-    const { data } = useSelector((state) => state.admin);
+    const { data } = useSelector((state) => state.student);
 
-    console.log("admin data in dashboard", data);
+    console.log("student data in dashboard", data);
 
     // fetching the admin details
     useEffect(() => {
-        dispatch(adminGetDetails(history));
+        dispatch(studentGetDetails(history));
     }, [dispatch, history]);
 
     // function to chnage the tabs screens of the dashboard
@@ -36,21 +32,12 @@ const AdminDashboard = () => {
                 setRoute({
                     home: true,
                     profile: false,
-                    manageGroups: false,
                 });
                 break;
             case "profile":
                 setRoute({
                     home: false,
                     profile: true,
-                    manageGroups: false,
-                });
-                break;
-            case "manageGroups":
-                setRoute({
-                    home: false,
-                    profile: false,
-                    manageGroups: true,
                 });
                 break;
             default:
@@ -61,14 +48,14 @@ const AdminDashboard = () => {
     // function to handle the logout
     const handleLogout = () => {
         // calling dispatch directly without an action call from the actions folder because we dont need any api to be called for loging out.
-        dispatch({ type: "LOGOUT_ADMIN" });
+        dispatch({ type: "LOGOUT_STUDENT" });
         history.push("/");
     };
 
     return (
-        <div className="flex bg-gray-50">
+        <div className="h-screen flex bg-gray-50">
             {!data && <LoadingDashboard />}
-            <nav className="w-3/20 h-screen bg-white flex flex-col z-10 fixed">
+            <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
                 <div className="h-1/10 flex items-center justify-center">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -84,12 +71,11 @@ const AdminDashboard = () => {
                             d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
                         />
                     </svg>
-                    <h1>Admin</h1>
+                    <h1>Student</h1>
                 </div>
                 <button
-                    id="manageGroups"
-                    onClick={handleRouteChange}
-                    className={`flex items-center justify-between text-left bg-blue-600 hover:bg-blue-800 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
+                    id="home"
+                    className={`flex items-center justify-between text-left bg-blue-600 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
                 >
                     Manage Groups
                     <svg
@@ -167,8 +153,6 @@ const AdminDashboard = () => {
                     Logout
                 </button>
             </nav>
-            {/* temp div under the nav */}
-            <div className="w-3/20 h-screen"></div>
             <div className="w-17/20 h-screen">
                 <div className="w-full h-1/10 mb-6 bg-white shadow-md flex items-center justify-end">
                     <div className="flex items-center justify-evenly w-1/5">
@@ -182,7 +166,7 @@ const AdminDashboard = () => {
                         </svg>
                         <img
                             src={data?.user?.avatar?.url}
-                            alt="admin name"
+                            alt="avatar"
                             className="w-14 h-14 rounded-full"
                         />
                         <h4>{data?.user?.name}</h4>
@@ -190,13 +174,10 @@ const AdminDashboard = () => {
                 </div>
                 <div className="flex items-center justify-center">
                     {/* conditional rendering of the inner tab screens */}
-                    {route.manageGroups && <ManageGroups />}
-                    {route.home && <Home />}
-                    {route.profile && <Profile details={data.user} />}
                 </div>
             </div>
         </div>
     );
 };
 
-export default AdminDashboard;
+export default StudentDashboard;
