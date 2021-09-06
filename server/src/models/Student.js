@@ -37,6 +37,14 @@ const studentSchema = new mongoose.Schema(
             type: String,
             default: Role.Student
         },
+        avatar: {
+            url: {
+                type: String,
+                default:
+                    "https://res.cloudinary.com/tremedy/image/upload/c_scale,w_90/v1582207349/avatars/man_2_lvablz.png",
+            },
+            id: String,
+        },
         tokens: [
             {
                 token: {

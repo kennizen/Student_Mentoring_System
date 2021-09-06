@@ -17,4 +17,7 @@ router.post("/login", adminController.adminLoginHandler);
 // admin dashboard route
 router.get("/dashboard", Auth, Authorize(Role.Admin), adminController.adminDashboardHandler);
 
+// get all mentor and students
+router.get("/getAllUsers", Auth, Authorize(Role.Admin), adminController.getAllUsers);
+
 module.exports = router;
