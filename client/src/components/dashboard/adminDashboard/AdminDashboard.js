@@ -6,18 +6,22 @@ import { adminGetDetails } from "../../../actions/admin";
 import LoadingDashboard from "../../loading/LoadingDashboard";
 import Home from "./dashboardLinks/Home";
 import Profile from "./dashboardLinks/Profile";
+import ManageGroups from "./dashboardLinks/ManageGroups";
 
 const AdminDashboard = () => {
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
         profile: false,
+        manageGroups: false,
     });
     // setting the admin auth token
     const dispatch = useDispatch();
     const history = useHistory();
     // accessing the redux store state
     const { data } = useSelector((state) => state.admin);
+
+    console.log("admin data in dashboard", data);
 
     // fetching the admin details
     useEffect(() => {
@@ -32,12 +36,21 @@ const AdminDashboard = () => {
                 setRoute({
                     home: true,
                     profile: false,
+                    manageGroups: false,
                 });
                 break;
             case "profile":
                 setRoute({
                     home: false,
                     profile: true,
+                    manageGroups: false,
+                });
+                break;
+            case "manageGroups":
+                setRoute({
+                    home: false,
+                    profile: false,
+                    manageGroups: true,
                 });
                 break;
             default:
@@ -53,9 +66,9 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="h-screen flex bg-gray-50">
-            {data === undefined ? <LoadingDashboard /> : <div></div>}
-            <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
+        <div className="flex bg-gray-50">
+            {!data && <LoadingDashboard />}
+            <nav className="w-3/20 h-screen bg-white flex flex-col z-10 fixed">
                 <div className="h-1/10 flex items-center justify-center">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -74,8 +87,9 @@ const AdminDashboard = () => {
                     <h1>Admin</h1>
                 </div>
                 <button
-                    id="home"
-                    className={`flex items-center justify-between text-left bg-blue-600 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
+                    id="manageGroups"
+                    onClick={handleRouteChange}
+                    className={`flex items-center justify-between text-left bg-blue-600 hover:bg-blue-800 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
                 >
                     Manage Groups
                     <svg
@@ -153,6 +167,8 @@ const AdminDashboard = () => {
                     Logout
                 </button>
             </nav>
+            {/* temp div under the nav */}
+            <div className="w-3/20 h-screen"></div>
             <div className="w-17/20 h-screen">
                 <div className="w-full h-1/10 mb-6 bg-white shadow-md flex items-center justify-end">
                     <div className="flex items-center justify-evenly w-1/5">
@@ -174,6 +190,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="flex items-center justify-center">
                     {/* conditional rendering of the inner tab screens */}
+                    {route.manageGroups && <ManageGroups />}
                     {route.home && <Home />}
                     {route.profile && <Profile details={data.user} />}
                 </div>

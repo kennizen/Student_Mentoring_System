@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { mentorGetDetails } from "../../../actions/mentor";
+import { studentGetDetails } from "../../../actions/student";
 import LoadingDashboard from "../../loading/LoadingDashboard";
 
-const MentorDashboard = () => {
+const StudentDashboard = () => {
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
@@ -15,13 +15,13 @@ const MentorDashboard = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     // accessing the redux store state
-    const { data } = useSelector((state) => state.mentor);
+    const { data } = useSelector((state) => state.student);
 
-    console.log("mentor data in dashboard", data);
+    console.log("student data in dashboard", data);
 
     // fetching the admin details
     useEffect(() => {
-        dispatch(mentorGetDetails(history));
+        dispatch(studentGetDetails(history));
     }, [dispatch, history]);
 
     // function to chnage the tabs screens of the dashboard
@@ -48,7 +48,7 @@ const MentorDashboard = () => {
     // function to handle the logout
     const handleLogout = () => {
         // calling dispatch directly without an action call from the actions folder because we dont need any api to be called for loging out.
-        dispatch({ type: "LOGOUT_MENTOR" });
+        dispatch({ type: "LOGOUT_STUDENT" });
         history.push("/");
     };
 
@@ -71,7 +71,7 @@ const MentorDashboard = () => {
                             d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
                         />
                     </svg>
-                    <h1>Mentor</h1>
+                    <h1>Student</h1>
                 </div>
                 <button
                     id="home"
@@ -180,4 +180,4 @@ const MentorDashboard = () => {
     );
 };
 
-export default MentorDashboard;
+export default StudentDashboard;

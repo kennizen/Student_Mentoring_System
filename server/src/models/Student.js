@@ -35,7 +35,7 @@ const studentSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            default: Role.Student
+            default: Role.Student,
         },
         avatar: {
             url: {
@@ -53,11 +53,11 @@ const studentSchema = new mongoose.Schema(
                 },
             },
         ],
-
-},{
-    timestamps: true
-})
-
+    },
+    {
+        timestamps: true,
+    }
+);
 
 // hiding sensitive info from user
 studentSchema.methods.toJSON = function () {
@@ -78,7 +78,11 @@ studentSchema.methods.toJSON = function () {
 // generate auth token function
 studentSchema.methods.generateAuthToken = async function () {
     const student = this;
-    const token = jwt.sign({ _id: student._id.toString(), role: 'Student' }, process.env.JWT_SECRET, { expiresIn: '3h' });
+    const token = jwt.sign(
+        { _id: student._id.toString(), role: "Student" },
+        process.env.JWT_SECRET,
+        { expiresIn: "3h" }
+    );
     // student.tokens = student.tokens.concat({ token });
     student.tokens = { token };
     await student.save();
@@ -95,9 +99,9 @@ studentSchema.statics.findByCredentials = async (email, password) => {
         throw new Error("Unable to login");
     }
     const isMatch = await bcrypt.compare(password, student.password);
-    
-    if(!isMatch){
-        console.log("Password error")
+
+    if (!isMatch) {
+        console.log("Password error");
         throw new Error("Unable to login");
     }
     return student;

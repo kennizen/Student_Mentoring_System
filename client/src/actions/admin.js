@@ -21,6 +21,8 @@ export const adminGetDetails = (history) => async (dispatch) => {
         if (data.code === 401) {
             dispatch({ type: "LOGOUT_ADMIN" });
             history.push("/");
+        } else if (data.code === 403) {
+            history.goBack();
         } else {
             dispatch({ type: "FETCH_ADMIN", data });
         }

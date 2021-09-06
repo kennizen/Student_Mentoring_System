@@ -8,8 +8,8 @@ module.exports = {
         try {
             const { email, password } = req.body;
 
-            if(!email || !password){
-                return res.status(400).send( Response.error("No email/password provided", {}) );
+            if (!email || !password) {
+                return res.status(400).send(Response.error("No email/password provided", {}));
             }
             const mentor = await Mentor.findByCredentials(email, password);
 
@@ -43,12 +43,11 @@ module.exports = {
             mentor.name = `${firstName} ${lastName}`;
             await mentor.save();
             res.send(Response.success("Mentor created successfully", {}));
-
         } catch (err) {
             console.log(err);
 
             if (err.code == "11000") {
-                res.status(500).send(Response.error("Email already exists", {}));
+                return res.status(500).send(Response.error("Email already exists", {}));
             }
 
             res.status(500).send(Response.error("Some error occured", {}));
