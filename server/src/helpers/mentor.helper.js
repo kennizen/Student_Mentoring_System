@@ -12,6 +12,6 @@ module.exports = {
     getAllMentors: async () => {
     
         const mentors = await Mentor.find().select('id name avatar');
-        return mentors;
+        return mentors; 
     }
 }
