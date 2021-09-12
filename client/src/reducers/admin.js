@@ -1,10 +1,12 @@
-const admin = (state = { user: null }, action) => {
+const admin = (state = { mentorMenteeDetails: null, adminData: null }, action) => {
     switch (action.type) {
         case "SIGN_IN_ADMIN":
             localStorage.setItem("authData", JSON.stringify({ ...action?.data?.data }));
-            return { ...state, user: action?.data?.data };
+            return state;
         case "FETCH_ADMIN":
-            return action.data;
+            return { ...state, adminData: action.data };
+        case "FETCH_MENTOR_MENTEE":
+            return { ...state, mentorMenteeDetails: action.data.data };
         case "LOGOUT_ADMIN":
             localStorage.clear();
             return { ...state, user: null };
