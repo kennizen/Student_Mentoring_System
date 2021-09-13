@@ -33,6 +33,10 @@ const studentSchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
+        roll_no: String,
+        programme: String,
+        enrollment_year: String,
+        department: String,
         role: {
             type: String,
             default: Role.Student,

@@ -14,10 +14,16 @@ const Role = require("../utils/roles");
 
 // admin login route
 router.post("/login", adminController.adminLoginHandler);
+
 // admin dashboard route
 router.get("/dashboard", Auth, Authorize(Role.Admin), adminController.adminDashboardHandler);
 
 // get all mentor and students
 router.get("/getAllUsers", Auth, Authorize(Role.Admin), adminController.getAllUsers);
+
+// saving student mentor groups
+router.post("/saveGroup", Auth, Authorize(Role.Admin), async (req, res) =>{
+
+})
 
 module.exports = router;

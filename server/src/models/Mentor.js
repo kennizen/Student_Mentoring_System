@@ -25,10 +25,7 @@ const mentorSchema = new mongoose.Schema(
             required: true,
             trim: true,
         },
-        phone: {
-            primary: String,
-            alternate: [String],
-        },
+        phone: String,
         address: {
             type: String,
             trim: true,
