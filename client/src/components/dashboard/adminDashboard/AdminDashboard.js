@@ -19,7 +19,7 @@ const AdminDashboard = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     // accessing the redux store state
-    const { data } = useSelector((state) => state.admin);
+    const data = useSelector((state) => state.admin);
 
     console.log("admin data in dashboard", data);
 
@@ -192,7 +192,7 @@ const AdminDashboard = () => {
                     {/* conditional rendering of the inner tab screens */}
                     {route.manageGroups && <ManageGroups />}
                     {route.home && <Home />}
-                    {route.profile && <Profile details={data.user} />}
+                    {route.profile && <Profile details={data.adminData} />}
                 </div>
             </div>
         </div>

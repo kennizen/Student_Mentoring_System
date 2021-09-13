@@ -8,12 +8,15 @@ API.interceptors.request.use((req) => {
             JSON.parse(localStorage.getItem("authData")).auth_token
         }`;
     }
-
     return req;
 });
 
 export const signIn = (fields) => API.post("/admin/login", fields);
 export const fetchAdmin = () =>
     API.get("/admin/dashboard").catch((error) => {
+        return error.response;
+    });
+export const fetchMentorMentee = () =>
+    API.get("/admin/getAllUsers").catch((error) => {
         return error.response;
     });
