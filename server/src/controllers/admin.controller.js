@@ -43,6 +43,7 @@ module.exports = {
     res.send(Response.success("", { mentors, students }));
   },
 
+<<<<<<< Updated upstream
   /**
    *  saveGroup route saves the mentor and students group
    *  We store the mentor's id in every students property named "mentordBy" , to establish a link
@@ -75,4 +76,45 @@ module.exports = {
       res.status(500).send(Response.error("Some error occured", {}));
     }
   },
+=======
+    // admin dashboard handler function
+    adminDashboardHandler: (req, res) => {
+        res.send(Response.success("", { user: req.user }));
+    },
+
+    // this route handler returns the list of all users i.e, all mentors and students
+    getAllUsers: async (req, res) => {
+        const students = await studentHelpers.getAllStudents();
+        const mentors = await mentorHelpers.getAllMentors();
+        res.send(Response.success("", { mentors, students }));
+    },
+
+    /**
+     *  saveGroup route saves the mentor and students group
+     *  We store the mentor's id in every students property named "mentordBy" , to establish a link
+     *  between from a mentor to every students mentored by hims
+     * */
+    saveGroup: async (req, res) => {
+        try {
+            const mentor = await Mentor.findById(req.body.mentor);
+
+            if (!mentor) {
+                // if mentor doesn't exists
+                return res.send(Response.error("Some error occured", {}));
+            }
+
+            const students = req.body.students;
+            // looing through students array
+            for (i = 0; i < students.length; i++) {
+                const student = await Student.findById(students[i]);
+                student.mentoredBy = mentor._id;
+                await student.save();
+            }
+
+            res.send(Response.success("Assigned Successfully", {}));
+        } catch (err) {
+            res.status(500).send(Response.error("Some error occured", {}));
+        }
+    },
+>>>>>>> Stashed changes
 };
