@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { adminGetMentorMentee } from "../../../../actions/admin";
+import { adminGetMentorMentee, adminSaveGroup } from "../../../../actions/admin";
 
 const ManageGroups = () => {
     const dispatch = useDispatch();
@@ -66,6 +66,17 @@ const ManageGroups = () => {
             });
             setStudents([...students].filter((student) => student._id !== id));
         }
+    }
+
+    // function to save the formed group
+    function handleSaveGroup() {
+        dispatch(adminSaveGroup(group, history));
+        setMentor([]);
+        setStudents([]);
+        setGroup({
+            mentorId: "",
+            studentIds: [],
+        });
     }
 
     console.log(group.mentorId);
@@ -237,7 +248,10 @@ const ManageGroups = () => {
                         </section>
                         {group.mentorId !== "" && students.length !== 0 ? (
                             <div className="relative">
-                                <button className="bg-blue-600 absolute -top-12 right-9 rounded-md pl-3 pr-3 pt-2 pb-2 flex items-center text-white">
+                                <button
+                                    onClick={handleSaveGroup}
+                                    className="bg-blue-600 absolute -top-12 right-9 rounded-md pl-3 pr-3 pt-2 pb-2 flex items-center text-white"
+                                >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         className="h-4 w-4 mr-1"
