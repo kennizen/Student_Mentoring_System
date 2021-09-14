@@ -8,9 +8,9 @@ const Student = require("../models/Student");
  */
 
 module.exports = {
-    // gets all students from db and return it
-    getAllStudents: async () => {
-        const students = await Student.find({}).select("id name avatar mentoredBy");
-        return students;
-    },
+  // gets all students from db and return it
+  getAllStudents: async () => {
+    const students = await Student.find({}).select("id name department roll_no avatar mentoredBy");
+    return students;
+  },
 };
