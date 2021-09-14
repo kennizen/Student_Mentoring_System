@@ -1,4 +1,6 @@
 const Admin = require("../models/Admin");
+const Mentor = require("../models/Mentor");
+const Student = require("../models/Student");
 const dotenv = require("dotenv");
 const Response = require("../utils/response.utils");
 
@@ -42,4 +44,33 @@ module.exports = {
         const mentors = await mentorHelpers.getAllMentors();
         res.send( Response.success("", { mentors, students }) )
     },
+
+    /** 
+     *  saveGroup route saves the mentor and students group
+     *  We store the mentor's id in every students property named "mentordBy" , to establish a link 
+     *  between from a mentor to every students mentored by hims
+     * */ 
+    saveGroup: async (req, res) => {
+        
+        try{
+            const mentor = await Mentor.findById(req.body.mentor);
+
+            if(!mentor){ // if mentor doesn't exists
+                return res.send( Response.error("Some error occured", {}));
+            }
+
+            const students = req.body.students;
+            // looing through students array
+            for(i = 0; i < students.length; i++){
+                const student = await Student.findById(students[i]);
+                student.mentoredBy = mentor._id;
+                await student.save();
+            }
+            
+            res.send( Response.success("Assigned Successfully",{}) )
+        }
+        catch(err){
+            res.status(500).send( Response.error("Some error occured", {}));
+        }
+    }
 };

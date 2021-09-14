@@ -21,4 +21,7 @@ router.post("/signup", mentorController.mentorSignupHandler);
 // mentor dashboard
 router.get("/dashboard", Auth, Authorize(Role.Mentor), mentorController.mentorDashboardHandler);
 
+// reset password
+router.post("/reset", mentorController.resetPassword);
+
 module.exports = router;

@@ -62,4 +62,8 @@ module.exports = {
             console.log(err);
         }
     },
+
+    resetPassword: async(req, res) => {
+        
+    }
 };

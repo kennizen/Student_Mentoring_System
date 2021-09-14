@@ -17,7 +17,8 @@ const secret = process.env.JWT_SECRET;
 const auth = async (req, res, next) => {
     try {
         let user;
-        const token = req.headers.authorization.split(" ")[1];
+        // we are splitting the Bearer token string received in header and taking only JWT from it
+        const token = req.headers.authorization.split(" ")[1];  
 
         if (!token) {
             throw new Error("Token not received");
@@ -39,7 +40,7 @@ const auth = async (req, res, next) => {
         }
 
         if (!user) {
-            return res.status(404).send(Response.notfound("404 Not Found", {}));
+            return res.status(404).send(Response.notfound("404 User Not Found", {}));
         }
 
         req.user = user;

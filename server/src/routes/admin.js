@@ -22,8 +22,6 @@ router.get("/dashboard", Auth, Authorize(Role.Admin), adminController.adminDashb
 router.get("/getAllUsers", Auth, Authorize(Role.Admin), adminController.getAllUsers);
 
 // saving student mentor groups
-router.post("/saveGroup", Auth, Authorize(Role.Admin), async (req, res) =>{
-
-})
+router.post("/saveGroup", Auth, Authorize(Role.Admin), adminController.saveGroup);
 
 module.exports = router;
