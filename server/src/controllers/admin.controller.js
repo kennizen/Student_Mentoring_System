@@ -45,18 +45,6 @@ module.exports = {
         res.send(Response.success("", { mentors, students }));
     },
 
-    // admin dashboard handler function
-    adminDashboardHandler: (req, res) => {
-        res.send(Response.success("", { user: req.user }));
-    },
-
-    // this route handler returns the list of all users i.e, all mentors and students
-    getAllUsers: async (req, res) => {
-        const students = await studentHelpers.getAllStudents();
-        const mentors = await mentorHelpers.getAllMentors();
-        res.send(Response.success("", { mentors, students }));
-    },
-
     /**
      *  saveGroup route saves the mentor and students group
      *  We store the mentor's id in every students property named "mentordBy" , to establish a link
@@ -64,14 +52,14 @@ module.exports = {
      * */
     saveGroup: async (req, res) => {
         try {
-            const mentor = await Mentor.findById(req.body.mentor);
+            const mentor = await Mentor.findById(req.body.mentorId);
 
             if (!mentor) {
                 // if mentor doesn't exists
-                return res.send(Response.error("Some error occured", {}));
+                return res.status(500).send(Response.error("Some error occured", {}));
             }
 
-            const students = req.body.students;
+            const students = req.body.studentIds;
             // looing through students array
             for (i = 0; i < students.length; i++) {
                 const student = await Student.findById(students[i]);
@@ -79,7 +67,15 @@ module.exports = {
                 await student.save();
             }
 
-            res.send(Response.success("Assigned Successfully", {}));
+            const allStudents = await studentHelpers.getAllStudents();
+            const allMentors = await mentorHelpers.getAllMentors();
+
+            res.send(
+                Response.success("Assigned Successfully", {
+                    mentors: allMentors,
+                    students: allStudents,
+                })
+            );
         } catch (err) {
             res.status(500).send(Response.error("Some error occured", {}));
         }

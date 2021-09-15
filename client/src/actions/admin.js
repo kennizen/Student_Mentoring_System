@@ -65,9 +65,9 @@ export const adminSaveGroup = (groupData, history) => async (dispatch) => {
             history.push("/");
         } else if (data.code === 403) {
             history.goBack();
-        } //else {
-        //     dispatch({ type: "FETCH_MENTOR_MENTEE", data });
-        // }
+        } else {
+            dispatch({ type: "FETCH_MENTOR_MENTEE", data });
+        }
     } catch (error) {
         console.log(error);
     }

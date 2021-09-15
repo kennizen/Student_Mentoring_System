@@ -29,6 +29,9 @@ const ManageGroups = () => {
 
     // function to handle the change for setting mentor
     function handleSelectedMentor(id) {
+        let alreadyAssignedStudents = [];
+        let assignedStudentIds = [];
+
         if (id === group.mentorId) {
             setGroup({
                 ...group,
@@ -36,17 +39,37 @@ const ManageGroups = () => {
             });
             setMentor([]);
         } else if (group.mentorId === "") {
+            setMentor(mentorMenteeDetails.mentors.filter((mentor) => mentor._id === id));
+            console.log("running 1");
+            for (let i = 0; i < mentorMenteeDetails.students.length; i++) {
+                if (id === mentorMenteeDetails.students[i].mentoredBy) {
+                    alreadyAssignedStudents.push(mentorMenteeDetails.students[i]);
+                    assignedStudentIds.push(mentorMenteeDetails.students[i]._id);
+                }
+            }
+            console.log("already assigned 1", alreadyAssignedStudents);
+            setStudents(alreadyAssignedStudents);
             setGroup({
                 ...group,
                 mentorId: id,
+                studentIds: assignedStudentIds,
             });
-            setMentor(mentorMenteeDetails.mentors.filter((mentor) => mentor._id === id));
         } else {
+            setMentor(mentorMenteeDetails.mentors.filter((mentor) => mentor._id === id));
+            console.log("running 2");
+            for (let i = 0; i < mentorMenteeDetails.students.length; i++) {
+                if (id === mentorMenteeDetails.students[i].mentoredBy) {
+                    alreadyAssignedStudents.push(mentorMenteeDetails.students[i]);
+                    assignedStudentIds.push(mentorMenteeDetails.students[i]._id);
+                }
+            }
+            console.log("already assigned 2", alreadyAssignedStudents);
+            setStudents(alreadyAssignedStudents);
             setGroup({
                 ...group,
                 mentorId: id,
-            });
-            setMentor(mentorMenteeDetails.mentors.filter((mentor) => mentor._id === id));
+                studentIds: assignedStudentIds,
+            }); /// just testing the outcome working 30% to make it perfect ///
         }
     }
 
@@ -89,8 +112,8 @@ const ManageGroups = () => {
             {mentorMenteeDetails === null ? (
                 <h1>LOADING...</h1>
             ) : (
-                <div className="flex items-center justify-between mt-32">
-                    <section className="bg-white h-650 w-1/3 rounded-md shadow-md p-3  overflow-y-auto mr-4">
+                <div className="grid grid-cols-12 grid-rows-2 mt-32 gap-y-4">
+                    <section className="bg-white h-450 rounded-md shadow-md p-3 overflow-y-auto mr-4 col-span-3">
                         {mentorMenteeDetails.mentors.map((mentor) => {
                             return (
                                 <div
@@ -106,7 +129,7 @@ const ManageGroups = () => {
                                     <div className="col-span-5">
                                         <h2 className="select-none">{mentor.name}</h2>
                                         <h6 className="mb-1 select-none">
-                                            Assitant Proffesor - CSE
+                                            Assistant Proffessor - CSE
                                         </h6>
                                         <hr />
                                     </div>
@@ -135,19 +158,19 @@ const ManageGroups = () => {
                         })}
                     </section>
                     <section
-                        className={`${
-                            group.mentorId || "flex items-center justify-center"
-                        } bg-white h-650 w-1/3 rounded-md shadow-md p-3 overflow-y-auto mr-4`}
+                        className={`bg-white h-450 rounded-md shadow-md p-3 overflow-y-auto grid grid-cols-3 grid-rows-6 col-span-9`}
                     >
                         {group.mentorId === "" ? (
-                            <p>Select a mentor to view the student list</p>
+                            <p className="col-span-3 row-span-6 place-self-center">
+                                Select a mentor to view the student list
+                            </p>
                         ) : (
                             mentorMenteeDetails.students.map((student) => {
                                 return (
                                     <div
                                         onClick={() => handleSelectedStudent(student._id)}
                                         key={student._id}
-                                        className="w-full p-2 grid grid-cols-7 gap-2 hover:bg-gray-100 cursor-pointer"
+                                        className="w-full p-2 grid grid-cols-7 gap-2 place-content-center hover:bg-gray-100 cursor-pointer"
                                     >
                                         <img
                                             src={student.avatar.url}
@@ -186,63 +209,68 @@ const ManageGroups = () => {
                             })
                         )}
                     </section>
-                    <div className="w-1/3">
+                    <div className="row-start-2 col-span-12">
                         <section
-                            className={`${
-                                group.mentorId || "flex items-center justify-center"
-                            } bg-white h-650 rounded-md shadow-md p-3 overflow-y-auto`}
+                            className={`bg-white h-450 rounded-md shadow-md p-3 overflow-y-auto grid grid-cols-12`}
                         >
                             {group.mentorId === "" ? (
-                                <p>Select a mentor to view the group</p>
+                                <p className="col-span-12 place-self-center">
+                                    Select a mentor to view the group
+                                </p>
                             ) : (
                                 <>
-                                    {mentor.map((m) => {
-                                        return (
-                                            <div key={m._id}>
-                                                <h2>Mentor</h2>
-                                                <div className="w-full p-2 grid grid-cols-7 gap-2 hover:bg-gray-100 cursor-pointer mb-5">
-                                                    <img
-                                                        src={m.avatar.url}
-                                                        alt={m.name}
-                                                        className="h-9 w-9 place-self-center"
-                                                    />
-                                                    <div className="col-span-5">
-                                                        <h2>{m.name}</h2>
-                                                        <h6 className="mb-1">
-                                                            Assitant Proffesor - CSE
-                                                        </h6>
-                                                        <hr />
-                                                    </div>
-                                                </div>
-                                                <h2>Mentees</h2>
-                                            </div>
-                                        );
-                                    })}
-                                    {students.length === 0 && group.mentorId !== "" ? (
-                                        <p className="text-center">No Mentees assigned</p>
-                                    ) : (
-                                        students.map((s) => {
+                                    <div className="col-span-3 grid grid-cols-1 place-content-center">
+                                        {mentor.map((m) => {
                                             return (
-                                                <div
-                                                    key={s._id}
-                                                    className="w-full p-2 grid grid-cols-7 gap-2 hover:bg-gray-100 cursor-pointer"
-                                                >
-                                                    <img
-                                                        src={s.avatar.url}
-                                                        alt={s.name}
-                                                        className="h-9 w-9 place-self-center"
-                                                    />
-                                                    <div className="col-span-4">
-                                                        <h2 className="select-none">{s.name}</h2>
-                                                        <h6 className="mb-1 select-none">
-                                                            Assitant Proffesor - CSE
-                                                        </h6>
-                                                        <hr />
+                                                <div key={m._id}>
+                                                    <div className="w-full p-2 flex flex-col mb-5">
+                                                        <img
+                                                            src={m.avatar.url}
+                                                            alt={m.name}
+                                                            className="h-18 w-18 place-self-center"
+                                                        />
+                                                        <div className="text-center">
+                                                            <h2>{m.name}</h2>
+                                                            <h6 className="mb-1">
+                                                                Assitant Proffesor - CSE
+                                                            </h6>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             );
-                                        })
-                                    )}
+                                        })}
+                                    </div>
+                                    <div className="col-span-9 grid grid-cols-3 grid-rows-6">
+                                        {students.length === 0 && group.mentorId !== "" ? (
+                                            <p className="col-span-3 place-self-center row-span-6">
+                                                No Mentees assigned
+                                            </p>
+                                        ) : (
+                                            students.map((s) => {
+                                                return (
+                                                    <div
+                                                        key={s._id}
+                                                        className="w-full p-2 grid grid-cols-7 place-content-center gap-2"
+                                                    >
+                                                        <img
+                                                            src={s.avatar.url}
+                                                            alt={s.name}
+                                                            className="h-9 w-9 place-self-center"
+                                                        />
+                                                        <div className="col-span-4">
+                                                            <h2 className="select-none">
+                                                                {s.name}
+                                                            </h2>
+                                                            <h6 className="mb-1 select-none">
+                                                                Assitant Proffesor - CSE
+                                                            </h6>
+                                                            <hr />
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })
+                                        )}
+                                    </div>
                                 </>
                             )}
                         </section>

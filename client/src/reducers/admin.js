@@ -9,7 +9,7 @@ const admin = (state = { mentorMenteeDetails: null, adminData: null }, action) =
             return { ...state, mentorMenteeDetails: action.data.data };
         case "LOGOUT_ADMIN":
             localStorage.clear();
-            return { ...state, user: null };
+            return { ...state, adminData: null };
         default:
             return state;
     }
