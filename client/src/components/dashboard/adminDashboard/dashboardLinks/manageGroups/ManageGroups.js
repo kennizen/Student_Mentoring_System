@@ -221,7 +221,7 @@ const ManageGroups = () => {
                                 </>
                             )}
                         </section>
-                        {group.mentorId !== "" && students.length !== 0 ? (
+                        {group.mentorId !== "" ? (
                             <div className="relative">
                                 <button
                                     onClick={handleSaveGroup}

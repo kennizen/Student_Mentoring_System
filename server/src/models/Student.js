@@ -8,78 +8,78 @@ const Role = require("../utils/roles");
 dotenv.config();
 
 const studentSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    phone: {
-      type: String,
-    },
-    address: {
-      type: String,
-      trim: true,
-    },
-    roll_no: String,
-    programme: String,
-    enrollment_year: String,
-    department: String,
-    role: {
-      type: String,
-      default: Role.Student,
-    },
-    mentoredBy: {
-      type: String,
-      default: "unassigned",
-    },
-    assigned: {
-      type: String,
-      default: "unassigned",
-    },
-    avatar: {
-      url: {
-        type: String,
-        default:
-          "https://res.cloudinary.com/tremedy/image/upload/c_scale,w_90/v1582207349/avatars/man_2_lvablz.png",
-      },
-      id: String,
-    },
-    tokens: [
-      {
-        token: {
-          type: String,
-          required: true,
+    {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
         },
-      },
-    ],
-  },
-  {
-    timestamps: true,
-  }
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        phone: {
+            type: String,
+        },
+        address: {
+            type: String,
+            trim: true,
+        },
+        roll_no: String,
+        programme: String,
+        enrollment_year: String,
+        department: String,
+        role: {
+            type: String,
+            default: Role.Student,
+        },
+        mentoredBy: {
+            type: String,
+            default: "unassigned",
+        },
+        assigned: {
+            type: String,
+            default: "unassigned",
+        },
+        avatar: {
+            url: {
+                type: String,
+                default:
+                    "https://res.cloudinary.com/tremedy/image/upload/c_scale,w_90/v1582207349/avatars/man_2_lvablz.png",
+            },
+            id: String,
+        },
+        tokens: [
+            {
+                token: {
+                    type: String,
+                    required: true,
+                },
+            },
+        ],
+    },
+    {
+        timestamps: true,
+    }
 );
 
 // hiding sensitive info from user
 studentSchema.methods.toJSON = function () {
-  const student = this;
-  const studentObject = student.toObject();
+    const student = this;
+    const studentObject = student.toObject();
 
-  delete studentObject.password;
-  delete studentObject.tokens;
-  delete studentObject.role;
+    delete studentObject.password;
+    delete studentObject.tokens;
+    delete studentObject.role;
 
-  return studentObject;
+    return studentObject;
 };
 
 /**
@@ -88,32 +88,36 @@ studentSchema.methods.toJSON = function () {
  */
 // generate auth token function
 studentSchema.methods.generateAuthToken = async function () {
-  const student = this;
-  const token = jwt.sign({ _id: student._id.toString(), role: "Student" }, process.env.JWT_SECRET, {
-    expiresIn: "3h",
-  });
-  // student.tokens = student.tokens.concat({ token });
-  student.tokens = { token };
-  await student.save();
-  return token;
+    const student = this;
+    const token = jwt.sign(
+        { _id: student._id.toString(), role: "Student" },
+        process.env.JWT_SECRET,
+        {
+            expiresIn: "3h",
+        }
+    );
+    // student.tokens = student.tokens.concat({ token });
+    student.tokens = { token };
+    await student.save();
+    return token;
 };
 
 /**
  *   Model.Statics methods are available on the Model itself.  **/
 //custom login method for mentor
 studentSchema.statics.findByCredentials = async (email, password) => {
-  const student = await Student.findOne({ email });
+    const student = await Student.findOne({ email });
 
-  if (!student) {
-    throw new Error("Unable to login");
-  }
-  const isMatch = await bcrypt.compare(password, student.password);
+    if (!student) {
+        throw new Error("Unable to login");
+    }
+    const isMatch = await bcrypt.compare(password, student.password);
 
-  if (!isMatch) {
-    console.log("Password error");
-    throw new Error("Unable to login");
-  }
-  return student;
+    if (!isMatch) {
+        console.log("Password error");
+        throw new Error("Unable to login");
+    }
+    return student;
 };
 
 const Student = mongoose.model("Student", studentSchema);
