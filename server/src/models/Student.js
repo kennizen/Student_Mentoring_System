@@ -45,6 +45,10 @@ const studentSchema = new mongoose.Schema(
             type: String,
             default: "unassigned",
         },
+        assigned: {
+            type: String,
+            default: "unassigned",
+        },
         avatar: {
             url: {
                 type: String,

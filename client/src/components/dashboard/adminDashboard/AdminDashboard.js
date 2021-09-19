@@ -4,9 +4,9 @@ import { useHistory } from "react-router";
 
 import { adminGetDetails } from "../../../actions/admin";
 import LoadingDashboard from "../../loading/LoadingDashboard";
-import Home from "./dashboardLinks/Home";
-import Profile from "./dashboardLinks/Profile";
-import ManageGroups from "./dashboardLinks/ManageGroups";
+import Home from "./dashboardLinks/home/Home";
+import Profile from "./dashboardLinks/profile/Profile";
+import ManageGroups from "./dashboardLinks/manageGroups/ManageGroups";
 
 const AdminDashboard = () => {
     // state for maintaining the side nav bar

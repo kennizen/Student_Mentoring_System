@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { adminGetMentorMentee, adminSaveGroup } from "../../../../actions/admin";
+import { adminGetMentorMentee, adminSaveGroup } from "../../../../../actions/admin";
+import ListComponent from "./listComponent/ListComponent";
+import TickComponent from "./tickComponent/TickComponent";
 
 const ManageGroups = () => {
     const dispatch = useDispatch();
@@ -36,6 +38,7 @@ const ManageGroups = () => {
             setGroup({
                 ...group,
                 mentorId: "",
+                studentIds: [],
             });
             setMentor([]);
         } else if (group.mentorId === "") {
@@ -119,39 +122,14 @@ const ManageGroups = () => {
                                 <div
                                     onClick={() => handleSelectedMentor(mentor._id)}
                                     key={mentor._id}
+                                    title={mentor.name}
                                     className="w-full p-2 grid grid-cols-7 gap-2 hover:bg-gray-100 cursor-pointer"
                                 >
-                                    <img
-                                        src={mentor.avatar.url}
-                                        alt={mentor.name}
-                                        className="h-9 w-9 place-self-center"
-                                    />
-                                    <div className="col-span-5">
-                                        <h2 className="select-none">{mentor.name}</h2>
-                                        <h6 className="mb-1 select-none">
-                                            Assistant Proffessor - CSE
-                                        </h6>
-                                        <hr />
-                                    </div>
+                                    <ListComponent {...mentor} />
                                     {group.mentorId === mentor._id ? (
-                                        <div className="w-6 h-6 rounded-full bg-blue-600 place-self-center flex justify-center items-center">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-4 w-4"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="#ffffff"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M5 13l4 4L19 7"
-                                                />
-                                            </svg>
-                                        </div>
+                                        <TickComponent color="#2563EB" />
                                     ) : (
-                                        <div></div>
+                                        <TickComponent color="#CCCCCC" />
                                     )}
                                 </div>
                             );
@@ -160,54 +138,22 @@ const ManageGroups = () => {
                     <section
                         className={`bg-white h-450 rounded-md shadow-md p-3 overflow-y-auto grid grid-cols-3 grid-rows-6 col-span-9`}
                     >
-                        {group.mentorId === "" ? (
-                            <p className="col-span-3 row-span-6 place-self-center">
-                                Select a mentor to view the student list
-                            </p>
-                        ) : (
-                            mentorMenteeDetails.students.map((student) => {
-                                return (
-                                    <div
-                                        onClick={() => handleSelectedStudent(student._id)}
-                                        key={student._id}
-                                        className="w-full p-2 grid grid-cols-7 gap-2 place-content-center hover:bg-gray-100 cursor-pointer"
-                                    >
-                                        <img
-                                            src={student.avatar.url}
-                                            alt={student.name}
-                                            className="h-9 w-9 place-self-center"
-                                        />
-                                        <div className="col-span-5">
-                                            <h2 className="select-none">{student.name}</h2>
-                                            <h6 className="mb-1 select-none">
-                                                Assitant Proffesor - CSE
-                                            </h6>
-                                            <hr />
-                                        </div>
-                                        {group.studentIds.includes(student._id) ? (
-                                            <div className="w-6 h-6 rounded-full bg-blue-600 place-self-center flex justify-center items-center">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="h-4 w-4"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="#ffffff"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M5 13l4 4L19 7"
-                                                    />
-                                                </svg>
-                                            </div>
-                                        ) : (
-                                            <div></div>
-                                        )}
-                                    </div>
-                                );
-                            })
-                        )}
+                        {mentorMenteeDetails.students.map((student) => {
+                            return (
+                                <div
+                                    onClick={() => handleSelectedStudent(student._id)}
+                                    key={student._id}
+                                    className="w-full p-2 grid grid-cols-7 gap-2 place-content-center hover:bg-gray-100 cursor-pointer"
+                                >
+                                    <ListComponent {...student} />
+                                    {group.studentIds.includes(student._id) ? (
+                                        <TickComponent color="#2563EB" />
+                                    ) : (
+                                        <TickComponent color="#CCCCCC" />
+                                    )}
+                                </div>
+                            );
+                        })}
                     </section>
                     <div className="row-start-2 col-span-12">
                         <section
@@ -222,19 +168,20 @@ const ManageGroups = () => {
                                     <div className="col-span-3 grid grid-cols-1 place-content-center">
                                         {mentor.map((m) => {
                                             return (
-                                                <div key={m._id}>
-                                                    <div className="w-full p-2 flex flex-col mb-5">
-                                                        <img
-                                                            src={m.avatar.url}
-                                                            alt={m.name}
-                                                            className="h-18 w-18 place-self-center"
-                                                        />
-                                                        <div className="text-center">
-                                                            <h2>{m.name}</h2>
-                                                            <h6 className="mb-1">
-                                                                Assitant Proffesor - CSE
-                                                            </h6>
-                                                        </div>
+                                                <div
+                                                    key={m._id}
+                                                    className="w-full p-2 flex flex-col mb-5"
+                                                >
+                                                    <img
+                                                        src={m.avatar.url}
+                                                        alt={m.name}
+                                                        className="h-18 w-18 place-self-center"
+                                                    />
+                                                    <div className="text-center">
+                                                        <h2>{m.name}</h2>
+                                                        <h6 className="mb-1">
+                                                            Assitant Proffesor - CSE
+                                                        </h6>
                                                     </div>
                                                 </div>
                                             );
@@ -278,7 +225,8 @@ const ManageGroups = () => {
                             <div className="relative">
                                 <button
                                     onClick={handleSaveGroup}
-                                    className="bg-blue-600 absolute -top-12 right-9 rounded-md pl-3 pr-3 pt-2 pb-2 flex items-center text-white"
+                                    className="bg-blue-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 absolute -top-12 right-9 flex"
+                                    type="button"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
