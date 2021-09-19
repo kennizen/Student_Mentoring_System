@@ -8,76 +8,82 @@ const Role = require("../utils/roles");
 dotenv.config();
 
 const mentorSchema = new mongoose.Schema(
-    {
-        name: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        email: {
-            type: String,
-            required: true,
-            trim: true,
-            unique: true,
-        },
-        password: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        phone: String,
-        address: {
-            type: String,
-            trim: true,
-        },
-        department: {
-            type: String,
-            trim: true,
-        },
-        designation: {
-            type: String,
-            trim: true,
-        },
-        role: {
-            type: String,
-            default: Role.Mentor,
-        },
-        assigned: {
-            type: String,
-            default: "unassigned",
-        },
-        avatar: {
-            url: {
-                type: String,
-                default:
-                    "https://res.cloudinary.com/tremedy/image/upload/c_scale,w_90/v1582207349/avatars/man_2_lvablz.png",
-            },
-            id: String,
-        },
-        tokens: [
-            {
-                token: {
-                    type: String,
-                    required: true,
-                },
-            },
-        ],
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    {
-        timestamps: true,
-    }
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    phone: {
+      type: String,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
+    department: {
+      type: String,
+      trim: true,
+    },
+    designation: {
+      type: String,
+      trim: true,
+    },
+    role: {
+      type: String,
+      default: Role.Mentor,
+    },
+    assigned: {
+      type: String,
+      default: "unassigned",
+    },
+    studentCount: {
+      type: Number,
+      default: 0,
+    },
+    avatar: {
+      url: {
+        type: String,
+        default:
+          "https://res.cloudinary.com/tremedy/image/upload/c_scale,w_90/v1582207349/avatars/man_2_lvablz.png",
+      },
+      id: String,
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
 );
 
 // hiding sensitive info from user
 mentorSchema.methods.toJSON = function () {
-    const mentor = this;
-    const mentorObject = mentor.toObject();
+  const mentor = this;
+  const mentorObject = mentor.toObject();
 
-    delete mentorObject.password;
-    delete mentorObject.tokens;
-    delete mentorObject.role;
+  delete mentorObject.password;
+  delete mentorObject.tokens;
+  delete mentorObject.role;
 
-    return mentorObject;
+  return mentorObject;
 };
 
 /**
@@ -86,31 +92,31 @@ mentorSchema.methods.toJSON = function () {
  */
 // generate auth token function
 mentorSchema.methods.generateAuthToken = async function () {
-    const mentor = this;
-    const token = jwt.sign({ _id: mentor._id.toString(), role: "Mentor" }, process.env.JWT_SECRET, {
-        expiresIn: "6h",
-    });
-    // admin.tokens = admin.tokens.concat({ token });
-    mentor.tokens = { token };
-    await mentor.save();
-    return token;
+  const mentor = this;
+  const token = jwt.sign({ _id: mentor._id.toString(), role: "Mentor" }, process.env.JWT_SECRET, {
+    expiresIn: "6h",
+  });
+  // admin.tokens = admin.tokens.concat({ token });
+  mentor.tokens = { token };
+  await mentor.save();
+  return token;
 };
 
 /**
  *   Model.Statics methods are available on the Model itself.  **/
 //custom login method for mentor
 mentorSchema.statics.findByCredentials = async (email, password) => {
-    const mentor = await Mentor.findOne({ email });
+  const mentor = await Mentor.findOne({ email });
 
-    if (!mentor) {
-        throw new Error("Unable to login");
-    }
-    const isMatch = await bcrypt.compare(password, mentor.password);
+  if (!mentor) {
+    throw new Error("Unable to login");
+  }
+  const isMatch = await bcrypt.compare(password, mentor.password);
 
-    if (!isMatch) {
-        throw new Error("Unable to login");
-    }
-    return mentor;
+  if (!isMatch) {
+    throw new Error("Unable to login");
+  }
+  return mentor;
 };
 
 const Mentor = mongoose.model("Mentor", mentorSchema);

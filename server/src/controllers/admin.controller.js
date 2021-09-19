@@ -47,24 +47,70 @@ module.exports = {
    *  saveGroup route saves the mentor and students group
    *  We store the mentor's id in every students property named "mentordBy" , to establish a link
    *  between from a mentor to every students mentored by hims
+   *  add/update and unassigned students operations are in this route
    * */
   saveGroup: async (req, res) => {
     try {
+      const mentorCountToUpdate = {};
+      const newStudentsList = {};
       const mentor = await Mentor.findById(req.body.mentorId);
+      const students = req.body.studentIds;
+      const oldStudents = await Student.find({ mentoredBy: req.body.mentorId }).distinct("_id");
 
       if (!mentor) {
         // if mentor doesn't exists
+        console.log("inside !mentor", mentor);
         return res.status(500).send(Response.error("Some error occured", {}));
       }
 
-      const students = req.body.studentIds;
+      // generating the newStudentList object or hash map
+      for (let i = 0; i < students.length; i++) {
+        if (!newStudentsList[students[i]]) {
+          newStudentsList[students[i]] = 1;
+        }
+      }
+
+      // finding the students not in the old instance from db
+      for (let i = 0; i < oldStudents.length; i++) {
+        if (!newStudentsList[oldStudents[i]]) {
+          const oldStudent = await Student.findById(oldStudents[i]);
+          oldStudent.mentoredBy = "";
+          oldStudent.assigned = "";
+          await oldStudent.save();
+        }
+      }
+
       // looing through students array
       for (i = 0; i < students.length; i++) {
         const student = await Student.findById(students[i]);
+        // checking for chnages in the new request. And updating the student count
+        if (student.mentoredBy !== req.body.mentorId) {
+          mentorCountToUpdate[student.mentoredBy]
+            ? (mentorCountToUpdate[student.mentoredBy] += 1)
+            : (mentorCountToUpdate[student.mentoredBy] = 1);
+        }
         student.mentoredBy = mentor._id;
+        // setting student to assigned
+        student.assigned = "in a group";
         await student.save();
       }
 
+      for (let mentorId in mentorCountToUpdate) {
+        const newMentor = await Mentor.findById(mentorId);
+        newMentor.studentCount -= mentorCountToUpdate[mentorId];
+        if (newMentor.studentCount < 1) {
+          newMentor.assigned = ""; // "" empty string is used to set false
+        }
+        await newMentor.save();
+      }
+
+      // setting mentor to assigned
+      mentor.assigned = "assigned";
+      // setting no of students
+      mentor.studentCount = students.length;
+      await mentor.save();
+
+      // getting all the students and mentors after performing all the above operations
       const allStudents = await studentHelpers.getAllStudents();
       const allMentors = await mentorHelpers.getAllMentors();
 
@@ -75,6 +121,7 @@ module.exports = {
         })
       );
     } catch (err) {
+      console.log("catch", err);
       res.status(500).send(Response.error("Some error occured", {}));
     }
   },
