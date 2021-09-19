@@ -50,14 +50,14 @@ module.exports = {
    * */
   saveGroup: async (req, res) => {
     try {
-      const mentor = await Mentor.findById(req.body.mentor);
+      const mentor = await Mentor.findById(req.body.mentorId);
 
       if (!mentor) {
         // if mentor doesn't exists
         return res.status(500).send(Response.error("Some error occured", {}));
       }
 
-      const students = req.body.students;
+      const students = req.body.studentIds;
       // looing through students array
       for (i = 0; i < students.length; i++) {
         const student = await Student.findById(students[i]);
@@ -69,7 +69,10 @@ module.exports = {
       const allMentors = await mentorHelpers.getAllMentors();
 
       res.send(
-        Response.success("Assigned Successfully", { mentors: allMentors, students: allStudents })
+        Response.success("Assigned Successfully", {
+          mentors: allMentors,
+          students: allStudents,
+        })
       );
     } catch (err) {
       res.status(500).send(Response.error("Some error occured", {}));

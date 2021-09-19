@@ -40,7 +40,11 @@ const mentorSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            default: Role.Mentor
+            default: Role.Mentor,
+        },
+        assigned: {
+            type: String,
+            default: "unassigned",
         },
         avatar: {
             url: {
@@ -58,10 +62,11 @@ const mentorSchema = new mongoose.Schema(
                 },
             },
         ],
-},{
-    timestamps: true
-})
-
+    },
+    {
+        timestamps: true,
+    }
+);
 
 // hiding sensitive info from user
 mentorSchema.methods.toJSON = function () {
@@ -82,7 +87,9 @@ mentorSchema.methods.toJSON = function () {
 // generate auth token function
 mentorSchema.methods.generateAuthToken = async function () {
     const mentor = this;
-    const token = jwt.sign({ _id: mentor._id.toString(), role: 'Mentor' }, process.env.JWT_SECRET, { expiresIn: '6h' });
+    const token = jwt.sign({ _id: mentor._id.toString(), role: "Mentor" }, process.env.JWT_SECRET, {
+        expiresIn: "6h",
+    });
     // admin.tokens = admin.tokens.concat({ token });
     mentor.tokens = { token };
     await mentor.save();

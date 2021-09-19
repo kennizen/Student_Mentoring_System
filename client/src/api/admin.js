@@ -20,3 +20,8 @@ export const fetchMentorMentee = () =>
     API.get("/admin/getAllUsers").catch((error) => {
         return error.response;
     });
+export const saveGroup = (groupData) =>
+    API.post("/admin/saveGroup", groupData).catch((error) => {
+        console.log(groupData);
+        return error.response;
+    });
