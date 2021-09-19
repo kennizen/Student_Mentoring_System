@@ -54,7 +54,7 @@ module.exports = {
 
       if (!mentor) {
         // if mentor doesn't exists
-        return res.send(Response.error("Some error occured", {}));
+        return res.status(500).send(Response.error("Some error occured", {}));
       }
 
       const students = req.body.students;
