@@ -2,16 +2,16 @@ module.exports = {
     purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
     darkMode: false, // or 'media' or 'class'
     theme: {
-        // fontFamily: {
-        //     sans: ['"Open Sans"', "sans-serif"],
-        // },
+        fontFamily: {
+            sans: ['"Open Sans"', "sans-serif"],
+        },
         fontSize: {
-            xs: ["12px", "unset"],
-            sm: ["14px", "unset"],
-            base: ["16px", "unset"],
-            lg: ["18px", "unset"],
-            xl: ["20px", "unset"],
-            "2xl": ["24px", "unset"],
+            xs: ["0.556vw", "unset"],
+            sm: ["0.875rem", "unset"],
+            base: ["1rem", "unset"],
+            lg: ["1.125rem", "unset"],
+            xl: ["1.25rem", "unset"],
+            "2xl": ["1.5rem", "unset"],
         },
         extend: {
             width: {

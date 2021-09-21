@@ -66,7 +66,7 @@ const AdminDashboard = () => {
     };
 
     return (
-        <div className="flex bg-gray-50">
+        <div className="flex">
             {!data && <LoadingDashboard />}
             <nav className="w-3/20 h-screen bg-white flex flex-col z-10 fixed">
                 <div className="h-1/10 flex items-center justify-center">

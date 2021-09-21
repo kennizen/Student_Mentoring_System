@@ -4,11 +4,13 @@ import { useHistory } from "react-router";
 
 import { mentorGetDetails } from "../../../actions/mentor";
 import LoadingDashboard from "../../loading/LoadingDashboard";
+import Post from "./dashboardLinks/post/Post";
 
 const MentorDashboard = () => {
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
+        post: false,
         profile: false,
     });
     // setting the admin auth token
@@ -31,12 +33,21 @@ const MentorDashboard = () => {
             case "home":
                 setRoute({
                     home: true,
+                    post: false,
+                    profile: false,
+                });
+                break;
+            case "post":
+                setRoute({
+                    home: false,
+                    post: true,
                     profile: false,
                 });
                 break;
             case "profile":
                 setRoute({
                     home: false,
+                    post: false,
                     profile: true,
                 });
                 break;
@@ -74,26 +85,6 @@ const MentorDashboard = () => {
                     <h1>Mentor</h1>
                 </div>
                 <button
-                    id="home"
-                    className={`flex items-center justify-between text-left bg-blue-600 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
-                >
-                    Manage Groups
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                        />
-                    </svg>
-                </button>
-                <button
                     onClick={handleRouteChange}
                     id="home"
                     className={`${
@@ -109,6 +100,27 @@ const MentorDashboard = () => {
                         <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                     </svg>
                     Home
+                </button>
+                <button
+                    onClick={handleRouteChange}
+                    id="post"
+                    className={`${
+                        route.post && "text-gray-700"
+                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`${route.post && "text-blue-600"} h-5 w-5 mr-3`}
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
+                            clipRule="evenodd"
+                        />
+                    </svg>
+                    Post
                 </button>
                 <button
                     onClick={handleRouteChange}
@@ -174,6 +186,7 @@ const MentorDashboard = () => {
                 </div>
                 <div className="flex items-center justify-center">
                     {/* conditional rendering of the inner tab screens */}
+                    {route.post && <Post />}
                 </div>
             </div>
         </div>
