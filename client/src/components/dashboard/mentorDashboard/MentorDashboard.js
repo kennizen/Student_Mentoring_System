@@ -166,7 +166,7 @@ const MentorDashboard = () => {
                 </button>
             </nav>
             <div className="w-17/20 h-screen">
-                <div className="w-full h-1/10 mb-6 bg-white shadow-md flex items-center justify-end">
+                <div className="w-full h-1/10 bg-white shadow-md flex items-center justify-end">
                     <div className="flex items-center justify-evenly w-1/5">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
