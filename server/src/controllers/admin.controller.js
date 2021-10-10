@@ -63,11 +63,9 @@ module.exports = {
 
             if (!mentor) {
                 // if mentor doesn't exists
-                console.log("inside mentor", mentor);
                 return res.status(500).send(Response.error("Some error occured", {}));
             }
 
-            console.log("1");
             // generating the newStudentList object or hash map
             for (let i = 0; i < students.length; i++) {
                 if (!newStudentsList[students[i]]) {
@@ -75,7 +73,6 @@ module.exports = {
                 }
             }
 
-            console.log("2");
             // finding the students not in the old instance from db
             for (let i = 0; i < oldStudents.length; i++) {
                 if (!newStudentsList[oldStudents[i]]) {
@@ -86,7 +83,6 @@ module.exports = {
                 }
             }
 
-            console.log("3");
             // looing through students array
             for (i = 0; i < students.length; i++) {
                 const student = await Student.findById(students[i]);
@@ -102,8 +98,6 @@ module.exports = {
                 await student.save();
             }
 
-            console.log("4");
-            console.log(mentorCountToUpdate);
             if (Object.keys(mentorCountToUpdate).length !== 0) {
                 for (let mentorId in mentorCountToUpdate) {
                     const newMentor = await Mentor.findById(mentorId);
@@ -115,7 +109,6 @@ module.exports = {
                 }
             }
 
-            console.log("5");
             // setting mentor to assigned
             if (students.length === 0) {
                 mentor.assigned = "";
@@ -129,7 +122,7 @@ module.exports = {
             // getting all the students and mentors after performing all the above operations
             const allStudents = await studentHelpers.getAllStudents();
             const allMentors = await mentorHelpers.getAllMentors();
-
+            // sending final response back
             res.send(
                 Response.success("Assigned Successfully", {
                     mentors: allMentors,

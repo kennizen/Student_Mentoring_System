@@ -1,4 +1,5 @@
 const Mentor = require("../models/Mentor");
+const Post = require("../models/Post");
 const bcrypt = require("bcryptjs");
 const Response = require("../utils/response.utils");
 
@@ -64,4 +65,31 @@ module.exports = {
     },
 
     resetPassword: async (req, res) => {},
+
+    // handler for creating a new post by mentor
+    createNewPost: async (req, res) => {
+        try {
+            const body = req.body.body;
+
+            if (!body) {
+                return res.send(Response.badrequest("Please provide all data", {}));
+            }
+            const newPost = new Post();
+            newPost.body = body;
+            newPost.group_id = newPost.author = req.user._id;
+            await newPost.save();
+            res.send(Response.success("Post Created", {}));
+        } catch (err) {
+            res.send(Response.error("", {}));
+        }
+    },
+
+    fetchAllPosts: async (req, res) => {
+        try {
+            const posts = await Post.find({});
+            res.send(Response.success("", { posts }));
+        } catch (err) {
+            res.send(Response.error("", {}));
+        }
+    },
 };

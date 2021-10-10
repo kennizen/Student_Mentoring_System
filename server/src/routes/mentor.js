@@ -24,4 +24,10 @@ router.get("/dashboard", Auth, Authorize(Role.Mentor), mentorController.mentorDa
 // reset password
 router.post("/reset", mentorController.resetPassword);
 
+// create a new post
+router.post("/newPost", Auth, Authorize(Role.Mentor), mentorController.createNewPost);
+
+// get all posts
+router.get("/fetchAllPosts", Auth, Authorize(Role.Mentor), mentorController.fetchAllPosts);
+
 module.exports = router;

@@ -20,5 +20,10 @@ router.post("/signup", studentController.studentSignupHandler);
 
 // student dashboard
 router.get("/dashboard", Auth, Authorize(Role.Student), studentController.studentDashboardHandler);
+// create a new post
+router.post("/newPost", Auth, Authorize(Role.Student), studentController.createNewPost);
+
+// get all posts
+router.get("/fetchAllPosts", Auth, Authorize(Role.Student), studentController.fetchAllPosts);
 
 module.exports = router;
