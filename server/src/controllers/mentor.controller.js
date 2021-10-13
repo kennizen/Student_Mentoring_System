@@ -86,7 +86,7 @@ module.exports = {
 
     fetchAllPosts: async (req, res) => {
         try {
-            const posts = await Post.find({});
+            const posts = await Post.find({ group_id: req.user._id });
             res.send(Response.success("", { posts }));
         } catch (err) {
             res.send(Response.error("", {}));
