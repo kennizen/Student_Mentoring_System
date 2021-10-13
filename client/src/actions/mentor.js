@@ -44,3 +44,19 @@ export const mentorGetDetails = (history) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const mentorGetAllPosts = (history) => async (dispatch) => {
+    try {
+        const { data } = await api.fetchAllMentorPost();
+        console.log("mentor posts in actions", data);
+
+        //check if the response data is error
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "SAVE_GEN_POSTS", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

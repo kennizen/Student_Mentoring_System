@@ -17,7 +17,7 @@ const MentorDashboard = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     // accessing the redux store state
-    const { data } = useSelector((state) => state.mentor);
+    const data = useSelector((state) => state.mentor);
 
     console.log("mentor data in dashboard", data);
 

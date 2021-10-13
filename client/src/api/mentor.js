@@ -21,3 +21,7 @@ export const fetchMentor = () =>
     API.get("/mentor/dashboard").catch((error) => {
         return error.response;
     });
+export const fetchAllMentorPost = () =>
+    API.get("/mentor/fetchAllPosts").catch((error) => {
+        return error.response;
+    });
