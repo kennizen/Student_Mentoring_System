@@ -90,10 +90,7 @@ const Post = () => {
                     <SingleComment />
                 </div>
                 <form action="" className="group">
-                    <div
-                        tabIndex="-1"
-                        className="grid grid-cols-12 mt-4 border border-gray-400 rounded-full focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent"
-                    >
+                    <div className="grid grid-cols-12 mt-4 border border-gray-400 rounded-full focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent">
                         <input
                             type="text"
                             placeholder="type a comment..."
