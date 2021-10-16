@@ -79,7 +79,7 @@ module.exports = {
             newPost.body = body;
             newPost.group_id = newPost.author = req.user._id;
             await newPost.save();
-            res.send(Response.success("Post Created", {}));
+            res.send(Response.success("Post Created", { postData: newPost, authorData: req.user }));
         } catch (err) {
             res.send(Response.error("", {}));
         }

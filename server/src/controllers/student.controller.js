@@ -65,6 +65,7 @@ module.exports = {
         }
     },
 
+    // create new post handler for student
     createNewPost: async (req, res) => {
         try {
             const body = req.body.body;
@@ -74,9 +75,10 @@ module.exports = {
             }
             const newPost = new Post();
             newPost.body = body;
-            newPost.group_id = newPost.author = req.user._id;
+            newPost.group_id = req.user.mentoredBy;
+            newPost.author = req.user._id;
             await newPost.save();
-            res.send(Response.success("Post Created", {}));
+            res.send(Response.success("Post Created", { postData: newPost, authorData: req.user }));
         } catch (err) {
             console.log(err);
             res.send(Response.error("", {}));
