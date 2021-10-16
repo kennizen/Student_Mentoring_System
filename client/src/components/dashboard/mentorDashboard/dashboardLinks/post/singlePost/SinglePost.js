@@ -1,45 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { mentorGetUserDetailsOfPosts } from "../../../../../../actions/mentor";
+import React from "react";
 import moment from "moment";
 
 const SinglePost = ({ post, author }) => {
-    const dispatch = useDispatch();
-
-    const [userDetails, setUserDetails] = useState({
-        avatar: "",
-        name: "",
-        department: "",
-    });
-
-    useEffect(() => {
-        const fetchUsers = (user) => {
-            setUserDetails({
-                avatar: user.avatar.url,
-                name: user.name,
-                department: user.department,
-            });
-        };
-        dispatch(mentorGetUserDetailsOfPosts(author, fetchUsers));
-    }, [dispatch, author]);
-
     return (
         <div className="bg-gray-100 mb-2 py-3 px-4 rounded-md border flex flex-col">
             <div className="flex items-center justify-between">
                 <div className="flex items-center justify-between mb-5">
                     <img
                         className="h-12 w-12 rounded-full mr-5"
-                        src={userDetails.avatar}
+                        src={author.avatar.url}
                         alt="authorImage"
                     />
                     <div>
-                        <h3>{userDetails.name}</h3>
+                        <h3>{author.name}</h3>
                         <div className="flex items-center justify-center">
                             <h6> {moment(post.createdOn).format("LLL")}</h6>
-                            <h6 className="ml-2 mr-2">&#9679; </h6>
+                            <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
                             <h6> Assistant Professor</h6>
-                            <h6 className="ml-2 mr-2"> &#9679;</h6>
-                            <h6> {userDetails.department}</h6>
+                            <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
+                            <h6> {author.department}</h6>
                         </div>
                     </div>
                 </div>
