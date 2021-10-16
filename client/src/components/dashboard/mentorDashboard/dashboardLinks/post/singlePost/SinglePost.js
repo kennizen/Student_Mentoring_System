@@ -39,7 +39,7 @@ const SinglePost = ({ post, author }) => {
                     </svg>
                 </button>
             </div>
-            <p className="mb-4">{post.body}</p>
+            <p className="mb-4" dangerouslySetInnerHTML={{ __html: `${post.body}` }}></p>
             <button className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

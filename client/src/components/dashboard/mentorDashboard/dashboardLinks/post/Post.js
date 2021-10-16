@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SunEditor, { buttonList } from "suneditor-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import "suneditor/dist/css/suneditor.min.css";
-import { mentorGetAllPosts } from "../../../../../actions/mentor";
+import { mentorGetAllPosts, mentorSubmitPost } from "../../../../../actions/mentor";
 import SinglePost from "./singlePost/SinglePost";
 import SingleComment from "./singleComment/SingleComment";
 
@@ -12,6 +12,10 @@ const Post = () => {
     const editor = useRef();
     const dispatch = useDispatch();
     const history = useHistory();
+
+    const [userText, setUserText] = useState({
+        body: "",
+    });
 
     useEffect(() => {
         dispatch(mentorGetAllPosts(history));
@@ -25,6 +29,18 @@ const Post = () => {
     // The sunEditor parameter will be set to the core suneditor instance when this function is called
     const getSunEditorInstance = (sunEditor) => {
         editor.current = sunEditor;
+    };
+
+    const handleChange = (content) => {
+        setUserText({ ...userText, body: content });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(mentorSubmitPost(history, userText));
+        setUserText({
+            body: "",
+        });
     };
 
     return (
@@ -41,9 +57,10 @@ const Post = () => {
                         );
                     })}
                 </div>
-                <div className="h-1/5 relative">
+                <form className="h-1/5 relative pl-3" onSubmit={handleSubmit}>
                     <div className="absolute z-10 right-5 top-3">
                         <button
+                            type="submit"
                             title="Submit post"
                             className="flex items-center justify-center transition-all text-gray-600 hover:text-gray-900"
                         >
@@ -64,6 +81,9 @@ const Post = () => {
                         </button>
                     </div>
                     <SunEditor
+                        name="myEditor"
+                        setContents={userText.body}
+                        onChange={handleChange}
                         getSunEditorInstance={getSunEditorInstance}
                         setOptions={{
                             buttonList: buttonList.basic,
@@ -72,7 +92,7 @@ const Post = () => {
                             minHeight: "120px",
                         }}
                     />
-                </div>
+                </form>
             </div>
             <div className="col-span-4 p-4 flex flex-col justify-between">
                 <h3 className="font-bold">Comments</h3>
@@ -93,7 +113,7 @@ const Post = () => {
                     <div className="grid grid-cols-12 mt-4 border border-gray-400 rounded-full focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent">
                         <input
                             type="text"
-                            placeholder="type a comment..."
+                            placeholder="Type a comment..."
                             className="col-span-10 bg-transparent outline-none border-none focus:ring-0 pl-5"
                         />
                         <button

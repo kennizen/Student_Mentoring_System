@@ -60,3 +60,19 @@ export const mentorGetAllPosts = (history) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const mentorSubmitPost = (history, post) => async (dispatch) => {
+    try {
+        const { data } = await api.PostMentorPost(post);
+        console.log("mentor submit posts in actions", data);
+
+        //check if the response data is error
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "SUBMIT_POST", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

@@ -25,3 +25,7 @@ export const fetchAllMentorPost = () =>
     API.get("/mentor/fetchAllPosts").catch((error) => {
         return error.response;
     });
+export const PostMentorPost = (post) =>
+    API.post("/mentor/newPost", post).catch((error) => {
+        return error.response;
+    });
