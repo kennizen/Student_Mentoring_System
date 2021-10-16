@@ -2,6 +2,7 @@ const Mentor = require("../models/Mentor");
 const Post = require("../models/Post");
 const bcrypt = require("bcryptjs");
 const Response = require("../utils/response.utils");
+const Student = require("../models/Student");
 
 module.exports = {
     // mentor login handler function
@@ -86,8 +87,27 @@ module.exports = {
 
     fetchAllPosts: async (req, res) => {
         try {
+            let allPosts = []; // posts array init
+
             const posts = await Post.find({ group_id: req.user._id });
-            res.send(Response.success("", { posts }));
+
+            for (let i = 0; i < posts.length; i++) {
+                // getting author info from the db
+                let author = await Student.findById(posts[i].author);
+
+                if (!author) {
+                    author = await Mentor.findById(posts[i].author);
+                }
+                // creating new post object
+                let post = {
+                    postData: posts[i],
+                    authorData: author,
+                };
+                // generating array of posts
+                allPosts.push(post);
+            }
+
+            res.send(Response.success("", { posts: allPosts }));
         } catch (err) {
             res.send(Response.error("", {}));
         }
