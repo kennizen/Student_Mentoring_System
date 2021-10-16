@@ -21,6 +21,10 @@ export const fetchMentor = () =>
     API.get("/mentor/dashboard").catch((error) => {
         return error.response;
     });
+export const fetchUserDetailsOfPosts = (authorId) =>
+    API.get(`/user/${authorId}`).catch((error) => {
+        return error.response;
+    });
 export const fetchAllMentorPost = () =>
     API.get("/mentor/fetchAllPosts").catch((error) => {
         return error.response;

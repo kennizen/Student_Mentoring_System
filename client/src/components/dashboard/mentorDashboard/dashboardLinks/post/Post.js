@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import SunEditor, { buttonList } from "suneditor-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -31,7 +31,7 @@ const Post = () => {
             <div className="col-span-8 border-r-1 border-solid border-black flex flex-col overflow-y-auto p-2">
                 <div className="h-4/5 overflow-y-auto mb-3 p-3">
                     {genPosts.map((post) => {
-                        return <SinglePost key={post._id} post={post} />;
+                        return <SinglePost key={post._id} post={post} author={post.author} />;
                     })}
                 </div>
                 <div className="h-1/5 relative">

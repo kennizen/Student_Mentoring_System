@@ -45,6 +45,21 @@ export const mentorGetDetails = (history) => async (dispatch) => {
     }
 };
 
+export const mentorGetUserDetailsOfPosts = (authorId, fetchUsers) => async (dispatch) => {
+    try {
+        const { data } = await api.fetchUserDetailsOfPosts(authorId);
+        console.log("mentor user details data in actions", data);
+        fetchUsers(data.data.user);
+
+        //check if the response data is error
+        // if (data.code === 403) {
+        //     history.goBack();
+        // }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const mentorGetAllPosts = (history) => async (dispatch) => {
     try {
         const { data } = await api.fetchAllMentorPost();
