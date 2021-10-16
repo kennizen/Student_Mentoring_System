@@ -97,7 +97,7 @@ const Post = () => {
                         <input
                             type="text"
                             placeholder="type a comment..."
-                            className="col-span-10 bg-transparent outline-none pl-5"
+                            className="col-span-10 bg-transparent outline-none border-none focus:ring-0 pl-5"
                         />
                         <button
                             title="Submit comment"
