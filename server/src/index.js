@@ -32,11 +32,13 @@ const adminRoutes = require("./routes/admin");
 const mentorRoutes = require("./routes/mentor");
 const studentRoutes = require("./routes/student");
 const indexRoutes = require("./routes/index");
+const postRoutes = require("./routes/post");
 
 // setting routes
 app.use("/", indexRoutes);
 app.use("/admin", adminRoutes);
 app.use("/mentor", mentorRoutes);
 app.use("/student", studentRoutes);
+app.use("/post", postRoutes);
 
 app.listen(PORT, () => console.log(`server running on port ${PORT}`));
