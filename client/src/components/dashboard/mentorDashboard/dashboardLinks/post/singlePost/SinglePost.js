@@ -1,7 +1,9 @@
 import React from "react";
 import moment from "moment";
 
-const SinglePost = ({ post, author }) => {
+import "./SinglePost.css";
+
+const SinglePost = ({ post, author, handleComment, isSelected, index }) => {
     return (
         <div className="bg-gray-100 mb-2 py-3 px-4 rounded-md border flex flex-col">
             <div className="flex items-center justify-between">
@@ -14,7 +16,7 @@ const SinglePost = ({ post, author }) => {
                     <div>
                         <h3>{author.name}</h3>
                         <div className="flex items-center justify-center">
-                            <h6> {moment(post.createdOn).format("LLL")}</h6>
+                            <h6> {moment(post.createdAt).format("LLL")}</h6>
                             <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
                             <h6> Assistant Professor</h6>
                             <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
@@ -22,25 +24,45 @@ const SinglePost = ({ post, author }) => {
                         </div>
                     </div>
                 </div>
-                <button className="flex items-center justify-center hover:bg-gray-200 p-1 rounded-full">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                        />
-                    </svg>
-                </button>
+                <div className="flex items-center justify-between">
+                    {isSelected && (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-3"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                        >
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path
+                                fillRule="evenodd"
+                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                    )}
+                    <button className="flex items-center justify-center hover:bg-gray-200 p-1 rounded-full">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                            />
+                        </svg>
+                    </button>
+                </div>
             </div>
-            <p className="mb-4" dangerouslySetInnerHTML={{ __html: `${post.body}` }}></p>
-            <button className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md">
+            <p className="mb-4 a-tag" dangerouslySetInnerHTML={{ __html: `${post.body}` }}></p>
+            <button
+                onClick={() => handleComment(post._id, index)}
+                className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md"
+            >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 mr-1"
@@ -55,8 +77,8 @@ const SinglePost = ({ post, author }) => {
                         d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                     />
                 </svg>
-                <h6 className="mr-1">Comments</h6>
-                <h6>(10)</h6>
+                <h6 className="mr-1">comments</h6>
+                <h6>10</h6>
             </button>
         </div>
     );

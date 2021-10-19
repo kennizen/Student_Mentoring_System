@@ -1,4 +1,4 @@
-const mentor = (state = { mentorData: null, genPosts: [] }, action) => {
+const mentor = (state = { mentorData: null, genPosts: [], comments: [] }, action) => {
     switch (action.type) {
         case "SIGN_IN_MENTOR":
             localStorage.setItem("authData", JSON.stringify({ ...action?.data?.data }));
@@ -11,6 +11,8 @@ const mentor = (state = { mentorData: null, genPosts: [] }, action) => {
             const newArray = [];
             newArray.push(action.data.data);
             return { ...state, genPosts: [...state.genPosts].concat(newArray) };
+        case "SAVE_COMMENTS":
+            return { ...state, comments: action.data.data.comments };
         case "LOGOUT_MENTOR":
             localStorage.clear();
             return { ...state, mentorData: null };

@@ -29,3 +29,11 @@ export const PostMentorPost = (post) =>
     API.post("/mentor/newPost", post).catch((error) => {
         return error.response;
     });
+export const PostMentorComment = (comment, postId) =>
+    API.post(`post/${postId}/comment`, comment).catch((error) => {
+        return error.response;
+    });
+export const fetchMentorComments = (postId) =>
+    API.get(`post/${postId}/comment`).catch((error) => {
+        return error.response;
+    });

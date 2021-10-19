@@ -23,3 +23,7 @@
         @apply text-xs;
     }
 }
+
+html {
+    scroll-behavior: smooth;
+}

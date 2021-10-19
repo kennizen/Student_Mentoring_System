@@ -45,7 +45,7 @@ export const mentorGetDetails = (history) => async (dispatch) => {
     }
 };
 
-export const mentorGetAllPosts = (history) => async (dispatch) => {
+export const mentorGetAllPosts = (history, executeScroll, isInterval) => async (dispatch) => {
     try {
         const { data } = await api.fetchAllMentorPost();
         console.log("mentor posts in actions", data);
@@ -56,12 +56,15 @@ export const mentorGetAllPosts = (history) => async (dispatch) => {
         } else {
             dispatch({ type: "SAVE_GEN_POSTS", data });
         }
+        if (isInterval) {
+            executeScroll();
+        }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const mentorSubmitPost = (history, post) => async (dispatch) => {
+export const mentorSubmitPost = (history, post, executeScroll) => async (dispatch) => {
     try {
         const { data } = await api.PostMentorPost(post);
         console.log("mentor submit posts in actions", data);
@@ -72,6 +75,39 @@ export const mentorSubmitPost = (history, post) => async (dispatch) => {
         } else {
             dispatch({ type: "SUBMIT_POST", data });
         }
+        executeScroll();
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const mentorGetComments = (history, postId) => async (dispatch) => {
+    try {
+        const { data } = await api.fetchMentorComments(postId);
+        console.log("mentor fetched comments in actions", data);
+
+        //check if the response data is error
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "SAVE_COMMENTS", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const mentorSubmitComment = (history, comment, postId) => async (dispatch) => {
+    try {
+        const { data } = await api.PostMentorComment(comment, postId);
+        console.log("mentor submit comment in actions", data);
+
+        //check if the response data is error
+        // if (data.code === 403) {
+        //     history.goBack();
+        // } else {
+        //     dispatch({ type: "SUBMIT_POST", data });
+        // }
     } catch (error) {
         console.log(error);
     }
