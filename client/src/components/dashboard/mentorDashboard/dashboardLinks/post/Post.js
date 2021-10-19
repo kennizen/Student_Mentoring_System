@@ -168,15 +168,19 @@ const Post = () => {
             <div className="col-span-4 p-4 flex flex-col justify-between">
                 <h3 className="font-bold">Comments</h3>
                 <div className="h-650 overflow-y-auto flex flex-col">
-                    {comments.map((obj) => {
-                        return (
-                            <SingleComment
-                                key={obj.commentData._id}
-                                author={obj.authorData}
-                                comment={obj.commentData}
-                            />
-                        );
-                    })}
+                    {selectedPost !== -1 ? (
+                        comments.map((obj) => {
+                            return (
+                                <SingleComment
+                                    key={obj.commentData._id}
+                                    author={obj.authorData}
+                                    comment={obj.commentData}
+                                />
+                            );
+                        })
+                    ) : (
+                        <div></div>
+                    )}
                 </div>
                 <form className="group" onSubmit={(e) => handleCommentSubmit(selectedPostId, e)}>
                     <div className="grid grid-cols-12 mt-4 border border-gray-400 rounded-full focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent">
