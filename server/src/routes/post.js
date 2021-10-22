@@ -39,4 +39,12 @@ router.get(
     postController.fetchAllCommentsHandler
 );
 
+// delete a comment
+router.post(
+    "/:pid/comment/:cid/delete",
+    Auth,
+    Authorize([Roles.Mentor, Roles.Student]),
+    postController.deleteCommentHandler
+);
+
 module.exports = router;

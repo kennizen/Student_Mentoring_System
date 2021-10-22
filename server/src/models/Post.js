@@ -15,6 +15,10 @@ const postSchema = new mongoose.Schema(
         group_id: {
             type: String,
         },
+        commentCount: {
+            type: Number,
+            default: 0,
+        },
     },
     {
         timestamps: true,

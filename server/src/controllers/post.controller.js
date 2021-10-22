@@ -65,8 +65,21 @@ module.exports = {
             newComment.post_id = req.params.id;
 
             await newComment.save();
-            res.send(Response.success("Comment created", {}));
+            // updating the comment count
+            post.commentCount++;
+            await post.save();
+
+            res.send(
+                Response.success("Comment created", {
+                    post,
+                    comment: {
+                        commentData: newComment,
+                        authorData: req.user,
+                    },
+                })
+            );
         } catch (err) {
+            console.log(err);
             res.status(500).send(Response.error("", {}));
         }
     },
@@ -97,9 +110,35 @@ module.exports = {
                 allComments.push(comment);
             }
 
-            res.send(Response.success("", { comments: allComments }));
+            res.send(
+                Response.success("", { commentsCount: allComments.length, comments: allComments })
+            );
         } catch (err) {
             console.log(err);
+            res.status(500).send(Response.error("", {}));
+        }
+    },
+
+    deleteCommentHandler: async (req, res) => {
+        try {
+            const pid = req.params.pid; // post id
+            const cid = req.params.cid; // comment id
+            const post = await Post.findById(pid);
+
+            if (!post) {
+                return res.status(404).send(Response.notfound("Post Not found", {}));
+            }
+            const comment = await Comment.findOneAndDelete({ _id: cid, post_id: pid });
+            console.log(deleted);
+
+            if (!comment) {
+                return res.status(404).send(Response.notfound("Comment Not found", {}));
+            }
+            post.commentCount--;
+            await post.save();
+
+            res.send(Response.success("", {}));
+        } catch (err) {
             res.status(500).send(Response.error("", {}));
         }
     },
