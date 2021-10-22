@@ -30,10 +30,20 @@ module.exports = {
                 450: "450px",
                 845: "845px",
             },
+            maxHeight: {
+                500: "500px",
+                600: "600px",
+                700: "700px",
+                800: "800px",
+                900: "900px",
+            },
         },
     },
     variants: {
-        extend: {},
+        extend: {
+            display: ["group-hover"],
+            opacity: ["disabled"],
+        },
     },
     plugins: [require("@tailwindcss/forms")],
 };

@@ -11,8 +11,21 @@ const mentor = (state = { mentorData: null, genPosts: [], comments: [] }, action
             const newArray = [];
             newArray.push(action.data.data);
             return { ...state, genPosts: [...state.genPosts].concat(newArray) };
+        case "UPDATE_POST":
+            let pos;
+            state.genPosts.forEach((post, i) => {
+                if (post.postData._id === action.data.data.postData._id) {
+                    pos = i;
+                }
+            });
+            state.genPosts[pos] = action.data.data;
+            return { ...state };
         case "SAVE_COMMENTS":
             return { ...state, comments: action.data.data.comments };
+        case "SUBMIT_COMMENTS":
+            const newComment = [];
+            newComment.push(action.data.data.comment);
+            return { ...state, comments: [...state.comments].concat(newComment) };
         case "LOGOUT_MENTOR":
             localStorage.clear();
             return { ...state, mentorData: null };

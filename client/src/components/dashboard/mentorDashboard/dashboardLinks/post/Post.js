@@ -9,13 +9,15 @@ import {
     mentorGetComments,
     mentorSubmitComment,
     mentorSubmitPost,
+    mentorUpdatePost,
 } from "../../../../../actions/mentor";
 import SinglePost from "./singlePost/SinglePost";
 import SingleComment from "./singleComment/SingleComment";
+import Modal from "../../../../modal/Modal";
 
 const Post = () => {
-    const editor = useRef(null);
-    const scrollPost = useRef(null);
+    const editor = useRef();
+    const scrollPost = useRef();
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -31,6 +33,8 @@ const Post = () => {
     const [selectedPost, setSelectedPost] = useState(-1);
     // state variable to store the id of the selected post used in handleCommentSubmit
     const [selectedPostId, setSelectedPostId] = useState("");
+    const [showModal, setShowModal] = useState(false);
+    const [postDataForModal, setPostDataForModal] = useState({});
 
     useEffect(() => {
         dispatch(mentorGetAllPosts(history, executeScroll, true));
@@ -61,12 +65,17 @@ const Post = () => {
     };
 
     //  function to handle the post submission
-    const handleSubmit = (e) => {
+    const handleSubmit = (e, postId, cnt) => {
         e.preventDefault();
-        dispatch(mentorSubmitPost(history, userText, executeScroll));
-        setUserText({
-            body: "",
-        });
+        if (!postId) {
+            dispatch(mentorSubmitPost(history, userText, executeScroll));
+            setUserText({
+                body: "",
+            });
+        } else {
+            dispatch(mentorUpdatePost(history, cnt, postId));
+            handleShowModal();
+        }
     };
 
     // function used in each post to get the postId and index of the selected post
@@ -85,6 +94,13 @@ const Post = () => {
         });
     };
 
+    const handleShowModal = (postData) => {
+        setShowModal(!showModal);
+        if (postData) {
+            setPostDataForModal(postData);
+        }
+    };
+
     // function to make scroll focus to the recent post posted
     const executeScroll = () => {
         scrollPost?.current?.scrollIntoView({
@@ -97,8 +113,15 @@ const Post = () => {
     // }, 10000);
 
     return (
-        <div className="w-full h-845 mt-2 grid grid-cols-12">
-            <div className="col-span-8 border-r-1 border-solid border-black flex flex-col overflow-y-auto p-2">
+        <div className="w-full h-845 mt-2 grid grid-cols-12 relative">
+            {showModal && (
+                <Modal
+                    handleShowModal={handleShowModal}
+                    postDataForModal={postDataForModal}
+                    handleSubmit={handleSubmit}
+                />
+            )}
+            <div className="col-span-8 border-solid border-black flex flex-col overflow-y-auto p-2">
                 <div className="h-4/5 overflow-y-auto mb-3 p-3">
                     {genPosts.map((obj, index) => {
                         if (selectedPost === index) {
@@ -110,6 +133,7 @@ const Post = () => {
                                     author={obj.authorData}
                                     index={index}
                                     isSelected={true}
+                                    handleShowModal={handleShowModal}
                                 />
                             );
                         } else {
@@ -121,6 +145,7 @@ const Post = () => {
                                     author={obj.authorData}
                                     index={index}
                                     isSelected={false}
+                                    handleShowModal={handleShowModal}
                                 />
                             );
                         }

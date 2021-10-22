@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import moment from "moment";
 
 import "./SinglePost.css";
 
-const SinglePost = ({ post, author, handleComment, isSelected, index }) => {
+const SinglePost = ({ post, author, handleComment, isSelected, index, handleShowModal }) => {
+    const [toggleMenu, setToggleMenu] = useState(false);
+
+    const handleToggleMenu = () => {
+        setToggleMenu(!toggleMenu);
+    };
+
     return (
         <div className="bg-gray-100 mb-2 py-3 px-4 rounded-md border flex flex-col">
+            {toggleMenu && (
+                <div
+                    onClick={handleToggleMenu}
+                    className="fixed left-72 opacity-0 w-full h-full top-0 right-0 z-10"
+                ></div>
+            )}
             <div className="flex items-center justify-between">
                 <div className="flex items-center justify-between mb-5">
                     <img
@@ -40,7 +52,12 @@ const SinglePost = ({ post, author, handleComment, isSelected, index }) => {
                             />
                         </svg>
                     )}
-                    <button className="flex items-center justify-center hover:bg-gray-200 p-1 rounded-full">
+                    <button
+                        onClick={handleToggleMenu}
+                        className={`flex items-center justify-center hover:bg-gray-200 p-1 rounded-full transition-all relative group ${
+                            toggleMenu ? "bg-gray-200" : ""
+                        }`}
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="h-5 w-5"
@@ -55,13 +72,33 @@ const SinglePost = ({ post, author, handleComment, isSelected, index }) => {
                                 d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
                             />
                         </svg>
+                        <div
+                            className={`${
+                                toggleMenu
+                                    ? "scale-100 translate-x-0 translate-y-0"
+                                    : "scale-0 translate-x-11 -translate-y-8"
+                            } absolute transform transition-all bg-white top-3 z-20 right-9 rounded-md py-2 shadow-sm`}
+                        >
+                            <h5
+                                onClick={() => handleShowModal(post)}
+                                className="hover:bg-gray-200 px-4 flex py-1"
+                            >
+                                Edit
+                            </h5>
+                            <h5
+                                onClick={() => handleShowModal(post)}
+                                className="hover:bg-gray-200 px-4 py-1 flex"
+                            >
+                                Delete
+                            </h5>
+                        </div>
                     </button>
                 </div>
             </div>
             <p className="mb-4 a-tag" dangerouslySetInnerHTML={{ __html: `${post.body}` }}></p>
             <button
                 onClick={() => handleComment(post._id, index)}
-                className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md"
+                className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md transition-all"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +115,7 @@ const SinglePost = ({ post, author, handleComment, isSelected, index }) => {
                     />
                 </svg>
                 <h6 className="mr-1">comments</h6>
-                <h6>10</h6>
+                <h6>{post.commentCount}</h6>
             </button>
         </div>
     );

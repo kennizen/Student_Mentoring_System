@@ -71,7 +71,7 @@ module.exports = {
 
             res.send(
                 Response.success("Comment created", {
-                    post,
+                    postData: post,
                     comment: {
                         commentData: newComment,
                         authorData: req.user,
