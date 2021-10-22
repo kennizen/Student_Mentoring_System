@@ -10,9 +10,6 @@ module.exports = {
             const editedPost = req.body.body;
             const post = await Post.findById(req.params.id);
 
-            console.log("post", post);
-            console.log("post", editedPost);
-
             if (!post) {
                 throw new Error();
             }
@@ -23,7 +20,7 @@ module.exports = {
 
             post.body = editedPost;
             await post.save();
-            res.send(Response.success("", { postData: post, authorData: req.user }));
+            res.send(Response.success("", { post: { postData: post, authorData: req.user } }));
         } catch (err) {
             res.status(500).send(Response.error("Some error occured", {}));
         }
@@ -69,9 +66,22 @@ module.exports = {
             post.commentCount++;
             await post.save();
 
+            let author = await Student.findById(post.author);
+
+            if (!author) {
+                author = await Mentor.findById(post.author);
+            }
+
+            if (!author) {
+                throw new Error();
+            }
+
             res.send(
                 Response.success("Comment created", {
-                    postData: post,
+                    post: {
+                        postData: post,
+                        authorData: author,
+                    },
                     comment: {
                         commentData: newComment,
                         authorData: req.user,
@@ -129,7 +139,6 @@ module.exports = {
                 return res.status(404).send(Response.notfound("Post Not found", {}));
             }
             const comment = await Comment.findOneAndDelete({ _id: cid, post_id: pid });
-            console.log(deleted);
 
             if (!comment) {
                 return res.status(404).send(Response.notfound("Comment Not found", {}));
