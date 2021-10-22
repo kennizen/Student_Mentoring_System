@@ -13,7 +13,7 @@ const SingleComment = ({ author, comment }) => {
                 <div className="flex items-center justify-start">
                     <h5>{author.name}</h5>
                     <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
-                    <h6>{moment(comment.createdAt).startOf("hour").fromNow()}</h6>
+                    <h6>{moment(comment.createdAt).fromNow()}</h6>
                 </div>
                 <p>{comment.body}</p>
             </div>

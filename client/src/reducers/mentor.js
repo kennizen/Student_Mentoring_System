@@ -14,11 +14,11 @@ const mentor = (state = { mentorData: null, genPosts: [], comments: [] }, action
         case "UPDATE_POST":
             let pos;
             state.genPosts.forEach((post, i) => {
-                if (post.postData._id === action.data.data.postData._id) {
+                if (post.postData._id === action.data.data.post.postData._id) {
                     pos = i;
                 }
             });
-            state.genPosts[pos] = action.data.data;
+            state.genPosts[pos] = action.data.data.post;
             return { ...state };
         case "SAVE_COMMENTS":
             return { ...state, comments: action.data.data.comments };

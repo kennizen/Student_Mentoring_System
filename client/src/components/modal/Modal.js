@@ -5,6 +5,7 @@ import "suneditor/dist/css/suneditor.min.css";
 
 const Modal = ({ handleShowModal, postDataForModal, handleSubmit }) => {
     const editor = useRef();
+
     const [op, setOp] = useState("opacity-0");
     const [sc, setSc] = useState("scale-0");
     const [isDisable, setIsDisable] = useState(true);

@@ -94,6 +94,7 @@ const Post = () => {
         });
     };
 
+    // function to show modal
     const handleShowModal = (postData) => {
         setShowModal(!showModal);
         if (postData) {
@@ -124,31 +125,17 @@ const Post = () => {
             <div className="col-span-8 border-solid border-black flex flex-col overflow-y-auto p-2">
                 <div className="h-4/5 overflow-y-auto mb-3 p-3">
                     {genPosts.map((obj, index) => {
-                        if (selectedPost === index) {
-                            return (
-                                <SinglePost
-                                    key={obj.postData._id}
-                                    handleComment={handleComment}
-                                    post={obj.postData}
-                                    author={obj.authorData}
-                                    index={index}
-                                    isSelected={true}
-                                    handleShowModal={handleShowModal}
-                                />
-                            );
-                        } else {
-                            return (
-                                <SinglePost
-                                    key={obj.postData._id}
-                                    handleComment={handleComment}
-                                    post={obj.postData}
-                                    author={obj.authorData}
-                                    index={index}
-                                    isSelected={false}
-                                    handleShowModal={handleShowModal}
-                                />
-                            );
-                        }
+                        return (
+                            <SinglePost
+                                key={obj.postData._id}
+                                handleComment={handleComment}
+                                post={obj.postData}
+                                author={obj.authorData}
+                                index={index}
+                                isSelected={selectedPost === index ? true : false}
+                                handleShowModal={handleShowModal}
+                            />
+                        );
                     })}
                     <div ref={scrollPost}></div>
                 </div>
