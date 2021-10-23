@@ -45,3 +45,7 @@ export const postMentorComment = (comment, postId) =>
     API.post(`post/${postId}/comment`, comment).catch((error) => {
         return error.response;
     });
+export const deleteMentorComment = (commentId) =>
+    API.post(`post/comment/${commentId}/delete`).catch((error) => {
+        return error.response;
+    });

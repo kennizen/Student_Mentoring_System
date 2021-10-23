@@ -47,9 +47,7 @@ const SinglePost = ({
                 </div>
                 <div className="flex items-center justify-between">
                     {isSelected && (
-                        <h6 className="text-blue-600 bg-blue-100 border border-blue-600 px-2 rounded-full">
-                            viewing
-                        </h6>
+                        <h6 className="text-blue-600 bg-blue-100 px-2 rounded-full">viewing</h6>
                     )}
                     <button
                         onClick={handleToggleMenu}
@@ -97,6 +95,27 @@ const SinglePost = ({
             <p className="mb-4 a-tag" dangerouslySetInnerHTML={{ __html: `${post.body}` }}></p>
             <div className="flex items-center justify-end">
                 <button
+                    onClick={() => handleComment(post._id, index)}
+                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md transition-all"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                        />
+                    </svg>
+                    <h5 className="mr-1">comments</h5>
+                    <h5>{post.commentCount}</h5>
+                </button>
+                <button
                     onClick={() => {
                         handleComment(post._id, index);
                         setIsHidden(false);
@@ -119,27 +138,6 @@ const SinglePost = ({
                         />
                     </svg>
                     <h5 className="mr-1">reply</h5>
-                </button>
-                <button
-                    onClick={() => handleComment(post._id, index)}
-                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md transition-all"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                        />
-                    </svg>
-                    <h5 className="mr-1">comments</h5>
-                    <h5>{post.commentCount}</h5>
                 </button>
             </div>
         </div>

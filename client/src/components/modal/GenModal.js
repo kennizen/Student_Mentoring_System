@@ -26,9 +26,9 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, handleShowModal, i
                         &times;
                     </button>
                 </div>
-                <div className="p-2">
-                    <p>{body}</p>
-                </div>
+
+                <p>{body}</p>
+
                 <div className="w-full flex items-center justify-end">
                     <button
                         onClick={() => handleShowModal({ isEdit: false })}
@@ -38,7 +38,10 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, handleShowModal, i
                         {b1Text}
                     </button>
                     <button
-                        onClick={() => handleFunc(id)}
+                        onClick={() => {
+                            handleFunc(id);
+                            handleShowModal({ isEdit: false });
+                        }}
                         type="submit"
                         className="p-2 hover:bg-gray-200 rounded-md text-gray-800 mt-5"
                     >
