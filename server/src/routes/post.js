@@ -41,7 +41,7 @@ router.get(
 
 // delete a comment
 router.post(
-    "/:pid/comment/:cid/delete",
+    "/comment/:id/delete",
     Auth,
     Authorize([Roles.Mentor, Roles.Student]),
     postController.deleteCommentHandler

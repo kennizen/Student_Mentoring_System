@@ -132,22 +132,19 @@ module.exports = {
 
     deleteCommentHandler: async (req, res) => {
         try {
-            const pid = req.params.pid; // post id
-            const cid = req.params.cid; // comment id
+            const cid = req.params.id; // comment id
 
-            const comment = await Comment.findOneAndDelete({ _id: cid, post_id: pid }).then(
-                async (data) => {
-                    //decrements the comment count of the post
-                    await Post.findOneAndUpdate({ _id: pid }, { $inc: { commentCount: -1 } });
-                    return data;
-                }
-            );
+            const comment = await Comment.findOneAndDelete({ _id: cid }).then(async (data) => {
+                //decrements the comment count of the post
+                await Post.findOneAndUpdate({ _id: data.post_id }, { $inc: { commentCount: -1 } });
+                return data;
+            });
 
             if (!comment) {
                 return res.status(404).send(Response.notfound("Comment Not found", {}));
             }
 
-            let post = await Post.findById(pid);
+            let post = await Post.findById(comment.post_id);
 
             let author = await Student.findById(post.author);
 
@@ -172,6 +169,7 @@ module.exports = {
                 })
             );
         } catch (err) {
+            console.log(err);
             res.status(500).send(Response.error("", {}));
         }
     },
