@@ -3,7 +3,16 @@ import moment from "moment";
 
 import "./SinglePost.css";
 
-const SinglePost = ({ post, author, handleComment, isSelected, index, handleShowModal }) => {
+const SinglePost = ({
+    post,
+    author,
+    handleComment,
+    isSelected,
+    index,
+    handleShowModal,
+    setIsHidden,
+    setIsDisabled,
+}) => {
     const [toggleMenu, setToggleMenu] = useState(false);
 
     const handleToggleMenu = () => {
@@ -11,7 +20,7 @@ const SinglePost = ({ post, author, handleComment, isSelected, index, handleShow
     };
 
     return (
-        <div className="bg-gray-100 mb-2 py-3 px-4 rounded-md border flex flex-col">
+        <div className="bg-gray-100 mb-5 py-3 px-4 rounded-md border flex flex-col">
             {toggleMenu && (
                 <div
                     onClick={handleToggleMenu}
@@ -38,19 +47,9 @@ const SinglePost = ({ post, author, handleComment, isSelected, index, handleShow
                 </div>
                 <div className="flex items-center justify-between">
                     {isSelected && (
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 mr-3"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path
-                                fillRule="evenodd"
-                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
+                        <h6 className="text-blue-600 bg-blue-100 border border-blue-600 px-2 rounded-full">
+                            viewing
+                        </h6>
                     )}
                     <button
                         onClick={handleToggleMenu}
@@ -96,27 +95,53 @@ const SinglePost = ({ post, author, handleComment, isSelected, index, handleShow
                 </div>
             </div>
             <p className="mb-4 a-tag" dangerouslySetInnerHTML={{ __html: `${post.body}` }}></p>
-            <button
-                onClick={() => handleComment(post._id, index)}
-                className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md transition-all"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+            <div className="flex items-center justify-end">
+                <button
+                    onClick={() => {
+                        handleComment(post._id, index);
+                        setIsHidden(false);
+                        setIsDisabled(true);
+                    }}
+                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md transition-all"
                 >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    />
-                </svg>
-                <h6 className="mr-1">comments</h6>
-                <h6>{post.commentCount}</h6>
-            </button>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                        />
+                    </svg>
+                    <h5 className="mr-1">reply</h5>
+                </button>
+                <button
+                    onClick={() => handleComment(post._id, index)}
+                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md transition-all"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                        />
+                    </svg>
+                    <h5 className="mr-1">comments</h5>
+                    <h5>{post.commentCount}</h5>
+                </button>
+            </div>
         </div>
     );
 };
