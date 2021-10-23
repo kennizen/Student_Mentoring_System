@@ -66,7 +66,7 @@ export const mentorGetAllPosts = (history, executeScroll, isInterval) => async (
 
 export const mentorSubmitPost = (history, post, executeScroll) => async (dispatch) => {
     try {
-        const { data } = await api.PostMentorPost(post);
+        const { data } = await api.postMentorPost(post);
         console.log("mentor submit posts in actions", data);
 
         //check if the response data is error
@@ -83,7 +83,7 @@ export const mentorSubmitPost = (history, post, executeScroll) => async (dispatc
 
 export const mentorUpdatePost = (history, post, postId) => async (dispatch) => {
     try {
-        const { data } = await api.UpdateMentorPost(post, postId);
+        const { data } = await api.updateMentorPost(post, postId);
         console.log("mentor update post in actions", data);
 
         //check if the response data is error
@@ -92,6 +92,22 @@ export const mentorUpdatePost = (history, post, postId) => async (dispatch) => {
         } else {
             dispatch({ type: "UPDATE_POST", data });
         }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const mentorDeletePost = (history, postId) => async (dispatch) => {
+    try {
+        const { data } = await api.deleteMentorPost(postId);
+        console.log("mentor delete post in actions", data);
+
+        //check if the response data is error
+        // if (data.code === 403) {
+        //     history.goBack();
+        // } else {
+        //     dispatch({ type: "UPDATE_POST", data });
+        // }
     } catch (error) {
         console.log(error);
     }
@@ -115,7 +131,7 @@ export const mentorGetComments = (history, postId) => async (dispatch) => {
 
 export const mentorSubmitComment = (history, comment, postId) => async (dispatch) => {
     try {
-        const { data } = await api.PostMentorComment(comment, postId);
+        const { data } = await api.postMentorComment(comment, postId);
         console.log("mentor submit comment in actions", data);
 
         //check if the response data is error

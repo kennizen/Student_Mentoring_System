@@ -80,13 +80,13 @@ const SinglePost = ({ post, author, handleComment, isSelected, index, handleShow
                             } absolute transform transition-all bg-white top-3 z-20 right-9 rounded-md py-2 shadow-sm`}
                         >
                             <h5
-                                onClick={() => handleShowModal(post)}
+                                onClick={() => handleShowModal({ post: post, isEdit: true })}
                                 className="hover:bg-gray-200 px-4 flex py-1"
                             >
                                 Edit
                             </h5>
                             <h5
-                                onClick={() => handleShowModal(post)}
+                                onClick={() => handleShowModal({ post: post, isEdit: false })}
                                 className="hover:bg-gray-200 px-4 py-1 flex"
                             >
                                 Delete

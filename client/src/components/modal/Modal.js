@@ -32,7 +32,7 @@ const Modal = ({ handleShowModal, postDataForModal, handleSubmit }) => {
     return (
         <>
             <div
-                onClick={handleShowModal}
+                onClick={() => handleShowModal({ isEdit: true })}
                 className={`${op} fixed flex items-center justify-center left-72 bg-black w-full h-full top-0 right-0 z-30 transition-opacity`}
             ></div>
             <div
@@ -40,7 +40,7 @@ const Modal = ({ handleShowModal, postDataForModal, handleSubmit }) => {
             >
                 <div className="flex items-center justify-between mb-3">
                     <h4>Edit Post</h4>
-                    <button onClick={handleShowModal} className="text-2xl">
+                    <button onClick={() => handleShowModal({ isEdit: true })} className="text-2xl">
                         &times;
                     </button>
                 </div>

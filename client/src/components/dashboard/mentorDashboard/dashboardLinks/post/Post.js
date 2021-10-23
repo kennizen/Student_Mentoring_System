@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 
 import "suneditor/dist/css/suneditor.min.css";
 import {
+    mentorDeletePost,
     mentorGetAllPosts,
     mentorGetComments,
     mentorSubmitComment,
@@ -14,6 +15,7 @@ import {
 import SinglePost from "./singlePost/SinglePost";
 import SingleComment from "./singleComment/SingleComment";
 import Modal from "../../../../modal/Modal";
+import GenModal from "../../../../modal/GenModal";
 
 const Post = () => {
     const editor = useRef();
@@ -33,7 +35,8 @@ const Post = () => {
     const [selectedPost, setSelectedPost] = useState(-1);
     // state variable to store the id of the selected post used in handleCommentSubmit
     const [selectedPostId, setSelectedPostId] = useState("");
-    const [showModal, setShowModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [postDataForModal, setPostDataForModal] = useState({});
 
     useEffect(() => {
@@ -78,6 +81,11 @@ const Post = () => {
         }
     };
 
+    const handlePostDelete = (postId) => {
+        dispatch(mentorDeletePost(history, postId));
+        handleShowModal({ isEdit: false });
+    };
+
     // function used in each post to get the postId and index of the selected post
     const handleComment = (postId, index) => {
         setSelectedPost(index);
@@ -95,10 +103,17 @@ const Post = () => {
     };
 
     // function to show modal
-    const handleShowModal = (postData) => {
-        setShowModal(!showModal);
-        if (postData) {
-            setPostDataForModal(postData);
+    const handleShowModal = ({ post: postData, isEdit: isEditModal }) => {
+        if (isEditModal) {
+            setShowEditModal(!showEditModal);
+            if (postData) {
+                setPostDataForModal(postData);
+            }
+        } else {
+            setShowDeleteModal(!showDeleteModal);
+            if (postData) {
+                setSelectedPostId(postData._id);
+            }
         }
     };
 
@@ -115,11 +130,22 @@ const Post = () => {
 
     return (
         <div className="w-full h-845 mt-2 grid grid-cols-12 relative">
-            {showModal && (
+            {showEditModal && (
                 <Modal
                     handleShowModal={handleShowModal}
                     postDataForModal={postDataForModal}
                     handleSubmit={handleSubmit}
+                />
+            )}
+            {showDeleteModal && (
+                <GenModal
+                    id={selectedPostId}
+                    handleFunc={handlePostDelete}
+                    handleShowModal={handleShowModal}
+                    b1Text="Cancel"
+                    b2Text="Delete"
+                    body="If you delete this post than all the comments on this post will also be deleted."
+                    header="Delete Post ?"
                 />
             )}
             <div className="col-span-8 border-solid border-black flex flex-col overflow-y-auto p-2">
