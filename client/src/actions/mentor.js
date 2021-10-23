@@ -129,19 +129,21 @@ export const mentorGetComments = (history, postId) => async (dispatch) => {
     }
 };
 
-export const mentorSubmitComment = (history, comment, postId) => async (dispatch) => {
-    try {
-        const { data } = await api.postMentorComment(comment, postId);
-        console.log("mentor submit comment in actions", data);
+export const mentorSubmitComment =
+    (history, comment, executeScrollToComment, postId) => async (dispatch) => {
+        try {
+            const { data } = await api.postMentorComment(comment, postId);
+            console.log("mentor submit comment in actions", data);
 
-        //check if the response data is error
-        if (data.code === 403) {
-            history.goBack();
-        } else {
-            dispatch({ type: "SUBMIT_COMMENTS", data });
-            dispatch({ type: "UPDATE_POST", data });
+            //check if the response data is error
+            if (data.code === 403) {
+                history.goBack();
+            } else {
+                dispatch({ type: "SUBMIT_COMMENTS", data });
+                dispatch({ type: "UPDATE_POST", data });
+            }
+            executeScrollToComment();
+        } catch (error) {
+            console.log(error);
         }
-    } catch (error) {
-        console.log(error);
-    }
-};
+    };

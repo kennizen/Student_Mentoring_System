@@ -20,6 +20,7 @@ import GenModal from "../../../../modal/GenModal";
 const Post = () => {
     const editor = useRef();
     const scrollPost = useRef();
+    const scrollComment = useRef();
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -97,7 +98,7 @@ const Post = () => {
     // function to handle the comment submission
     const handleCommentSubmit = (postId, e) => {
         e.preventDefault();
-        dispatch(mentorSubmitComment(history, comment, postId));
+        dispatch(mentorSubmitComment(history, comment, executeScrollToComment, postId));
         setComment({
             body: "",
         });
@@ -121,6 +122,13 @@ const Post = () => {
     // function to make scroll focus to the recent post posted
     const executeScroll = () => {
         scrollPost?.current?.scrollIntoView({
+            behavior: "smooth",
+        });
+    };
+
+    // function to make scroll focus to the recent comment posted
+    const executeScrollToComment = () => {
+        scrollComment?.current?.scrollIntoView({
             behavior: "smooth",
         });
     };
@@ -220,6 +228,7 @@ const Post = () => {
                     ) : (
                         <div></div>
                     )}
+                    <div ref={scrollComment}></div>
                 </div>
                 <form className="group" onSubmit={(e) => handleCommentSubmit(selectedPostId, e)}>
                     <div className="grid grid-cols-12 mt-4 border border-gray-400 rounded-full focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent">

@@ -54,23 +54,18 @@ module.exports = {
     addCommentHandler: async (req, res) => {
         try {
             const comment = req.body.body;
-            let post = await Post.findOneAndUpdate(
-                { _id: req.params.id },
-                { $inc: { commentCount: 1 } }
-            );
-
-            if (!post) {
-                throw new Error();
-            }
-
-            post = await Post.findById(post._id);
-
+            // generating a new comment
             const newComment = new Comment();
             newComment.body = comment;
             newComment.author = req.user._id;
             newComment.post_id = req.params.id;
 
-            await newComment.save();
+            await newComment.save().then(async () => {
+                // increments the comment count of the post
+                await Post.findOneAndUpdate({ _id: req.params.id }, { $inc: { commentCount: 1 } });
+            });
+
+            const post = await Post.findById(req.params.id);
 
             let author = await Student.findById(post.author);
 
@@ -109,7 +104,7 @@ module.exports = {
                 throw new Error();
             }
 
-            const comments = await Comment.find({ post_id: post._id });
+            const comments = await Comment.find({ post_id: post._id }).sort({ createdAt: "asc" });
 
             for (let i = 0; i < comments.length; i++) {
                 let user = await Mentor.findById(comments[i].author);
@@ -139,20 +134,43 @@ module.exports = {
         try {
             const pid = req.params.pid; // post id
             const cid = req.params.cid; // comment id
-            const post = await Post.findById(pid);
 
-            if (!post) {
-                return res.status(404).send(Response.notfound("Post Not found", {}));
-            }
-            const comment = await Comment.findOneAndDelete({ _id: cid, post_id: pid });
+            const comment = await Comment.findOneAndDelete({ _id: cid, post_id: pid }).then(
+                async (data) => {
+                    //decrements the comment count of the post
+                    await Post.findOneAndUpdate({ _id: pid }, { $inc: { commentCount: -1 } });
+                    return data;
+                }
+            );
 
             if (!comment) {
                 return res.status(404).send(Response.notfound("Comment Not found", {}));
             }
-            post.commentCount--;
-            await post.save();
 
-            res.send(Response.success("", {}));
+            let post = await Post.findById(pid);
+
+            let author = await Student.findById(post.author);
+
+            if (!author) {
+                author = await Mentor.findById(post.author);
+            }
+
+            if (!author) {
+                throw new Error();
+            }
+
+            res.send(
+                Response.success("Comment deleted", {
+                    post: {
+                        postData: post,
+                        authorData: author,
+                    },
+                    comment: {
+                        commentData: comment,
+                        authorData: req.user,
+                    },
+                })
+            );
         } catch (err) {
             res.status(500).send(Response.error("", {}));
         }
