@@ -8,9 +8,9 @@ const mentor = (state = { mentorData: null, genPosts: [], comments: [] }, action
         case "SAVE_GEN_POSTS":
             return { ...state, genPosts: action.data.data.posts };
         case "SUBMIT_POST":
-            const newArray = [];
-            newArray.push(action.data.data);
-            return { ...state, genPosts: [...state.genPosts].concat(newArray) };
+            const newPost = [];
+            newPost.push(action.data.data);
+            return { ...state, genPosts: [...state.genPosts].concat(newPost) };
         case "UPDATE_POST":
             let pos;
             state.genPosts.forEach((post, i) => {

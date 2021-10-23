@@ -36,9 +36,14 @@ const Post = () => {
     const [selectedPost, setSelectedPost] = useState(-1);
     // state variable to store the id of the selected post used in handleCommentSubmit
     const [selectedPostId, setSelectedPostId] = useState("");
+    // state variable to show the modal is we click the edit in a single post
     const [showEditModal, setShowEditModal] = useState(false);
+    // state variable to show the modal is we click the delete in a single post
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    // state variable to store the post data and send it to modal component
     const [postDataForModal, setPostDataForModal] = useState({});
+    const [isHidden, setIsHidden] = useState(true);
+    const [isDisabled, setIsDisabled] = useState(true);
 
     useEffect(() => {
         dispatch(mentorGetAllPosts(history, executeScroll, true));
@@ -66,9 +71,12 @@ const Post = () => {
     // updating the state variable for comment body
     const handleChangeComment = (e) => {
         setComment({ ...comment, body: e.target.value });
+        if (isDisabled) {
+            setIsDisabled(false);
+        }
     };
 
-    //  function to handle the post submission
+    // function to handle the post submission
     const handleSubmit = (e, postId, cnt) => {
         e.preventDefault();
         if (!postId) {
@@ -82,10 +90,11 @@ const Post = () => {
         }
     };
 
+    // function to handle post deletion
     const handlePostDelete = (postId) => {
         dispatch(mentorDeletePost(history, postId));
         handleShowModal({ isEdit: false });
-        setSelectedPost(-1);
+        setSelectedPost(-1); // resetting selected post index
     };
 
     // function used in each post to get the postId and index of the selected post
@@ -102,6 +111,7 @@ const Post = () => {
         setComment({
             body: "",
         });
+        setIsDisabled(true);
     };
 
     // function to show modal
@@ -157,7 +167,7 @@ const Post = () => {
                     header="Delete Post ?"
                 />
             )}
-            <div className="col-span-8 border-solid border-black flex flex-col overflow-y-auto p-2">
+            <div className="col-span-8 border-r-2 border-gray-200 flex flex-col overflow-y-auto p-2">
                 <div className="h-4/5 overflow-y-auto mb-3 p-3">
                     {genPosts.map((obj, index) => {
                         return (
@@ -169,6 +179,8 @@ const Post = () => {
                                 index={index}
                                 isSelected={selectedPost === index ? true : false}
                                 handleShowModal={handleShowModal}
+                                setIsHidden={setIsHidden}
+                                setIsDisabled={setIsDisabled}
                             />
                         );
                     })}
@@ -230,38 +242,45 @@ const Post = () => {
                     )}
                     <div ref={scrollComment}></div>
                 </div>
-                <form className="group" onSubmit={(e) => handleCommentSubmit(selectedPostId, e)}>
-                    <div className="grid grid-cols-12 mt-4 border border-gray-400 rounded-full focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent">
-                        <input
-                            value={comment.body}
-                            onChange={handleChangeComment}
-                            name="comment"
-                            type="text"
-                            placeholder="Type a comment..."
-                            className="col-span-10 bg-transparent outline-none border-none focus:ring-0 pl-5"
-                        />
-                        <button
-                            type="submit"
-                            title="Submit comment"
-                            className="w-12 h-12 ml-3 col-start-11 col-span-2 rounded-full flex items-center justify-center place-self-center text-gray-600"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6 transform rotate-90"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
+                {isHidden || (
+                    <form
+                        className="group"
+                        onSubmit={(e) => handleCommentSubmit(selectedPostId, e)}
+                    >
+                        <div className="grid grid-cols-12 mt-4 border border-gray-400 rounded-full focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent">
+                            <input
+                                value={comment.body}
+                                ref={(input) => input && input.focus()}
+                                onChange={handleChangeComment}
+                                name="comment"
+                                type="text"
+                                placeholder="Type a comment..."
+                                className="col-span-10 bg-transparent outline-none border-none focus:ring-0 pl-5"
+                            />
+                            <button
+                                type="submit"
+                                title="Submit comment"
+                                disabled={comment.body === "" ? true : isDisabled}
+                                className="w-12 h-12 ml-3 col-start-11 col-span-2 rounded-full flex items-center justify-center place-self-center text-blue-600 disabled:opacity-50"
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-                </form>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6 transform rotate-90"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                )}
             </div>
         </div>
     );
