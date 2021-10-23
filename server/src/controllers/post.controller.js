@@ -33,17 +33,20 @@ module.exports = {
             if (!post) {
                 throw new Error();
             }
-            // checks and allows only post authors to edit a post
-            if (post.author != req.user._id) {
-                return res.status(403).send(Response.forbidden("", {}));
-            }
-            // delete post via its id
-            const deleted = await Post.deleteOne({ _id: req.params.id });
 
-            if (!deleted) {
+            // delete post via its id
+            const postDeleted = await Post.deleteOne({ _id: req.params.id });
+
+            if (!postDeleted) {
                 throw new Error();
             }
-            res.send(Response.success("", {}));
+            const commentsDeleted = await Comment.deleteMany({ post_id: post._id });
+
+            if (!commentsDeleted) {
+                throw new Error();
+            }
+
+            res.send(Response.success("Post successfully deleted", { post: { _id: post._id } }));
         } catch (err) {
             res.status(500).send(Response.error("", {}));
         }
@@ -51,20 +54,23 @@ module.exports = {
     addCommentHandler: async (req, res) => {
         try {
             const comment = req.body.body;
-            const post = await Post.findById(req.params.id);
+            let post = await Post.findOneAndUpdate(
+                { _id: req.params.id },
+                { $inc: { commentCount: 1 } }
+            );
 
             if (!post) {
                 throw new Error();
             }
+
+            post = await Post.findById(post._id);
+
             const newComment = new Comment();
             newComment.body = comment;
             newComment.author = req.user._id;
             newComment.post_id = req.params.id;
 
             await newComment.save();
-            // updating the comment count
-            post.commentCount++;
-            await post.save();
 
             let author = await Student.findById(post.author);
 

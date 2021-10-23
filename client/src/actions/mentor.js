@@ -103,11 +103,11 @@ export const mentorDeletePost = (history, postId) => async (dispatch) => {
         console.log("mentor delete post in actions", data);
 
         //check if the response data is error
-        // if (data.code === 403) {
-        //     history.goBack();
-        // } else {
-        //     dispatch({ type: "UPDATE_POST", data });
-        // }
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "DELETE_POST", data });
+        }
     } catch (error) {
         console.log(error);
     }

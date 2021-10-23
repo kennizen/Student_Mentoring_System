@@ -77,13 +77,14 @@ const Post = () => {
             });
         } else {
             dispatch(mentorUpdatePost(history, cnt, postId));
-            handleShowModal();
+            handleShowModal({ isEdit: true });
         }
     };
 
     const handlePostDelete = (postId) => {
         dispatch(mentorDeletePost(history, postId));
         handleShowModal({ isEdit: false });
+        setSelectedPost(-1);
     };
 
     // function used in each post to get the postId and index of the selected post

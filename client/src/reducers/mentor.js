@@ -20,6 +20,14 @@ const mentor = (state = { mentorData: null, genPosts: [], comments: [] }, action
             });
             state.genPosts[pos] = action.data.data.post;
             return { ...state };
+        case "DELETE_POST":
+            let filteredPosts = [];
+            state.genPosts.forEach((post) => {
+                if (post.postData._id !== action.data.data.post._id) {
+                    filteredPosts.push(post);
+                }
+            });
+            return { ...state, genPosts: filteredPosts, comments: [] };
         case "SAVE_COMMENTS":
             return { ...state, comments: action.data.data.comments };
         case "SUBMIT_COMMENTS":

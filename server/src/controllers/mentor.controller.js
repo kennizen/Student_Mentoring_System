@@ -19,7 +19,13 @@ module.exports = {
                 return res.status(404).send(Response.notfound("404 Not found", {}));
             }
             const token = await mentor.generateAuthToken();
-            res.send(Response.success("Login successful", { auth_token: token, role: "MENTOR" }));
+            res.send(
+                Response.success("Login successful", {
+                    auth_token: token,
+                    role: "MENTOR",
+                    uid: mentor._id,
+                })
+            );
         } catch (err) {
             console.log(err);
             res.status(500).send(Response.error("Some error occured", {}));
