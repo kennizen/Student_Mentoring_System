@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 
 import "suneditor/dist/css/suneditor.min.css";
 import {
+    mentorDeleteComment,
     mentorDeletePost,
     mentorGetAllPosts,
     mentorGetComments,
@@ -93,8 +94,8 @@ const Post = () => {
     // function to handle post deletion
     const handlePostDelete = (postId) => {
         dispatch(mentorDeletePost(history, postId));
-        handleShowModal({ isEdit: false });
         setSelectedPost(-1); // resetting selected post index
+        setIsHidden(true);
     };
 
     // function used in each post to get the postId and index of the selected post
@@ -112,6 +113,11 @@ const Post = () => {
             body: "",
         });
         setIsDisabled(true);
+    };
+
+    // function to handle comment delete
+    const handleCommentDelete = (commentId) => {
+        dispatch(mentorDeleteComment(history, commentId));
     };
 
     // function to show modal
@@ -225,23 +231,27 @@ const Post = () => {
                 </form>
             </div>
             <div className="col-span-4 p-4 flex flex-col justify-between">
-                <h3 className="font-bold">Comments</h3>
-                <div className="h-650 overflow-y-auto flex flex-col">
-                    {selectedPost !== -1 ? (
-                        comments.map((obj) => {
-                            return (
-                                <SingleComment
-                                    key={obj.commentData._id}
-                                    author={obj.authorData}
-                                    comment={obj.commentData}
-                                />
-                            );
-                        })
-                    ) : (
-                        <div></div>
-                    )}
-                    <div ref={scrollComment}></div>
+                <div>
+                    <h3 className="font-bold mb-5">Comments</h3>
+                    <div className="h-650 overflow-y-auto flex flex-col">
+                        {selectedPost !== -1 ? (
+                            comments.map((obj) => {
+                                return (
+                                    <SingleComment
+                                        key={obj.commentData._id}
+                                        author={obj.authorData}
+                                        comment={obj.commentData}
+                                        handleCommentDelete={handleCommentDelete}
+                                    />
+                                );
+                            })
+                        ) : (
+                            <div></div>
+                        )}
+                        <div ref={scrollComment}></div>
+                    </div>
                 </div>
+
                 {isHidden || (
                     <form
                         className="group"

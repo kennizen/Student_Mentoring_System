@@ -34,6 +34,14 @@ const mentor = (state = { mentorData: null, genPosts: [], comments: [] }, action
             const newComment = [];
             newComment.push(action.data.data.comment);
             return { ...state, comments: [...state.comments].concat(newComment) };
+        case "DELETE_COMMENT":
+            let filteredComments = [];
+            state.comments.forEach((comment) => {
+                if (comment.commentData._id !== action.data.data.comment.commentData._id) {
+                    filteredComments.push(comment);
+                }
+            });
+            return { ...state, comments: filteredComments };
         case "LOGOUT_MENTOR":
             localStorage.clear();
             return { ...state, mentorData: null };

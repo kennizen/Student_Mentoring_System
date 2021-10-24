@@ -147,3 +147,20 @@ export const mentorSubmitComment =
             console.log(error);
         }
     };
+
+export const mentorDeleteComment = (history, commentId) => async (dispatch) => {
+    try {
+        const { data } = await api.deleteMentorComment(commentId);
+        console.log("mentor delete comment in actions", data);
+
+        //check if the response data is error
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "DELETE_COMMENT", data });
+            dispatch({ type: "UPDATE_POST", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
