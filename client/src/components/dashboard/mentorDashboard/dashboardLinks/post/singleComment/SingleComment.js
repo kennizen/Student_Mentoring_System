@@ -22,7 +22,11 @@ const SingleComment = ({ author, comment, handleCommentDelete }) => {
             )}
             <img
                 className="h-8 w-8 rounded-full mr-3 flex-shrink-0"
-                src={author.avatar.url}
+                src={
+                    author.avatar.url === ""
+                        ? `https://avatars.dicebear.com/api/initials/${author.name}.svg`
+                        : author.avatar.url
+                }
                 alt="commentorImage"
             />
             <div>

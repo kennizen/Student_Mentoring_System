@@ -51,7 +51,9 @@ const SinglePost = ({
                 </div>
                 <div className="flex items-center justify-between">
                     {isSelected && (
-                        <h6 className="text-blue-600 bg-blue-100 px-2 rounded-full">viewing</h6>
+                        <h6 className="text-blue-600 bg-blue-100 py-px px-2 rounded-full">
+                            viewing
+                        </h6>
                     )}
                     <button
                         onClick={handleToggleMenu}

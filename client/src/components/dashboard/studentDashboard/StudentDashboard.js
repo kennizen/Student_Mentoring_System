@@ -4,12 +4,14 @@ import { useHistory } from "react-router";
 
 import { studentGetDetails } from "../../../actions/student";
 import LoadingDashboard from "../../loading/LoadingDashboard";
+import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
 
 const StudentDashboard = () => {
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
         profile: false,
+        academicDetails: false,
     });
     // setting the admin auth token
     const dispatch = useDispatch();
@@ -32,12 +34,21 @@ const StudentDashboard = () => {
                 setRoute({
                     home: true,
                     profile: false,
+                    academicDetails: false,
                 });
                 break;
             case "profile":
                 setRoute({
                     home: false,
                     profile: true,
+                    academicDetails: false,
+                });
+                break;
+            case "academicDetails":
+                setRoute({
+                    home: false,
+                    profile: false,
+                    academicDetails: true,
                 });
                 break;
             default:
@@ -73,26 +84,6 @@ const StudentDashboard = () => {
                     </svg>
                     <h1>Student</h1>
                 </div>
-                <button
-                    id="home"
-                    className={`flex items-center justify-between text-left bg-blue-600 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
-                >
-                    Manage Groups
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                        />
-                    </svg>
-                </button>
                 <button
                     onClick={handleRouteChange}
                     id="home"
@@ -130,6 +121,31 @@ const StudentDashboard = () => {
                         />
                     </svg>
                     Profile
+                </button>
+                <button
+                    onClick={handleRouteChange}
+                    id="academicDetails"
+                    className={`${
+                        route.academicDetails && "text-gray-700"
+                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`${route.academicDetails && "text-blue-600"} h-5 w-5 mr-3`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
+                        />
+                    </svg>
+                    Academic details
                 </button>
                 <button
                     onClick={handleLogout}
@@ -174,6 +190,7 @@ const StudentDashboard = () => {
                 </div>
                 <div className="flex items-center justify-center">
                     {/* conditional rendering of the inner tab screens */}
+                    {route.academicDetails && <AcademicDetails />}
                 </div>
             </div>
         </div>
