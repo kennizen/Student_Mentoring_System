@@ -31,7 +31,11 @@ const SinglePost = ({
                 <div className="flex items-center justify-between mb-5">
                     <img
                         className="h-12 w-12 rounded-full mr-5"
-                        src={author.avatar.url}
+                        src={
+                            author.avatar.url === ""
+                                ? `https://avatars.dicebear.com/api/initials/${author.name}.svg`
+                                : author.avatar.url
+                        }
                         alt="authorImage"
                     />
                     <div>

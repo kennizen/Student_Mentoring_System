@@ -55,8 +55,7 @@ const mentorSchema = new mongoose.Schema(
         avatar: {
             url: {
                 type: String,
-                default:
-                    "https://res.cloudinary.com/tremedy/image/upload/c_scale,w_90/v1582207349/avatars/man_2_lvablz.png",
+                default: "",
             },
             id: String,
         },
