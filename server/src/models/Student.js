@@ -28,7 +28,7 @@ const studentSchema = new mongoose.Schema(
         phone: {
             type: String,
         },
-        address: {
+        home_address: {
             type: String,
             trim: true,
         },
@@ -36,6 +36,24 @@ const studentSchema = new mongoose.Schema(
         programme: String,
         enrollment_year: String,
         department: String,
+        academic: {
+            class_10: {
+                board: String,
+                percentage: String,
+            },
+            class_12: {
+                board: String,
+                percentage: String,
+            },
+            hobbies: String,
+        },
+        hostel: {
+            name: String,
+            room_no: Number,
+            warden: String,
+            asst_warden: String,
+        },
+        blood_group: String,
         role: {
             type: String,
             default: Role.Student,
@@ -51,8 +69,7 @@ const studentSchema = new mongoose.Schema(
         avatar: {
             url: {
                 type: String,
-                default:
-                    "https://res.cloudinary.com/tremedy/image/upload/c_scale,w_90/v1582207349/avatars/man_2_lvablz.png",
+                default: "",
             },
             id: String,
         },
