@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 import { studentGetDetails } from "../../../actions/student";
 import LoadingDashboard from "../../loading/LoadingDashboard";
 import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
+import Profile from "./dashboardLinks/profile/Profile";
 
 const StudentDashboard = () => {
     // state for maintaining the side nav bar
@@ -120,7 +121,7 @@ const StudentDashboard = () => {
                             clipRule="evenodd"
                         />
                     </svg>
-                    Profile
+                    Mentee info
                 </button>
                 <button
                     onClick={handleRouteChange}
@@ -191,6 +192,7 @@ const StudentDashboard = () => {
                 <div className="flex items-center justify-center">
                     {/* conditional rendering of the inner tab screens */}
                     {route.academicDetails && <AcademicDetails />}
+                    {route.profile && <Profile />}
                 </div>
             </div>
         </div>
