@@ -36,7 +36,7 @@ const studentSchema = new mongoose.Schema(
         class_10_percentage: String,
         class_12_board: String,
         class_12_percentage: String,
-        roll_no: String,
+        enrollment_no: String,
         programme: String,
         enrollment_year: String,
         department: String,

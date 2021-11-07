@@ -149,4 +149,10 @@ module.exports = {
             const student = await Student.findById(req.user._id);
         } catch (err) {}
     },
+    editAvatar: async (req, res) => {
+        try {
+        } catch (err) {
+            console.log(err);
+        }
+    },
 };

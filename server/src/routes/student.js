@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 const Auth = require("../middlewares/auth");
 const studentController = require("../controllers/student.controller");
 const Authorize = require("../middlewares/authorize");
@@ -31,5 +32,8 @@ router.get("/profile", Auth, Authorize(Role.Student), studentController.getProfi
 
 // edit stduent profile
 router.post("/profile", Auth, Authorize(Role.Student), studentController.editProfile);
+
+//  edit or change avatar
+router.post("/editAvatar", Auth, Authorize(Role.Student), studentController.editAvatar);
 
 module.exports = router;
