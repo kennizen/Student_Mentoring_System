@@ -9,29 +9,6 @@ dotenv.config();
 
 const studentSchema = new mongoose.Schema(
     {
-        firstname: String,
-        middlename: String,
-        lastname: String,
-        phone: String,
-        gender: String,
-        blood_group: String,
-        home_address: String,
-        guardian_name: String,
-        guardian_phone: String,
-        guardian_address: String,
-        family_details: String,
-        hobbies: String,
-        email: {
-            type: String,
-            required: true,
-            trim: true,
-            unique: true,
-        },
-        password: {
-            type: String,
-            required: true,
-            trim: true,
-        },
         class_10_board: String,
         class_10_percentage: String,
         class_12_board: String,

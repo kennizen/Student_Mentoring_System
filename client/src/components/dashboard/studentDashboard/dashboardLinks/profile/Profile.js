@@ -1,12 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import EditButton from "../../editButtonForMenteeInformation/EditButton";
+import StuModal from "./stuModal/StuModal";
 
 const Profile = () => {
+    const [Hidden, setHidden] = useState(false);
+    const [profileData, setProfileData] = useState({
+        department: "",
+        programme: "",
+        semester: "",
+        enrollment_no: "",
+        enrollment_year: "",
+        phone_no: "",
+        address: "",
+        firstname: "",
+        middlename: "",
+        lastname: "",
+        gender: "",
+        blood_group: "",
+        home_place: "",
+        hobbies: "",
+        guardian_name: "",
+        guardian_ph_no: "",
+        guardian_address: "",
+        family_details: "",
+        hotel_name: "",
+        warden_name: "",
+        asstt_warden_name: "",
+        warden_ph_no: "",
+        asstt_warden_ph_no: "",
+        responsible_contact_person_at_residence: "",
+        contact_no_of_contact_person: "",
+        residence_address: "",
+    });
+
+    // function to show modal
+    const handleShowModalFromModal = (setOp, setSc) => {
+        setOp("opacity-0");
+        setSc("scale-0");
+        setTimeout(() => {
+            setHidden(false);
+        }, 100);
+    };
+
+    // function to show modal
+    const handleShowModal = () => {
+        setHidden(true);
+    };
+
     return (
-        <div className="w-full p-2">
+        <div className="w-full p-2 relative">
+            {Hidden && <StuModal handleShowModal={handleShowModalFromModal} />}
             <div className="grid grid-cols-12 gap-x-1">
                 <div className="col-span-4 p-2">
-                    <div className="w-full shadow-md py-6 px-3 rounded-md mb-3">
+                    <div className="w-full shadow-m32 py-6 px-3 rounded-md mb-6">
                         <h2 className="mb-5 text-gray-700 flex items-center justify-start">
                             Profile Photo
                             <svg
@@ -68,7 +114,7 @@ const Profile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-full shadow-md py-5 px-3 rounded-md mb-3">
+                    <div className="w-full shadow-m32 py-5 px-3 rounded-md mb-6">
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-gray-700 flex items-center justify-start">
                                 Academic Information
@@ -89,7 +135,6 @@ const Profile = () => {
                                     />
                                 </svg>
                             </h2>
-                            <EditButton />
                         </div>
                         <div className="grid grid-cols-6">
                             <div className="col-span-3">
@@ -122,7 +167,7 @@ const Profile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-full shadow-md py-5 px-3 rounded-md">
+                    <div className="w-full shadow-m32 py-5 px-3 rounded-md">
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-gray-700 flex items-center justify-start">
                                 Contact Details
@@ -141,7 +186,6 @@ const Profile = () => {
                                     />
                                 </svg>
                             </h2>
-                            <EditButton />
                         </div>
                         <div className="">
                             <div className="flex flex-col items-start mb-4">
@@ -160,7 +204,7 @@ const Profile = () => {
                     </div>
                 </div>
                 <div className="col-span-8 p-2">
-                    <div className="w-full shadow-md py-5 px-3 rounded-md mb-3">
+                    <div className="w-full shadow-m32 py-5 px-3 rounded-md mb-6">
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-gray-700 flex items-center justify-start">
                                 Personal Information
@@ -179,7 +223,6 @@ const Profile = () => {
                                     />
                                 </svg>
                             </h2>
-                            <EditButton />
                         </div>
 
                         <div className="grid grid-cols-3">
@@ -231,7 +274,7 @@ const Profile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-full shadow-md py-5 px-3 rounded-md mb-3">
+                    <div className="w-full shadow-m32 py-5 px-3 rounded-md mb-3">
                         <h2 className="mb-5 text-gray-700 flex items-center justify-start">
                             Hostel Details
                             <svg
@@ -253,7 +296,6 @@ const Profile = () => {
                             <div className="col-span-1 grid grid-cols-2 border-r border-gray-300">
                                 <div className="flex items-center justify-between mb-4 col-span-2 mr-3">
                                     <h4 className="font-bold">If hostel boarder</h4>
-                                    <EditButton />
                                 </div>
 
                                 <div className="flex col-span-2 mb-4 items-start justify-center flex-col">
@@ -280,7 +322,6 @@ const Profile = () => {
                             <div className="col-span-1 grid grid-cols-1">
                                 <div className="flex items-center justify-between mb-4 col-span-1">
                                     <h4 className="font-bold">If not hostel boarder</h4>
-                                    <EditButton />
                                 </div>
                                 <div className="flex col-span-1 mb-4 items-start justify-center flex-col">
                                     <h4 className="text-gray-400">
@@ -298,6 +339,9 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div className="w-full flex items-center justify-end mt-5">
+                        <EditButton handleShowModal={handleShowModal} />
                     </div>
                 </div>
             </div>
