@@ -135,4 +135,18 @@ module.exports = {
             res.send(Response.error("", {}));
         }
     },
+
+    getProfile: async (req, res) => {
+        try {
+            res.send(Response.success("", { studentData: req.user }));
+        } catch (err) {
+            res.status(500).send(Response.error("", {}));
+        }
+    },
+
+    editProfile: async (req, res) => {
+        try {
+            const student = await Student.findById(req.user._id);
+        } catch (err) {}
+    },
 };

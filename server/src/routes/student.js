@@ -26,4 +26,10 @@ router.post("/newPost", Auth, Authorize(Role.Student), studentController.createN
 // get all posts
 router.get("/fetchAllPosts", Auth, Authorize(Role.Student), studentController.fetchAllPosts);
 
+// get the student/mentee profile
+router.get("/profile", Auth, Authorize(Role.Student), studentController.getProfile);
+
+// edit stduent profile
+router.post("/profile", Auth, Authorize(Role.Student), studentController.editProfile);
+
 module.exports = router;

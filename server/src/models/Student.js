@@ -9,10 +9,21 @@ dotenv.config();
 
 const studentSchema = new mongoose.Schema(
     {
-        name: {
-            type: String,
-            required: true,
-            trim: true,
+        personal: {
+            firstname: String,
+            middlename: String,
+            lastname: String,
+            phone: String,
+            gender: String,
+            blood_group: String,
+            home_address: String,
+            guardian: {
+                name: String,
+                phone_no: String,
+                address: String,
+            },
+            family_details: String,
+            hobbies: String,
         },
         email: {
             type: String,
@@ -25,17 +36,6 @@ const studentSchema = new mongoose.Schema(
             required: true,
             trim: true,
         },
-        phone: {
-            type: String,
-        },
-        home_address: {
-            type: String,
-            trim: true,
-        },
-        roll_no: String,
-        programme: String,
-        enrollment_year: String,
-        department: String,
         academic: {
             class_10: {
                 board: String,
@@ -45,15 +45,37 @@ const studentSchema = new mongoose.Schema(
                 board: String,
                 percentage: String,
             },
-            hobbies: String,
+            ug: {
+                university: String,
+                percentage: String,
+            },
+            pg: {
+                university: String,
+                percentage: String,
+            },
+            roll_no: String,
+            programme: String,
+            enrollment_year: String,
+            department: String,
+            semester: String,
         },
         hostel: {
             name: String,
             room_no: Number,
-            warden: String,
-            asst_warden: String,
+            warden: {
+                name: String,
+                phone: String,
+            },
+            asst_warden: {
+                name: String,
+                phone: String,
+            },
+            other: {
+                name: String,
+                phone: String,
+                address: String,
+            },
         },
-        blood_group: String,
         role: {
             type: String,
             default: Role.Student,
