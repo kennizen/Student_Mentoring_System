@@ -9,6 +9,17 @@ dotenv.config();
 
 const studentSchema = new mongoose.Schema(
     {
+        email: {
+            type: String,
+            required: true,
+            trim: true,
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: true,
+            trim: true,
+        },
         class_10_board: String,
         class_10_percentage: String,
         class_12_board: String,
