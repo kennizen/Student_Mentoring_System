@@ -29,9 +29,9 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
 
                 <form action="" className="">
                     <div className="flex flex-col items-start justify-center">
-                        <h4 className="mb-3 font-bold">Academic Details</h4>
+                        <h4 className="mb-2 font-bold">Academic Information</h4>
                         <div className="grid grid-cols-5 gap-x-7 w-full">
-                            <div className="flex flex-col mb-6">
+                            <div className="flex flex-col mb-3">
                                 <label htmlFor="department" className="mb-2">
                                     Department
                                 </label>
@@ -48,7 +48,7 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                                     </option>
                                 </select>
                             </div>
-                            <div className="flex flex-col mb-6">
+                            <div className="flex flex-col mb-3">
                                 <label htmlFor="programme" className="mb-2">
                                     Programme
                                 </label>
@@ -66,7 +66,7 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                                     <option value="M.Tech(CSE)">M.Tech (CSE)</option>
                                 </select>
                             </div>
-                            <div className="flex flex-col mb-6">
+                            <div className="flex flex-col mb-3">
                                 <label htmlFor="semester" className="mb-2">
                                     Semester
                                 </label>
@@ -78,26 +78,26 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                            <div className="flex flex-col mb-3">
+                                <label htmlFor="enrollment_no" className="mb-2">
+                                    Enrollment number
                                 </label>
                                 <input
-                                    id="email"
+                                    id="enrollment_no"
                                     type="text"
-                                    name="email"
+                                    name="enrollment_no"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="enrollment_year" className="mb-2">
+                                    Enrollment year
                                 </label>
                                 <input
-                                    id="email"
+                                    id="enrollment_year"
                                     type="text"
-                                    name="email"
+                                    name="enrollment_year"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
@@ -105,28 +105,29 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                         </div>
                     </div>
                     <div className="flex flex-col items-start justify-center">
-                        <h4 className="mb-3 font-bold">Contact Details</h4>
+                        <h4 className="mb-2 font-bold">Contact Details</h4>
                         <div className="grid grid-cols-3 gap-x-7 w-full">
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                            <div className="flex flex-col mb-3">
+                                <label htmlFor="phone" className="mb-2">
+                                    Phone number
                                 </label>
                                 <input
-                                    id="email"
+                                    id="phone"
                                     type="text"
-                                    name="email"
+                                    name="phone"
                                     required
+                                    maxLength="10"
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6 col-span-2">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="address" className="mb-2">
+                                    Address
                                 </label>
                                 <input
-                                    id="email"
+                                    id="address"
                                     type="text"
-                                    name="email"
+                                    name="address"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
@@ -134,136 +135,149 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                         </div>
                     </div>
                     <div className="flex flex-col items-start justify-center">
-                        <h4 className="mb-3 font-bold">Personal Details</h4>
+                        <h4 className="mb-2 font-bold">Personal Information</h4>
                         <div className="grid grid-cols-6 gap-x-7 w-full">
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                            <div className="flex flex-col mb-3">
+                                <label htmlFor="firstname" className="mb-2">
+                                    First name
                                 </label>
                                 <input
-                                    id="email"
+                                    id="firstname"
                                     type="text"
-                                    name="email"
+                                    name="firstname"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                            <div className="flex flex-col mb-3">
+                                <label htmlFor="middlename" className="mb-2">
+                                    Middle name
                                 </label>
                                 <input
-                                    id="email"
+                                    id="middlename"
                                     type="text"
-                                    name="email"
+                                    name="middlename"
+                                    className="rounded-lg border-gray-300"
+                                />
+                            </div>
+                            <div className="flex flex-col mb-3">
+                                <label htmlFor="lastname" className="mb-2">
+                                    Last name
+                                </label>
+                                <input
+                                    id="lastname"
+                                    type="text"
+                                    name="lastname"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                            <div className="flex flex-col mb-3">
+                                <label htmlFor="gender" className="mb-2">
+                                    Gender
+                                </label>
+                                <select
+                                    id="gender"
+                                    name="gender"
+                                    className="rounded-lg border-gray-300"
+                                >
+                                    <option disabled selected hidden>
+                                        Select gender
+                                    </option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="others">Others</option>
+                                </select>
+                            </div>
+                            <div className="flex flex-col mb-3">
+                                <label htmlFor="blood_group" className="mb-2">
+                                    Blood group
+                                </label>
+                                <select
+                                    id="blood_group"
+                                    name="blood_group"
+                                    className="rounded-lg border-gray-300"
+                                >
+                                    <option disabled selected hidden>
+                                        Select group
+                                    </option>
+                                    <option value="A+ (positive)">A+ (positive)</option>
+                                    <option value="B+ (positive)">B+ (positive)</option>
+                                    <option value="O+ (positive)">O+ (positive)</option>
+                                    <option value="AB+ (positive)">AB+ (positive)</option>
+                                    <option value="A- (negative)">A- (negative)</option>
+                                    <option value="B- (negative)">B- (negative)</option>
+                                    <option value="O- (negative)">O- (negative)</option>
+                                    <option value="AB- (negative)">AB- (negative)</option>
+                                </select>
+                            </div>
+                            <div className="flex flex-col mb-3">
+                                <label htmlFor="home_address" className="mb-2">
+                                    Home address
                                 </label>
                                 <input
-                                    id="email"
+                                    id="home_address"
                                     type="text"
-                                    name="email"
+                                    name="home_address"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                            <div className="flex flex-col mb-3 col-span-2">
+                                <label htmlFor="guardian_name" className="mb-2">
+                                    Guardian name
                                 </label>
                                 <input
-                                    id="email"
+                                    id="guardian_name"
                                     type="text"
-                                    name="email"
+                                    name="guardian_name"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                            <div className="flex flex-col mb-3 col-span-2">
+                                <label htmlFor="guardian_ph_no" className="mb-2">
+                                    Guardian phone number
                                 </label>
                                 <input
-                                    id="email"
+                                    id="guardian_ph_no"
                                     type="text"
-                                    name="email"
+                                    name="guardian_ph_no"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                            <div className="flex flex-col mb-3 col-span-2">
+                                <label htmlFor="guardian_address" className="mb-2">
+                                    Guardian address
                                 </label>
                                 <input
-                                    id="email"
+                                    id="guardian_address"
                                     type="text"
-                                    name="email"
-                                    required
-                                    className="rounded-lg border-gray-300"
-                                />
-                            </div>
-                            <div className="flex flex-col mb-6 col-span-2">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
-                                </label>
-                                <input
-                                    id="email"
-                                    type="text"
-                                    name="email"
-                                    required
-                                    className="rounded-lg border-gray-300"
-                                />
-                            </div>
-                            <div className="flex flex-col mb-6 col-span-2">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
-                                </label>
-                                <input
-                                    id="email"
-                                    type="text"
-                                    name="email"
-                                    required
-                                    className="rounded-lg border-gray-300"
-                                />
-                            </div>
-                            <div className="flex flex-col mb-6 col-span-2">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
-                                </label>
-                                <input
-                                    id="email"
-                                    type="text"
-                                    name="email"
+                                    name="guardian_address"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6 col-span-3">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="hobbies" className="mb-2">
+                                    Hobbies
                                 </label>
                                 <input
-                                    id="email"
+                                    id="hobbies"
                                     type="text"
-                                    name="email"
-                                    required
+                                    name="hobbies"
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6 col-span-3">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="family_details" className="mb-2">
+                                    Family Details (occupation, members, etc)
                                 </label>
                                 <input
-                                    id="email"
+                                    id="family_details"
                                     type="text"
-                                    name="email"
+                                    name="family_details"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
@@ -271,64 +285,64 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                         </div>
                     </div>
                     <div className="flex flex-col items-start justify-center">
-                        <h4 className="mb-3 font-bold">If hostel boarder</h4>
+                        <h4 className="mb-2 font-bold">If hostel boarder</h4>
                         <div className="grid grid-cols-5 gap-x-7 w-full">
                             <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="hostel_name" className="mb-2">
+                                    Hostel name
                                 </label>
                                 <input
-                                    id="email"
+                                    id="hostel_name"
                                     type="text"
-                                    name="email"
+                                    name="hostel_name"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="warden_name" className="mb-2">
+                                    Warden's name
                                 </label>
                                 <input
-                                    id="email"
+                                    id="warden_name"
                                     type="text"
-                                    name="email"
+                                    name="warden_name"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="warden_ph_no" className="mb-2">
+                                    Warden's ph. no.
                                 </label>
                                 <input
-                                    id="email"
+                                    id="warden_ph_no"
                                     type="text"
-                                    name="email"
+                                    name="warden_ph_no"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="asstt_warden_name" className="mb-2">
+                                    Asstt. warden's name
                                 </label>
                                 <input
-                                    id="email"
+                                    id="asstt_warden_name"
                                     type="text"
-                                    name="email"
+                                    name="asstt_warden_name"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="asstt_warden_ph_no" className="mb-2">
+                                    Asstt. warden's ph. no.
                                 </label>
                                 <input
-                                    id="email"
+                                    id="asstt_warden_ph_no"
                                     type="text"
-                                    name="email"
+                                    name="asstt_warden_ph_no"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
@@ -336,40 +350,43 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                         </div>
                     </div>
                     <div className="flex flex-col items-start justify-center">
-                        <h4 className="mb-3 font-bold">If not hostel boarder</h4>
+                        <h4 className="mb-2 font-bold">If not hostel boarder</h4>
                         <div className="grid grid-cols-3 gap-x-7 w-full">
                             <div className="flex flex-col">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label
+                                    htmlFor="responsible_contact_person_at_residence"
+                                    className="mb-2"
+                                >
+                                    Responsible contact person at residence
                                 </label>
                                 <input
-                                    id="email"
+                                    id="responsible_contact_person_at_residence"
                                     type="text"
-                                    name="email"
+                                    name="responsible_contact_person_at_residence"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="contact_no_of_contact_person" className="mb-2">
+                                    Contact no of contact person
                                 </label>
                                 <input
-                                    id="email"
+                                    id="contact_no_of_contact_person"
                                     type="text"
-                                    name="email"
+                                    name="contact_no_of_contact_person"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
                             <div className="flex flex-col mb-6">
-                                <label htmlFor="email" className="mb-2">
-                                    Email address
+                                <label htmlFor="residence_address" className="mb-2">
+                                    Residence address
                                 </label>
                                 <input
-                                    id="email"
+                                    id="residence_address"
                                     type="text"
-                                    name="email"
+                                    name="residence_address"
                                     required
                                     className="rounded-lg border-gray-300"
                                 />
