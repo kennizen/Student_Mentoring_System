@@ -8,7 +8,6 @@ API.interceptors.request.use((req) => {
             JSON.parse(localStorage.getItem("authData")).auth_token
         }`;
     }
-
     return req;
 });
 
@@ -19,5 +18,9 @@ export const signUp = (fields) =>
     });
 export const fetchStudent = () =>
     API.get("/student/dashboard").catch((error) => {
+        return error.response;
+    });
+export const fetchStudentProfile = () =>
+    API.get("/student/profile").catch((error) => {
         return error.response;
     });

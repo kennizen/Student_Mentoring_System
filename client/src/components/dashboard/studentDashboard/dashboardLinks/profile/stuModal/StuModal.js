@@ -39,10 +39,10 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                                     id="department"
                                     name="department"
                                     className="rounded-lg border-gray-300"
+                                    placeholder="hello"
+                                    defaultValue="Category"
                                 >
-                                    <option disabled selected hidden>
-                                        Select department
-                                    </option>
+                                    <option value="Select department">Select department</option>
                                     <option value="Computer Science & Engineering">
                                         Computer Science & Engineering
                                     </option>
@@ -57,9 +57,9 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                                     name="programme"
                                     className="rounded-lg border-gray-300"
                                 >
-                                    <option disabled selected hidden>
+                                    {/* <option disabled selected hidden>
                                         Select programme
-                                    </option>
+                                    </option> */}
                                     <option value="B.Tech(CSE)">B.Tech (CSE)</option>
                                     <option value="MCA">MCA</option>
                                     <option value="M.Tech(IT)">M.Tech (IT)</option>
@@ -181,9 +181,9 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                                     name="gender"
                                     className="rounded-lg border-gray-300"
                                 >
-                                    <option disabled selected hidden>
+                                    {/* <option disabled selected hidden>
                                         Select gender
-                                    </option>
+                                    </option> */}
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                     <option value="others">Others</option>
@@ -198,9 +198,9 @@ const StuModal = ({ header, body, b2Text, handleFunc, handleShowModal, id }) => 
                                     name="blood_group"
                                     className="rounded-lg border-gray-300"
                                 >
-                                    <option disabled selected hidden>
+                                    {/* <option disabled selected hidden>
                                         Select group
-                                    </option>
+                                    </option> */}
                                     <option value="A+ (positive)">A+ (positive)</option>
                                     <option value="B+ (positive)">B+ (positive)</option>
                                     <option value="O+ (positive)">O+ (positive)</option>

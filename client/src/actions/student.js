@@ -44,3 +44,21 @@ export const studentGetDetails = (history) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const studentGetProfileDetails = (history) => async (dispatch) => {
+    try {
+        const { data } = await api.fetchStudentProfile();
+        console.log("student profile data in actions", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "FETCH_PROFILE", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

@@ -18,7 +18,7 @@ const StudentDashboard = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     // accessing the redux store state
-    const { data } = useSelector((state) => state.student);
+    const data = useSelector((state) => state.student);
 
     console.log("student data in dashboard", data);
 

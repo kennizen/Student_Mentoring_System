@@ -3,10 +3,10 @@ import React from "react";
 const AcademicDetails = () => {
     return (
         <div className="w-full p-5">
-            <h1 className="text-center">Academic Details</h1>
             <h2>Past Education</h2>
             <div className="flex space-x-2 mt-5 bg-white p-6 shadow-md border border-gray-200 rounded-lg">
                 <div className="flex-1">
+                    <h2 className="mb-2">Semester: 1 - Courses Details</h2>
                     <table className="mt-3 w-full mx-1">
                         <thead class="bg-gray-50">
                             <tr>

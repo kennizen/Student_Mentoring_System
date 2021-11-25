@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 import EditButton from "../../editButtonForMenteeInformation/EditButton";
 import StuModal from "./stuModal/StuModal";
+import { studentGetProfileDetails } from "../../../../../actions/student";
 
 const Profile = () => {
     const [Hidden, setHidden] = useState(false);
-    const [profileData, setProfileData] = useState({
+    const [stuProfileData, setStuProfileData] = useState({
         department: "",
         programme: "",
         semester: "",
@@ -23,15 +26,23 @@ const Profile = () => {
         guardian_ph_no: "",
         guardian_address: "",
         family_details: "",
-        hotel_name: "",
+        hostel_name: "",
         warden_name: "",
-        asstt_warden_name: "",
+        asst_warden_name: "",
         warden_ph_no: "",
-        asstt_warden_ph_no: "",
+        asst_warden_ph_no: "",
         responsible_contact_person_at_residence: "",
         contact_no_of_contact_person: "",
         residence_address: "",
     });
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    useEffect(() => {
+        dispatch(studentGetProfileDetails(history));
+    }, [history, dispatch]);
+
+    const { profileData } = useSelector((state) => state.student);
 
     // function to show modal
     const handleShowModalFromModal = (setOp, setSc) => {
@@ -140,29 +151,29 @@ const Profile = () => {
                             <div className="col-span-3">
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Department</h4>
-                                    <h4>CSE</h4>
+                                    <h4>{profileData.department}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Semester</h4>
-                                    <h4>3rd semester</h4>
+                                    <h4>{profileData.semester}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Enrollment Number</h4>
-                                    <h4>CSM20004</h4>
+                                    <h4>{profileData.enrollment_no}</h4>
                                 </div>
                             </div>
                             <div className="col-start-4 col-span-3">
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Programme</h4>
-                                    <h4>Master of Computer Application</h4>
+                                    <h4>{profileData.programme}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Mentored By</h4>
-                                    <h4>Nityananda Sharma</h4>
+                                    <h4>{profileData.mentoredBy}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Enrollment Year</h4>
-                                    <h4>2020</h4>
+                                    <h4>{profileData.enrollment_year}</h4>
                                 </div>
                             </div>
                         </div>
@@ -190,15 +201,15 @@ const Profile = () => {
                         <div className="">
                             <div className="flex flex-col items-start mb-4">
                                 <h4 className="text-gray-400">Email ID</h4>
-                                <h4>prachurjyagogoi123@gmail.com</h4>
+                                <h4>{profileData.email}</h4>
                             </div>
                             <div className="flex flex-col items-start mb-4">
                                 <h4 className="text-gray-400">Phone Number</h4>
-                                <h4>7086355792</h4>
+                                <h4>{profileData.phone_no}</h4>
                             </div>
                             <div className="flex flex-col items-start">
                                 <h4 className="text-gray-400">Address</h4>
-                                <h4>Joya Nagar, Gelapukhuri Road, Tinsukia, Assam</h4>
+                                <h4>{profileData.address}</h4>
                             </div>
                         </div>
                     </div>
@@ -228,49 +239,49 @@ const Profile = () => {
                         <div className="grid grid-cols-3">
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">First Name</h4>
-                                <h4>Mintu</h4>
+                                <h4>{profileData.firstname}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Middle Name</h4>
-                                <h4>Moni</h4>
+                                <h4>{profileData.middlename}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Last Name</h4>
-                                <h4>Kurmi</h4>
+                                <h4>{profileData.lastname}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Gender</h4>
-                                <h4>Male</h4>
+                                <h4>{profileData.gender}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Blood Group</h4>
-                                <h4>B+ (positive)</h4>
+                                <h4>{profileData.blood_group}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Home Place</h4>
-                                <h4>Titabor</h4>
+                                <h4>{profileData.home_place}</h4>
                             </div>
                             <div className="flex col-span-3 items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Hobbies</h4>
-                                <h4>Playing cricket, playing football, coding, hacking</h4>
+                                <h4>{profileData.hobbies}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Guardian Name</h4>
-                                <h4>Mintu</h4>
+                                <h4>{profileData.guardian_name}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Guardian Ph No.</h4>
-                                <h4>7086355792</h4>
+                                <h4>{profileData.guardian_ph_no}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Guardian Address</h4>
-                                <h4>Tinsukia</h4>
+                                <h4>{profileData.guardian_address}</h4>
                             </div>
                             <div className="flex col-span-3 items-start justify-center flex-col">
                                 <h4 className="text-gray-400">
                                     Family Details (occupation, members, etc)
                                 </h4>
-                                <h4>Total members 5, working father farmer.</h4>
+                                <h4>{profileData.family_details}</h4>
                             </div>
                         </div>
                     </div>
@@ -300,23 +311,23 @@ const Profile = () => {
 
                                 <div className="flex col-span-2 mb-4 items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Hostel Name</h4>
-                                    <h4>Kanchanjanga Men's Hostel</h4>
+                                    <h4>{profileData.hostel_name}</h4>
                                 </div>
                                 <div className="flex  items-start justify-center mb-2 flex-col">
                                     <h4 className="text-gray-400">Warden's Name</h4>
-                                    <h4>Mrinal Deka</h4>
+                                    <h4>{profileData.warden_name}</h4>
                                 </div>
                                 <div className="flex items-start justify-center mb-2 flex-col">
-                                    <h4 className="text-gray-400">Asstt Warden's Name</h4>
-                                    <h4>Saho Deka</h4>
+                                    <h4 className="text-gray-400">Asst Warden's Name</h4>
+                                    <h4>{profileData.asst_warden_name}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Ph No.</h4>
-                                    <h4>7086355792</h4>
+                                    <h4>{profileData.warden_ph_no}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Ph No.</h4>
-                                    <h4>7086355792</h4>
+                                    <h4>{profileData.asst_warden_ph_no}</h4>
                                 </div>
                             </div>
                             <div className="col-span-1 grid grid-cols-1">
@@ -327,15 +338,15 @@ const Profile = () => {
                                     <h4 className="text-gray-400">
                                         Responsible contact person at residence
                                     </h4>
-                                    <h4>Someone</h4>
+                                    <h4>{profileData.responsible_contact_person_at_residence}</h4>
                                 </div>
                                 <div className="flex col-span-1 mb-4 items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Contact no. of contact person</h4>
-                                    <h4>7086355792</h4>
+                                    <h4>{profileData.contact_no_of_contact_person}</h4>
                                 </div>
                                 <div className="flex col-span-1 items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Reidence Address</h4>
-                                    <h4>Porua, Tezpur</h4>
+                                    <h4>{profileData.residence_address}</h4>
                                 </div>
                             </div>
                         </div>

@@ -1,13 +1,15 @@
-const student = (state = { user: null }, action) => {
+const student = (state = { studentData: null, profileData: null }, action) => {
     switch (action.type) {
         case "SIGN_IN_STUDENT":
             localStorage.setItem("authData", JSON.stringify({ ...action?.data?.data }));
-            return { ...state, user: action?.data?.data };
+            return { ...state, studentData: action?.data?.data };
         case "FETCH_STUDENT":
-            return action.data;
+            return { ...state, studentData: action.data };
+        case "FETCH_PROFILE":
+            return { ...state, profileData: action.data.data.studentData };
         case "LOGOUT_STUDENT":
             localStorage.clear();
-            return { ...state, user: null };
+            return { ...state, studentData: null };
         default:
             return state;
     }
