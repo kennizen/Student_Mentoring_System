@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
 const Auth = require("../middlewares/auth");
 const studentController = require("../controllers/student.controller");
 const Authorize = require("../middlewares/authorize");
@@ -12,6 +11,9 @@ const Role = require("../utils/roles");
  *
  *  **This will prevent other users of the system from penetrating into the student dashboard
  */
+
+// importing multer config
+const upload = require("../config/multer");
 
 // student login
 router.post("/login", studentController.studentLoginHandler);
@@ -34,6 +36,12 @@ router.get("/profile", Auth, Authorize(Role.Student), studentController.getProfi
 router.post("/profile", Auth, Authorize(Role.Student), studentController.editProfile);
 
 //  edit or change avatar
-router.post("/editAvatar", Auth, Authorize(Role.Student), studentController.editAvatar);
+router.post(
+    "/avatar",
+    Auth,
+    Authorize(Role.Student),
+    upload.single("avatar"),
+    studentController.editAvatar
+);
 
 module.exports = router;
