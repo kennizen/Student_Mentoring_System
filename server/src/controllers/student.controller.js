@@ -142,13 +142,14 @@ module.exports = {
 
     getProfile: async (req, res) => {
         try {
-            const mentor = await Mentor.findById(req.user.mentoredBy);
-
-            if (!mentor) {
-                throw new Error();
+            if (req.user.mentoredBy) {
+                const mentor = await Mentor.findById(req.user.mentoredBy);
+                req.user.mentoredBy = mentor.name;
+            } else {
+                // if mentor not assigned to the student
+                req.user.mentoredBy = "Not assigned";
             }
 
-            req.user.mentor = mentor.name;
             res.send(Response.success("", { profileData: req.user }));
         } catch (err) {
             res.status(500).send(Response.error("", {}));
