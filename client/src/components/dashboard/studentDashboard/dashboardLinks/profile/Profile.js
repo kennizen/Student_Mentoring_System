@@ -56,11 +56,49 @@ const Profile = () => {
     // function to show modal
     const handleShowModal = () => {
         setHidden(true);
+        setStuProfileData({
+            department: profileData.department,
+            programme: profileData.programme,
+            semester: profileData.semester,
+            enrollment_no: profileData.enrollment_no,
+            enrollment_year: profileData.enrollment_year,
+            phone_no: profileData.phone_no,
+            address: profileData.address,
+            firstname: profileData.firstname,
+            middlename: profileData.middlename,
+            lastname: profileData.lastname,
+            gender: profileData.gender,
+            blood_group: profileData.blood_group,
+            home_place: profileData.home_place,
+            hobbies: profileData.hobbies,
+            guardian_name: profileData.guardian_name,
+            guardian_ph_no: profileData.guardian_ph_no,
+            guardian_address: profileData.guardian_address,
+            family_details: profileData.family_details,
+            hostel_name: profileData.hostel_name,
+            warden_name: profileData.warden_name,
+            asst_warden_name: profileData.asst_warden_name,
+            warden_ph_no: profileData.warden_ph_no,
+            asst_warden_ph_no: profileData.asst_warden_ph_no,
+            responsible_contact_person_at_residence:
+                profileData.responsible_contact_person_at_residence,
+            contact_no_of_contact_person: profileData.contact_no_of_contact_person,
+            residence_address: profileData.residence_address,
+        });
     };
 
     return (
         <div className="w-full p-2 relative">
-            {Hidden && <StuModal handleShowModal={handleShowModalFromModal} />}
+            {Hidden && (
+                <StuModal
+                    handleShowModal={handleShowModalFromModal}
+                    stuProfileData={stuProfileData}
+                    setStuProfileData={setStuProfileData}
+                    profileData={profileData}
+                    history={history}
+                    dispatch={dispatch}
+                />
+            )}
             <div className="grid grid-cols-12 gap-x-1">
                 <div className="col-span-4 p-2">
                     <div className="w-full shadow-m32 py-6 px-3 rounded-md mb-6">

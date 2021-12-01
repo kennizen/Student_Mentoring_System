@@ -62,3 +62,22 @@ export const studentGetProfileDetails = (history) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const studentUpdateProfileDetails = (history, fields) => async (dispatch) => {
+    try {
+        console.log("from actions", fields);
+        const { data } = await api.updateStudentProfile(fields);
+        console.log("student profile data in actions from update", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "FETCH_PROFILE", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

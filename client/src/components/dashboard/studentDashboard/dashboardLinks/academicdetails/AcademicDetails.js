@@ -1,298 +1,106 @@
 import React from "react";
+import PastDetails from "./pastDetails/PastDetails";
+import Semester from "./semester/Semester";
 
 const AcademicDetails = () => {
-    return (
-        <div className="w-full p-5">
-            <h2>Past Education</h2>
-            <div className="flex space-x-2 mt-5 bg-white p-6 shadow-md border border-gray-200 rounded-lg">
-                <div className="flex-1">
-                    <h2 className="mb-2">Semester: 1 - Courses Details</h2>
-                    <table className="mt-3 w-full mx-1">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-3 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Course
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Board
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Percentage/CGPA
-                                </th>
-                            </tr>
-                        </thead>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Class 10
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                SEBA
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Class 12
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                AHSEC
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div className="flex-0"></div>
-                <div className="flex-1">
-                    <table className="mt-3 w-full mx-1">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-3 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Course
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Board
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Percentage/CGPA
-                                </th>
-                            </tr>
-                        </thead>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                UG
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                DU
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                PG
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                TezU
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div className="flex space-x-2 mt-5 bg-white p-6 shadow-md border border-gray-200 rounded-lg">
-                <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                        <h2 className="mb-2">Semester: 1 - Courses Details</h2>
-                        <button className="">Edit</button>
-                    </div>
+    //dummy
+    const obj = [
+        {
+            semester: 1,
+            student_id: 1,
+            courses: [
+                {
+                    code: 123,
+                    title: "CN",
+                    credit: 3,
+                    type: "C",
+                    grade: "B+",
+                },
+                {
+                    code: 123,
+                    title: "CN",
+                    credit: 3,
+                    type: "C",
+                    grade: "B+",
+                },
+            ],
+        },
+        {
+            semester: 2,
+            student_id: 1,
+            courses: [
+                {
+                    code: 234,
+                    title: "CN Lab",
+                    credit: 3,
+                    type: "C",
+                    grade: "B+",
+                },
+            ],
+        },
+        {
+            semester: 3,
+            student_id: 1,
+            courses: [
+                {
+                    code: 345,
+                    title: "OS",
+                    credit: 3,
+                    type: "C",
+                    grade: "B+",
+                },
+            ],
+        },
+        {
+            semester: 4,
+            student_id: 1,
+            courses: [
+                {
+                    code: 456,
+                    title: "OS Lab",
+                    credit: 2,
+                    type: "C",
+                    grade: "B+",
+                },
+            ],
+        },
+        {
+            semester: 5,
+            student_id: 1,
+            courses: [
+                {
+                    code: 567,
+                    title: "AI",
+                    credit: 3,
+                    type: "E",
+                    grade: "B+",
+                },
+            ],
+        },
+        {
+            semester: 6,
+            student_id: 1,
+            courses: [
+                {
+                    code: 678,
+                    title: "IOT",
+                    credit: 2,
+                    type: "E",
+                    grade: "A+",
+                },
+            ],
+        },
+    ];
 
-                    <table className="w-full mx-3">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-3 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Course code
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Title
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Credit
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Type
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Grade
-                                </th>
-                            </tr>
-                        </thead>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Class 10
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                SEBA
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Class 12
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                AHSEC
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Class 12
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                AHSEC
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+    return (
+        <>
+            <div className="w-full h-845 pt-4 px-4 overflow-y-auto">
+                <PastDetails />
+                {obj.map((sem) => {
+                    return <Semester semester={sem.semester} course={sem.courses} />;
+                })}
             </div>
-            <div className="flex space-x-2 mt-5 bg-white p-6 shadow-md border border-gray-200 rounded-lg">
-                <div className="flex-1">
-                    <h2 className="mb-2">Semester: 2 - Course Details</h2>
-                    <table className="w-full mx-3">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-3 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Course code
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Title
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Credit
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Type
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="text-xs font-medium text-gray-700 px-6 py-3 text-left uppercase tracking-wider"
-                                >
-                                    Grade
-                                </th>
-                            </tr>
-                        </thead>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Class 10
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                SEBA
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Class 12
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                AHSEC
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                        <tr className="bg-white border-b">
-                            <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Class 12
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                AHSEC
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                            <td className="text-sm text-gray-500 px-6 py-4 whitespace-nowrap">
-                                70%
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
+        </>
     );
 };
 

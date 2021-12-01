@@ -24,3 +24,7 @@ export const fetchStudentProfile = () =>
     API.get("/student/profile").catch((error) => {
         return error.response;
     });
+export const updateStudentProfile = (fields) =>
+    API.post("/student/profile", fields).catch((error) => {
+        return error.response;
+    });
