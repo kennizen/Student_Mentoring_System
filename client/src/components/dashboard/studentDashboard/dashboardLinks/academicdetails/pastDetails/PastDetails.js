@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-const PastDetails = () => {
+const PastDetails = ({ handleShowModal, setOverflow, stuPastDetails }) => {
     return (
         <>
             <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-m32 rounded ">
@@ -13,6 +13,10 @@ const PastDetails = () => {
                         </div>
                         <div className="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
                             <button
+                                onClick={() => {
+                                    handleShowModal();
+                                    setOverflow(false);
+                                }}
                                 className="bg-indigo-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                                 type="button"
                             >
@@ -44,30 +48,30 @@ const PastDetails = () => {
                         <tbody>
                             <tr className="border-b">
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
-                                    Class 10
+                                    {stuPastDetails[10].class}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    SEBA
+                                    {stuPastDetails[10].board}
                                 </td>
                                 <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    A - New High School
+                                    {stuPastDetails[10].studied}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    86.5 %
+                                    {stuPastDetails[10].marks}
                                 </td>
                             </tr>
                             <tr>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-                                    Class 12
+                                    {stuPastDetails[12].class}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    AHSEC
+                                    {stuPastDetails[12].board}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    Salt Brook Academy
+                                    {stuPastDetails[12].studied}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    75.5 %
+                                    {stuPastDetails[12].marks}
                                 </td>
                             </tr>
                         </tbody>

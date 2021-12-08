@@ -6,7 +6,7 @@ import StuModal from "./stuModal/StuModal";
 import { studentGetProfileDetails } from "../../../../../actions/student";
 
 const Profile = () => {
-    const [Hidden, setHidden] = useState(false);
+    const [hidden, setHidden] = useState(false);
     const [stuProfileData, setStuProfileData] = useState({
         department: "",
         programme: "",
@@ -89,7 +89,7 @@ const Profile = () => {
 
     return (
         <div className="w-full p-2 relative">
-            {Hidden && (
+            {hidden && (
                 <StuModal
                     handleShowModal={handleShowModalFromModal}
                     stuProfileData={stuProfileData}

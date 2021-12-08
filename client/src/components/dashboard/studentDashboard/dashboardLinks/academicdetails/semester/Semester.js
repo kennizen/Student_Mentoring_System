@@ -47,7 +47,7 @@ const Semester = ({ semester, course }) => {
                         <tbody>
                             {course.map((course) => {
                                 return (
-                                    <tr className="border-b">
+                                    <tr className="border-b" key={course.code}>
                                         <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
                                             {course.code}
                                         </td>
