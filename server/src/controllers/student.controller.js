@@ -248,49 +248,73 @@ module.exports = {
                 semester: 1,
             });
 
-            const studentData = {
-                10: {
-                    board: req.user.class_10_board,
-                    studied: req.user.class_10_school,
-                    marks: req.user.class_10_percentage,
-                },
-                12: {
-                    board: req.user.class_12_board,
-                    studied: req.user.class_12_school,
-                    marks: req.user.class_12_percentage,
-                },
-                semesters: semesters,
-            };
-
-            res.send(Response.success("", { studentData }));
+            res.send(Response.success("", { semesters }));
         } catch (err) {
             res.status(500).send(Response.error("", {}));
         }
     },
     addSemesterInfo: async (req, res) => {
+        /** both the add and update semester is handled by this route   */
         try {
             let newSem;
+            // checking if semester info exists on db
             const semester = await Semester.findOne({
                 semester: req.body.semester,
                 student_id: req.user._id,
             });
 
+            // if semester info found on db we try to update the semester info and save
             if (semester) {
                 semester.courses = req.body.courses;
                 newSem = semester;
                 newSem.save();
             } else {
+                // else create a new semester and save to db
                 newSem = new Semester();
                 newSem.student_id = req.user._id;
                 newSem.semester = req.body.semester;
                 newSem.courses = req.body.courses;
                 await newSem.save();
             }
-
             res.send(Response.success("", { semesters: newSem }));
         } catch (err) {
             console.log(err);
             res.status(500).send(Response.error("", {}));
         }
+    },
+    /** add or update past education details to database  */
+    addPastEducation: async (req, res) => {
+        try {
+            const user = req.user;
+            // updating class 10 info
+            user.class_10_board = req.body[10].board;
+            user.class_10_school = req.body[10].studied;
+            user.class_10_percentage = req.body[10].marks;
+            // updating class 12 info
+            user.class_12_board = req.body[12].board;
+            user.class_12_school = req.body[12].studied;
+            user.class_12_percentage = req.body[12].marks;
+            /**  updating database        */
+            await user.save();
+            res.send(Response.success("", { pastEducation: req.body }));
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    /** get the past education details from database  */
+    getPastEducation: (req, res) => {
+        const pastEducation = {
+            10: {
+                board: req.user.class_10_board,
+                studied: req.user.class_10_school,
+                marks: req.user.class_10_percentage,
+            },
+            12: {
+                board: req.user.class_12_board,
+                studied: req.user.class_12_school,
+                marks: req.user.class_12_percentage,
+            },
+        };
+        res.send(Response.success("", { pastEducation }));
     },
 };

@@ -49,5 +49,9 @@ router.post(
 router.get("/semester/", Auth, Authorize(Role.Student), studentController.getSemesterInfo);
 //add semester info
 router.post("/semester/", Auth, Authorize(Role.Student), studentController.addSemesterInfo);
+//add or update pass education info
+router.post("/pastEducation/", Auth, Authorize(Role.Student), studentController.addPastEducation);
+//get all pass education info
+router.get("/pastEducation/", Auth, Authorize(Role.Student), studentController.getPastEducation);
 
 module.exports = router;
