@@ -14,6 +14,7 @@ const Role = require("../utils/roles");
 
 // importing multer config
 const upload = require("../config/multer");
+const { studentLoginHandler } = require("../controllers/student.controller");
 
 // student login
 router.post("/login", studentController.studentLoginHandler);
@@ -43,5 +44,10 @@ router.post(
     upload.single("avatar"),
     studentController.editAvatar
 );
+
+// get semester all/specific information
+router.get("/semester/:sem", Auth, Authorize(Role.Student), studentController.getSemesterInfo);
+//add semester info
+router.post("/semester/", Auth, Authorize(Role.Student), studentController.addSemesterInfo);
 
 module.exports = router;

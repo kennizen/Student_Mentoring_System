@@ -3,10 +3,13 @@ const Mentor = require("../models/Mentor");
 const Post = require("../models/Post");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 const Response = require("../utils/response.utils");
+const Semester = require("../models/Semester");
 
-// multer config
-// const storage = require("../config/multer");
+// including cloudinary configs
+require("../config/cloudinary");
 
 module.exports = {
     // student login handler function
@@ -209,15 +212,72 @@ module.exports = {
             student.mentor = mentor.name;
 
             res.send(Response.success("Profile Updated", { profileData: student }));
-        } catch (err) {}
+        } catch (err) {
+            res.status(500).send(Response.error("", {}));
+        }
     },
 
     // add/edit avatar image
     editAvatar: async (req, res) => {
         try {
-            console.log(req.file);
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                tags: "avatar",
+                width: 200,
+                height: 200,
+                quality: "auto:eco",
+            });
+            fs.unlinkSync(req.file.path);
+            if (!result) {
+                throw new Error();
+            }
+
+            req.user.avatar.url = result.secure_url;
+            req.user.avatar.id = result.public_id;
+            await req.user.save();
+
+            res.send(Response.success("Avatar updated", {}));
         } catch (err) {
             console.log("outer err", err);
+            res.status(500).send(Response.error("", {}));
+        }
+    },
+
+    getSemesterInfo: async (req, res) => {
+        try {
+            let sem = req.params.sem;
+            let semData;
+
+            // checking the parameter to decide fetch one/all the semester
+            if (sem != "all") {
+                sem = parseInt(sem);
+                semData = await Semester.find({ semester: sem, student_id: req.user._id });
+            }
+
+            semData = await Semester.find({ student_id: req.user._id });
+
+            console.log(semData);
+        } catch (err) {
+            console.log(err);
+            res.status(500).send(Response.error("", {}));
+        }
+    },
+    addSemesterInfo: async (req, res) => {
+        try {
+            const courseList = [];
+            const { semester, courses } = req.body;
+            const newSem = new Semester();
+            newSem.student_id = req.user._id;
+            newSem.semester = semester;
+
+            courses.forEach((item) => {
+                courseList.push(item);
+            });
+
+            newSem.courses = courses;
+            console.log(newSem);
+        } catch (err) {
+            console.log(err);
+            res.status(500).send(Response.error("", {}));
         }
     },
 };

@@ -24,4 +24,7 @@ router.get("/getAllUsers", Auth, Authorize(Role.Admin), adminController.getAllUs
 // saving student mentor groups
 router.post("/saveGroup", Auth, Authorize(Role.Admin), adminController.saveGroup);
 
+// fetching all logs from db
+router.get("/logs", Auth, Authorize(Role.Admin), adminController.getAllLogs);
+
 module.exports = router;

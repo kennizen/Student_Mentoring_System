@@ -14,7 +14,7 @@ app.use(cors());
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.set("trust proxy", true);
 /** server HTTP request logging
  * :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"
  * */
@@ -24,6 +24,7 @@ app.use(
         stream: fs.createWriteStream("./logs/access.log", { flags: "a" }),
     })
 );
+
 // logging to console
 app.use(morgan("dev"));
 

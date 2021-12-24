@@ -2,7 +2,12 @@ const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Student = require("../models/Student");
 const dotenv = require("dotenv");
+const Log = require("../models/Log");
+
+// imporintg utils
 const Response = require("../utils/response.utils");
+const log = require("../utils/log.utils");
+const logEvents = require("../utils/logEvents");
 
 // importing helpers methods
 const studentHelpers = require("../helpers/student.helper");
@@ -26,6 +31,8 @@ module.exports = {
 
             const admin = await Admin.findByCredentials(email, password);
             const token = await admin.generateAuthToken();
+            //logging
+            log.generateLog(logEvents.LOGIN, admin, req.ip);
             res.send(Response.success("Login successful", { auth_token: token, role: "ADMIN" }));
         } catch (err) {
             console.log(err);
@@ -83,10 +90,10 @@ module.exports = {
                 }
             }
 
-            // looing through students array
+            // looping through students array
             for (i = 0; i < students.length; i++) {
                 const student = await Student.findById(students[i]);
-                // checking for chnages in the new request. And updating the student count
+                // checking for changes in the new request. And updating the student count
                 if (student.mentoredBy !== "" && student.mentoredBy !== req.body.mentorId) {
                     mentorCountToUpdate[student.mentoredBy]
                         ? (mentorCountToUpdate[student.mentoredBy] += 1)
@@ -122,6 +129,9 @@ module.exports = {
             // getting all the students and mentors after performing all the above operations
             const allStudents = await studentHelpers.getAllStudents();
             const allMentors = await mentorHelpers.getAllMentors();
+
+            log.generateLog(logEvents.GROUP_UPDATE, req.user, req.ip); // logging the event
+
             // sending final response back
             res.send(
                 Response.success("Assigned Successfully", {
@@ -132,6 +142,14 @@ module.exports = {
         } catch (err) {
             console.log("catch", err);
             res.status(500).send(Response.error("Some error occured", {}));
+        }
+    },
+    getAllLogs: async (req, res) => {
+        try {
+            const allLogs = await Log.find();
+            res.send(Response.success("", { logs: allLogs }));
+        } catch (err) {
+            console.log(err);
         }
     },
 };

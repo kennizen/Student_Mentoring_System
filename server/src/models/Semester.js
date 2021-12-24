@@ -12,7 +12,7 @@ const semesterSchema = new mongoose.Schema(
             {
                 code: String,
                 title: String,
-                credit: String,
+                credit: Number,
                 type: String,
                 grade: String,
             },
