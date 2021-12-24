@@ -244,37 +244,50 @@ module.exports = {
 
     getSemesterInfo: async (req, res) => {
         try {
-            let sem = req.params.sem;
-            let semData;
+            const semesters = await Semester.find({ student_id: req.user._id }).sort({
+                semester: 1,
+            });
 
-            // checking the parameter to decide fetch one/all the semester
-            if (sem != "all") {
-                sem = parseInt(sem);
-                semData = await Semester.find({ semester: sem, student_id: req.user._id });
-            }
+            const studentData = {
+                10: {
+                    board: req.user.class_10_board,
+                    studied: req.user.class_10_school,
+                    marks: req.user.class_10_percentage,
+                },
+                12: {
+                    board: req.user.class_12_board,
+                    studied: req.user.class_12_school,
+                    marks: req.user.class_12_percentage,
+                },
+                semesters: semesters,
+            };
 
-            semData = await Semester.find({ student_id: req.user._id });
-
-            console.log(semData);
+            res.send(Response.success("", { studentData }));
         } catch (err) {
-            console.log(err);
             res.status(500).send(Response.error("", {}));
         }
     },
     addSemesterInfo: async (req, res) => {
         try {
-            const courseList = [];
-            const { semester, courses } = req.body;
-            const newSem = new Semester();
-            newSem.student_id = req.user._id;
-            newSem.semester = semester;
-
-            courses.forEach((item) => {
-                courseList.push(item);
+            let newSem;
+            const semester = await Semester.findOne({
+                semester: req.body.semester,
+                student_id: req.user._id,
             });
 
-            newSem.courses = courses;
-            console.log(newSem);
+            if (semester) {
+                semester.courses = req.body.courses;
+                newSem = semester;
+                newSem.save();
+            } else {
+                newSem = new Semester();
+                newSem.student_id = req.user._id;
+                newSem.semester = req.body.semester;
+                newSem.courses = req.body.courses;
+                await newSem.save();
+            }
+
+            res.send(Response.success("", { semesters: newSem }));
         } catch (err) {
             console.log(err);
             res.status(500).send(Response.error("", {}));
