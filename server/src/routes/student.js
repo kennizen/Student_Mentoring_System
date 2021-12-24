@@ -46,7 +46,7 @@ router.post(
 );
 
 // get semester all/specific information
-router.get("/semester/", Auth, Authorize(Role.Student), studentController.getSemesterInfo);
+router.get("/semester", Auth, Authorize(Role.Student), studentController.getSemesterInfo);
 //add semester info
 router.post("/semester/", Auth, Authorize(Role.Student), studentController.addSemesterInfo);
 //add or update pass education info

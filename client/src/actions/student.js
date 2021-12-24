@@ -81,3 +81,40 @@ export const studentUpdateProfileDetails = (history, fields) => async (dispatch)
         console.log(error);
     }
 };
+
+export const studentGetSemesterDetails = (history) => async (dispatch) => {
+    try {
+        const { data } = await api.fetchStudentSemesterDetails();
+        console.log("student semester data in actions from get", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "SAVE_SEM_DATA", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const studentUpdateSemesterDetails = (history, fields) => async (dispatch) => {
+    try {
+        console.log("in actions for semdetails", fields);
+        const { data } = await api.updateStudentSemesterDetails(fields);
+        console.log("student semester data in actions from update", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        // if (data.code === 403) {
+        //     history.goBack();
+        // } else {
+        //     dispatch({ type: "FETCH_PROFILE", data });
+        // }
+    } catch (error) {
+        console.log(error);
+    }
+};

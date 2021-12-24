@@ -1,91 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PastDetails from "./pastDetails/PastDetails";
 import Semester from "./semester/Semester";
 import AcademicModal from "./academicModal/AcademicModal";
 import { useHistory } from "react-router";
+import SemesterModal from "./academicModal/SemesterModal";
+import { useDispatch, useSelector } from "react-redux";
+import { studentGetSemesterDetails } from "../../../../../actions/student";
 
 const AcademicDetails = () => {
-    //dummy
-    const obj = [
-        {
-            semester: 1,
-            student_id: 1,
-            courses: [
-                {
-                    code: 123,
-                    title: "CN",
-                    credit: 3,
-                    type: "C",
-                    grade: "B+",
-                },
-            ],
-        },
-        {
-            semester: 2,
-            student_id: 1,
-            courses: [
-                {
-                    code: 234,
-                    title: "CN Lab",
-                    credit: 3,
-                    type: "C",
-                    grade: "B+",
-                },
-            ],
-        },
-        {
-            semester: 3,
-            student_id: 1,
-            courses: [
-                {
-                    code: 345,
-                    title: "OS",
-                    credit: 3,
-                    type: "C",
-                    grade: "B+",
-                },
-            ],
-        },
-        {
-            semester: 4,
-            student_id: 1,
-            courses: [
-                {
-                    code: 456,
-                    title: "OS Lab",
-                    credit: 2,
-                    type: "C",
-                    grade: "B+",
-                },
-            ],
-        },
-        {
-            semester: 5,
-            student_id: 1,
-            courses: [
-                {
-                    code: 567,
-                    title: "AI",
-                    credit: 3,
-                    type: "E",
-                    grade: "B+",
-                },
-            ],
-        },
-        {
-            semester: 6,
-            student_id: 1,
-            courses: [
-                {
-                    code: 678,
-                    title: "IOT",
-                    credit: 2,
-                    type: "E",
-                    grade: "A+",
-                },
-            ],
-        },
-    ];
+    const [showModal, setShowModal] = useState(false);
+    const [showSemesterModal, setShowSemesterModal] = useState(false);
+    const [overflow, setOverflow] = useState(true);
+    const [semNo, setSemNo] = useState(0);
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(studentGetSemesterDetails(history));
+    }, [dispatch, history]);
+
+    const { semData } = useSelector((state) => state.student);
+
+    console.log("semData", semData);
+
+    const [obj, setObj] = useState([]);
 
     const stuPastDetails = {
         10: {
@@ -117,9 +55,20 @@ const AcademicDetails = () => {
         },
     });
 
-    const [showModal, setShowModal] = useState(false);
-    const [overflow, setOverflow] = useState(true);
-    const history = useHistory();
+    const [semesterDetails, setSemesterDetails] = useState({
+        semester: 0,
+        courses: [],
+    });
+
+    const [semesterCourses, setSemesterCourses] = useState([
+        {
+            code: "",
+            title: "",
+            credit: 0,
+            type: "",
+            grade: "",
+        },
+    ]);
 
     // function to show modal
     const handleShowModalFromModal = (setOp, setSc) => {
@@ -127,6 +76,7 @@ const AcademicDetails = () => {
         setSc("scale-0");
         setTimeout(() => {
             setShowModal(false);
+            setShowSemesterModal(false);
         }, 100);
     };
 
@@ -148,12 +98,78 @@ const AcademicDetails = () => {
         });
     };
 
+    const addSemester = (len) => {
+        if (obj.length > 1) {
+            setObj([
+                ...obj,
+                {
+                    semester: (obj.length += 1),
+                    courses: [
+                        {
+                            code: "",
+                            title: "",
+                            credit: 0,
+                            type: "",
+                            grade: "",
+                        },
+                    ],
+                },
+            ]);
+        } else {
+            semData.map((sem) => {
+                return setObj((state) => [
+                    ...state,
+                    {
+                        semester: sem.semester,
+                        courses: sem.courses,
+                    },
+                ]);
+            });
+            setObj((state) => [
+                ...state,
+                {
+                    semester: (len += 1),
+                    courses: [
+                        {
+                            code: "",
+                            title: "",
+                            credit: 0,
+                            type: "",
+                            grade: "",
+                        },
+                    ],
+                },
+            ]);
+        }
+    };
+
+    console.log("obj", obj);
+
+    const removeSemester = (i) => {
+        let formValues = obj;
+        formValues.splice(i, 1);
+        setObj([...formValues]);
+    };
+
+    const handleSemesterModal = (i) => {
+        if (semData !== 0) {
+            let tempCourses = semData[i]?.courses;
+            if (tempCourses === undefined) {
+                tempCourses = [];
+                setSemesterCourses([...tempCourses]);
+            } else {
+                setSemesterCourses([...tempCourses]);
+            }
+        }
+        setShowSemesterModal(true);
+    };
+
     return (
-        <>
+        <div className="w-full relative">
             <div
                 className={`w-full h-845 pt-4 px-4 ${
                     overflow ? "overflow-y-auto" : "overflow-y-hidden"
-                } relative`}
+                } `}
             >
                 {showModal && (
                     <AcademicModal
@@ -165,18 +181,79 @@ const AcademicDetails = () => {
                         history={history}
                     />
                 )}
+
+                {showSemesterModal && (
+                    <SemesterModal
+                        handleShowModal={handleShowModalFromModal}
+                        setOverflow={setOverflow}
+                        semesterCourses={semesterCourses}
+                        semesterDetails={semesterDetails}
+                        setSemesterCourses={setSemesterCourses}
+                        semNo={semNo}
+                        setSemesterDetails={setSemesterDetails}
+                        history={history}
+                    />
+                )}
+
                 <PastDetails
                     handleShowModal={handleShowModal}
                     setOverflow={setOverflow}
                     stuPastDetails={stuPastDetails}
                 />
-                {obj.map((sem) => {
-                    return (
-                        <Semester key={sem.semester} semester={sem.semester} course={sem.courses} />
-                    );
-                })}
+
+                {obj.length <= 1
+                    ? semData.map((sem, index) => {
+                          return (
+                              <Semester
+                                  key={sem.semester}
+                                  semester={sem.semester}
+                                  courses={sem.courses}
+                                  handleSemesterModal={handleSemesterModal}
+                                  setOverflow={setOverflow}
+                                  setSemNo={setSemNo}
+                                  removeSemester={removeSemester}
+                                  index={index}
+                              />
+                          );
+                      })
+                    : obj.map((sem, index) => {
+                          return (
+                              <Semester
+                                  key={sem.semester}
+                                  semester={sem.semester}
+                                  courses={sem.courses}
+                                  handleSemesterModal={handleSemesterModal}
+                                  setOverflow={setOverflow}
+                                  setSemNo={setSemNo}
+                                  removeSemester={removeSemester}
+                                  index={index}
+                              />
+                          );
+                      })}
+
+                <button
+                    onClick={() => addSemester(semData.length)}
+                    type="button"
+                    className="rounded-md text-gray-900 bg-gray-200 w-full p-6 disabled:opacity-50 flex justify-center align-middle"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 mr-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v16m8-8H4"
+                        />
+                    </svg>
+                    Add Semester
+                </button>
             </div>
-        </>
+        </div>
     );
 };
 
