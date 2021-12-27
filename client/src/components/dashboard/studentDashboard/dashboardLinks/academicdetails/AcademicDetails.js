@@ -201,7 +201,7 @@ const AcademicDetails = () => {
                     stuPastDetails={stuPastDetails}
                 />
 
-                {obj.length <= 1
+                {obj.length < 1
                     ? semData.map((sem, index) => {
                           return (
                               <Semester
@@ -213,6 +213,7 @@ const AcademicDetails = () => {
                                   setSemNo={setSemNo}
                                   removeSemester={removeSemester}
                                   index={index}
+                                  isObj={false}
                               />
                           );
                       })
@@ -227,6 +228,7 @@ const AcademicDetails = () => {
                                   setSemNo={setSemNo}
                                   removeSemester={removeSemester}
                                   index={index}
+                                  isObj={true}
                               />
                           );
                       })}
