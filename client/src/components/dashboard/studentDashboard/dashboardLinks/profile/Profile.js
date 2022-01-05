@@ -56,35 +56,37 @@ const Profile = () => {
     // function to show modal
     const handleShowModal = () => {
         setHidden(true);
-        setStuProfileData({
-            department: profileData.department,
-            programme: profileData.programme,
-            semester: profileData.semester,
-            enrollment_no: profileData.enrollment_no,
-            enrollment_year: profileData.enrollment_year,
-            phone_no: profileData.phone_no,
-            address: profileData.address,
-            firstname: profileData.firstname,
-            middlename: profileData.middlename,
-            lastname: profileData.lastname,
-            gender: profileData.gender,
-            blood_group: profileData.blood_group,
-            home_place: profileData.home_place,
-            hobbies: profileData.hobbies,
-            guardian_name: profileData.guardian_name,
-            guardian_ph_no: profileData.guardian_ph_no,
-            guardian_address: profileData.guardian_address,
-            family_details: profileData.family_details,
-            hostel_name: profileData.hostel_name,
-            warden_name: profileData.warden_name,
-            asst_warden_name: profileData.asst_warden_name,
-            warden_ph_no: profileData.warden_ph_no,
-            asst_warden_ph_no: profileData.asst_warden_ph_no,
-            responsible_contact_person_at_residence:
-                profileData.responsible_contact_person_at_residence,
-            contact_no_of_contact_person: profileData.contact_no_of_contact_person,
-            residence_address: profileData.residence_address,
-        });
+        if (profileData) {
+            setStuProfileData({
+                department: profileData.department,
+                programme: profileData.programme,
+                semester: profileData.semester,
+                enrollment_no: profileData.enrollment_no,
+                enrollment_year: profileData.enrollment_year,
+                phone_no: profileData.phone_no,
+                address: profileData.address,
+                firstname: profileData.firstname,
+                middlename: profileData.middlename,
+                lastname: profileData.lastname,
+                gender: profileData.gender,
+                blood_group: profileData.blood_group,
+                home_place: profileData.home_place,
+                hobbies: profileData.hobbies,
+                guardian_name: profileData.guardian_name,
+                guardian_ph_no: profileData.guardian_ph_no,
+                guardian_address: profileData.guardian_address,
+                family_details: profileData.family_details,
+                hostel_name: profileData.hostel_name,
+                warden_name: profileData.warden_name,
+                asst_warden_name: profileData.asst_warden_name,
+                warden_ph_no: profileData.warden_ph_no,
+                asst_warden_ph_no: profileData.asst_warden_ph_no,
+                responsible_contact_person_at_residence:
+                    profileData.responsible_contact_person_at_residence,
+                contact_no_of_contact_person: profileData.contact_no_of_contact_person,
+                residence_address: profileData.residence_address,
+            });
+        }
     };
 
     return (
@@ -188,29 +190,29 @@ const Profile = () => {
                             <div className="col-span-3">
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Department</h4>
-                                    <h4>{profileData.department}</h4>
+                                    <h4>{profileData?.department}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Semester</h4>
-                                    <h4>{profileData.semester}</h4>
+                                    <h4>{profileData?.semester}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Enrollment Number</h4>
-                                    <h4>{profileData.enrollment_no}</h4>
+                                    <h4>{profileData?.enrollment_no}</h4>
                                 </div>
                             </div>
                             <div className="col-start-4 col-span-3">
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Programme</h4>
-                                    <h4>{profileData.programme}</h4>
+                                    <h4>{profileData?.programme}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Mentored By</h4>
-                                    <h4>{profileData.mentoredBy}</h4>
+                                    <h4>{profileData?.mentoredBy}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Enrollment Year</h4>
-                                    <h4>{profileData.enrollment_year}</h4>
+                                    <h4>{profileData?.enrollment_year}</h4>
                                 </div>
                             </div>
                         </div>
@@ -238,15 +240,15 @@ const Profile = () => {
                         <div className="">
                             <div className="flex flex-col items-start mb-4">
                                 <h4 className="text-gray-400">Email ID</h4>
-                                <h4>{profileData.email}</h4>
+                                <h4>{profileData?.email}</h4>
                             </div>
                             <div className="flex flex-col items-start mb-4">
                                 <h4 className="text-gray-400">Phone Number</h4>
-                                <h4>{profileData.phone_no}</h4>
+                                <h4>{profileData?.phone_no}</h4>
                             </div>
                             <div className="flex flex-col items-start">
                                 <h4 className="text-gray-400">Address</h4>
-                                <h4>{profileData.address}</h4>
+                                <h4>{profileData?.address}</h4>
                             </div>
                         </div>
                     </div>
@@ -276,49 +278,49 @@ const Profile = () => {
                         <div className="grid grid-cols-3">
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">First Name</h4>
-                                <h4>{profileData.firstname}</h4>
+                                <h4>{profileData?.firstname}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Middle Name</h4>
-                                <h4>{profileData.middlename}</h4>
+                                <h4>{profileData?.middlename}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Last Name</h4>
-                                <h4>{profileData.lastname}</h4>
+                                <h4>{profileData?.lastname}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Gender</h4>
-                                <h4>{profileData.gender}</h4>
+                                <h4>{profileData?.gender}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Blood Group</h4>
-                                <h4>{profileData.blood_group}</h4>
+                                <h4>{profileData?.blood_group}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Home Place</h4>
-                                <h4>{profileData.home_place}</h4>
+                                <h4>{profileData?.home_place}</h4>
                             </div>
                             <div className="flex col-span-3 items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Hobbies</h4>
-                                <h4>{profileData.hobbies}</h4>
+                                <h4>{profileData?.hobbies}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Guardian Name</h4>
-                                <h4>{profileData.guardian_name}</h4>
+                                <h4>{profileData?.guardian_name}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Guardian Ph No.</h4>
-                                <h4>{profileData.guardian_ph_no}</h4>
+                                <h4>{profileData?.guardian_ph_no}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Guardian Address</h4>
-                                <h4>{profileData.guardian_address}</h4>
+                                <h4>{profileData?.guardian_address}</h4>
                             </div>
                             <div className="flex col-span-3 items-start justify-center flex-col">
                                 <h4 className="text-gray-400">
                                     Family Details (occupation, members, etc)
                                 </h4>
-                                <h4>{profileData.family_details}</h4>
+                                <h4>{profileData?.family_details}</h4>
                             </div>
                         </div>
                     </div>
@@ -348,23 +350,23 @@ const Profile = () => {
 
                                 <div className="flex col-span-2 mb-4 items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Hostel Name</h4>
-                                    <h4>{profileData.hostel_name}</h4>
+                                    <h4>{profileData?.hostel_name}</h4>
                                 </div>
                                 <div className="flex  items-start justify-center mb-2 flex-col">
                                     <h4 className="text-gray-400">Warden's Name</h4>
-                                    <h4>{profileData.warden_name}</h4>
+                                    <h4>{profileData?.warden_name}</h4>
                                 </div>
                                 <div className="flex items-start justify-center mb-2 flex-col">
                                     <h4 className="text-gray-400">Asst Warden's Name</h4>
-                                    <h4>{profileData.asst_warden_name}</h4>
+                                    <h4>{profileData?.asst_warden_name}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Ph No.</h4>
-                                    <h4>{profileData.warden_ph_no}</h4>
+                                    <h4>{profileData?.warden_ph_no}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Ph No.</h4>
-                                    <h4>{profileData.asst_warden_ph_no}</h4>
+                                    <h4>{profileData?.asst_warden_ph_no}</h4>
                                 </div>
                             </div>
                             <div className="col-span-1 grid grid-cols-1">
@@ -375,15 +377,15 @@ const Profile = () => {
                                     <h4 className="text-gray-400">
                                         Responsible contact person at residence
                                     </h4>
-                                    <h4>{profileData.responsible_contact_person_at_residence}</h4>
+                                    <h4>{profileData?.responsible_contact_person_at_residence}</h4>
                                 </div>
                                 <div className="flex col-span-1 mb-4 items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Contact no. of contact person</h4>
-                                    <h4>{profileData.contact_no_of_contact_person}</h4>
+                                    <h4>{profileData?.contact_no_of_contact_person}</h4>
                                 </div>
                                 <div className="flex col-span-1 items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Reidence Address</h4>
-                                    <h4>{profileData.residence_address}</h4>
+                                    <h4>{profileData?.residence_address}</h4>
                                 </div>
                             </div>
                         </div>

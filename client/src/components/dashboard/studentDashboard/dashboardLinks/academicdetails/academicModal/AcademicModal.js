@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { studentUpdatePastEduDetails } from "../../../../../../actions/student";
 
-const AcademicModal = ({ header, handleShowModal, setOverflow, pastDetails, setPastDetails }) => {
+const AcademicModal = ({
+    header,
+    handleShowModal,
+    setOverflow,
+    pastDetails,
+    setPastDetails,
+    history,
+}) => {
     const [op, setOp] = useState("opacity-0");
     const [sc, setSc] = useState("scale-0");
+    const [isDisabled, setIsDisabled] = useState(true);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -14,6 +23,7 @@ const AcademicModal = ({ header, handleShowModal, setOverflow, pastDetails, setP
     }, []);
 
     const handleChange10 = (e) => {
+        setIsDisabled(false);
         setPastDetails({
             ...pastDetails,
             10: {
@@ -24,6 +34,7 @@ const AcademicModal = ({ header, handleShowModal, setOverflow, pastDetails, setP
     };
 
     const handleChange12 = (e) => {
+        setIsDisabled(false);
         setPastDetails({
             ...pastDetails,
             12: {
@@ -35,7 +46,7 @@ const AcademicModal = ({ header, handleShowModal, setOverflow, pastDetails, setP
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        //dispatch(studentUpdateProfileDetails(history, pastDetails));
+        dispatch(studentUpdatePastEduDetails(history, pastDetails));
         handleShowModal(setOp, setSc);
     };
 
@@ -161,8 +172,10 @@ const AcademicModal = ({ header, handleShowModal, setOverflow, pastDetails, setP
                     </div>
                     <div className="w-full flex items-center justify-end">
                         <button
+                            onClick={() => setOverflow(true)}
                             type="submit"
                             className="p-2 bg-blue-600 rounded-md text-white disabled:opacity-50"
+                            disabled={isDisabled}
                         >
                             Update
                         </button>

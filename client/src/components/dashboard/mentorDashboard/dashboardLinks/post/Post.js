@@ -260,7 +260,7 @@ const Post = () => {
                         <div className="grid grid-cols-12 mt-4 border border-gray-400 rounded-full focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent">
                             <input
                                 value={comment.body}
-                                ref={(input) => input && input.focus()}
+                                // ref={(input) => input && input.focus()}
                                 onChange={handleChangeComment}
                                 name="comment"
                                 type="text"

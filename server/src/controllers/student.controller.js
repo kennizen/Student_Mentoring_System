@@ -331,7 +331,7 @@ module.exports = {
                 throw new Error("Some error occured");
             }
 
-            res.send(Response.success("Semester deleted", { semData: deleted }));
+            res.send(Response.success("Semester deleted", { semester: deleted }));
         } catch (err) {
             console.log(err);
             res.status(500).send(Response.error("", {}));

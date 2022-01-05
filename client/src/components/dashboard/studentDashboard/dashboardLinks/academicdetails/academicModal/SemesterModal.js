@@ -14,6 +14,7 @@ const SemesterModal = ({
 }) => {
     const [op, setOp] = useState("opacity-0");
     const [sc, setSc] = useState("scale-0");
+    const [isDisabled, setIsDisabled] = useState(true);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -24,6 +25,7 @@ const SemesterModal = ({
     }, []);
 
     const handleChange = (e, i) => {
+        setIsDisabled(false);
         let formValues = semesterCourses;
         formValues[i][e.target.name] = e.target.value;
         setSemesterCourses([...formValues]);
@@ -36,7 +38,7 @@ const SemesterModal = ({
     const addField = () => {
         setSemesterCourses([
             ...semesterCourses,
-            { code: "", title: "", credit: 0, type: "", grade: "" },
+            { code: "", title: "", credit: "", type: "", grade: "" },
         ]);
     };
 
@@ -44,6 +46,10 @@ const SemesterModal = ({
         let formValues = semesterCourses;
         formValues.splice(i, 1);
         setSemesterCourses([...formValues]);
+        setSemesterDetails({
+            semester: semNo,
+            courses: semesterCourses,
+        });
     };
 
     const handleSubmit = (e) => {
@@ -52,8 +58,8 @@ const SemesterModal = ({
         handleShowModal(setOp, setSc);
     };
 
-    console.log(semesterDetails);
-    console.log(semesterCourses);
+    console.log("sem details", semesterDetails);
+    console.log("sem courses", semesterCourses);
 
     return (
         <>
@@ -119,7 +125,7 @@ const SemesterModal = ({
                                         </label>
                                         <input
                                             id="credit"
-                                            type="number"
+                                            type="text"
                                             name="credit"
                                             required
                                             className="rounded-lg border-gray-300"
@@ -174,13 +180,30 @@ const SemesterModal = ({
                                             <option value="X">X</option>
                                         </select>
                                     </div>
-                                    <button
-                                        onClick={() => removeField(index)}
-                                        type="button"
-                                        className="p-2 bg-blue-600 rounded-md text-white disabled:opacity-50 place-self-center mt-2"
-                                    >
-                                        Remove
-                                    </button>
+                                    {semesterCourses.length <= 2 ? (
+                                        <div></div>
+                                    ) : (
+                                        <button
+                                            onClick={() => removeField(index)}
+                                            type="button"
+                                            className="p-2 bg-blue-600 rounded-full text-white disabled:opacity-50 place-self-center mt-2"
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-6 w-6"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M20 12H4"
+                                                />
+                                            </svg>
+                                        </button>
+                                    )}
                                 </div>
                             );
                         })}
@@ -193,7 +216,7 @@ const SemesterModal = ({
                                 <button
                                     onClick={addField}
                                     type="button"
-                                    className="p-2 bg-blue-600 rounded-md text-white disabled:opacity-50 mr-5"
+                                    className="p-2 bg-blue-600 rounded-full text-white disabled:opacity-50 mr-5"
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -213,8 +236,10 @@ const SemesterModal = ({
                             </div>
                         )}
                         <button
+                            onClick={() => setOverflow(true)}
                             type="submit"
                             className="p-2 bg-blue-600 rounded-md text-white disabled:opacity-50"
+                            disabled={isDisabled}
                         >
                             Update
                         </button>

@@ -100,6 +100,25 @@ export const studentGetSemesterDetails = (history) => async (dispatch) => {
     }
 };
 
+export const studentAddSemesterDetails = (history, fields) => async (dispatch) => {
+    try {
+        console.log("in actions for semdetails", fields);
+        const { data } = await api.addStudentSemesterDetails(fields);
+        console.log("student semester data in actions from add", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "ADD_SEM_DATA", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const studentUpdateSemesterDetails = (history, fields) => async (dispatch) => {
     try {
         console.log("in actions for semdetails", fields);
@@ -109,11 +128,67 @@ export const studentUpdateSemesterDetails = (history, fields) => async (dispatch
         // check if the response data is error
         // if yes then call dispatch logout
         // and redirect to "/"
-        // if (data.code === 403) {
-        //     history.goBack();
-        // } else {
-        //     dispatch({ type: "FETCH_PROFILE", data });
-        // }
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "UPDATE_SEM_DATA", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const studentDeleteSemesterDetails = (history, fields) => async (dispatch) => {
+    try {
+        console.log("in actions for semdetails", fields);
+        const { data } = await api.deleteStudentSemesterDetails(fields);
+        console.log("student semester data in actions from delete", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "DELETE_SEM_DATA", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const studentGetPastEduDetails = (history) => async (dispatch) => {
+    try {
+        const { data } = await api.getStudentPastEduDetails();
+        console.log("student past edu data in actions from get", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "SAVE_PAST_EDU_DATA", data });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const studentUpdatePastEduDetails = (history, fields) => async (dispatch) => {
+    try {
+        console.log("in actions for pastEduDetails", fields);
+        const { data } = await api.updateStudentPastEduDetails(fields);
+        console.log("student past edu data in actions from update", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "SAVE_PAST_EDU_DATA", data });
+        }
     } catch (error) {
         console.log(error);
     }

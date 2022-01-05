@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-const PastDetails = ({ handleShowModal, setOverflow, stuPastDetails }) => {
+const PastDetails = ({ handleShowModal, setOverflow, pastEducation }) => {
     return (
         <>
             <div className="flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-m32 rounded ">
@@ -48,30 +48,30 @@ const PastDetails = ({ handleShowModal, setOverflow, stuPastDetails }) => {
                         <tbody>
                             <tr className="border-b">
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700 ">
-                                    {stuPastDetails[10].class}
+                                    Class 10
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    {stuPastDetails[10].board}
+                                    {pastEducation["10"]?.board}
                                 </td>
                                 <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    {stuPastDetails[10].studied}
+                                    {pastEducation["10"]?.studied}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    {stuPastDetails[10].marks}
+                                    {pastEducation["10"]?.marks}
                                 </td>
                             </tr>
                             <tr>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
-                                    {stuPastDetails[12].class}
+                                    Class 12
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    {stuPastDetails[12].board}
+                                    {pastEducation["12"]?.board}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    {stuPastDetails[12].studied}
+                                    {pastEducation["12"]?.studied}
                                 </td>
                                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left">
-                                    {stuPastDetails[12].marks}
+                                    {pastEducation["12"]?.marks}
                                 </td>
                             </tr>
                         </tbody>
