@@ -130,8 +130,7 @@ const AcademicDetails = () => {
         setShowSemesterModal(true);
     };
 
-    const handleDelSemModal = (sem) => {
-        setSemNo(sem);
+    const handleDelSemModal = () => {
         setShowDelModal(true);
     };
 
@@ -196,6 +195,7 @@ const AcademicDetails = () => {
                             setOverflow={setOverflow}
                             setSemNo={setSemNo}
                             index={index}
+                            semDataLength={semData.length}
                         />
                     );
                 })}
