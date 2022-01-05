@@ -27,6 +27,7 @@ const SemesterModal = ({
     const handleChange = (e, i) => {
         setIsDisabled(false);
         let formValues = semesterCourses;
+        if (e.target.value === "") return;
         formValues[i][e.target.name] = e.target.value;
         setSemesterCourses([...formValues]);
         setSemesterDetails({
@@ -151,6 +152,8 @@ const SemesterModal = ({
                                             <option value="E">E</option>
                                             <option value="OE">OE</option>
                                             <option value="Audit">Audit</option>
+                                            <option value="Minor Project">Minor Project</option>
+                                            <option value="Major Project">Major Project</option>
                                         </select>
                                     </div>
                                     <div className="flex flex-col mb-6">
