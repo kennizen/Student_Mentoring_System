@@ -317,4 +317,24 @@ module.exports = {
         };
         res.send(Response.success("", { pastEducation }));
     },
+    // delete a semester
+    deleteSemesterInfo: async (req, res) => {
+        try {
+            const sem = req.body.sem;
+
+            const deleted = await Semester.findOneAndDelete({
+                student_id: req.user._id,
+                semester: sem,
+            });
+
+            if (!deleted) {
+                throw new Error("Some error occured");
+            }
+
+            res.send(Response.success("Semester deleted", { semData: deleted }));
+        } catch (err) {
+            console.log(err);
+            res.status(500).send(Response.error("", {}));
+        }
+    },
 };

@@ -49,6 +49,13 @@ router.post(
 router.get("/semester/", Auth, Authorize(Role.Student), studentController.getSemesterInfo);
 //add semester info
 router.post("/semester/", Auth, Authorize(Role.Student), studentController.addSemesterInfo);
+// semester delete
+router.post(
+    "/semester/delete",
+    Auth,
+    Authorize(Role.Student),
+    studentController.deleteSemesterInfo
+);
 //add or update pass education info
 router.post("/pastEducation/", Auth, Authorize(Role.Student), studentController.addPastEducation);
 //get all pass education info
