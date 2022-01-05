@@ -1,6 +1,6 @@
 import React from "react";
 
-const ListComponent = ({ name, avatar, assigned, isInGroup }) => {
+const ListComponent = ({ name, avatar, assigned, isInGroup, isStudent }) => {
     return (
         <>
             <img
@@ -13,10 +13,14 @@ const ListComponent = ({ name, avatar, assigned, isInGroup }) => {
                 className="h-9 w-9 place-self-center rounded-full"
             />
             <div className="col-span-3">
-                <h4 className="select-none">{name}</h4>
-                <div className="flex items-center justify-between">
-                    <h6 className="mb-1 select-none">Assistant Proffessor</h6>
-                    <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
+                <h4 className="select-none ml-3">{name}</h4>
+                <div
+                    className={`flex items-center ${
+                        isStudent ? "ml-3 justify-start" : "justify-between"
+                    } `}
+                >
+                    {isStudent || <h6 className="mb-1 select-none">Assistant Proffessor</h6>}
+                    {isStudent || <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>}
                     <h6>CSE</h6>
                 </div>
             </div>

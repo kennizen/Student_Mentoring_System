@@ -94,7 +94,6 @@ const Profile = () => {
                     handleShowModal={handleShowModalFromModal}
                     stuProfileData={stuProfileData}
                     setStuProfileData={setStuProfileData}
-                    profileData={profileData}
                     history={history}
                     dispatch={dispatch}
                 />

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const PastDetails = ({ handleShowModal, setOverflow, stuPastDetails }) => {
     return (
         <>
-            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-m32 rounded ">
+            <div className="flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-m32 rounded ">
                 <div className="rounded-t mb-0 px-4 py-3 border-0">
                     <div className="flex flex-wrap items-center">
                         <div className="relative w-full px-2 max-w-full flex-grow flex-1">

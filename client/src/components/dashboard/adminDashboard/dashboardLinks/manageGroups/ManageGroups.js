@@ -154,7 +154,11 @@ const ManageGroups = () => {
                                             title={mentor.name}
                                             className="p-2 grid grid-cols-7 gap-2 hover:bg-gray-100 cursor-pointer rounded-md border-gray-200 border-solid border mb-2"
                                         >
-                                            <ListComponent {...mentor} isInGroup={false} />
+                                            <ListComponent
+                                                {...mentor}
+                                                isInGroup={false}
+                                                isStudent={false}
+                                            />
                                             {group.mentorId === mentor._id ? (
                                                 <TickComponent color="#2563EB" isCross={false} />
                                             ) : (
@@ -203,7 +207,11 @@ const ManageGroups = () => {
                                             key={student._id}
                                             className="py-2 px-4 grid grid-cols-7 hover:bg-gray-100 cursor-pointer place-self-center rounded-md border-gray-200 border-solid border"
                                         >
-                                            <ListComponent {...student} isInGroup={false} />
+                                            <ListComponent
+                                                {...student}
+                                                isInGroup={false}
+                                                isStudent={true}
+                                            />
                                             {group.studentIds.includes(student._id) ? (
                                                 <TickComponent color="#2563EB" isCross={false} />
                                             ) : (

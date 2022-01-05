@@ -1,4 +1,4 @@
-const student = (state = { studentData: null, profileData: {} }, action) => {
+const student = (state = { studentData: null, profileData: {}, semData: [] }, action) => {
     switch (action.type) {
         case "SIGN_IN_STUDENT":
             localStorage.setItem("authData", JSON.stringify({ ...action?.data?.data }));
@@ -7,6 +7,8 @@ const student = (state = { studentData: null, profileData: {} }, action) => {
             return { ...state, studentData: action.data };
         case "FETCH_PROFILE":
             return { ...state, profileData: action.data.data.profileData };
+        case "SAVE_SEM_DATA":
+            return { ...state, semData: action.data.data.semesters };
         case "LOGOUT_STUDENT":
             localStorage.clear();
             return { ...state, studentData: null };

@@ -28,3 +28,11 @@ export const updateStudentProfile = (fields) =>
     API.post("/student/profile", fields).catch((error) => {
         return error.response;
     });
+export const fetchStudentSemesterDetails = () =>
+    API.get("/student/semester").catch((error) => {
+        return error.response;
+    });
+export const updateStudentSemesterDetails = (fields) =>
+    API.post("/student/semester", fields).catch((error) => {
+        return error.response;
+    });
