@@ -27,9 +27,17 @@ const SemesterModal = ({
     const handleChange = (e, i) => {
         setIsDisabled(false);
         let formValues = semesterCourses;
-        if (e.target.value === "") return;
         formValues[i][e.target.name] = e.target.value;
         setSemesterCourses([...formValues]);
+        if (
+            semesterCourses.length === 1 &&
+            semesterCourses[0].code === "" &&
+            semesterCourses[0].title === "" &&
+            semesterCourses[0].credit === "" &&
+            semesterCourses[0].type === "" &&
+            semesterCourses[0].grade === ""
+        )
+            return;
         setSemesterDetails({
             semester: semNo,
             courses: semesterCourses,
@@ -47,6 +55,15 @@ const SemesterModal = ({
         let formValues = semesterCourses;
         formValues.splice(i, 1);
         setSemesterCourses([...formValues]);
+        if (
+            semesterCourses.length === 1 &&
+            semesterCourses[0].code === "" &&
+            semesterCourses[0].title === "" &&
+            semesterCourses[0].credit === "" &&
+            semesterCourses[0].type === "" &&
+            semesterCourses[0].grade === ""
+        )
+            return;
         setSemesterDetails({
             semester: semNo,
             courses: semesterCourses,
@@ -183,9 +200,8 @@ const SemesterModal = ({
                                             <option value="X">X</option>
                                         </select>
                                     </div>
-                                    {semesterCourses.length <= 2 ? (
-                                        <div></div>
-                                    ) : (
+                                    {semesterCourses.length > 1 &&
+                                    semesterCourses.length - 1 === index ? (
                                         <button
                                             onClick={() => removeField(index)}
                                             type="button"
@@ -206,6 +222,8 @@ const SemesterModal = ({
                                                 />
                                             </svg>
                                         </button>
+                                    ) : (
+                                        <div></div>
                                     )}
                                 </div>
                             );

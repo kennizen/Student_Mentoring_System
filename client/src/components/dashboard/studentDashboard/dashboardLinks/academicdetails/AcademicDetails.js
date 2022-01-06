@@ -49,15 +49,7 @@ const AcademicDetails = () => {
         courses: [],
     });
 
-    const [semesterCourses, setSemesterCourses] = useState([
-        {
-            code: "",
-            title: "",
-            credit: "",
-            type: "",
-            grade: "",
-        },
-    ]);
+    const [semesterCourses, setSemesterCourses] = useState([]);
 
     // function to show modal
     const handleShowModalFromModal = (setOp, setSc) => {
@@ -88,6 +80,7 @@ const AcademicDetails = () => {
 
     // logic to add semester dynamically
     const mount = useRef();
+
     useEffect(() => {
         // mount is a reference variable that is set true after first time component renders
         if (!mount.current) {
@@ -122,10 +115,21 @@ const AcademicDetails = () => {
         });
     };
 
-    const handleSemesterModal = (i) => {
-        if (semData !== 0) {
-            let tempCourses = semData[i]?.courses;
-            setSemesterCourses([...tempCourses]);
+    const handleSemesterModal = (index) => {
+        if (semData.length !== 0) {
+            let tempC = [];
+            semData[index].courses.forEach((course) => {
+                let temp = {
+                    code: course.code,
+                    title: course.title,
+                    credit: course.credit,
+                    type: course.type,
+                    grade: course.grade,
+                };
+
+                tempC.push(temp);
+            });
+            setSemesterCourses([...tempC]);
         }
         setShowSemesterModal(true);
     };
@@ -187,14 +191,14 @@ const AcademicDetails = () => {
                 {semData.map((sem, index) => {
                     return (
                         <Semester
-                            key={sem.semester}
+                            key={sem._id}
                             semester={sem.semester}
                             courses={sem.courses}
+                            index={index}
                             handleSemesterModal={handleSemesterModal}
                             handleDelSemModal={handleDelSemModal}
                             setOverflow={setOverflow}
                             setSemNo={setSemNo}
-                            index={index}
                             semDataLength={semData.length}
                         />
                     );
