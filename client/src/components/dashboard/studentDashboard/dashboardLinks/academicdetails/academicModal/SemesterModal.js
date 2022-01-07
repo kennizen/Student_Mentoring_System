@@ -108,7 +108,7 @@ const SemesterModal = ({
                     <div className="flex flex-col items-start justify-center">
                         {semesterCourses.map((course, index) => {
                             return (
-                                <div className="grid grid-cols-6 gap-x-7 w-full" key={index}>
+                                <div className="grid grid-cols-5 gap-x-7 w-full" key={index}>
                                     <div className="flex flex-col mb-3">
                                         <label htmlFor="code" className="mb-2">
                                             Code
@@ -173,58 +173,60 @@ const SemesterModal = ({
                                             <option value="Major Project">Major Project</option>
                                         </select>
                                     </div>
-                                    <div className="flex flex-col mb-6">
-                                        <label htmlFor="grade" className="mb-2">
-                                            Grade
-                                        </label>
-                                        <select
-                                            id="grade"
-                                            name="grade"
-                                            className="rounded-lg border-gray-300"
-                                            value={course.grade}
-                                            onChange={(e) => handleChange(e, index)}
-                                            required
-                                            selected={course.grade}
-                                        >
-                                            <option value="">Select grade</option>
-                                            <option value="O">O</option>
-                                            <option value="A+">A+</option>
-                                            <option value="A">A</option>
-                                            <option value="B+">B+</option>
-                                            <option value="B">B</option>
-                                            <option value="C">C</option>
-                                            <option value="D">D</option>
-                                            <option value="P">P</option>
-                                            <option value="S">S</option>
-                                            <option value="F">F</option>
-                                            <option value="X">X</option>
-                                        </select>
-                                    </div>
-                                    {semesterCourses.length > 1 &&
-                                    semesterCourses.length - 1 === index ? (
-                                        <button
-                                            onClick={() => removeField(index)}
-                                            type="button"
-                                            className="p-2 bg-blue-600 rounded-full text-white disabled:opacity-50 place-self-center mt-2"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-6 w-6"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
+                                    <div className="flex justify-between mb-6">
+                                        <div className="flex flex-col">
+                                            <label htmlFor="grade" className="mb-2">
+                                                Grade
+                                            </label>
+                                            <select
+                                                id="grade"
+                                                name="grade"
+                                                className="rounded-lg border-gray-300"
+                                                value={course.grade}
+                                                onChange={(e) => handleChange(e, index)}
+                                                required
+                                                selected={course.grade}
                                             >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M20 12H4"
-                                                />
-                                            </svg>
-                                        </button>
-                                    ) : (
-                                        <div></div>
-                                    )}
+                                                <option value="">Select grade</option>
+                                                <option value="O">O</option>
+                                                <option value="A+">A+</option>
+                                                <option value="A">A</option>
+                                                <option value="B+">B+</option>
+                                                <option value="B">B</option>
+                                                <option value="C">C</option>
+                                                <option value="D">D</option>
+                                                <option value="P">P</option>
+                                                <option value="S">S</option>
+                                                <option value="F">F</option>
+                                                <option value="X">X</option>
+                                            </select>
+                                        </div>
+
+                                        {semesterCourses.length > 1 ? (
+                                            <button
+                                                onClick={() => removeField(index)}
+                                                type="button"
+                                                className="p-2 bg-blue-600 rounded-full text-white disabled:opacity-50 place-self-end mt-2"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="h-6 w-6"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M20 12H4"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        ) : (
+                                            <div></div>
+                                        )}
+                                    </div>
                                 </div>
                             );
                         })}

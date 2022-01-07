@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import { adminGetDetails } from "../../../actions/admin";
-import LoadingDashboard from "../../loading/LoadingDashboard";
+import Loading from "../../loading/Loading";
 import Home from "./dashboardLinks/home/Home";
 import Profile from "./dashboardLinks/profile/Profile";
 import ManageGroups from "./dashboardLinks/manageGroups/ManageGroups";
@@ -67,7 +67,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="flex">
-            {!data && <LoadingDashboard />}
+            {!data && <Loading />}
             <nav className="w-3/20 h-screen bg-white flex flex-col z-10 fixed">
                 <div className="h-1/10 flex items-center justify-center">
                     <svg

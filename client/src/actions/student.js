@@ -100,7 +100,7 @@ export const studentGetSemesterDetails = (history) => async (dispatch) => {
     }
 };
 
-export const studentAddSemesterDetails = (history, fields) => async (dispatch) => {
+export const studentAddSemesterDetails = (history, fields, setIsLoading) => async (dispatch) => {
     try {
         console.log("in actions for semdetails", fields);
         const { data } = await api.addStudentSemesterDetails(fields);
@@ -114,6 +114,7 @@ export const studentAddSemesterDetails = (history, fields) => async (dispatch) =
         } else {
             dispatch({ type: "ADD_SEM_DATA", data });
         }
+        setIsLoading(false);
     } catch (error) {
         console.log(error);
     }

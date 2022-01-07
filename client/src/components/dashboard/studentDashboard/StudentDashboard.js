@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import { studentGetDetails } from "../../../actions/student";
-import LoadingDashboard from "../../loading/LoadingDashboard";
+import Home from "../studentDashboard/dashboardLinks/home/Home";
 import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
 import Profile from "./dashboardLinks/profile/Profile";
 
@@ -66,7 +66,6 @@ const StudentDashboard = () => {
 
     return (
         <div className="h-screen flex bg-gray-50">
-            {!data && <LoadingDashboard />}
             <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
                 <div className="h-1/10 flex items-center justify-center">
                     <svg
@@ -193,6 +192,7 @@ const StudentDashboard = () => {
                     {/* conditional rendering of the inner tab screens */}
                     {route.academicDetails && <AcademicDetails />}
                     {route.profile && <Profile />}
+                    {route.home && <Home />}
                 </div>
             </div>
         </div>

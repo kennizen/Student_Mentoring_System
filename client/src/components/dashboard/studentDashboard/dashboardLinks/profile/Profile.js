@@ -90,7 +90,7 @@ const Profile = () => {
     };
 
     return (
-        <div className="w-full p-2 relative">
+        <div className="w-full h-845 p-2 relative">
             {hidden && (
                 <StuModal
                     handleShowModal={handleShowModalFromModal}
@@ -190,7 +190,7 @@ const Profile = () => {
                             <div className="col-span-3">
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Department</h4>
-                                    <h4>{profileData?.department}</h4>
+                                    <h4 className="pr-4">{profileData?.department}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Semester</h4>

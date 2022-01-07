@@ -11,6 +11,7 @@ import {
     studentGetPastEduDetails,
 } from "../../../../../actions/student";
 import SemesterDelModal from "./academicModal/SemesterDelModal";
+import Loading from "../../../../loading/Loading";
 
 const AcademicDetails = () => {
     const [showModal, setShowModal] = useState(false);
@@ -18,6 +19,7 @@ const AcademicDetails = () => {
     const [showDelModal, setShowDelModal] = useState(false);
     const [overflow, setOverflow] = useState(true);
     const [semNo, setSemNo] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -95,7 +97,7 @@ const AcademicDetails = () => {
                 semesterDetails.courses[0].type === "" &&
                 semesterDetails.courses[0].grade === ""
             ) {
-                dispatch(studentAddSemesterDetails(history, semesterDetails));
+                dispatch(studentAddSemesterDetails(history, semesterDetails, setIsLoading));
             }
         }
     }, [dispatch, history, semesterDetails]);
@@ -113,6 +115,7 @@ const AcademicDetails = () => {
                 },
             ],
         });
+        setIsLoading(true);
     };
 
     const handleSemesterModal = (index) => {
@@ -175,7 +178,7 @@ const AcademicDetails = () => {
                         handleShowModal={handleShowModalFromModal}
                         b1Text="Cancel"
                         b2Text="Delete"
-                        body="If you delete the semester than all the course details will also be deleted."
+                        body="If you delete the semester than all the course details for this semester will also be deleted."
                         header="Delete semester details ?"
                         history={history}
                         setOverflow={setOverflow}
@@ -210,22 +213,26 @@ const AcademicDetails = () => {
                     <button
                         onClick={() => addSemester(semData.length)}
                         type="button"
-                        className="rounded-md text-gray-900 bg-gray-200 w-full p-6 disabled:opacity-50 flex justify-center align-middle"
+                        className="rounded-md text-gray-900 bg-gray-200 w-full p-6 disabled:opacity-50 flex justify-center items-center gap-2"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 mr-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 4v16m8-8H4"
-                            />
-                        </svg>
+                        {isLoading ? (
+                            <Loading width={"w-6"} height={"h-6"} />
+                        ) : (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 4v16m8-8H4"
+                                />
+                            </svg>
+                        )}
                         Add Semester
                     </button>
                 )}

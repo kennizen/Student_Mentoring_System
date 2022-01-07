@@ -20,6 +20,7 @@
     "redux-thunk": "^2.3.0",
     "suneditor": "^2.41.3",
     "suneditor-react": "^3.3.0",
+    "tw-elements": "^1.0.0-alpha4",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
