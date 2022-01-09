@@ -22,6 +22,7 @@ const Post = () => {
     const editor = useRef();
     const scrollPost = useRef();
     const scrollComment = useRef();
+    const focusInput = useRef();
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -41,6 +42,8 @@ const Post = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     // state variable to show the modal is we click the delete in a single post
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    // state variable to show comment delete modal
+    const [showCommentDeleteModal, setShowCommentDeleteModal] = useState(false);
     // state variable to store the post data and send it to modal component
     const [postDataForModal, setPostDataForModal] = useState({});
     const [isHidden, setIsHidden] = useState(true);
@@ -87,7 +90,6 @@ const Post = () => {
             });
         } else {
             dispatch(mentorUpdatePost(history, cnt, postId));
-            handleShowModal({ isEdit: true });
         }
     };
 
@@ -95,6 +97,7 @@ const Post = () => {
     const handlePostDelete = (postId) => {
         dispatch(mentorDeletePost(history, postId));
         setSelectedPost(-1); // resetting selected post index
+        // setting isHidded to true will remove the comments part for the deleted post
         setIsHidden(true);
     };
 
@@ -123,16 +126,27 @@ const Post = () => {
     // function to show modal
     const handleShowModal = ({ post: postData, isEdit: isEditModal }) => {
         if (isEditModal) {
-            setShowEditModal(!showEditModal);
+            setShowEditModal(true);
             if (postData) {
                 setPostDataForModal(postData);
             }
         } else {
-            setShowDeleteModal(!showDeleteModal);
+            setShowDeleteModal(true);
             if (postData) {
                 setSelectedPostId(postData._id);
             }
         }
+    };
+
+    // function to show modal
+    const handleShowModalFromModal = (setOp, setSc) => {
+        setOp("opacity-0");
+        setSc("scale-0");
+        setTimeout(() => {
+            setShowEditModal(false);
+            setShowDeleteModal(false);
+            setShowCommentDeleteModal(false);
+        }, 100);
     };
 
     // function to make scroll focus to the recent post posted
@@ -149,6 +163,13 @@ const Post = () => {
         });
     };
 
+    // function to focus the comment input box when reply is clicked
+    const executeFocusInput = () => {
+        setTimeout(() => {
+            focusInput?.current?.focus();
+        }, 1);
+    };
+
     // setInterval(() => {
     //     dispatch(mentorGetAllPosts(history, executeScroll, false));
     // }, 10000);
@@ -157,16 +178,16 @@ const Post = () => {
         <div className="w-full h-845 mt-2 grid grid-cols-12 relative">
             {showEditModal && (
                 <Modal
-                    handleShowModal={handleShowModal}
                     postDataForModal={postDataForModal}
                     handleSubmit={handleSubmit}
+                    handleShowModalFromModal={handleShowModalFromModal}
                 />
             )}
             {showDeleteModal && (
                 <GenModal
                     id={selectedPostId}
                     handleFunc={handlePostDelete}
-                    handleShowModal={handleShowModal}
+                    handleShowModalFromModal={handleShowModalFromModal}
                     b1Text="Cancel"
                     b2Text="Delete"
                     body="If you delete this post than all the comments on this post will also be deleted."
@@ -187,6 +208,7 @@ const Post = () => {
                                 handleShowModal={handleShowModal}
                                 setIsHidden={setIsHidden}
                                 setIsDisabled={setIsDisabled}
+                                executeFocusInput={executeFocusInput}
                             />
                         );
                     })}
@@ -242,6 +264,9 @@ const Post = () => {
                                         author={obj.authorData}
                                         comment={obj.commentData}
                                         handleCommentDelete={handleCommentDelete}
+                                        handleShowModalFromModal={handleShowModalFromModal}
+                                        setShowCommentDeleteModal={setShowCommentDeleteModal}
+                                        showCommentDeleteModal={showCommentDeleteModal}
                                     />
                                 );
                             })
@@ -260,7 +285,7 @@ const Post = () => {
                         <div className="grid grid-cols-12 mt-4 border border-gray-400 rounded-full focus-within:ring-2 focus-within:ring-blue-600 focus-within:border-transparent">
                             <input
                                 value={comment.body}
-                                // ref={(input) => input && input.focus()}
+                                ref={focusInput}
                                 onChange={handleChangeComment}
                                 name="comment"
                                 type="text"

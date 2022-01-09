@@ -1,21 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import moment from "moment";
 import GenModal from "../../../../../modal/GenModal";
 
-const SingleComment = ({ author, comment, handleCommentDelete }) => {
-    const [showModal, setShowModal] = useState({
-        isEdit: false,
-    });
-
+const SingleComment = ({
+    author,
+    comment,
+    handleCommentDelete,
+    handleShowModalFromModal,
+    showCommentDeleteModal,
+    setShowCommentDeleteModal,
+}) => {
     return (
         <div className="p-2 bg-gray-100 rounded-md place-self-start mb-3 mr-2 flex">
-            {showModal.isEdit && (
+            {showCommentDeleteModal && (
                 <GenModal
                     header="Delete comment?"
                     b1Text="Cancel"
                     b2Text="Delete"
                     body="Are you sure you want to delete this comment?"
-                    handleShowModal={setShowModal}
+                    handleShowModalFromModal={handleShowModalFromModal}
                     handleFunc={handleCommentDelete}
                     id={comment._id}
                 />
@@ -36,11 +39,7 @@ const SingleComment = ({ author, comment, handleCommentDelete }) => {
                     <h6>{moment(comment.createdAt).fromNow()}</h6>
                     <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
                     <svg
-                        onClick={() =>
-                            setShowModal({
-                                isEdit: true,
-                            })
-                        }
+                        onClick={() => setShowCommentDeleteModal(true)}
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4 cursor-pointer hover:text-red-600 transition-all"
                         fill="none"

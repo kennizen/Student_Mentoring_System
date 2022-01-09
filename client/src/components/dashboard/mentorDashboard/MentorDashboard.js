@@ -4,6 +4,7 @@ import { useHistory } from "react-router";
 
 import { mentorGetDetails } from "../../../actions/mentor";
 import Loading from "../../loading/Loading";
+import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
 import Post from "./dashboardLinks/post/Post";
 
 const MentorDashboard = () => {
@@ -11,6 +12,7 @@ const MentorDashboard = () => {
     const [route, setRoute] = useState({
         home: true,
         post: false,
+        menteeInfo: false,
         profile: false,
     });
     // setting the admin auth token
@@ -34,6 +36,7 @@ const MentorDashboard = () => {
                 setRoute({
                     home: true,
                     post: false,
+                    menteeInfo: false,
                     profile: false,
                 });
                 break;
@@ -41,6 +44,7 @@ const MentorDashboard = () => {
                 setRoute({
                     home: false,
                     post: true,
+                    menteeInfo: false,
                     profile: false,
                 });
                 break;
@@ -48,7 +52,16 @@ const MentorDashboard = () => {
                 setRoute({
                     home: false,
                     post: false,
+                    menteeInfo: false,
                     profile: true,
+                });
+                break;
+            case "menteeInfo":
+                setRoute({
+                    home: false,
+                    post: false,
+                    menteeInfo: true,
+                    profile: false,
                 });
                 break;
             default:
@@ -124,6 +137,31 @@ const MentorDashboard = () => {
                 </button>
                 <button
                     onClick={handleRouteChange}
+                    id="menteeInfo"
+                    className={`${
+                        route.menteeInfo && "text-gray-700"
+                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`${route.menteeInfo && "text-blue-600"} h-5 w-5 mr-3`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
+                        />
+                    </svg>
+                    Mentee Info
+                </button>
+                <button
+                    onClick={handleRouteChange}
                     id="profile"
                     className={`${
                         route.profile && "text-gray-700"
@@ -187,6 +225,7 @@ const MentorDashboard = () => {
                 <div className="flex items-center justify-center">
                     {/* conditional rendering of the inner tab screens */}
                     {route.post && <Post />}
+                    {route.menteeInfo && <MenteeInfo />}
                 </div>
             </div>
         </div>

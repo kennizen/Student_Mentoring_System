@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const GenModal = ({ header, body, b1Text, b2Text, handleFunc, handleShowModal, id }) => {
+const GenModal = ({ header, body, b1Text, b2Text, handleFunc, id, handleShowModalFromModal }) => {
     const [op, setOp] = useState("opacity-0");
     const [sc, setSc] = useState("scale-0");
 
@@ -14,7 +14,7 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, handleShowModal, i
     return (
         <>
             <div
-                onClick={() => handleShowModal({ isEdit: false })}
+                onClick={() => handleShowModalFromModal(setOp, setSc)}
                 className={`${op} absolute flex items-center justify-center bg-black w-full h-full top-0 right-0 z-30 transition-opacity`}
             ></div>
             <div
@@ -22,7 +22,10 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, handleShowModal, i
             >
                 <div className="flex items-center justify-between mb-3">
                     <h4>{header}</h4>
-                    <button onClick={() => handleShowModal({ isEdit: false })} className="text-2xl">
+                    <button
+                        onClick={() => handleShowModalFromModal(setOp, setSc)}
+                        className="text-2xl"
+                    >
                         &times;
                     </button>
                 </div>
@@ -31,7 +34,7 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, handleShowModal, i
 
                 <div className="w-full flex items-center justify-end">
                     <button
-                        onClick={() => handleShowModal({ isEdit: false })}
+                        onClick={() => handleShowModalFromModal(setOp, setSc)}
                         type="submit"
                         className="p-2 hover:bg-gray-200 rounded-md text-gray-600 mt-5 mr-3"
                     >
@@ -40,7 +43,7 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, handleShowModal, i
                     <button
                         onClick={() => {
                             handleFunc(id);
-                            handleShowModal({ isEdit: false });
+                            handleShowModalFromModal(setOp, setSc);
                         }}
                         type="submit"
                         className="p-2 hover:bg-gray-200 rounded-md text-gray-800 mt-5"

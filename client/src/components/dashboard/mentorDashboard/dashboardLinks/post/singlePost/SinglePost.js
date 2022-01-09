@@ -12,6 +12,7 @@ const SinglePost = ({
     handleShowModal,
     setIsHidden,
     setIsDisabled,
+    executeFocusInput,
 }) => {
     const [toggleMenu, setToggleMenu] = useState(false);
 
@@ -126,6 +127,7 @@ const SinglePost = ({
                         handleComment(post._id, index);
                         setIsHidden(false);
                         setIsDisabled(true);
+                        executeFocusInput();
                     }}
                     className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md transition-all"
                 >
