@@ -3,6 +3,7 @@ const Post = require("../models/Post");
 const bcrypt = require("bcryptjs");
 const Response = require("../utils/response.utils");
 const Student = require("../models/Student");
+const Semester = require("../models/Semester");
 
 module.exports = {
     // mentor login handler function
@@ -115,7 +116,26 @@ module.exports = {
 
             res.send(Response.success("", { posts: allPosts }));
         } catch (err) {
-            res.send(Response.error("", {}));
+            res.status(500).send(Response.error("", {}));
+        }
+    },
+    fetchAllMentees: async (req, res) => {
+        try {
+            const students = await Student.find({ mentoredBy: req.user._id });
+            res.send(Response.success("", { mentees: students }));
+        } catch (err) {
+            res.status(500).send(Response.error("", {}));
+        }
+    },
+
+    // fetch students semesters
+    fetchStudentSemesters: async (req, res) => {
+        try {
+            const _id = req.body.id;
+            const semesters = await Semester.find({ student_id: _id });
+            res.send(Response.success("", { semesters }));
+        } catch (err) {
+            res.status(500).send(Response.error("", {}));
         }
     },
 };

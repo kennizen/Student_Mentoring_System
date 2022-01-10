@@ -30,4 +30,10 @@ router.post("/newPost", Auth, Authorize(Role.Mentor), mentorController.createNew
 // get all posts
 router.get("/fetchAllPosts", Auth, Authorize(Role.Mentor), mentorController.fetchAllPosts);
 
+//get all students of mentored
+router.get("/getAllMentees", Auth, Authorize(Role.Mentor), mentorController.fetchAllMentees);
+
+// get all semesters info of mentee
+router.get("/getSemesters", Auth, Authorize(Role.Mentor), mentorController.fetchStudentSemesters);
+
 module.exports = router;
