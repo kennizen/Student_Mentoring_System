@@ -164,3 +164,36 @@ export const mentorDeleteComment = (history, commentId) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const mentorGetAllMentees = (history, setAllMentees) => async (dispatch) => {
+    try {
+        const { data } = await api.getAllMentees();
+        console.log("mentor all mentees in actions", data);
+
+        //check if the response data is error
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            setAllMentees(data.data.mentees);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const mentorGetAllMenteeSemesters =
+    (history, setSemesters, menteeId) => async (dispatch) => {
+        try {
+            const { data } = await api.getAllMenteeSemesters(menteeId);
+            console.log("mentee all semesters in actions", data);
+
+            //check if the response data is error
+            if (data.code === 403) {
+                history.goBack();
+            } else {
+                setSemesters(data.data.semesters);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };

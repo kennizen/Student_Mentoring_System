@@ -13,11 +13,20 @@ module.exports = {
             xl: ["1.25rem", "unset"],
             "2xl": ["1.5rem", "unset"],
         },
+        flex: {
+            2: "2 2 0%",
+            3: "3 3 0%",
+            4: "4 4 0%",
+        },
         extend: {
             width: {
                 "9/20": "45%",
                 "3/20": "15%",
                 "17/20": "85%",
+                800: "800px",
+                650: "650px",
+                450: "450px",
+                845: "845px",
             },
             height: {
                 "9/20": "45%",
@@ -41,12 +50,18 @@ module.exports = {
             boxShadow: {
                 m32: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
             },
+            gridTemplateColumns: {
+                // custom grid column for showing mentee info on mentor
+                custom: "80px 200px 1fr 1fr 1fr 300px 1fr 1fr 1fr",
+            },
         },
     },
     variants: {
         extend: {
             display: ["group-hover"],
             opacity: ["disabled"],
+            backgroundColor: ["active"],
+            textColor: ["active"],
         },
     },
     plugins: [require("@tailwindcss/forms"), require("tw-elements/dist/plugin")],

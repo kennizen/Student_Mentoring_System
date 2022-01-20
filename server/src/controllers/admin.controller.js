@@ -118,7 +118,7 @@ module.exports = {
 
             // setting mentor to assigned
             if (students.length === 0) {
-                mentor.assigned = "";
+                mentor.assigned = "unassigned";
             } else {
                 mentor.assigned = "assigned";
             }

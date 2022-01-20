@@ -49,3 +49,11 @@ export const deleteMentorComment = (commentId) =>
     API.post(`post/comment/${commentId}/delete`).catch((error) => {
         return error.response;
     });
+export const getAllMentees = () =>
+    API.get(`/mentor/getAllMentees`).catch((error) => {
+        return error.response;
+    });
+export const getAllMenteeSemesters = (menteeId) =>
+    API.get(`/mentor/getSemesters/${menteeId}`).catch((error) => {
+        return error.response;
+    });

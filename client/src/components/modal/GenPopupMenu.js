@@ -23,9 +23,13 @@ const GenPopupMenu = ({
                     toggleMenu ? "scale-100" : "scale-0"
                 } absolute transform transition-all bg-white top-${top} z-20 right-${right} rounded-md py-2 shadow-md`}
             >
-                {itemArray.map((item) => {
+                {itemArray.map((item, index) => {
                     return (
-                        <h5 onClick={() => {}} className="hover:bg-gray-200 px-4 flex py-1">
+                        <h5
+                            key={index}
+                            onClick={() => {}}
+                            className="hover:bg-gray-200 px-4 flex py-1"
+                        >
                             {item}
                         </h5>
                     );

@@ -34,6 +34,11 @@ router.get("/fetchAllPosts", Auth, Authorize(Role.Mentor), mentorController.fetc
 router.get("/getAllMentees", Auth, Authorize(Role.Mentor), mentorController.fetchAllMentees);
 
 // get all semesters info of mentee
-router.get("/getSemesters", Auth, Authorize(Role.Mentor), mentorController.fetchStudentSemesters);
+router.get(
+    "/getSemesters/:id",
+    Auth,
+    Authorize(Role.Mentor),
+    mentorController.fetchStudentSemesters
+);
 
 module.exports = router;

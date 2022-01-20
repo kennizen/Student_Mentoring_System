@@ -131,7 +131,7 @@ module.exports = {
     // fetch students semesters
     fetchStudentSemesters: async (req, res) => {
         try {
-            const _id = req.body.id;
+            const _id = req.params.id;
             const semesters = await Semester.find({ student_id: _id });
             res.send(Response.success("", { semesters }));
         } catch (err) {
