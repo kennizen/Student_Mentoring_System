@@ -21,14 +21,43 @@ const MenteeInfo = () => {
 
     console.log(mentees);
 
+    // search function to search for mentees
+    const handleSearch = (e) => {
+        console.log(e.target.value);
+        let value = e.target.value;
+        let temp = [];
+
+        mentees.forEach((mentee) => {
+            console.log(mentee["firstname"].toLowerCase());
+            if (mentee["firstname"].toString().toLowerCase().indexOf(value) > -1) {
+                temp.push(mentee);
+            }
+        });
+
+        console.log(temp);
+    };
+
     return (
         <div className="h-845 w-full px-5 py-5">
             <div className="w-full bg-gray-100 p-3 rounded-md shadow-md h-800 overflow-y-auto">
-                <div>
-                    <h2 className="font-medium mb-3">Mentee Information</h2>
-                    <h5 className="font-light mb-10 flex justify-start items-center">
-                        <p className="font-semibold mr-1">{mentees.length}</p> mentees found
-                    </h5>
+                <div className="w-full flex items-start justify-between">
+                    <div>
+                        <h2 className="font-medium mb-3">Mentee Information</h2>
+                        <h5 className="font-light mb-10 flex justify-start items-center">
+                            <p className="font-semibold mr-1">{mentees.length}</p> mentees found
+                        </h5>
+                    </div>
+                    <div className="flex justify-center">
+                        <div className="mb-3 xl:w-96">
+                            <input
+                                onChange={(e) => handleSearch(e)}
+                                type="search"
+                                className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                id="exampleSearch"
+                                placeholder="Type query"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <div className="grid grid-cols-custom bg-white rounded-md py-1 px-2">
                     <div className="flex justify-start items-center">

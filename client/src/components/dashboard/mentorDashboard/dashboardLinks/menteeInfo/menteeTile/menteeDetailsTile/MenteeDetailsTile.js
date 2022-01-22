@@ -38,6 +38,7 @@ const MenteeDetailsTile = ({ mentee, semesters }) => {
                         </div>
                     </div>
                     <div className="mt-10 grid grid-cols-3 gap-4">
+                        <h5 className="col-span-3 font-semibold text-gray-400">PERSONAL DETAILS</h5>
                         <div>
                             <h6 className="text-gray-400">ENROLLMENT YEAR</h6>
                             <h6 className="font-semibold">{mentee.enrollment_year}</h6>
@@ -62,7 +63,7 @@ const MenteeDetailsTile = ({ mentee, semesters }) => {
                             <h6 className="text-gray-400">FAMILY DETAILS</h6>
                             <h6 className="font-semibold">{mentee.family_details}</h6>
                         </div>
-                        <div className="col-span-3">
+                        <div>
                             <h6 className="text-gray-400">HOBBIES</h6>
                             <h6 className="font-semibold">{mentee.hobbies}</h6>
                         </div>
@@ -78,16 +79,75 @@ const MenteeDetailsTile = ({ mentee, semesters }) => {
                             <h6 className="text-gray-400">GUARDIAN ADDRESS</h6>
                             <h6 className="font-semibold">{mentee.guardian_address}</h6>
                         </div>
+                        {mentee.hostel_name === "" ? (
+                            <h6 className="col-span-3 text-gray-400 font-semibold">
+                                NOT HOSTEL BORDER
+                            </h6>
+                        ) : (
+                            <h6 className="col-span-3 text-gray-400 font-semibold">
+                                HOSTEL BORDER
+                            </h6>
+                        )}
+                        {mentee.hostel_name === "" ? (
+                            <div>
+                                <h6 className="text-gray-400">RESPONSIBLE CONTACT PERSON</h6>
+                                <h6 className="font-semibold">
+                                    {mentee.responsible_contact_person_at_residence}
+                                </h6>
+                            </div>
+                        ) : (
+                            <div>
+                                <h6 className="text-gray-400">HOSTEL NAME</h6>
+                                <h6 className="font-semibold">{mentee.hostel_name}</h6>
+                            </div>
+                        )}
+                        {mentee.hostel_name === "" ? (
+                            <div>
+                                <h6 className="text-gray-400">CONTACT NO. CONTACT PERSON</h6>
+                                <h6 className="font-semibold">
+                                    {mentee.contact_no_of_contact_person}
+                                </h6>
+                            </div>
+                        ) : (
+                            <div>
+                                <h6 className="text-gray-400">WARDEN NAME</h6>
+                                <h6 className="font-semibold">{mentee.warden_name}</h6>
+                            </div>
+                        )}
+                        {mentee.hostel_name === "" ? (
+                            <div>
+                                <h6 className="text-gray-400">RESIDENCE ADDRESS</h6>
+                                <h6 className="font-semibold">{mentee.residence_address}</h6>
+                            </div>
+                        ) : (
+                            <div>
+                                <h6 className="text-gray-400">ASST. WARDEN NAME</h6>
+                                <h6 className="font-semibold">{mentee.asst_warden_name}</h6>
+                            </div>
+                        )}
+                        {mentee.hostel_name && (
+                            <div>
+                                <h6 className="text-gray-400">WARDEN PH NO.</h6>
+                                <h6 className="font-semibold">{mentee.warden_ph_no}</h6>
+                            </div>
+                        )}
+                        {mentee.hostel_name && (
+                            <div>
+                                <h6 className="text-gray-400">ASST. WARDEN PH NO.</h6>
+                                <h6 className="font-semibold">{mentee.asst_warden_ph_no}</h6>
+                            </div>
+                        )}
                     </div>
                 </div>
-                <div className="ml-5 w-2/3 grid grid-cols-2 gap-3">
+                <div className="ml-5 px-5 w-2/3 grid grid-cols-2 gap-3 border-l-2">
+                    <h5 className="col-span-2 font-semibold text-gray-400">SEMESTER DETAILS</h5>
                     {semesters.map((semester) => {
                         return (
                             <div key={semester._id} className="mb-7">
                                 <h5 className="mb-1 font-semibold">
                                     Semester - {semester.semester}
                                 </h5>
-                                <table className="items-center w-full">
+                                <table className="items-center w-full border border-solid border-gray-200">
                                     <thead>
                                         <tr className="bg-gray-100">
                                             <th className="px-6 align-middle py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-center">
@@ -112,7 +172,7 @@ const MenteeDetailsTile = ({ mentee, semesters }) => {
                                         {semester.courses.map((course, index) => {
                                             return (
                                                 <tr className="border-b" key={index}>
-                                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-blueGray-700 text-center">
+                                                    <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">
                                                         {course.code}
                                                     </td>
                                                     <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-center">

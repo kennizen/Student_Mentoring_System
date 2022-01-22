@@ -59,11 +59,11 @@ const studentSchema = new mongoose.Schema(
         },
         mentoredBy: {
             type: String,
-            default: "unassigned",
+            default: "",
         },
         assigned: {
             type: String,
-            default: "unassigned",
+            default: "",
         },
         avatar: {
             url: {
