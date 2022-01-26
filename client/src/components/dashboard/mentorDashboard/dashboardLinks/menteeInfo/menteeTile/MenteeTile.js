@@ -12,7 +12,7 @@ const MenteeTile = ({ slno, mentee, history }) => {
     // state variable to store the fetched semesters for the mentee
     const [semesters, setSemesters] = useState([]);
 
-    console.log(semesters);
+    console.log("semesters", semesters);
 
     return (
         <>

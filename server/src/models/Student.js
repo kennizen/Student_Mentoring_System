@@ -27,7 +27,10 @@ const studentSchema = new mongoose.Schema(
         gender: String,
         blood_group: String,
         home_place: String,
-        address: String,
+        address: {
+            type: String,
+            default: "",
+        },
         guardian_name: String,
         guardian_ph_no: String,
         guardian_address: String,
@@ -42,7 +45,10 @@ const studentSchema = new mongoose.Schema(
         enrollment_no: String,
         programme: String,
         enrollment_year: String,
-        department: String,
+        department: {
+            type: String,
+            default: "",
+        },
         semester: String,
         hostel_name: String,
         hostel_room_no: Number,

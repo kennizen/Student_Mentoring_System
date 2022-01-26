@@ -42,9 +42,18 @@ module.exports = {
     // student signup handler
     studentSignupHandler: async (req, res) => {
         try {
-            const { email, password, confirmPassword, firstName, lastName } = req.body;
+            const {
+                email,
+                password,
+                confirmPassword,
+                firstName,
+                lastName,
+                middleName,
+                enrollmentNo,
+                semester,
+            } = req.body;
 
-            if (!email || !password || !firstName || !lastName) {
+            if (!email || !password || !firstName || !lastName || !semester || !enrollmentNo) {
                 return res.status(400).send(Response.badrequest("Malformed input", {}));
             }
 
@@ -55,7 +64,11 @@ module.exports = {
             const student = new Student();
             student.email = email;
             student.password = await bcrypt.hash(password, 8);
-            student.name = `${firstName} ${lastName}`;
+            student.firstname = firstName;
+            student.middlename = middleName === "" ? "" : middleName;
+            student.lastname = lastName;
+            student.enrollment_no = enrollmentNo;
+            student.semester = semester;
             await student.save();
             res.send(Response.success("Student created successfully", {}));
         } catch (err) {

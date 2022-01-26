@@ -11,6 +11,10 @@ const MenteeInfo = () => {
 
     const [mentees, setMentees] = useState([]);
 
+    // temporary array to store the filtered results of the search
+    const [tempList, setTempList] = useState([]);
+
+    // func to set all the mentees fetched from db
     const setAllMentees = (mentees) => {
         setMentees(mentees);
     };
@@ -19,8 +23,6 @@ const MenteeInfo = () => {
         dispatch(mentorGetAllMentees(history, setAllMentees));
     }, [dispatch, history]);
 
-    console.log(mentees);
-
     // search function to search for mentees
     const handleSearch = (e) => {
         console.log(e.target.value);
@@ -28,13 +30,21 @@ const MenteeInfo = () => {
         let temp = [];
 
         mentees.forEach((mentee) => {
-            console.log(mentee["firstname"].toLowerCase());
             if (mentee["firstname"].toString().toLowerCase().indexOf(value) > -1) {
+                temp.push(mentee);
+            } else if (mentee["lastname"].toString().toLowerCase().indexOf(value) > -1) {
+                temp.push(mentee);
+            } else if (mentee["address"].toString().toLowerCase().indexOf(value) > -1) {
+                temp.push(mentee);
+            } else if (mentee["department"].toString().toLowerCase().indexOf(value) > -1) {
+                temp.push(mentee);
+            } else if (mentee["semester"].toString().toLowerCase().indexOf(value) > -1) {
                 temp.push(mentee);
             }
         });
 
-        console.log(temp);
+        // setting mentees for the temp list
+        setTempList(temp);
     };
 
     return (
@@ -54,7 +64,7 @@ const MenteeInfo = () => {
                                 type="search"
                                 className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                 id="exampleSearch"
-                                placeholder="Type query"
+                                placeholder="Search"
                             />
                         </div>
                     </div>
@@ -139,8 +149,19 @@ const MenteeInfo = () => {
                 </div>
                 {mentees.length === 0 ? (
                     <div></div>
-                ) : (
+                ) : tempList.length === 0 ? (
                     mentees.map((mentee, index) => {
+                        return (
+                            <MenteeTile
+                                key={index}
+                                slno={index + 1}
+                                mentee={mentee}
+                                history={history}
+                            />
+                        );
+                    })
+                ) : (
+                    tempList.map((mentee, index) => {
                         return (
                             <MenteeTile
                                 key={index}

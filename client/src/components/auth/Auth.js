@@ -12,9 +12,12 @@ const Auth = ({ location }) => {
     const [fields, setFields] = useState({
         firstName: "",
         lastName: "",
+        middleName: "",
         email: "",
         password: "",
         confirmPassword: "",
+        enrollmentNo: "",
+        semester: "",
     });
     const [isSuccess, setIsSuccess] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -34,9 +37,12 @@ const Auth = ({ location }) => {
         setFields({
             firstName: "",
             lastName: "",
+            middleName: "",
             email: "",
             password: "",
             confirmPassword: "",
+            enrollmentNo: "",
+            semester: "",
         });
     };
 
@@ -64,7 +70,9 @@ const Auth = ({ location }) => {
 
     const handleChange = (e) => {
         // this function is used to set the new form field values
-        setFields({ ...fields, [e.target.name]: e.target.value });
+        console.log(e.target.value);
+        if (e.target.name === "semester" && e.target.value === "") return;
+        setFields({ ...fields, [e.target.name]: e.target.value.trim() });
     };
 
     const handleSubmit = (e) => {
@@ -95,6 +103,8 @@ const Auth = ({ location }) => {
         resetFields();
     };
 
+    console.log("fields", fields);
+
     return (
         <div className="bg-gray-100 h-screen flex flex-col items-center justify-center">
             <h1>{isSuccess && "acc created successfully login to continue"}</h1>
@@ -103,8 +113,8 @@ const Auth = ({ location }) => {
             <div className="container bg-white sm:w-2/3 lg:w-4/12 py-5 px-10 rounded-lg shadow-lg">
                 <form className="font-semibold" onSubmit={handleSubmit}>
                     {toggleLogin && (
-                        <div className="flex justify-between">
-                            <div className="flex flex-col mb-6 w-9/20">
+                        <div className="grid grid-cols-3 gap-2">
+                            <div className="flex flex-col mb-6">
                                 <label htmlFor="firstName" className="mb-2">
                                     First Name
                                 </label>
@@ -118,7 +128,20 @@ const Auth = ({ location }) => {
                                     className="rounded-lg border-gray-300"
                                 />
                             </div>
-                            <div className="flex flex-col mb-6 w-9/20">
+                            <div className="flex flex-col mb-6">
+                                <label htmlFor="middleName" className="mb-2">
+                                    Middle Name
+                                </label>
+                                <input
+                                    id="middleName"
+                                    name="middleName"
+                                    type="text"
+                                    value={fields.middleName}
+                                    onChange={handleChange}
+                                    className="rounded-lg border-gray-300"
+                                />
+                            </div>
+                            <div className="flex flex-col mb-6">
                                 <label htmlFor="lastName" className="mb-2">
                                     Last Name
                                 </label>
@@ -133,6 +156,51 @@ const Auth = ({ location }) => {
                                 />
                             </div>
                         </div>
+                    )}
+                    {toggleLogin && location.state === "Mentee" ? (
+                        <div className="grid grid-cols-2 gap-2">
+                            <div className="flex flex-col mb-6">
+                                <label htmlFor="enrollmentNo" className="mb-2">
+                                    Enrollment No.
+                                </label>
+                                <input
+                                    id="enrollmentNo"
+                                    name="enrollmentNo"
+                                    type="text"
+                                    value={fields.enrollmentNo.toUpperCase()}
+                                    onChange={handleChange}
+                                    required
+                                    className="rounded-lg border-gray-300"
+                                />
+                            </div>
+                            <div className="flex flex-col mb-6">
+                                <label htmlFor="semester" className="mb-2">
+                                    Semester
+                                </label>
+                                <select
+                                    id="semester"
+                                    name="semester"
+                                    className="rounded-lg border-gray-300"
+                                    value={fields.semester}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="">Select semester</option>
+                                    <option value="1st semester">1st semester</option>
+                                    <option value="2nd semester">2nd semester</option>
+                                    <option value="3rd semester">3rd semester</option>
+                                    <option value="4th semester">4th semester</option>
+                                    <option value="5th semester">5th semester</option>
+                                    <option value="6th semester">6th semester</option>
+                                    <option value="7th semester">7th semester</option>
+                                    <option value="8th semester">8th semester</option>
+                                    <option value="9th semester">9th semester</option>
+                                    <option value="10th semester">10th semester</option>
+                                </select>
+                            </div>
+                        </div>
+                    ) : (
+                        <div></div>
                     )}
                     <div className="flex flex-col mb-6">
                         <label htmlFor="email" className="mb-2">
