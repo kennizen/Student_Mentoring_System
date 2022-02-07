@@ -34,6 +34,7 @@ module.exports = {
                 "17/20": "85%",
                 "1/10": "10%",
                 "9/10": "90%",
+                cal: "calc(100% - 100px)",
                 800: "800px",
                 650: "650px",
                 450: "450px",
@@ -53,6 +54,10 @@ module.exports = {
             gridTemplateColumns: {
                 // custom grid column for showing mentee info on mentor
                 custom: "80px 200px 1fr 1fr 1fr 300px 1fr 1fr 1fr",
+                chatTab: "max-content 1fr max-content",
+            },
+            outline: {
+                zero: "0px solid #0000ff",
             },
         },
     },

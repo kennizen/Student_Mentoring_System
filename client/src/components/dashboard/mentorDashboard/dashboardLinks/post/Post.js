@@ -175,7 +175,7 @@ const Post = () => {
     // }, 10000);
 
     return (
-        <div className="w-full h-845 mt-2 grid grid-cols-12 relative">
+        <div className="w-full h-845 grid grid-cols-12 relative">
             {showEditModal && (
                 <Modal
                     postDataForModal={postDataForModal}
