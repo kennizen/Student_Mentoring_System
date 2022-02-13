@@ -4,6 +4,7 @@ import { useHistory } from "react-router";
 
 import { mentorGetDetails } from "../../../actions/mentor";
 import Loading from "../../loading/Loading";
+import Chat from "./dashboardLinks/chat/Chat";
 import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
 import Post from "./dashboardLinks/post/Post";
 
@@ -14,6 +15,7 @@ const MentorDashboard = () => {
         post: false,
         menteeInfo: false,
         profile: false,
+        chat: false,
     });
     // setting the admin auth token
     const dispatch = useDispatch();
@@ -38,6 +40,7 @@ const MentorDashboard = () => {
                     post: false,
                     menteeInfo: false,
                     profile: false,
+                    chat: false,
                 });
                 break;
             case "post":
@@ -46,6 +49,7 @@ const MentorDashboard = () => {
                     post: true,
                     menteeInfo: false,
                     profile: false,
+                    chat: false,
                 });
                 break;
             case "profile":
@@ -54,6 +58,7 @@ const MentorDashboard = () => {
                     post: false,
                     menteeInfo: false,
                     profile: true,
+                    chat: false,
                 });
                 break;
             case "menteeInfo":
@@ -62,6 +67,16 @@ const MentorDashboard = () => {
                     post: false,
                     menteeInfo: true,
                     profile: false,
+                    chat: false,
+                });
+                break;
+            case "chat":
+                setRoute({
+                    home: false,
+                    post: false,
+                    menteeInfo: false,
+                    profile: false,
+                    chat: true,
                 });
                 break;
             default:
@@ -162,6 +177,29 @@ const MentorDashboard = () => {
                 </button>
                 <button
                     onClick={handleRouteChange}
+                    id="chat"
+                    className={`${
+                        route.chat && "text-gray-700"
+                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`${route.chat && "text-blue-600"} h-5 w-5 mr-3`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                        />
+                    </svg>
+                    Chat
+                </button>
+                <button
+                    onClick={handleRouteChange}
                     id="profile"
                     className={`${
                         route.profile && "text-gray-700"
@@ -204,7 +242,7 @@ const MentorDashboard = () => {
                 </button>
             </nav>
             <div className="w-17/20 h-screen">
-                <div className="w-full h-1/10 bg-white shadow-md flex items-center justify-end">
+                <div className="relative w-full h-1/10 bg-white shadow-md flex items-center justify-end">
                     <div className="flex items-center justify-evenly w-1/5">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -222,10 +260,11 @@ const MentorDashboard = () => {
                         <h4>{data?.user?.name}</h4>
                     </div>
                 </div>
-                <div className="flex items-center justify-center">
+                <div className="h-9/10 bg-gray-100">
                     {/* conditional rendering of the inner tab screens */}
                     {route.post && <Post />}
                     {route.menteeInfo && <MenteeInfo />}
+                    {route.chat && <Chat />}
                 </div>
             </div>
         </div>

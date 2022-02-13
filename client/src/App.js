@@ -9,18 +9,20 @@ import StudentDashboard from "./components/dashboard/studentDashboard/StudentDas
 
 const App = () => {
     return (
-        <BrowserRouter>
-            <Switch>
-                <Route path="/" exact component={Main} />
-                <Route path="/admin" exact component={Auth} />
-                <Route path="/mentor" exact component={Auth} />
-                <Route path="/mentee" exact component={Auth} />
-                <Route path="/admin/dashboard" exact component={AdminDashboard} />
-                <Route path="/mentor/dashboard" exact component={MentorDashboard} />
-                <Route path="/mentee/dashboard" exact component={StudentDashboard} />
-                <Route path="/error" exact component={Error403} />
-            </Switch>
-        </BrowserRouter>
+        <React.StrictMode>
+            <BrowserRouter>
+                <Switch>
+                    <Route path="/" exact component={Main} />
+                    <Route path="/admin" exact component={Auth} />
+                    <Route path="/mentor" exact component={Auth} />
+                    <Route path="/mentee" exact component={Auth} />
+                    <Route path="/admin/dashboard" exact component={AdminDashboard} />
+                    <Route path="/mentor/dashboard" exact component={MentorDashboard} />
+                    <Route path="/mentee/dashboard" exact component={StudentDashboard} />
+                    <Route path="/error" exact component={Error403} />
+                </Switch>
+            </BrowserRouter>
+        </React.StrictMode>
     );
 };
 
