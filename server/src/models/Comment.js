@@ -3,13 +3,21 @@ const mongoose = require("mongoose");
 const commentSchema = new mongoose.Schema(
     {
         author: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            refPath: "authorModel",
+        },
+        authorModel: {
             type: String,
+            required: true,
+            enum: ["Mentor", "Student"],
         },
         body: {
             type: String,
         },
         post_id: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post",
         },
     },
     {

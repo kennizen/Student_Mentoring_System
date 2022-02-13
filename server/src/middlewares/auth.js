@@ -1,10 +1,6 @@
-/**
- *  This module is used for user authentication.
- *  It is passed as a middleware to the routes to authenticate every request comig into the server..
- */
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const Response = require("../utils/response.utils");
+const response = require("../utils/responses.utils");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Student = require("../models/Student");
@@ -14,11 +10,16 @@ dotenv.config();
 
 const secret = process.env.JWT_SECRET;
 
+/**
+ *  This module is used for user authentication.
+ *  It is passed as a middleware to the routes to authenticate every request coming into the server..
+ */
+
 const auth = async (req, res, next) => {
     try {
         let user;
         // we are splitting the Bearer token string received in header and taking only JWT from it
-        const token = req.headers.authorization.split(" ")[1];  
+        const token = req.headers.authorization.split(" ")[1];
 
         if (!token) {
             throw new Error("Token not received");
@@ -40,7 +41,7 @@ const auth = async (req, res, next) => {
         }
 
         if (!user) {
-            return res.status(404).send(Response.notfound("404 User Not Found", {}));
+            return response.notfound(res, "404 User Not Found", {});
         }
 
         req.user = user;
@@ -48,7 +49,7 @@ const auth = async (req, res, next) => {
         next();
     } catch (error) {
         console.log(error);
-        res.status(401).send(Response.unauthorized("Unauthorized Access", {}));
+        response.unauthorize(res, "Unauthorized Access", {});
     }
 };
 

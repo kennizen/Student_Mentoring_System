@@ -2,10 +2,16 @@ const mongoose = require("mongoose");
 
 const logSchema = new mongoose.Schema(
     {
-        user: String,
-        user_role: String,
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            refPath: "userModel",
+        },
+        userModel: {
+            type: String,
+            enum: ["Admin", "Mentor", "Student"],
+        },
         event_type: String,
-        log_detail: String,
+        event_detail: String,
         ip: String,
     },
     {

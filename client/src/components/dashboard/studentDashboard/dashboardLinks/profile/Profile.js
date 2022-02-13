@@ -208,7 +208,7 @@ const Profile = () => {
                                 </div>
                                 <div className="flex items-start justify-center flex-col mb-4">
                                     <h4 className="text-gray-400">Mentored By</h4>
-                                    <h4>{profileData?.mentoredBy}</h4>
+                                    <h4>{profileData?.mentoredBy?.name}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Enrollment Year</h4>

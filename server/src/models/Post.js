@@ -6,7 +6,14 @@ const postSchema = new mongoose.Schema(
             type: String,
         },
         author: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            refPath: "authorModel",
+        },
+        authorModel: {
             type: String,
+            required: true,
+            enum: ["Mentor", "Student"],
         },
         createdOn: {
             type: Date,
@@ -24,6 +31,21 @@ const postSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
+
+// hiding sensitive info from user
+postSchema.methods.toJSON = function () {
+    const post = this;
+    const postObject = post.toObject();
+    delete postObject.authorModel;
+    delete postObject.author.password;
+    delete postObject.author.role;
+    delete postObject.author.tokens;
+    delete postObject.author.createdAt;
+    delete postObject.author.updatedAt;
+    delete postObject.author.assigned;
+    delete postObject.author.studentCount;
+    return postObject;
+};
 
 const Post = mongoose.model("Post", postSchema);
 module.exports = Post;

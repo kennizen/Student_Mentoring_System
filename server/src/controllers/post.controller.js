@@ -2,10 +2,63 @@ const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 const Mentor = require("../models/Mentor");
 const Student = require("../models/Student");
-const Response = require("../utils/response.utils");
+const response = require("../utils/responses.utils");
+const roles = require("../utils/roles");
 
 module.exports = {
-    editPostHandler: async (req, res) => {
+    // create new post
+    createNewPost: async (req, res, next) => {
+        try {
+            const body = req.body.body;
+
+            if (!body) {
+                return response.badrequest(res, "Please provide all required fields", {});
+            }
+            const newPost = new Post();
+            newPost.body = body;
+            newPost.author = req.user._id;
+            newPost.authorModel = req.user.role;
+
+            if (req.user.role === roles.Student) {
+                newPost.group_id = req.user.mentoredBy;
+            }
+            if (req.user.role === roles.Mentor) {
+                newPost.group_id = req.user._id;
+            }
+            await newPost.save();
+
+            // updating author for sending in response instead of requesting to db
+            newPost.author = req.user;
+            const authorData = newPost.author;
+            response.success(res, "Post created", { postData: newPost, authorData });
+            next();
+        } catch (err) {
+            console.log(err);
+            response.error(res);
+        }
+    },
+    // fetch all the posts in a group
+    fetchAllPosts: async (req, res, next) => {
+        try {
+            let posts;
+            if (req.user.role === roles.Mentor) {
+                posts = await Post.find({ group_id: req.user._id }).populate("author");
+            }
+
+            if (req.user.role === roles.Student) {
+                posts = await Post.find({ group_id: req.user.mentoredBy }).populate("author");
+            }
+
+            const allPosts = posts.map((post) => {
+                return { postData: post, authorData: post.author };
+            });
+            response.success(res, "", { posts: allPosts });
+            next();
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    editPostById: async (req, res, next) => {
         try {
             const editedPost = req.body.body;
             const post = await Post.findById(req.params.id);
@@ -13,20 +66,21 @@ module.exports = {
             if (!post) {
                 throw new Error();
             }
-            // checks and allows only post authors to edit a post
+            // check.. to allow only post authors to edit a post
             if (post.author != req.user._id) {
-                return res.status(403).send(Response.forbidden("", {}));
+                return response.forbidden(res);
             }
 
             post.body = editedPost;
             await post.save();
-            res.send(Response.success("", { post: { postData: post, authorData: req.user } }));
+            response.success(res, "", { post: { postData: post, authorData: req.user } });
+            next();
         } catch (err) {
-            res.status(500).send(Response.error("Some error occured", {}));
+            response.error(res);
         }
     },
 
-    deletePostHandler: async (req, res) => {
+    deletePostById: async (req, res, next) => {
         try {
             const post = await Post.findById(req.params.id);
 
@@ -46,131 +100,110 @@ module.exports = {
                 throw new Error();
             }
 
-            res.send(Response.success("Post successfully deleted", { post: { _id: post._id } }));
+            response.success(res, "Post successfully deleted", { post: { _id: post._id } });
+            next();
         } catch (err) {
-            res.status(500).send(Response.error("", {}));
+            response.error(res);
         }
     },
-    addCommentHandler: async (req, res) => {
+    addNewComment: async (req, res, next) => {
         try {
             const comment = req.body.body;
-            // generating a new comment
-            const newComment = new Comment();
+            const newComment = new Comment(); // creating a new comment
             newComment.body = comment;
             newComment.author = req.user._id;
+            newComment.authorModel = req.user.role;
             newComment.post_id = req.params.id;
 
-            await newComment.save().then(async () => {
-                // increments the comment count of the post
-                await Post.findOneAndUpdate({ _id: req.params.id }, { $inc: { commentCount: 1 } });
+            const updatedPost = await newComment.save().then(async () => {
+                // increments the comment count of the post and returns updated post
+                return await Post.findOneAndUpdate(
+                    { _id: req.params.id },
+                    { $inc: { commentCount: 1 } },
+                    { new: true }
+                ).populate("author");
             });
+            newComment.author = req.user; // updating author with the current user
 
-            const post = await Post.findById(req.params.id);
-
-            let author = await Student.findById(post.author);
-
-            if (!author) {
-                author = await Mentor.findById(post.author);
-            }
-
-            if (!author) {
-                throw new Error();
-            }
-
-            res.send(
-                Response.success("Comment created", {
-                    post: {
-                        postData: post,
-                        authorData: author,
-                    },
-                    comment: {
-                        commentData: newComment,
-                        authorData: req.user,
-                    },
-                })
-            );
+            response.success(res, "Comment created", {
+                post: {
+                    postData: updatedPost,
+                    authorData: updatedPost.author,
+                },
+                comment: {
+                    commentData: newComment,
+                    authorData: req.user,
+                },
+            });
+            next();
         } catch (err) {
             console.log(err);
-            res.status(500).send(Response.error("", {}));
+            response.error(res);
         }
     },
 
-    fetchAllCommentsHandler: async (req, res) => {
+    fetchAllComments: async (req, res, next) => {
         try {
-            const allComments = [];
             const post = await Post.findById(req.params.id);
-
             if (!post) {
                 throw new Error();
             }
 
-            const comments = await Comment.find({ post_id: post._id }).sort({ createdAt: "asc" });
+            const comments = await Comment.find({ post_id: post._id })
+                .sort({ createdAt: "asc" })
+                .populate("author");
 
-            for (let i = 0; i < comments.length; i++) {
-                let user = await Mentor.findById(comments[i].author);
-
-                if (!user) {
-                    user = await Student.findById(comments[i].author);
-                }
-
-                let comment = {
-                    commentData: comments[i],
-                    authorData: user,
+            const allComments = comments.map((comment) => {
+                return {
+                    commentData: comment,
+                    authorData: comment.author,
                 };
+            });
 
-                allComments.push(comment);
-            }
-
-            res.send(
-                Response.success("", { commentsCount: allComments.length, comments: allComments })
-            );
+            response.success(res, "", { commentsCount: comments.length, comments: allComments });
+            next();
         } catch (err) {
             console.log(err);
-            res.status(500).send(Response.error("", {}));
+            response.error(res);
         }
     },
 
-    deleteCommentHandler: async (req, res) => {
+    deleteCommentById: async (req, res, next) => {
         try {
             const cid = req.params.id; // comment id
-
-            const comment = await Comment.findOneAndDelete({ _id: cid }).then(async (data) => {
-                //decrements the comment count of the post
-                await Post.findOneAndUpdate({ _id: data.post_id }, { $inc: { commentCount: -1 } });
-                return data;
-            });
+            const comment = await Comment.findById(cid).populate("author");
 
             if (!comment) {
-                return res.status(404).send(Response.notfound("Comment Not found", {}));
+                return response.notfound(res);
             }
 
-            let post = await Post.findById(comment.post_id);
-
-            let author = await Student.findById(post.author);
-
-            if (!author) {
-                author = await Mentor.findById(post.author);
+            if (req.user.role !== comment.author.role) {
+                return response.unauthorize(res, "", {});
             }
 
-            if (!author) {
-                throw new Error();
-            }
+            const post = await Comment.findOneAndDelete({ _id: cid }).then(async (data) => {
+                //decrements the comment count of the post
+                return await Post.findOneAndUpdate(
+                    { _id: data.post_id },
+                    { $inc: { commentCount: -1 } },
+                    { new: true }
+                ).populate("author");
+            });
 
-            res.send(
-                Response.success("Comment deleted", {
-                    post: {
-                        postData: post,
-                        authorData: author,
-                    },
-                    comment: {
-                        commentData: comment,
-                        authorData: req.user,
-                    },
-                })
-            );
+            response.success(res, "Comment deleted", {
+                post: {
+                    postData: post,
+                    authorData: post.author,
+                },
+                comment: {
+                    commentData: comment,
+                    authorData: req.user,
+                },
+            });
+            next();
         } catch (err) {
             console.log(err);
-            res.status(500).send(Response.error("", {}));
+            response.error(res);
         }
     },
 };

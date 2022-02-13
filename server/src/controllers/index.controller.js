@@ -1,15 +1,13 @@
 const mongoose = require("mongoose");
 const Student = require("../models/Student");
 const Mentor = require("../models/Mentor");
-const Response = require("../utils/response.utils");
+const response = require("../utils/responses.utils");
 
 module.exports = {
     // get user info via id handler
     userInfoHandler: async (req, res) => {
         if (!mongoose.isValidObjectId(req.params.id)) {
-            return res
-                .status(400)
-                .send(Response.badrequest("Bad Request. Provide a valid user id", {}));
+            return response.badrequest(res, "Bad Request. Provide a valid user id", {});
         }
 
         try {
@@ -22,10 +20,9 @@ module.exports = {
             if (!user) {
                 throw new Error();
             }
-
-            res.send(Response.success("", { user }));
+            response.success(res, "", { user });
         } catch (err) {
-            res.status(404).send(Response.notfound("", {}));
+            response.notfound(res, "", {});
         }
     },
 };

@@ -9,6 +9,10 @@ const Student = require("../models/Student");
 
 module.exports = {
     // gets all students from db and return it
+    /**
+     * @Desc This function fetches all the available students
+     * @returns Array of Students
+     */
     getAllStudents: async () => {
         const students = await Student.find({}).select(
             "id name department roll_no avatar mentoredBy assigned"

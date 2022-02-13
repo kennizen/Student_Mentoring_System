@@ -4,6 +4,8 @@ const Auth = require("../middlewares/auth");
 const Authorize = require("../middlewares/authorize");
 const Role = require("../utils/roles");
 const mentorController = require("../controllers/mentor.controller");
+const Logger = require("../middlewares/logger");
+const events = require("../utils/logEvents");
 
 /** All Mentor routes are in this file
  *  For protected routes we are passing the Authorize middleware to check if the user
@@ -13,10 +15,10 @@ const mentorController = require("../controllers/mentor.controller");
  */
 
 // mentor login
-router.post("/login", mentorController.mentorLoginHandler);
+router.post("/login", mentorController.mentorLoginHandler, Logger(events.LOGIN));
 
 // mentor signup
-router.post("/signup", mentorController.mentorSignupHandler);
+router.post("/signup", mentorController.mentorSignupHandler, Logger(events.SIGNUP));
 
 // mentor dashboard
 router.get("/dashboard", Auth, Authorize(Role.Mentor), mentorController.mentorDashboardHandler);
@@ -25,10 +27,10 @@ router.get("/dashboard", Auth, Authorize(Role.Mentor), mentorController.mentorDa
 router.post("/reset", mentorController.resetPassword);
 
 // create a new post
-router.post("/newPost", Auth, Authorize(Role.Mentor), mentorController.createNewPost);
+// router.post("/newPost", Auth, Authorize(Role.Mentor), mentorController.createNewPost);
 
 // get all posts
-router.get("/fetchAllPosts", Auth, Authorize(Role.Mentor), mentorController.fetchAllPosts);
+// router.get("/fetchAllPosts", Auth, Authorize(Role.Mentor), mentorController.fetchAllPosts);
 
 //get all students of mentored
 router.get("/getAllMentees", Auth, Authorize(Role.Mentor), mentorController.fetchAllMentees);

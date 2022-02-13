@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
-const Response = require("../utils/response.utils");
+const response = require("../utils/responses.utils");
 const Semester = require("../models/Semester");
 
 // including cloudinary configs
@@ -13,34 +13,35 @@ require("../config/cloudinary");
 
 module.exports = {
     // student login handler function
-    studentLoginHandler: async (req, res) => {
+    studentLoginHandler: async (req, res, next) => {
         try {
             const { email, password } = req.body;
 
             if (!email || !password) {
-                return res.status(400).send(Response.error("No email/password provided", {}));
+                return response.badrequest(res, "No email/password provided", {});
             }
             const student = await Student.findByCredentials(email, password);
 
             if (!student) {
-                return res.status(404).send(Response.notfound("404 Not found", {}));
+                return response.notfound(res);
             }
             const token = await student.generateAuthToken();
-            res.send(
-                Response.success("Login successful", {
-                    auth_token: token,
-                    role: "STUDENT",
-                    uid: student._id,
-                })
-            );
+
+            response.success(res, "Login successful", {
+                auth_token: token,
+                role: "STUDENT",
+                uid: student._id,
+            });
+            req.user = student;
+            next();
         } catch (err) {
             console.log(err);
-            res.status(500).send(Response.error("Some error occured", {}));
+            response.error(res);
         }
     },
 
     // student signup handler
-    studentSignupHandler: async (req, res) => {
+    studentSignupHandler: async (req, res, next) => {
         try {
             const {
                 email,
@@ -54,11 +55,11 @@ module.exports = {
             } = req.body;
 
             if (!email || !password || !firstName || !lastName || !semester || !enrollmentNo) {
-                return res.status(400).send(Response.badrequest("Malformed input", {}));
+                return response.badrequest(res, "Malformed input", {});
             }
 
             if (password != confirmPassword) {
-                return res.status(400).send(Response.badrequest("Passwords doesn't match", {}));
+                return response.badrequest(res, "Passwords doesn't match", {});
             }
 
             const student = new Student();
@@ -70,109 +71,45 @@ module.exports = {
             student.enrollment_no = enrollmentNo;
             student.semester = semester;
             await student.save();
-            res.send(Response.success("Student created successfully", {}));
+            response.success(res, "Student created successfully", {});
+            req.user = student;
+            next();
         } catch (err) {
             console.log(err);
 
             if (err.code == "11000") {
-                return res.status(403).send(Response.forbidden("Email already exists", {}));
+                return response.error(res, "Email already exists", {});
             }
 
-            res.status(500).send(Response.error("Some error occured", {}));
+            response.error(res, "", {});
         }
     },
 
     // student dashboard handler
-    studentDashboardHandler: async (req, res) => {
+    studentDashboardHandler: async (req, res, next) => {
         try {
-            res.send(Response.success("", { user: req.user }));
+            response.success(res, "", { user: req.user });
+            next();
         } catch (err) {
             console.log(err);
         }
     },
 
-    // create new post handler for student
-    createNewPost: async (req, res) => {
-        try {
-            const body = req.body.body;
-
-            if (!body) {
-                return res.send(Response.badrequest("Please provide all data", {}));
-            }
-            const newPost = new Post();
-            newPost.body = body;
-            newPost.group_id = req.user.mentoredBy;
-            newPost.author = req.user._id;
-            await newPost.save();
-            res.send(Response.success("Post Created", { postData: newPost, authorData: req.user }));
-        } catch (err) {
-            console.log(err);
-            res.send(Response.error("", {}));
-        }
-    },
-
-    fetchAllPosts: async (req, res) => {
-        try {
-            let allPosts = [];
-            const oldPosts = await Post.find({ author: req.user._id });
-            const posts = await Post.find({ group_id: req.user.mentoredBy });
-
-            for (let i = 0; i < oldPosts.length; i++) {
-                // getting author info from the db
-                let author = await Student.findById(oldPosts[i].author);
-
-                if (!author) {
-                    author = await Mentor.findById(oldPosts[i].author);
-                }
-                // creating new post object
-                let post = {
-                    postData: oldPosts[i],
-                    authorData: author,
-                };
-                // generating array of posts
-                allPosts.push(post);
-            }
-
-            for (let i = 0; i < posts.length; i++) {
-                // getting author info from the db
-                let author = await Student.findById(posts[i].author);
-
-                if (!author) {
-                    author = await Mentor.findById(posts[i].author);
-                }
-                // creating new post object
-                let post = {
-                    postData: posts[i],
-                    authorData: author,
-                };
-                // generating array of posts
-                allPosts.push(post);
-            }
-
-            res.send(Response.success("", { posts: allPosts }));
-        } catch (err) {
-            console.log(err);
-            res.send(Response.error("", {}));
-        }
-    },
-
-    getProfile: async (req, res) => {
+    getProfile: async (req, res, next) => {
         try {
             if (req.user.mentoredBy) {
                 const mentor = await Mentor.findById(req.user.mentoredBy);
-                req.user.mentoredBy = mentor.name;
-            } else {
-                // if mentor not assigned to the student
-                req.user.mentoredBy = "Not assigned";
+                req.user.mentoredBy = mentor;
             }
 
-            res.send(Response.success("", { profileData: req.user }));
+            response.success(res, "", { profileData: req.user });
+            next();
         } catch (err) {
-            res.status(500).send(Response.error("", {}));
+            response.error(res);
         }
     },
 
-    editProfile: async (req, res) => {
+    editProfile: async (req, res, next) => {
         try {
             const student = await Student.findById(req.user._id);
 
@@ -224,14 +161,15 @@ module.exports = {
 
             student.mentor = mentor.name;
 
-            res.send(Response.success("Profile Updated", { profileData: student }));
+            response.success(res, "Profile Updated", { profileData: student });
+            next();
         } catch (err) {
-            res.status(500).send(Response.error("", {}));
+            response.error(res);
         }
     },
 
     // add/edit avatar image
-    editAvatar: async (req, res) => {
+    editAvatar: async (req, res, next) => {
         try {
             const result = await cloudinary.uploader.upload(req.file.path, {
                 tags: "avatar",
@@ -248,25 +186,27 @@ module.exports = {
             req.user.avatar.id = result.public_id;
             await req.user.save();
 
-            res.send(Response.success("Avatar updated", {}));
+            response.success(res, "Avatar updated", {});
+            next();
         } catch (err) {
             console.log("outer err", err);
-            res.status(500).send(Response.error("", {}));
+            response.error(res);
         }
     },
 
-    getSemesterInfo: async (req, res) => {
+    getSemesterInfo: async (req, res, next) => {
         try {
             const semesters = await Semester.find({ student_id: req.user._id }).sort({
                 semester: 1,
             });
 
-            res.send(Response.success("", { semesters }));
+            response.success(res, "", { semesters });
+            next();
         } catch (err) {
-            res.status(500).send(Response.error("", {}));
+            response.error(res, "", {});
         }
     },
-    addSemesterInfo: async (req, res) => {
+    addSemesterInfo: async (req, res, next) => {
         /** both the add and update semester is handled by this route   */
         try {
             let newSem;
@@ -289,14 +229,15 @@ module.exports = {
                 newSem.courses = req.body.courses;
                 await newSem.save();
             }
-            res.send(Response.success("", { semesters: newSem }));
+            response.success(res, "", { semesters: newSem });
+            next();
         } catch (err) {
             console.log(err);
-            res.status(500).send(Response.error("", {}));
+            response.error(res);
         }
     },
     /** add or update past education details to database  */
-    addPastEducation: async (req, res) => {
+    addPastEducation: async (req, res, next) => {
         try {
             const user = req.user;
             // updating class 10 info
@@ -309,13 +250,14 @@ module.exports = {
             user.class_12_percentage = req.body[12].marks;
             /**  updating database        */
             await user.save();
-            res.send(Response.success("", { pastEducation: req.body }));
+            response.success(res, "", { pastEducation: req.body });
+            next();
         } catch (err) {
             console.log(err);
         }
     },
     /** get the past education details from database  */
-    getPastEducation: (req, res) => {
+    getPastEducation: (req, res, next) => {
         const pastEducation = {
             10: {
                 board: req.user.class_10_board,
@@ -328,10 +270,11 @@ module.exports = {
                 marks: req.user.class_12_percentage,
             },
         };
-        res.send(Response.success("", { pastEducation }));
+        response.success(res, "", { pastEducation });
+        next();
     },
     // delete a semester
-    deleteSemesterInfo: async (req, res) => {
+    deleteSemesterInfo: async (req, res, next) => {
         try {
             const sem = req.body.sem;
 
@@ -344,10 +287,11 @@ module.exports = {
                 throw new Error("Some error occured");
             }
 
-            res.send(Response.success("Semester deleted", { semester: deleted }));
+            response.success(res, "Semester deleted", { semester: deleted });
+            next();
         } catch (err) {
             console.log(err);
-            res.status(500).send(Response.error("", {}));
+            response.error(res);
         }
     },
 };

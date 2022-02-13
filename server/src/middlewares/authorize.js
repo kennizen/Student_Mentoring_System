@@ -1,4 +1,4 @@
-const Response = require("../utils/response.utils");
+const response = require("../utils/responses.utils");
 
 /**
  *  This module is for Role Based Authorization of every user requests.
@@ -16,10 +16,10 @@ module.exports = (roles = []) => {
     return [
         (req, res, next) => {
             if (roles.length && !roles.includes(req.user.role)) {
-                // user's role is not authorized
-                return res.status(403).send(Response.forbidden("", {}));
+                // if user's role is not authorized
+                return response.forbidden(res);
             }
-            // authentication and authorization successful
+            // if authentication and authorization successful
             next();
         },
     ];

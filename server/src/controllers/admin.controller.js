@@ -1,13 +1,11 @@
+const mongoose = require("mongoose");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Student = require("../models/Student");
 const dotenv = require("dotenv");
-const Log = require("../models/Log");
 
-// imporintg utils
-const Response = require("../utils/response.utils");
-const log = require("../utils/log.utils");
-const logEvents = require("../utils/logEvents");
+// importing utils
+const response = require("../utils/responses.utils");
 
 // importing helpers methods
 const studentHelpers = require("../helpers/student.helper");
@@ -16,61 +14,67 @@ const mentorHelpers = require("../helpers/mentor.helper");
 // env config
 dotenv.config();
 
+/**
+ * This module consists of all the handler function for the admin route
+ */
+
 module.exports = {
     // admin login handler fn
-    adminLoginHandler: async (req, res) => {
+    adminLoginHandler: async (req, res, next) => {
         try {
             const { email, password } = req.body;
 
             if (!email || !password) {
                 // if email/pass does not exists
-                return res
-                    .status(400)
-                    .send(Response.badrequest("Please provide valid email/password", {}));
+                return response.badrequest(res, "Please provide valid email/password", {});
             }
 
             const admin = await Admin.findByCredentials(email, password);
             const token = await admin.generateAuthToken();
-            //logging
-            log.generateLog(logEvents.LOGIN, admin, req.ip);
-            res.send(Response.success("Login successful", { auth_token: token, role: "ADMIN" }));
+            response.success(res, "Login successful", { auth_token: token, role: "ADMIN" });
+
+            req.user = admin;
+            next();
         } catch (err) {
             console.log(err);
-            res.status(500).send(Response.error("Some error occured", {}));
+            response.error(res);
         }
     },
 
     // admin dashboard handler function
-    adminDashboardHandler: (req, res) => {
-        res.send(Response.success("", { user: req.user }));
+    adminDashboardHandler: (req, res, next) => {
+        response.success(res, "", { user: req.user });
+        next();
     },
 
     // this route handler returns the list of all users i.e, all mentors and students
-    getAllUsers: async (req, res) => {
+    getAllUsers: async (req, res, next) => {
         const students = await studentHelpers.getAllStudents();
         const mentors = await mentorHelpers.getAllMentors();
-        res.send(Response.success("", { mentors, students }));
+        response.success(res, "", { mentors, students });
+        next();
     },
 
     /**
-     *  saveGroup route saves the mentor and students group
-     *  We store the mentor's id in every students property named "mentordBy" , to establish a link
-     *  between from a mentor to every students mentored by hims
-     *  add/update and unassigned students operations are in this route
+     *  saveGroup route saves the mentor and students group.
+     *  We store the mentor's id in every student's property named "mentordBy" , to establish a link
+     *  between a mentor and the students mentored by him.
+     *
+     * Add/Update and unassigned students operations are in this route
      * */
-    saveGroup: async (req, res) => {
+    saveGroup: async (req, res, next) => {
         try {
             const mentorCountToUpdate = {};
             const newStudentsList = {};
             const mentor = await Mentor.findById(req.body.mentorId);
             const students = req.body.studentIds;
-            const oldStudents = await Student.find({ mentoredBy: req.body.mentorId }).distinct(
-                "_id"
-            );
+            const oldStudents = await Student.find({
+                mentoredBy: mongoose.Types.ObjectId(req.body.mentorId),
+            }).distinct("_id");
 
             if (!mentor) {
                 // if mentor doesn't exists
-                return res.status(500).send(Response.error("Some error occured", {}));
+                return response.error(res);
             }
 
             // generating the newStudentList object or hash map
@@ -84,7 +88,7 @@ module.exports = {
             for (let i = 0; i < oldStudents.length; i++) {
                 if (!newStudentsList[oldStudents[i]]) {
                     const oldStudent = await Student.findById(oldStudents[i]);
-                    oldStudent.mentoredBy = "";
+                    delete oldStudent.mentoredBy;
                     oldStudent.assigned = "";
                     await oldStudent.save();
                 }
@@ -123,31 +127,31 @@ module.exports = {
                 mentor.assigned = "assigned";
             }
             // setting no of students
-            mentor.studentCount = students.length;
+            mentor.studentCount = students?.length;
             await mentor.save();
 
             // getting all the students and mentors after performing all the above operations
             const allStudents = await studentHelpers.getAllStudents();
             const allMentors = await mentorHelpers.getAllMentors();
 
-            log.generateLog(logEvents.GROUP_UPDATE, req.user, req.ip); // logging the event
+            // log.generateLog(logEvents.GROUP_UPDATE, req.user, req.ip); // logging the event
 
             // sending final response back
-            res.send(
-                Response.success("Assigned Successfully", {
-                    mentors: allMentors,
-                    students: allStudents,
-                })
-            );
+            response.success(res, "Assigned Successfully", {
+                mentors: allMentors,
+                students: allStudents,
+            });
+            next();
         } catch (err) {
             console.log("catch", err);
-            res.status(500).send(Response.error("Some error occured", {}));
+            response.error(res);
         }
     },
-    getAllLogs: async (req, res) => {
+    getAllLogs: async (req, res, next) => {
         try {
             const allLogs = await Log.find();
-            res.send(Response.success("", { logs: allLogs }));
+            response.success(res, "", { logs: allLogs });
+            next();
         } catch (err) {
             console.log(err);
         }

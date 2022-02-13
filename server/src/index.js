@@ -40,6 +40,6 @@ app.use("/", indexRoutes);
 app.use("/admin", adminRoutes);
 app.use("/mentor", mentorRoutes);
 app.use("/student", studentRoutes);
-app.use("/post", postRoutes);
+app.use("/posts", postRoutes);
 
 app.listen(PORT, () => console.log(`server running on port ${PORT}`));

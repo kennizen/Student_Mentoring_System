@@ -4,6 +4,8 @@ const Auth = require("../middlewares/auth");
 const adminController = require("../controllers/admin.controller");
 const Authorize = require("../middlewares/authorize");
 const Role = require("../utils/roles");
+const Logger = require("../middlewares/logger");
+const events = require("../utils/logEvents");
 
 /** All admin routes are in this file
  *  For protected routes we are passing the Authorize middleware to check if the user
@@ -13,7 +15,7 @@ const Role = require("../utils/roles");
  */
 
 // admin login route
-router.post("/login", adminController.adminLoginHandler);
+router.post("/login", adminController.adminLoginHandler, Logger(events.LOGIN));
 
 // admin dashboard route
 router.get("/dashboard", Auth, Authorize(Role.Admin), adminController.adminDashboardHandler);
@@ -22,7 +24,13 @@ router.get("/dashboard", Auth, Authorize(Role.Admin), adminController.adminDashb
 router.get("/getAllUsers", Auth, Authorize(Role.Admin), adminController.getAllUsers);
 
 // saving student mentor groups
-router.post("/saveGroup", Auth, Authorize(Role.Admin), adminController.saveGroup);
+router.post(
+    "/saveGroup",
+    Auth,
+    Authorize(Role.Admin),
+    adminController.saveGroup,
+    Logger(events.GROUP_UPDATE)
+);
 
 // fetching all logs from db
 router.get("/logs", Auth, Authorize(Role.Admin), adminController.getAllLogs);

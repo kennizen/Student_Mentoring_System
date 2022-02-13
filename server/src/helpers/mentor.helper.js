@@ -6,10 +6,15 @@ const Mentor = require("../models/Mentor");
  *
  *  *** This module consists all the helper function for Mentor
  */
+
 module.exports = {
-  // this method fetch all the mentors from the db and returns it
-  getAllMentors: async () => {
-    const mentors = await Mentor.find().select("id name avatar assigned studentCount");
-    return mentors;
-  },
+    // this method fetch all the mentors from the db and returns it
+    /**
+     * @Desc This function fetches all the available mentors
+     * @returns Array of Mentors
+     */
+    getAllMentors: async () => {
+        const mentors = await Mentor.find().select("id name avatar assigned studentCount");
+        return mentors;
+    },
 };

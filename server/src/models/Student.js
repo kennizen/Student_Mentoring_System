@@ -64,8 +64,8 @@ const studentSchema = new mongoose.Schema(
             default: Role.Student,
         },
         mentoredBy: {
-            type: String,
-            default: "",
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Mentor",
         },
         assigned: {
             type: String,
