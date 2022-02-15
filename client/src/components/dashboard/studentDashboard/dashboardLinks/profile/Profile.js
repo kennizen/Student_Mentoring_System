@@ -4,9 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 import EditButton from "../../editButtonForMenteeInformation/EditButton";
 import StuModal from "./stuModal/StuModal";
 import { studentGetProfileDetails } from "../../../../../actions/student";
+import MenteeInfoProfilePhotoIcon from "../../../../../assets/MenteeInfoProfilePhotoIcon";
+import ProfilePicModal from "./profilePicModal/ProfilePicModal";
+import ProfilePicDelModal from "./profilePicModal/ProfilePicDelModal";
+import MenteeInfoProfilePhotoChangeIcon from "../../../../../assets/MenteeInfoProfilePhotoChangeIcon";
+import MenteeInfoProfilePhotoRemoveIcon from "../../../../../assets/MenteeInfoProfilePhotoRemoveIcon";
 
 const Profile = () => {
+    // state variable to change the hidden state of the update information modal
     const [hidden, setHidden] = useState(false);
+    // state variable to change the hidden state of the change profile pic modal
+    const [hiddenProfilePicModal, setHiddenProfilePicModal] = useState(false);
+    // state variable to change the hidden state of the remove profile pic modal
+    const [hiddenProfilePicDelModal, setHiddenProfilePicDelModal] = useState(false);
+
     const [stuProfileData, setStuProfileData] = useState({
         department: "",
         programme: "",
@@ -35,6 +46,7 @@ const Profile = () => {
         contact_no_of_contact_person: "",
         residence_address: "",
     });
+
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -50,10 +62,12 @@ const Profile = () => {
         setSc("scale-0");
         setTimeout(() => {
             setHidden(false);
+            setHiddenProfilePicModal(false);
+            setHiddenProfilePicDelModal(false);
         }, 100);
     };
 
-    // function to show modal
+    // function to show modal for update information
     const handleShowModal = () => {
         setHidden(true);
         if (profileData) {
@@ -89,6 +103,16 @@ const Profile = () => {
         }
     };
 
+    // function to show modal for update profile pic
+    const handleShowModalProfilePic = () => {
+        setHiddenProfilePicModal(true);
+    };
+
+    // function to show modal for remove profile picture
+    const handleShowModalDelProfilePic = () => {
+        setHiddenProfilePicDelModal(true);
+    };
+
     return (
         <div className="w-full h-845 p-2 relative">
             {hidden && (
@@ -100,71 +124,55 @@ const Profile = () => {
                     dispatch={dispatch}
                 />
             )}
+            {hiddenProfilePicModal && (
+                <ProfilePicModal handleShowModal={handleShowModalFromModal} history={history} />
+            )}
+            {hiddenProfilePicDelModal && (
+                <ProfilePicDelModal
+                    handleShowModal={handleShowModalFromModal}
+                    b1Text="Cancel"
+                    b2Text="Remove"
+                    body="If you remove the profile picture then it will be reverted back to the default image."
+                    header="Remove profile picture ?"
+                    history={history}
+                />
+            )}
             <div className="grid grid-cols-12 gap-x-1">
                 <div className="col-span-4 p-2">
-                    <div className="w-full shadow-m32 py-6 px-3 rounded-md mb-6">
+                    <div className="w-full shadow-m32 py-6 px-3 rounded-md mb-6 bg-white">
                         <h2 className="mb-5 text-gray-700 flex items-center justify-start">
                             Profile Photo
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6 ml-2"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
+                            <MenteeInfoProfilePhotoIcon />
                         </h2>
                         <div className="flex items-center justify-start">
                             <img
                                 className="w-32 h-32 rounded-md mr-5"
-                                src="https://avatars.dicebear.com/api/initials/student.svg"
+                                src={
+                                    profileData?.avatar?.url === ""
+                                        ? `https://avatars.dicebear.com/api/initials/${profileData?.firstname}.svg`
+                                        : profileData?.avatar?.url
+                                }
                                 alt="menteeName"
                             />
                             <div className="flex flex-col items-center justify-between">
-                                <button className="p-2 bg-blue-600 rounded-md text-white flex items-center justify-between mb-5">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5 mr-2"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                                        />
-                                    </svg>
+                                <button
+                                    onClick={handleShowModalProfilePic}
+                                    className="p-2 bg-blue-600 border border-blue-600 hover:bg-blue-800 hover:border-blue-800 transition-all rounded-md text-white flex items-center justify-between mb-5"
+                                >
+                                    <MenteeInfoProfilePhotoChangeIcon margin={"mr-2"} />
                                     Change
                                 </button>
-                                <button className="p-2 bg-blue-600 rounded-md text-white flex items-center justify-between">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5 mr-2"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                        />
-                                    </svg>
+                                <button
+                                    onClick={handleShowModalDelProfilePic}
+                                    className="p-2 border border-red-600 text-red-600 rounded-md flex items-center justify-between hover:bg-red-600 hover:text-white transition-all"
+                                >
+                                    <MenteeInfoProfilePhotoRemoveIcon margin={"mr-2"} />
                                     Remove
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div className="w-full shadow-m32 py-5 px-3 rounded-md mb-6">
+                    <div className="w-full bg-white shadow-m32 py-5 px-3 rounded-md mb-6">
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-gray-700 flex items-center justify-start">
                                 Academic Information
@@ -217,7 +225,7 @@ const Profile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-full shadow-m32 py-5 px-3 rounded-md">
+                    <div className="w-full bg-white shadow-m32 py-5 px-3 rounded-md">
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-gray-700 flex items-center justify-start">
                                 Contact Details
@@ -254,7 +262,7 @@ const Profile = () => {
                     </div>
                 </div>
                 <div className="col-span-8 p-2">
-                    <div className="w-full shadow-m32 py-5 px-3 rounded-md mb-6">
+                    <div className="w-full bg-white shadow-m32 py-5 px-3 rounded-md mb-6">
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-gray-700 flex items-center justify-start">
                                 Personal Information
@@ -324,7 +332,7 @@ const Profile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-full shadow-m32 py-5 px-3 rounded-md mb-3">
+                    <div className="w-full bg-white shadow-m32 py-5 px-3 rounded-md mb-3">
                         <h2 className="mb-5 text-gray-700 flex items-center justify-start">
                             Hostel Details
                             <svg

@@ -33,7 +33,7 @@ const Modal = ({ postDataForModal, handleSubmit, handleShowModalFromModal }) => 
         <>
             <div
                 onClick={() => handleShowModalFromModal(setOp, setSc)}
-                className={`${op} absolute flex items-center justify-center bg-black w-full h-full top-0 right-0 z-30 transition-opacity`}
+                className={`${op} absolute flex items-center justify-center bg-black w-full h-screen top-0 right-0 z-30 transition-opacity`}
             ></div>
             <div
                 className={`${sc} absolute top-2/4 left-2/4 transform -translate-x-2/4 -translate-y-2/4 max-h-500 overflow-y-auto w-2/4 z-50 p-6 bg-white transition-all`}

@@ -11,7 +11,7 @@ const SingleComment = ({
     setShowCommentDeleteModal,
 }) => {
     return (
-        <div className="p-2 bg-gray-100 rounded-md place-self-start mb-3 mr-2 flex">
+        <div className="p-2 bg-white rounded-md place-self-start mb-3 mr-2 flex">
             {showCommentDeleteModal && (
                 <GenModal
                     header="Delete comment?"

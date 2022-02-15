@@ -21,7 +21,7 @@ const SinglePost = ({
     };
 
     return (
-        <div className="bg-gray-100 mb-5 py-3 px-4 rounded-md border flex flex-col">
+        <div className="bg-white mb-5 py-3 px-4 rounded-md border flex flex-col">
             {toggleMenu && (
                 <div
                     onClick={handleToggleMenu}
@@ -81,7 +81,7 @@ const SinglePost = ({
                                 toggleMenu
                                     ? "scale-100 translate-x-0 translate-y-0"
                                     : "scale-0 translate-x-11 -translate-y-8"
-                            } absolute transform transition-all bg-white top-3 z-20 right-9 rounded-md py-2 shadow-sm`}
+                            } absolute transform transition-all bg-white top-3 z-20 right-9 rounded-md py-2 shadow-m32`}
                         >
                             <h5
                                 onClick={() => handleShowModal({ post: post, isEdit: true })}
