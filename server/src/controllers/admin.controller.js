@@ -19,7 +19,7 @@ dotenv.config();
  */
 
 module.exports = {
-    // admin login handler fn
+    /** Admin Login Handler */
     adminLoginHandler: async (req, res, next) => {
         try {
             const { email, password } = req.body;

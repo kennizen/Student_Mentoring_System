@@ -186,10 +186,10 @@ module.exports = {
             req.user.avatar.id = result.public_id;
             await req.user.save();
 
-            response.success(res, "Avatar updated", {});
+            response.success(res, "Avatar updated", { user: req.user });
             next();
         } catch (err) {
-            console.log("outer err", err);
+            console.log("err", err);
             response.error(res);
         }
     },

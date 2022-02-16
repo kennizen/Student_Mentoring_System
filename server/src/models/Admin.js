@@ -78,7 +78,15 @@ adminSchema.methods.generateAuthToken = async function () {
  * if admin exists in db return admin else throws an error
  *   Model.Statics methods are available on the Model itself.
  * **/
-//custom login method for admin
+
+/**
+ * @name findByCredentials
+ * @description This method verifies the user's email and password
+ * @param {string} email
+ * @param {string} password
+ *
+ * @returns {Object} Admin
+ */
 adminSchema.statics.findByCredentials = async (email, password) => {
     const admin = await Admin.findOne({ email });
 
