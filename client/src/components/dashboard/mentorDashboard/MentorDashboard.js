@@ -260,7 +260,7 @@ const MentorDashboard = () => {
                         <h4>{data?.user?.name}</h4>
                     </div>
                 </div>
-                <div className="h-9/10 bg-gray-100">
+                <div className="h-9/10 bg-gray-100 overflow-hidden">
                     {/* conditional rendering of the inner tab screens */}
                     {route.post && <Post />}
                     {route.menteeInfo && <MenteeInfo />}

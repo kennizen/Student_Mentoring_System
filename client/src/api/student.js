@@ -28,6 +28,10 @@ export const updateStudentProfile = (fields) =>
     API.post("/student/profile", fields).catch((error) => {
         return error.response;
     });
+export const updateStudentProfilePicutre = (avatar) =>
+    API.post("/student/avatar", avatar).catch((error) => {
+        return error.response;
+    });
 export const fetchStudentSemesterDetails = () =>
     API.get("/student/semester").catch((error) => {
         return error.response;

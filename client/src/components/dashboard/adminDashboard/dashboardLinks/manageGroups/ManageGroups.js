@@ -113,10 +113,10 @@ const ManageGroups = () => {
         setToggleMenu(!toggleMenu);
     };
 
-    console.log(group.mentorId);
-    console.log(group.studentIds);
-    console.log(mentor);
-    console.log(students);
+    console.log("group mentor id", group.mentorId);
+    console.log("group studentids", group.studentIds);
+    console.log("mentor", mentor);
+    console.log("students", students);
 
     return (
         <div className="w-screen pl-4 pr-4 pb-4">

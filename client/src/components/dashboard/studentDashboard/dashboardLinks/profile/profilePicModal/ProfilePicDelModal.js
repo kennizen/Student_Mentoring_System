@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-const GenModal = ({ header, body, b1Text, b2Text, handleFunc, id, handleShowModalFromModal }) => {
+const ProfilePicDelModal = ({ header, body, b1Text, b2Text, handleShowModal, semNo, history }) => {
     const [op, setOp] = useState("opacity-0");
     const [sc, setSc] = useState("scale-0");
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setTimeout(() => {
@@ -11,10 +13,14 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, id, handleShowModa
         }, 0);
     }, []);
 
+    const handleFunc = () => {};
+
     return (
         <>
             <div
-                onClick={() => handleShowModalFromModal(setOp, setSc)}
+                onClick={() => {
+                    handleShowModal(setOp, setSc);
+                }}
                 className={`${op} absolute flex items-center justify-center bg-black w-full h-screen top-0 right-0 z-30 transition-opacity`}
             ></div>
             <div
@@ -23,7 +29,9 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, id, handleShowModa
                 <div className="flex items-center justify-between mb-3">
                     <h4>{header}</h4>
                     <button
-                        onClick={() => handleShowModalFromModal(setOp, setSc)}
+                        onClick={() => {
+                            handleShowModal(setOp, setSc);
+                        }}
                         className="text-2xl"
                     >
                         &times;
@@ -34,7 +42,9 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, id, handleShowModa
 
                 <div className="w-full flex items-center justify-end">
                     <button
-                        onClick={() => handleShowModalFromModal(setOp, setSc)}
+                        onClick={() => {
+                            handleShowModal(setOp, setSc);
+                        }}
                         type="submit"
                         className="p-2 hover:bg-gray-200 rounded-md text-gray-600 mt-5 mr-3"
                     >
@@ -42,8 +52,8 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, id, handleShowModa
                     </button>
                     <button
                         onClick={() => {
-                            handleFunc(id);
-                            handleShowModalFromModal(setOp, setSc);
+                            handleFunc();
+                            handleShowModal(setOp, setSc);
                         }}
                         type="submit"
                         className="p-2 hover:bg-gray-200 rounded-md text-gray-800 mt-5"
@@ -56,4 +66,4 @@ const GenModal = ({ header, body, b1Text, b2Text, handleFunc, id, handleShowModa
     );
 };
 
-export default GenModal;
+export default ProfilePicDelModal;

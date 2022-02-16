@@ -88,7 +88,7 @@ module.exports = {
             for (let i = 0; i < oldStudents.length; i++) {
                 if (!newStudentsList[oldStudents[i]]) {
                     const oldStudent = await Student.findById(oldStudents[i]);
-                    delete oldStudent.mentoredBy;
+                    oldStudent.mentoredBy = undefined;
                     oldStudent.assigned = "";
                     await oldStudent.save();
                 }
@@ -98,7 +98,7 @@ module.exports = {
             for (i = 0; i < students.length; i++) {
                 const student = await Student.findById(students[i]);
                 // checking for changes in the new request. And updating the student count
-                if (student.mentoredBy !== "" && student.mentoredBy !== req.body.mentorId) {
+                if (student.mentoredBy && student.mentoredBy !== req.body.mentorId) {
                     mentorCountToUpdate[student.mentoredBy]
                         ? (mentorCountToUpdate[student.mentoredBy] += 1)
                         : (mentorCountToUpdate[student.mentoredBy] = 1);
@@ -114,7 +114,7 @@ module.exports = {
                     const newMentor = await Mentor.findById(mentorId);
                     newMentor.studentCount -= mentorCountToUpdate[mentorId];
                     if (newMentor.studentCount < 1) {
-                        newMentor.assigned = ""; // "" empty string is used to set false
+                        newMentor.assigned = "unassigned"; // "" empty string is used to set false
                     }
                     await newMentor.save();
                 }
@@ -127,7 +127,7 @@ module.exports = {
                 mentor.assigned = "assigned";
             }
             // setting no of students
-            mentor.studentCount = students?.length;
+            mentor.studentCount = students.length;
             await mentor.save();
 
             // getting all the students and mentors after performing all the above operations

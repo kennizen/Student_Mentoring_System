@@ -79,53 +79,6 @@ module.exports = {
 
     resetPassword: async (req, res) => {},
 
-    // handler for creating a new post by mentor
-    // createNewPost: async (req, res) => {
-    //     try {
-    //         const body = req.body.body;
-
-    //         if (!body) {
-    //             return res.send(Response.badrequest("Please provide all data", {}));
-    //         }
-    //         const newPost = new Post();
-    //         newPost.body = body;
-    //         newPost.group_id = newPost.author = req.user._id;
-    //         newPost.authorModel = req.user.role;
-    //         await newPost.save();
-    //         res.send(Response.success("Post Created", { postData: newPost, authorData: req.user }));
-    //     } catch (err) {
-    //         res.send(Response.error("", {}));
-    //     }
-    // },
-
-    // fetchAllPosts: async (req, res) => {
-    //     try {
-    //         let allPosts = []; // posts array init
-
-    //         const posts = await Post.find({ group_id: req.user._id }).populate("author");
-
-    //         // for (let i = 0; i < posts.length; i++) {
-    //         //     // getting author info from the db
-    //         //     let author = await Student.findById(posts[i].author);
-
-    //         //     if (!author) {
-    //         //         author = await Mentor.findById(posts[i].author);
-    //         //     }
-    //         //     // creating new post object
-    //         //     let post = {
-    //         //         postData: posts[i],
-    //         //         authorData: author,
-    //         //     };
-    //         //     // generating array of posts
-    //         //     allPosts.push(post);
-    //         // }
-
-    //         res.send(Response.success("", { posts }));
-    //         // res.send(Response.success("", { posts: allPosts }));
-    //     } catch (err) {
-    //         res.status(500).send(Response.error("", {}));
-    //     }
-    // },
     fetchAllMentees: async (req, res, next) => {
         try {
             const students = await Student.find({ mentoredBy: req.user._id });
@@ -142,7 +95,7 @@ module.exports = {
             const _id = req.params.id;
             const semesters = await Semester.find({ student_id: _id });
             response.success(res, "", { semesters });
-            next;
+            next();
         } catch (err) {
             response.error(res);
         }

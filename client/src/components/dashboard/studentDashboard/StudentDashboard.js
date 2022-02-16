@@ -5,12 +5,14 @@ import { useHistory } from "react-router";
 import { studentGetDetails } from "../../../actions/student";
 import Home from "../studentDashboard/dashboardLinks/home/Home";
 import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
+import Chat from "./dashboardLinks/chat/Chat";
 import Profile from "./dashboardLinks/profile/Profile";
 
 const StudentDashboard = () => {
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
+        chat: false,
         profile: false,
         academicDetails: false,
     });
@@ -34,6 +36,7 @@ const StudentDashboard = () => {
             case "home":
                 setRoute({
                     home: true,
+                    chat: false,
                     profile: false,
                     academicDetails: false,
                 });
@@ -41,6 +44,7 @@ const StudentDashboard = () => {
             case "profile":
                 setRoute({
                     home: false,
+                    chat: false,
                     profile: true,
                     academicDetails: false,
                 });
@@ -48,8 +52,17 @@ const StudentDashboard = () => {
             case "academicDetails":
                 setRoute({
                     home: false,
+                    chat: false,
                     profile: false,
                     academicDetails: true,
+                });
+                break;
+            case "chat":
+                setRoute({
+                    home: false,
+                    chat: true,
+                    profile: false,
+                    academicDetails: false,
                 });
                 break;
             default:
@@ -100,6 +113,29 @@ const StudentDashboard = () => {
                         <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                     </svg>
                     Home
+                </button>
+                <button
+                    onClick={handleRouteChange}
+                    id="chat"
+                    className={`${
+                        route.chat && "text-gray-700"
+                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`${route.chat && "text-blue-600"} h-5 w-5 mr-3`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
+                        />
+                    </svg>
+                    Chat
                 </button>
                 <button
                     onClick={handleRouteChange}
@@ -188,11 +224,12 @@ const StudentDashboard = () => {
                         <h4>{data?.user?.name}</h4>
                     </div>
                 </div>
-                <div className="flex items-center justify-center">
+                <div className="h-9/10 bg-gray-100 overflow-hidden">
                     {/* conditional rendering of the inner tab screens */}
                     {route.academicDetails && <AcademicDetails />}
                     {route.profile && <Profile />}
                     {route.home && <Home />}
+                    {route.chat && <Chat />}
                 </div>
             </div>
         </div>
