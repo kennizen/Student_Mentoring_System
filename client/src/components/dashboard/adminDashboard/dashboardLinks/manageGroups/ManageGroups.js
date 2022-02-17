@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
 import { adminGetMentorMentee, adminSaveGroup } from "../../../../../actions/admin";
+import Check from "../../../../../assets/Check";
+import ChevronDown from "../../../../../assets/ChevronDown";
 import GenPopupMenu from "../../../../modal/GenPopupMenu";
 import ListComponent from "./listComponent/ListComponent";
 import TickComponent from "./tickComponent/TickComponent";
@@ -119,32 +121,19 @@ const ManageGroups = () => {
     console.log("students", students);
 
     return (
-        <div className="w-screen pl-4 pr-4 pb-4">
+        <div className="w-100 pl-4 pr-4 pb-4">
             {mentorMenteeDetails === null ? (
                 <h1>LOADING...</h1>
             ) : (
-                <div className="w-full mt-32">
+                <div className="w-full">
                     <div className="grid grid-cols-12 py-3 gap-x-4">
                         <div className="bg-white col-span-3 flex flex-col py-2 px-3 rounded-md shadow-md">
-                            {/* <div className="mb-1 flex items-center justify-end">
+                            <div className="mb-1 flex items-center justify-end">
                                 <button className="text-gray-600 flex items-center justify-between py-px px-3 mb-1 text-sm hover:bg-gray-300 bg-gray-200 rounded-full">
                                     Department
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-4 w-4 ml-1"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M19 9l-7 7-7-7"
-                                        />
-                                    </svg>
+                                    <ChevronDown myStyle={"ml-1 h-4 w-4"} alt={true} />
                                 </button>
-                            </div> */}
+                            </div>
                             <div className="h-450 overflow-y-auto">
                                 {mentorMenteeDetails.mentors.map((mentor) => {
                                     return (
@@ -176,20 +165,7 @@ const ManageGroups = () => {
                                     className="text-gray-600 flex items-center justify-between py-px px-3 mb-1 text-sm hover:bg-gray-300 bg-gray-200 rounded-full relative"
                                 >
                                     Programme
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-4 w-4 ml-1"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M19 9l-7 7-7-7"
-                                        />
-                                    </svg>
+                                    <ChevronDown myStyle={"ml-1 h-4 w-4"} alt={true} />
                                     <GenPopupMenu
                                         toggleMenu={toggleMenu}
                                         top={8}
@@ -260,20 +236,7 @@ const ManageGroups = () => {
                                     disabled={mentor.length === 0 ? true : false}
                                     className="p-2 bg-blue-600 rounded-md text-white flex items-center justify-between disabled:opacity-50"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5 mr-1"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M5 13l4 4L19 7"
-                                        />
-                                    </svg>
+                                    <Check myStyle={"mr-1 h-5 w-5"} alt={true} />
                                     Save
                                 </button>
                             </div>

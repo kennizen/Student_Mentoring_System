@@ -38,9 +38,9 @@ module.exports = {
     // mentor signup handler
     mentorSignupHandler: async (req, res, next) => {
         try {
-            const { email, password, confirmPassword, firstName, lastName } = req.body;
+            const { email, password, confirmPassword, firstName, lastName, middleName } = req.body;
 
-            if (!email || !password || !confirmPassword || !firstName || !lastName) {
+            if (!email || !password || !confirmPassword || !firstName) {
                 return res.status(400).send(Response.badrequest("Malformed input", {}));
             }
 
@@ -51,7 +51,9 @@ module.exports = {
             const mentor = new Mentor();
             mentor.email = email;
             mentor.password = await bcrypt.hash(password, 8);
-            mentor.name = `${firstName} ${lastName}`;
+            mentor.firstname = firstName;
+            mentor.middlename = middleName ? middleName : "";
+            mentor.lastname = lastName ? lastName : "";
             await mentor.save();
             response.success(res, "Mentor Signup successfull", {});
             req.user = mentor;

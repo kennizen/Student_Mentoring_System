@@ -72,3 +72,24 @@ export const adminSaveGroup = (groupData, history) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const adminFetchLogs = (history, setlogs) => async (dispatch) => {
+    try {
+        const { data } = await api.fetchLogs();
+        console.log("logs data in actions", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 401) {
+            dispatch({ type: "LOGOUT_ADMIN" });
+            history.push("/");
+        } else if (data.code === 403) {
+            history.goBack();
+        } else {
+            setlogs(data.data.logs);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

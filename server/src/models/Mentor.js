@@ -9,9 +9,17 @@ dotenv.config();
 
 const mentorSchema = new mongoose.Schema(
     {
-        name: {
+        firstname: {
             type: String,
             required: true,
+            trim: true,
+        },
+        middlename: {
+            type: String,
+            trim: true,
+        },
+        lastname: {
+            type: String,
             trim: true,
         },
         email: {

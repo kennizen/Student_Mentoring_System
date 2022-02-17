@@ -54,7 +54,7 @@ module.exports = {
                 semester,
             } = req.body;
 
-            if (!email || !password || !firstName || !lastName || !semester || !enrollmentNo) {
+            if (!email || !password || !firstName || !semester || !enrollmentNo) {
                 return response.badrequest(res, "Malformed input", {});
             }
 

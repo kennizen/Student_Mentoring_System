@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Student = require("../models/Student");
+const Log = require("../models/Log");
 const dotenv = require("dotenv");
 
 // importing utils
@@ -149,7 +150,7 @@ module.exports = {
     },
     getAllLogs: async (req, res, next) => {
         try {
-            const allLogs = await Log.find();
+            const allLogs = await Log.find().populate("user");
             response.success(res, "", { logs: allLogs });
             next();
         } catch (err) {
