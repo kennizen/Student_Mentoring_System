@@ -15,7 +15,7 @@ module.exports = {
      */
     getAllStudents: async () => {
         const students = await Student.find({}).select(
-            "id name department roll_no avatar mentoredBy assigned"
+            "id firstname middlename lastname department roll_no avatar mentoredBy assigned"
         );
         return students;
     },

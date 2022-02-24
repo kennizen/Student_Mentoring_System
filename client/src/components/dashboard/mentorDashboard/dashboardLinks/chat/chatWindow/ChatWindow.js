@@ -46,7 +46,7 @@ const ChatWindow = () => {
 
     return (
         <>
-            <div className="w-3/5 mt-7 p-2 bg-white rounded-md h-full overflow-auto">
+            <div className="w-3/5 mt-5 p-2 bg-white rounded-md h-full overflow-auto">
                 <div className="w-full h-9/10 overflow-auto"></div>
                 <div className="w-full h-1/10">
                     <div className="flex items-center justify-center h-full gap-x-6">

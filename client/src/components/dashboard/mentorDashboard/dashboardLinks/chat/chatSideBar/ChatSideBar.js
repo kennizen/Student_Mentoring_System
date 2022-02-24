@@ -1,10 +1,18 @@
 import React from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const ChatSideBar = () => {
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    useEffect(() => {}, []);
+
     return (
         <>
-            <div className="w-2/5 mt-7 p-2 bg-white rounded-md h-full overflow-auto">
-                <div className="sticky-top">
+            <div className="w-2/5 mt-5 p-2 bg-white rounded-md h-full overflow-auto">
+                <div className="sticky-top z-10">
                     <div className="relative mb-4">
                         <input
                             type="text"

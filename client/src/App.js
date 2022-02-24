@@ -7,6 +7,8 @@ import MentorDashboard from "./components/dashboard/mentorDashboard/MentorDashbo
 import Error403 from "./components/error/Error403";
 import StudentDashboard from "./components/dashboard/studentDashboard/StudentDashboard";
 
+import "./App.css";
+
 const App = () => {
     return (
         <React.StrictMode>

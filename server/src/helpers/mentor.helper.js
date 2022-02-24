@@ -14,7 +14,9 @@ module.exports = {
      * @returns Array of Mentors
      */
     getAllMentors: async () => {
-        const mentors = await Mentor.find().select("id name avatar assigned studentCount");
+        const mentors = await Mentor.find().select(
+            "id firstname middlename lastname avatar assigned studentCount department designation"
+        );
         return mentors;
     },
 };
