@@ -22,9 +22,10 @@ const ManageGroups = () => {
     const [mentor, setMentor] = useState([]);
     // mentor list in third form
     const [students, setStudents] = useState([]);
+
     const [toggleMenu, setToggleMenu] = useState(false);
 
-    const progArray = ["Phd", "M.Tech(CSE)", "M.Tech(IT)", "MCA", "B.Tech"];
+    const progArray = ["Phd", "M.Tech(CSE)", "M.Tech(IT)", "MCA", "B.Tech"]; // temporary
 
     // accessing global state for fetching the list of mentors and mentees
     const { mentorMenteeDetails } = useSelector((state) => state.admin);
@@ -47,6 +48,7 @@ const ManageGroups = () => {
                 studentIds: [],
             });
             setMentor([]);
+            setStudents([]);
         } else if (group.mentorId === "") {
             setMentor(mentorMenteeDetails.mentors.filter((mentor) => mentor._id === id));
             console.log("running 1");
@@ -208,20 +210,20 @@ const ManageGroups = () => {
                                             <img
                                                 src={
                                                     m.avatar.url === ""
-                                                        ? `https://avatars.dicebear.com/api/initials/${m.name}.svg`
+                                                        ? `https://avatars.dicebear.com/api/initials/${m.firstname}.svg`
                                                         : m.avatar.url
                                                 }
-                                                alt={m.name}
+                                                alt={`${m.firstname} ${m.middlename} ${m.lastname}`}
                                                 className="h-24 w-24 mb-3 rounded-full"
                                             />
                                             <div className="text-center">
-                                                <h2>{m.name}</h2>
+                                                <h2>{`${m.firstname} ${m.middlename} ${m.lastname}`}</h2>
                                                 <div className="flex items-center justify-between">
                                                     <h6 className="mb-1 select-none">
-                                                        Assistant Proffessor
+                                                        {m.designation}
                                                     </h6>
                                                     <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
-                                                    <h6>CSE</h6>
+                                                    <h6>{m.department}</h6>
                                                 </div>
                                             </div>
                                         </div>

@@ -1,19 +1,28 @@
 import React from "react";
 
-const ListComponent = ({ name, avatar, assigned, isInGroup, isStudent, department }) => {
+const ListComponent = ({
+    firstname,
+    middlename,
+    lastname,
+    avatar,
+    assigned,
+    isInGroup,
+    isStudent,
+    department,
+}) => {
     return (
         <>
             <img
                 src={
                     avatar.url === ""
-                        ? `https://avatars.dicebear.com/api/initials/${name}.svg`
+                        ? `https://avatars.dicebear.com/api/initials/${firstname}.svg`
                         : avatar.url
                 }
-                alt={name}
+                alt={`${firstname} ${middlename} ${lastname}`}
                 className="h-9 w-9 place-self-center rounded-full"
             />
             <div className="col-span-3">
-                <h4>{name}</h4>
+                <h4>{`${firstname} ${middlename} ${lastname}`}</h4>
                 <div
                     className={`flex items-center ${
                         isStudent ? "ml-3 justify-start" : "justify-between"

@@ -23,7 +23,15 @@ const MenteeTile = ({ slno, mentee, history }) => {
 
                 <div className="flex justify-start items-center">
                     <div className="mr-2">
-                        <img className="h-9 w-9 rounded-full" src={mentee.avatar.url} alt="img" />
+                        <img
+                            className="h-9 w-9 rounded-full"
+                            src={
+                                mentee.avatar.url === ""
+                                    ? `https://avatars.dicebear.com/api/initials/${mentee.firstname}.svg`
+                                    : mentee.avatar.url
+                            }
+                            alt="img"
+                        />
                     </div>
                     <div>
                         <h5>{`${mentee.firstname} ${mentee.middlename} ${mentee.lastname}`}</h5>
