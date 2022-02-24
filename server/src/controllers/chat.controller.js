@@ -1,5 +1,6 @@
 const Chat = require("../models/Chat");
 const response = require("../utils/responses.utils");
+const roles = require("../utils/roles");
 
 /**
  * @name createNewChat
@@ -7,17 +8,21 @@ const response = require("../utils/responses.utils");
  */
 exports.createNewChat = async (req, res, next) => {
     try {
-        const { users } = req.body;
+        const { students } = req.body;
 
-        const newChat = new Chat({
-            users,
-            userModel: req.user.role,
-        });
+        if (!students) {
+            throw new Error();
+        }
 
-        // console.log(newChat);
-        await newChat.save();
-        response.success(res, "Chat created", {});
-        next();
+        for (let i = 0; i < students.length; i++) {
+            const chat = new Chat();
+            chat.mentor = req.user._id;
+            chat.student = students[i];
+            chat.userModel = req.user.role;
+            await chat.save();
+        }
+
+        response.success(res);
     } catch (err) {
         console.log(err);
     }
@@ -29,7 +34,15 @@ exports.createNewChat = async (req, res, next) => {
  */
 exports.fetchAllChats = async (req, res, next) => {
     try {
-        const chats = await Chat.find({ users: req.user._id }).populate("users");
+        let chats;
+        if (req.user.role === roles.Mentor) {
+            chats = await Chat.find({ mentor: req.user._id }).populate(["mentor", "student"]);
+        }
+
+        if (req.user.role === roles.Student) {
+            chats = await Chat.find({ student: req.user._id }).populate(["mentor", "student"]);
+        }
+
         response.success(res, "", chats);
     } catch (err) {
         crossOriginIsolated.log(err);

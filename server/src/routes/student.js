@@ -54,6 +54,15 @@ router.post(
     Logger(events.AVATAR_UPDATED)
 );
 
+//  edit or change avatar
+router.delete(
+    "/avatar",
+    Auth,
+    Authorize(Role.Student),
+    studentController.deleteAvatar,
+    Logger(events.AVATAR_UPDATED)
+);
+
 // get semester all/specific information
 router.get("/semester", Auth, Authorize(Role.Student), studentController.getSemesterInfo);
 //add semester info

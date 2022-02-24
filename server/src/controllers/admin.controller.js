@@ -73,6 +73,8 @@ module.exports = {
                 mentoredBy: mongoose.Types.ObjectId(req.body.mentorId),
             }).distinct("_id");
 
+            console.log("student", oldStudents);
+
             if (!mentor) {
                 // if mentor doesn't exists
                 return response.error(res);

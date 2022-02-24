@@ -194,6 +194,23 @@ module.exports = {
         }
     },
 
+    // delete avatar
+    deleteAvatar: async (req, res, next) => {
+        try {
+            const result = await cloudinary.uploader.destroy(req.user.avatar.id);
+            if (!result) {
+                throw new Error();
+            }
+            req.user.avatar.url = "";
+            req.user.avatar.id = "";
+            await req.user.save();
+            response.success(res, "Avatar deleted successfully", {});
+        } catch (err) {
+            console.log("err", err);
+            response.error(res);
+        }
+    },
+
     getSemesterInfo: async (req, res, next) => {
         try {
             const semesters = await Semester.find({ student_id: req.user._id }).sort({
