@@ -13,18 +13,49 @@ exports.createNewChat = async (req, res, next) => {
         if (!students) {
             throw new Error();
         }
+        /** if req is from mentor  */
+        if (req.user.role === roles.Mentor) {
+            for (let i = 0; i < students.length; i++) {
+                const chat = new Chat();
+                // adding mentor to list
+                chat.users.push({
+                    role: req.user.role,
+                    user: req.user._id,
+                });
+                // adding student to list
+                chat.users.push({
+                    role: roles.Student,
+                    user: students[i],
+                });
 
-        for (let i = 0; i < students.length; i++) {
-            const chat = new Chat();
-            chat.mentor = req.user._id;
-            chat.student = students[i];
-            chat.userModel = req.user.role;
-            await chat.save();
+                await chat.save();
+            }
+        }
+
+        /** if req is from mentor */
+        if (req.user.role === roles.Student) {
+            for (let i = 0; i < students.length; i++) {
+                const chat = new Chat();
+                // adding creating student to list
+                chat.users.push({
+                    role: req.user.role,
+                    user: req.user._id,
+                });
+                // adding student to list
+                chat.users.push({
+                    role: roles.Student,
+                    user: students[i],
+                });
+
+                await chat.save();
+            }
         }
 
         response.success(res);
+        next();
     } catch (err) {
         console.log(err);
+        response.error(res);
     }
 };
 
@@ -36,15 +67,16 @@ exports.fetchAllChats = async (req, res, next) => {
     try {
         let chats;
         if (req.user.role === roles.Mentor) {
-            chats = await Chat.find({ mentor: req.user._id }).populate(["mentor", "student"]);
+            chats = await Chat.find({ "users.user": req.user._id }).populate("users.user");
         }
 
         if (req.user.role === roles.Student) {
-            chats = await Chat.find({ student: req.user._id }).populate(["mentor", "student"]);
+            chats = await Chat.find({ "users.user": req.user._id }).populate("users.user");
         }
-
         response.success(res, "", chats);
+        next();
     } catch (err) {
-        crossOriginIsolated.log(err);
+        console.log(err);
+        response.error(res);
     }
 };

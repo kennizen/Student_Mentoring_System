@@ -17,6 +17,7 @@ module.exports = (roles = []) => {
         (req, res, next) => {
             if (roles.length && !roles.includes(req.user.role)) {
                 // if user's role is not authorized
+                console.log("authrize error");
                 return response.forbidden(res);
             }
             // if authentication and authorization successful

@@ -7,7 +7,7 @@ const Role = require("../utils/roles");
 // import chat contorller
 const chatController = require("../controllers/chat.controller");
 
-router.post("/", Auth, Authorize(Role.Mentor, Role.Student), chatController.createNewChat);
-router.get("/", Auth, Authorize(Role.Mentor, Role.Student), chatController.fetchAllChats);
+router.post("/", Auth, Authorize([Role.Mentor, Role.Student]), chatController.createNewChat);
+router.get("/", Auth, Authorize([Role.Mentor, Role.Student]), chatController.fetchAllChats);
 
 module.exports = router;

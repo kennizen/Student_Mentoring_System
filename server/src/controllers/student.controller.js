@@ -311,4 +311,16 @@ module.exports = {
             response.error(res);
         }
     },
+
+    // fetch all stduents under the mentor of current student
+    getAllStudents: async (req, res, next) => {
+        try {
+            const students = await Student.find({ mentoredBy: req.user.mentoredBy });
+            response.success(res, "", { count: students.length, students });
+            next();
+        } catch (err) {
+            console.log(err);
+            response.error(res);
+        }
+    },
 };

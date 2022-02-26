@@ -26,11 +26,6 @@ router.post("/signup", studentController.studentSignupHandler, Logger(events.SIG
 
 // student dashboard
 router.get("/dashboard", Auth, Authorize(Role.Student), studentController.studentDashboardHandler);
-// create a new post
-// router.post("/newPost", Auth, Authorize(Role.Student), studentController.createNewPost);
-
-// get all posts
-// router.get("/fetchAllPosts", Auth, Authorize(Role.Student), studentController.fetchAllPosts);
 
 // get the student/mentee profile
 router.get("/profile", Auth, Authorize(Role.Student), studentController.getProfile);
@@ -91,5 +86,12 @@ router.post(
 );
 //get all pass education info
 router.get("/pastEducation/", Auth, Authorize(Role.Student), studentController.getPastEducation);
+// get all students of a mentor
+router.get(
+    "/getAllStudentsOfMentor",
+    Auth,
+    Authorize(Role.Student),
+    studentController.getAllStudents
+);
 
 module.exports = router;
