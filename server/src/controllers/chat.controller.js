@@ -8,15 +8,17 @@ const roles = require("../utils/roles");
  */
 exports.createNewChat = async (req, res, next) => {
     try {
-        const { students } = req.body;
+        const { chats } = req.body;
 
-        if (!students) {
+        if (!chats) {
             throw new Error();
         }
+
+        const chat = new Chat();
+
         /** if req is from mentor  */
         if (req.user.role === roles.Mentor) {
-            for (let i = 0; i < students.length; i++) {
-                const chat = new Chat();
+            for (let i = 0; i < chats.length; i++) {
                 // adding mentor to list
                 chat.users.push({
                     role: req.user.role,
@@ -25,17 +27,14 @@ exports.createNewChat = async (req, res, next) => {
                 // adding student to list
                 chat.users.push({
                     role: roles.Student,
-                    user: students[i],
+                    user: chats[i],
                 });
-
-                await chat.save();
             }
         }
 
-        /** if req is from mentor */
+        /** if req is from student */
         if (req.user.role === roles.Student) {
-            for (let i = 0; i < students.length; i++) {
-                const chat = new Chat();
+            for (let i = 0; i < chats.length; i++) {
                 // adding creating student to list
                 chat.users.push({
                     role: req.user.role,
@@ -44,14 +43,14 @@ exports.createNewChat = async (req, res, next) => {
                 // adding student to list
                 chat.users.push({
                     role: roles.Student,
-                    user: students[i],
+                    user: chats[i],
                 });
-
-                await chat.save();
             }
         }
 
-        response.success(res);
+        await chat.save();
+
+        response.success(res, "Chat created", { chat: chat });
         next();
     } catch (err) {
         console.log(err);

@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import { studentGetDetails } from "../../../actions/student";
 import Home from "../studentDashboard/dashboardLinks/home/Home";
 import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
-import Chat from "./dashboardLinks/chat/Chat";
+import Chat from "../mentorDashboard/dashboardLinks/chat/Chat";
 import Profile from "./dashboardLinks/profile/Profile";
 
 const StudentDashboard = () => {

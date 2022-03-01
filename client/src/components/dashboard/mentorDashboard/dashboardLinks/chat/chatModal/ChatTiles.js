@@ -2,8 +2,8 @@ import React from "react";
 
 const ChatTiles = ({ mentee, handleChange }) => {
     return (
-        <div className="flex items-center justify-between p-2 border border-solid border-gray-200 rounded-md">
-            <div className="flex items-center justify-start">
+        <div className="flex flex-shrink-0 items-center justify-between p-2 border border-solid border-gray-200 rounded-md">
+            <div className="flex items-center justify-start mr-6">
                 <img
                     className="h-10 w-10 rounded-full mr-3"
                     src={
@@ -13,7 +13,7 @@ const ChatTiles = ({ mentee, handleChange }) => {
                     }
                     alt=""
                 />
-                <div className="flex flex-col mr-2">
+                <div className="flex flex-col">
                     <h5>{`${mentee.firstname} ${mentee.middlename} ${mentee.lastname}`}</h5>
                     <h6>{mentee.enrollment_no}</h6>
                 </div>

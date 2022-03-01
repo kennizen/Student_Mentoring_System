@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { mentorGetAllMentees } from "../../../../../../actions/mentor";
+import { createChat } from "../../../../../../actions/chat";
 import ChatTiles from "./ChatTiles";
 
 import Plus from "../../../../../../assets/Plus";
 
-const ChatModal = ({ setShowModal, nodeRef }) => {
+const ChatModal = ({ setShowModal, nodeRef, chats }) => {
     // state variable to store the fetched mentees from the api
     const [mentees, setMentees] = useState([]);
 
@@ -14,7 +15,7 @@ const ChatModal = ({ setShowModal, nodeRef }) => {
     const history = useHistory();
 
     // state variable to store the chat ids of the selected mentees
-    const [chatIds, setChatIds] = useState([]);
+    const [chatIds, setChatIds] = useState({ chats: [] });
 
     // useEffect as component did mount to fetch the mentee for the mentor
     useEffect(() => {
@@ -26,11 +27,16 @@ const ChatModal = ({ setShowModal, nodeRef }) => {
         const checked = e.target.checked;
         const id = e.target.id;
         if (checked) {
-            setChatIds([...chatIds, id]);
+            setChatIds({ chats: [...chatIds.chats, id] });
         } else {
-            const newChatIds = chatIds.filter((chatid) => chatid !== id);
-            setChatIds(newChatIds);
+            const newChatIds = chatIds.chats.filter((chatid) => chatid !== id);
+            setChatIds({ chats: newChatIds });
         }
+    };
+
+    // function to submit the chatIds to the api for creation of new chats
+    const handleSubmit = () => {
+        dispatch(createChat(history, setShowModal, chatIds));
     };
 
     console.log("mentees", mentees);
@@ -41,7 +47,7 @@ const ChatModal = ({ setShowModal, nodeRef }) => {
             <div className="w-full h-full bg-transparent absolute top-0 left-0 flex items-center justify-center">
                 <div
                     ref={nodeRef}
-                    className={`max-h-500 overflow-y-auto w-11/12 z-50 p-6 bg-white rounded-md`}
+                    className={`max-h-500 overflow-y-auto max-w-7xl z-50 p-6 bg-white rounded-md`}
                 >
                     <div className="flex items-center justify-between mb-3">
                         <h4>Create a chat</h4>
@@ -55,23 +61,29 @@ const ChatModal = ({ setShowModal, nodeRef }) => {
                         </button>
                     </div>
 
-                    <div>
+                    <div className="mb-2">
                         <h5>Selected - {chatIds.length}</h5>
                     </div>
 
-                    <div className="grid grid-cols-6 gap-3">
-                        {mentees.map((mentee) => (
-                            <ChatTiles
-                                key={mentee._id}
-                                mentee={mentee}
-                                handleChange={handleChange}
-                            />
-                        ))}
+                    <div className="flex items-center flex-wrap justify-start gap-x-3">
+                        {mentees.map((mentee) => {
+                            if (chats.find((chat) => chat._id === mentee._id) === undefined) {
+                                return (
+                                    <ChatTiles
+                                        key={mentee._id}
+                                        mentee={mentee}
+                                        handleChange={handleChange}
+                                    />
+                                );
+                            }
+                            return <div key={mentee._id}></div>;
+                        })}
                     </div>
 
                     <div className="w-full mt-2 flex items-center justify-end">
                         <button
-                            disabled={chatIds.length === 0 ? true : false}
+                            onClick={handleSubmit}
+                            disabled={chatIds.chats.length === 0 ? true : false}
                             className="flex items-center justify-between py-2 px-4 rounded-md bg-blue-600 hover:bg-blue-800 transition-colors text-white disabled:opacity-50"
                         >
                             <Plus alt={false} myStyle={"h-5 w-5 mr-2"} /> Create

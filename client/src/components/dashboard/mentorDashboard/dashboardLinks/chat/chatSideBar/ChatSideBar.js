@@ -1,13 +1,10 @@
 import React from "react";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-const ChatSideBar = () => {
+const ChatSideBar = ({ chats }) => {
     const dispatch = useDispatch();
     const history = useHistory();
-
-    useEffect(() => {}, []);
 
     return (
         <>
@@ -38,23 +35,32 @@ const ChatSideBar = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-chatTab p-2 mb-4">
-                    <img
-                        className="h-14 w-14 rounded-full"
-                        src="https://picsum.photos/id/237/200/300"
-                        alt="img"
-                    />
-                    <div className="border-b border-solid border-gray-200 flex mx-6 flex-col items-start justify-evenly">
-                        <h2>John Doe</h2>
-                        <h6>Hi how are you?</h6>
-                    </div>
-                    <div className="px-3 flex flex-col items-center justify-evenly">
-                        <h6>a min ago</h6>
-                        <div className="bg-red-200 p-2.5 h-3 w-3 rounded-full flex items-center justify-center">
-                            <h6>2</h6>
+                {chats.map((chat) => (
+                    <div
+                        key={chat._id}
+                        className="grid grid-cols-chatTab p-2 hover:bg-gray-100 mb-4 cursor-pointer rounded-md transition-all"
+                    >
+                        <img
+                            className="h-12 w-12 rounded-full"
+                            src={
+                                chat?.avatar?.url === ""
+                                    ? `https://avatars.dicebear.com/api/initials/${chat.firstname}.svg`
+                                    : chat?.avatar?.url
+                            }
+                            alt="img"
+                        />
+                        <div className="border-b border-solid border-gray-200 flex mx-6 flex-col items-start justify-evenly">
+                            <h3>{`${chat?.firstname} ${chat?.middlename} ${chat?.lastname}`}</h3>
+                            <h6>{chat?.latestMessage}</h6>
+                        </div>
+                        <div className="px-3 flex flex-col items-center justify-evenly">
+                            <h6>a min ago</h6>
+                            <div className="bg-red-200 p-2.5 h-3 w-3 rounded-full flex items-center justify-center">
+                                <h6>2</h6>
+                            </div>
                         </div>
                     </div>
-                </div>
+                ))}
             </div>
         </>
     );
