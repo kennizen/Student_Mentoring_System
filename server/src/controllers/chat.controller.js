@@ -4,7 +4,8 @@ const roles = require("../utils/roles");
 
 /**
  * @name createNewChat
- * @Desc This method create a new chat
+ * @Desc This method creates a new chat and returns it
+ * @return Returns the newly created Chat
  */
 exports.createNewChat = async (req, res, next) => {
     try {
@@ -19,6 +20,15 @@ exports.createNewChat = async (req, res, next) => {
         /** if req is from mentor  */
         if (req.user.role === roles.Mentor) {
             for (let i = 0; i < chats.length; i++) {
+                // query db to check if exists
+                const chatExists = await Chat.find({
+                    $and: [{ "users.user": req.user._id }, { "users.user": chats[i] }],
+                });
+
+                // if chat already exists
+                if (chatExists.length > 0) {
+                    return response.error(res, "Chat already exists", {});
+                }
                 // adding mentor to list
                 chat.users.push({
                     role: req.user.role,
@@ -35,6 +45,15 @@ exports.createNewChat = async (req, res, next) => {
         /** if req is from student */
         if (req.user.role === roles.Student) {
             for (let i = 0; i < chats.length; i++) {
+                // query db to check if exists
+                const chatExists = await Chat.find({
+                    $and: [{ "users.user": req.user._id }, { "users.user": chats[i] }],
+                });
+
+                // if chat already exists
+                if (chatExists.length > 0) {
+                    return response.error(res, "Chat already exists", {});
+                }
                 // adding creating student to list
                 chat.users.push({
                     role: req.user.role,
@@ -47,10 +66,8 @@ exports.createNewChat = async (req, res, next) => {
                 });
             }
         }
-
-        await chat.save();
-
-        response.success(res, "Chat created", { chat: chat });
+        const newChat = await (await chat.save()).populate("users.user").execPopulate();
+        response.success(res, "Chat created", { chat: newChat });
         next();
     } catch (err) {
         console.log(err);
