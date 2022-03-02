@@ -213,3 +213,21 @@ export const studentUpdatePastEduDetails = (history, fields) => async (dispatch)
         console.log(error);
     }
 };
+
+export const studentGetAllStudentsOfMentor = (history, setAllMentees) => async (dispatch) => {
+    try {
+        const { data } = await api.getStudentsOfMentor();
+        console.log("students of mentor", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            setAllMentees(data.data.students);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

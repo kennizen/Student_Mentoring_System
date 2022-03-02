@@ -14,24 +14,21 @@ import { useSelector } from "react-redux";
 
 const Chat = () => {
     const [showModal, setShowModal] = useState(false);
-    const [chatsToBeDisplayed, setChatsToBeDisplayed] = useState([]);
 
     // refs used for css transition to work for the modal and the overlay
     const modalRef = useRef(null);
     const overlayRef = useRef(null);
 
+    const { chats } = useSelector((state) => state.chat);
+
     const dispatch = useDispatch();
     const history = useHistory();
 
-    // accessing global state to fetch the chats
-    const { chats } = useSelector((state) => state.chat);
-
     useEffect(() => {
-        dispatch(getAllChat(history, setChatsToBeDisplayed));
+        dispatch(getAllChat(history));
     }, [dispatch, history]);
 
     console.log("chats", chats);
-    console.log("chats to be displayed", chatsToBeDisplayed);
 
     return (
         <>
@@ -52,11 +49,7 @@ const Chat = () => {
                     classNames="modal"
                     unmountOnExit
                 >
-                    <ChatModal
-                        nodeRef={modalRef}
-                        setShowModal={setShowModal}
-                        chats={chatsToBeDisplayed}
-                    />
+                    <ChatModal nodeRef={modalRef} setShowModal={setShowModal} chats={chats} />
                 </CSSTransition>
                 <div className="bg-white flex items-center justify-between p-3 mt-2 rounded-lg">
                     <h2 className="text-gray-500">Chat with your fellow mentees...</h2>
@@ -69,7 +62,7 @@ const Chat = () => {
                     </button>
                 </div>
                 <div className="flex gap-x-5 h-cal">
-                    <ChatSideBar chats={chatsToBeDisplayed} />
+                    <ChatSideBar chats={chats} />
                     <ChatWindow />
                 </div>
             </div>

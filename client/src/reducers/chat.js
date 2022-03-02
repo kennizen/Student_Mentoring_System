@@ -3,7 +3,7 @@ const chat = (state = { chats: [] }, action) => {
         case "FETCH_CHATS":
             return { ...state, chats: action.data.data };
         case "ADD_CHATS":
-            return { ...state.chats.push(action.data.data) };
+            return { ...state, chats: [...state.chats, ...action.data.data.newChatArray] };
         default:
             return state;
     }

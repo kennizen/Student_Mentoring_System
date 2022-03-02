@@ -56,3 +56,7 @@ export const getStudentPastEduDetails = () =>
     API.get("/student/pastEducation").catch((error) => {
         return error.response;
     });
+export const getStudentsOfMentor = () =>
+    API.get("/student/getAllStudentsOfMentor").catch((error) => {
+        return error.response;
+    });

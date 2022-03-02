@@ -1,10 +1,13 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+// import { useDispatch } from "react-redux";
+// import { useHistory } from "react-router-dom";
 
 const ChatSideBar = ({ chats }) => {
-    const dispatch = useDispatch();
-    const history = useHistory();
+    // getting uid of the logged in user
+    const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+
+    // const dispatch = useDispatch();
+    // const history = useHistory();
 
     return (
         <>
@@ -35,32 +38,38 @@ const ChatSideBar = ({ chats }) => {
                     </div>
                 </div>
 
-                {chats.map((chat) => (
-                    <div
-                        key={chat._id}
-                        className="grid grid-cols-chatTab p-2 hover:bg-gray-100 mb-4 cursor-pointer rounded-md transition-all"
-                    >
-                        <img
-                            className="h-12 w-12 rounded-full"
-                            src={
-                                chat?.avatar?.url === ""
-                                    ? `https://avatars.dicebear.com/api/initials/${chat.firstname}.svg`
-                                    : chat?.avatar?.url
-                            }
-                            alt="img"
-                        />
-                        <div className="border-b border-solid border-gray-200 flex mx-6 flex-col items-start justify-evenly">
-                            <h3>{`${chat?.firstname} ${chat?.middlename} ${chat?.lastname}`}</h3>
-                            <h6>{chat?.latestMessage}</h6>
-                        </div>
-                        <div className="px-3 flex flex-col items-center justify-evenly">
-                            <h6>a min ago</h6>
-                            <div className="bg-red-200 p-2.5 h-3 w-3 rounded-full flex items-center justify-center">
-                                <h6>2</h6>
+                {chats.map((chat) => {
+                    if (chat.users.find((user) => user.user._id !== uid)) {
+                        let thatUser = chat.users.find((user) => user.user._id !== uid);
+                        return (
+                            <div
+                                key={chat._id}
+                                className="grid grid-cols-chatTab p-2 hover:bg-gray-100 mb-4 cursor-pointer rounded-md transition-all"
+                            >
+                                <img
+                                    className="h-12 w-12 rounded-full"
+                                    src={
+                                        thatUser?.user?.avatar?.url === ""
+                                            ? `https://avatars.dicebear.com/api/initials/${thatUser?.user?.firstname}.svg`
+                                            : thatUser?.user?.avatar?.url
+                                    }
+                                    alt="img"
+                                />
+                                <div className="border-b border-solid border-gray-200 flex mx-6 flex-col items-start justify-evenly">
+                                    <h3>{`${thatUser?.user?.firstname} ${thatUser?.user?.middlename} ${thatUser?.user?.lastname}`}</h3>
+                                    <h6>{chat?.latestMessage}</h6>
+                                </div>
+                                <div className="px-3 flex flex-col items-center justify-evenly">
+                                    <h6>a min ago</h6>
+                                    <div className="bg-red-200 p-2.5 h-3 w-3 rounded-full flex items-center justify-center">
+                                        <h6>2</h6>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                ))}
+                        );
+                    }
+                    return <div key={chat._id}></div>;
+                })}
             </div>
         </>
     );

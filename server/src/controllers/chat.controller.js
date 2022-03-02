@@ -15,11 +15,12 @@ exports.createNewChat = async (req, res, next) => {
             throw new Error();
         }
 
-        const chat = new Chat();
+        let newChatArray = [];
 
         /** if req is from mentor  */
         if (req.user.role === roles.Mentor) {
             for (let i = 0; i < chats.length; i++) {
+                const chat = new Chat();
                 // query db to check if exists
                 const chatExists = await Chat.find({
                     $and: [{ "users.user": req.user._id }, { "users.user": chats[i] }],
@@ -39,12 +40,15 @@ exports.createNewChat = async (req, res, next) => {
                     role: roles.Student,
                     user: chats[i],
                 });
+                const newChat = await (await chat.save()).populate("users.user").execPopulate();
+                newChatArray.push(newChat);
             }
         }
 
         /** if req is from student */
         if (req.user.role === roles.Student) {
             for (let i = 0; i < chats.length; i++) {
+                const chat = new Chat();
                 // query db to check if exists
                 const chatExists = await Chat.find({
                     $and: [{ "users.user": req.user._id }, { "users.user": chats[i] }],
@@ -64,10 +68,12 @@ exports.createNewChat = async (req, res, next) => {
                     role: roles.Student,
                     user: chats[i],
                 });
+                const newChat = await (await chat.save()).populate("users.user").execPopulate();
+                newChatArray.push(newChat);
             }
         }
-        const newChat = await (await chat.save()).populate("users.user").execPopulate();
-        response.success(res, "Chat created", { chat: newChat });
+
+        response.success(res, "Chat created", { newChatArray });
         next();
     } catch (err) {
         console.log(err);

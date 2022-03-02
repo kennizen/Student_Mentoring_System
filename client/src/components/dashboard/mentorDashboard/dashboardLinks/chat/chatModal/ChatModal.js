@@ -6,6 +6,7 @@ import { createChat } from "../../../../../../actions/chat";
 import ChatTiles from "./ChatTiles";
 
 import Plus from "../../../../../../assets/Plus";
+import { studentGetAllStudentsOfMentor } from "../../../../../../actions/student";
 
 const ChatModal = ({ setShowModal, nodeRef, chats }) => {
     // state variable to store the fetched mentees from the api
@@ -19,7 +20,10 @@ const ChatModal = ({ setShowModal, nodeRef, chats }) => {
 
     // useEffect as component did mount to fetch the mentee for the mentor
     useEffect(() => {
-        dispatch(mentorGetAllMentees(history, setMentees));
+        // checking to see if the logged in user in student or mentor
+        const role = JSON.parse(localStorage.getItem("authData"))["role"];
+        if (role === "STUDENT") dispatch(studentGetAllStudentsOfMentor(history, setMentees));
+        else dispatch(mentorGetAllMentees(history, setMentees));
     }, [dispatch, history]);
 
     // function to add and remove the chat ids from the state variable chatIds
@@ -39,7 +43,7 @@ const ChatModal = ({ setShowModal, nodeRef, chats }) => {
         dispatch(createChat(history, setShowModal, chatIds));
     };
 
-    console.log("mentees", mentees);
+    console.log("users", mentees);
     console.log("chatIds", chatIds);
 
     return (
@@ -67,7 +71,11 @@ const ChatModal = ({ setShowModal, nodeRef, chats }) => {
 
                     <div className="flex items-center flex-wrap justify-start gap-x-3">
                         {mentees.map((mentee) => {
-                            if (chats.find((chat) => chat._id === mentee._id) === undefined) {
+                            if (
+                                chats.find((chat) =>
+                                    chat.users.find((user) => user.user._id === mentee._id)
+                                ) === undefined
+                            ) {
                                 return (
                                     <ChatTiles
                                         key={mentee._id}
