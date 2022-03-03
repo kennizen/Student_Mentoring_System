@@ -21,3 +21,12 @@ export const fetchChat = () =>
     API.get(`/chats`).catch((error) => {
         return error.response;
     });
+
+export const createMessage = (message) =>
+    API.post(`/messages`, message).catch((error) => {
+        return error.response;
+    });
+export const getMessages = (chatId) =>
+    API.get(`/messages/${chatId}`).catch((error) => {
+        return error.response;
+    });

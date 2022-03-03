@@ -2,7 +2,7 @@ import React from "react";
 // import { useDispatch } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
-const ChatSideBar = ({ chats }) => {
+const ChatSideBar = ({ chats, setSelectedChat }) => {
     // getting uid of the logged in user
     const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
 
@@ -43,8 +43,9 @@ const ChatSideBar = ({ chats }) => {
                         let thatUser = chat.users.find((user) => user.user._id !== uid);
                         return (
                             <div
+                                onClick={() => setSelectedChat(chat._id)}
                                 key={chat._id}
-                                className="grid grid-cols-chatTab p-2 hover:bg-gray-100 mb-4 cursor-pointer rounded-md transition-all"
+                                className="grid grid-cols-chatTab p-2 hover:bg-gray-200 mb-4 cursor-pointer rounded-md transition-all relative"
                             >
                                 <img
                                     className="h-12 w-12 rounded-full"
@@ -55,7 +56,8 @@ const ChatSideBar = ({ chats }) => {
                                     }
                                     alt="img"
                                 />
-                                <div className="border-b border-solid border-gray-200 flex mx-6 flex-col items-start justify-evenly">
+                                <div className="w-56 h-px bg-gray-200 absolute bottom-0 left-20"></div>
+                                <div className="flex mx-6 flex-col items-start justify-evenly">
                                     <h3>{`${thatUser?.user?.firstname} ${thatUser?.user?.middlename} ${thatUser?.user?.lastname}`}</h3>
                                     <h6>{chat?.latestMessage}</h6>
                                 </div>

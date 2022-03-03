@@ -15,6 +15,8 @@ import { useSelector } from "react-redux";
 const Chat = () => {
     const [showModal, setShowModal] = useState(false);
 
+    const [selectedChat, setSelectedChat] = useState("");
+
     // refs used for css transition to work for the modal and the overlay
     const modalRef = useRef(null);
     const overlayRef = useRef(null);
@@ -62,8 +64,8 @@ const Chat = () => {
                     </button>
                 </div>
                 <div className="flex gap-x-5 h-cal">
-                    <ChatSideBar chats={chats} />
-                    <ChatWindow />
+                    <ChatSideBar chats={chats} setSelectedChat={setSelectedChat} />
+                    <ChatWindow selectedChat={selectedChat} />
                 </div>
             </div>
         </>

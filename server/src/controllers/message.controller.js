@@ -19,14 +19,14 @@ exports.createNewMessage = async (req, res, next) => {
         await newMessage.save();
         response.success(res, "Message created", newMessage);
         next();
-    } catch (errr) {
-        console.log("errr", err);
+    } catch (err) {
+        console.log("Error", err);
     }
 };
 
 exports.fetchAllMessage = async (req, res, next) => {
     try {
-        const chatId = req.params.id;
+        const chatId = req.params.chatId;
         const messages = await Message.find({ chat: chatId }).populate("sender");
         response.success(res, "", messages);
     } catch (err) {
