@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 // import { useDispatch } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
 const ChatSideBar = ({ chats, setSelectedChat }) => {
     // getting uid of the logged in user
     const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+
+    // state for activating the bg of the selected chat
+    const [selectedIndex, setSelectedIndex] = useState(-1);
 
     // const dispatch = useDispatch();
     // const history = useHistory();
@@ -38,35 +41,41 @@ const ChatSideBar = ({ chats, setSelectedChat }) => {
                     </div>
                 </div>
 
-                {chats.map((chat) => {
+                {chats?.map((chat, index) => {
                     if (chat.users.find((user) => user.user._id !== uid)) {
                         let thatUser = chat.users.find((user) => user.user._id !== uid);
                         return (
-                            <div
-                                onClick={() => setSelectedChat(chat._id)}
-                                key={chat._id}
-                                className="grid grid-cols-chatTab p-2 hover:bg-gray-200 mb-4 cursor-pointer rounded-md transition-all relative"
-                            >
-                                <img
-                                    className="h-12 w-12 rounded-full"
-                                    src={
-                                        thatUser?.user?.avatar?.url === ""
-                                            ? `https://avatars.dicebear.com/api/initials/${thatUser?.user?.firstname}.svg`
-                                            : thatUser?.user?.avatar?.url
-                                    }
-                                    alt="img"
-                                />
-                                <div className="w-56 h-px bg-gray-200 absolute bottom-0 left-20"></div>
-                                <div className="flex mx-6 flex-col items-start justify-evenly">
-                                    <h3>{`${thatUser?.user?.firstname} ${thatUser?.user?.middlename} ${thatUser?.user?.lastname}`}</h3>
-                                    <h6>{chat?.latestMessage}</h6>
-                                </div>
-                                <div className="px-3 flex flex-col items-center justify-evenly">
-                                    <h6>a min ago</h6>
-                                    <div className="bg-red-200 p-2.5 h-3 w-3 rounded-full flex items-center justify-center">
-                                        <h6>2</h6>
+                            <div key={chat._id} className="mb-4 flex flex-col items-end">
+                                <div
+                                    onClick={() => {
+                                        setSelectedIndex(index);
+                                        setSelectedChat(chat._id);
+                                    }}
+                                    className={`grid w-full grid-cols-chatTab p-2 hover:bg-gray-200 cursor-pointer rounded-md transition-all ${
+                                        selectedIndex === index ? "bg-gray-200" : ""
+                                    }`}
+                                >
+                                    <img
+                                        className="h-12 w-12 rounded-full"
+                                        src={
+                                            thatUser?.user?.avatar?.url === ""
+                                                ? `https://avatars.dicebear.com/api/initials/${thatUser?.user?.firstname}.svg`
+                                                : thatUser?.user?.avatar?.url
+                                        }
+                                        alt="img"
+                                    />
+                                    <div className="flex mx-6 flex-col items-start justify-evenly">
+                                        <h3>{`${thatUser?.user?.firstname} ${thatUser?.user?.middlename} ${thatUser?.user?.lastname}`}</h3>
+                                        <h6>{chat?.latestMessage}</h6>
+                                    </div>
+                                    <div className="px-3 flex flex-col items-center justify-evenly">
+                                        <h6>a min ago</h6>
+                                        <div className="bg-red-200 p-2.5 h-3 w-3 rounded-full flex items-center justify-center">
+                                            <h6>2</h6>
+                                        </div>
                                     </div>
                                 </div>
+                                <div className="w-5/6 h-px bg-gray-200"></div>
                             </div>
                         );
                     }

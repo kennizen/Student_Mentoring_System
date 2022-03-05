@@ -19,6 +19,7 @@
     "react-transition-group": "^4.4.2",
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",
+    "socket.io-client": "^4.4.1",
     "suneditor": "^2.41.3",
     "suneditor-react": "^3.3.0",
     "tw-elements": "^1.0.0-alpha4",

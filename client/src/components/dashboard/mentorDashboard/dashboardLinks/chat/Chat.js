@@ -15,17 +15,20 @@ import { useSelector } from "react-redux";
 const Chat = () => {
     const [showModal, setShowModal] = useState(false);
 
+    // state variable for storing the selected chat id for the selected chat
     const [selectedChat, setSelectedChat] = useState("");
 
     // refs used for css transition to work for the modal and the overlay
     const modalRef = useRef(null);
     const overlayRef = useRef(null);
 
+    // accesing global state to fetch the chats
     const { chats } = useSelector((state) => state.chat);
 
     const dispatch = useDispatch();
     const history = useHistory();
 
+    // api call to fetch all the chats
     useEffect(() => {
         dispatch(getAllChat(history));
     }, [dispatch, history]);

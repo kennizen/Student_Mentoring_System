@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { createMessage, getMessages } from "../../../../../../actions/chat";
 
+import { useSelector } from "react-redux";
+
 const ChatWindow = ({ selectedChat }) => {
     const dispatch = useDispatch();
     const history = useHistory();
@@ -20,12 +22,15 @@ const ChatWindow = ({ selectedChat }) => {
     const [placeHol, setPlaceHol] = useState("opacity-100");
     // state to set the disable status of the send button
     const [disable, setDisable] = useState(true);
-
     // state variable representing the message to be sent
     const [message, setMessage] = useState({
         content: "",
         chat: "",
     });
+    // state variable to store the fetched messages
+    // const [messages, setMessages] = useState([]);
+
+    const { messages } = useSelector((state) => state.chat);
 
     // div seletor for the div used as text input
     var contenteditable = document.querySelector("[contenteditable]");
@@ -65,15 +70,42 @@ const ChatWindow = ({ selectedChat }) => {
         });
     };
 
+    // getting uid of the logged in user
+    const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+
     console.log("message", message);
+    console.log("messages", messages);
 
     return (
         <>
             <div className="w-3/5 mt-5 p-2 bg-white rounded-md h-full overflow-auto">
-                <div className="w-full h-9/10 overflow-auto">{/* messages */}</div>
+                <div className="w-full h-9/10 overflow-auto flex flex-col-reverse px-10 pb-7">
+                    {messages
+                        .sort((a, b) => a.createdAt < b.createdAt)
+                        .map((message) => {
+                            return (
+                                <div
+                                    key={message._id}
+                                    className={`w-full flex items-center mb-1 ${
+                                        message.sender._id === uid ? "justify-end" : "justify-start"
+                                    }`}
+                                >
+                                    <h5
+                                        className={`px-2 max-w-3/5 py-1 ${
+                                            message.sender._id === uid
+                                                ? "bg-gray-200"
+                                                : "bg-blue-200"
+                                        } rounded-lg`}
+                                    >
+                                        {message.content}
+                                    </h5>
+                                </div>
+                            );
+                        })}
+                </div>
                 <div className="w-full h-1/10">
-                    <div className="flex items-center justify-center h-full gap-x-6">
-                        <div className="w-3/5 relative">
+                    <div className="flex items-center justify-center h-full px-10 gap-x-6">
+                        <div className="w-full relative">
                             <div
                                 onFocus={focusPlaceHol}
                                 onBlur={blurPlaceHol}

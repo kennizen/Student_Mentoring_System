@@ -49,17 +49,17 @@ export const createMessage = (history, message) => async (dispatch) => {
     }
 };
 
-export const getMessages = (history, chatId) => async (dispatch) => {
+export const getMessages = (history, chatId, setMessages) => async (dispatch) => {
     try {
         const { data } = await api.getMessages(chatId);
         console.log("message get data", data);
-
+        // setMessages(data.data);
         //check if the response data is error
-        // if (data.code === 403) {
-        //     history.goBack();
-        // } else {
-        //     dispatch({ type: "ADD_CHATS", data });
-        // }
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "FETCH_MESSAGES", data });
+        }
     } catch (error) {
         console.log(error);
     }
