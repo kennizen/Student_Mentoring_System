@@ -3,12 +3,23 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { createMessage, getMessages } from "../../../../../../actions/chat";
-
 import { useSelector } from "react-redux";
+
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:5000";
+var socket;
+
+// getting uid of the logged in user
+const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
 
 const ChatWindow = ({ selectedChat }) => {
     const dispatch = useDispatch();
     const history = useHistory();
+
+    useEffect(() => {
+        socket = io(ENDPOINT);
+    }, []);
 
     // api call to fetch all the messages for the selected chat
     useEffect(() => {
@@ -70,9 +81,6 @@ const ChatWindow = ({ selectedChat }) => {
         });
     };
 
-    // getting uid of the logged in user
-    const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-
     console.log("message", message);
     console.log("messages", messages);
 
@@ -81,7 +89,7 @@ const ChatWindow = ({ selectedChat }) => {
             <div className="w-3/5 mt-5 p-2 bg-white rounded-md h-full overflow-auto">
                 <div className="w-full h-9/10 overflow-auto flex flex-col-reverse px-10 pb-7">
                     {messages
-                        .sort((a, b) => a.createdAt < b.createdAt)
+                        .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
                         .map((message) => {
                             return (
                                 <div

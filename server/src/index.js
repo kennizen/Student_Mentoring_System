@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const morgan = require("morgan");
+const { Server } = require("socket.io");
 
 // mongoose config
 require("./config/mongoose");
@@ -46,4 +47,15 @@ app.use("/posts", postRoutes);
 app.use("/chats", chatRoutes);
 app.use("/messages", messageRoutes);
 
-app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+
+const io = new Server(server, {
+    pingTimeout: 60000,
+    cors: {
+        origin: "http://localhost:3000",
+    },
+});
+
+io.on("connection", (socket) => {
+    console.log("connected to socket");
+});

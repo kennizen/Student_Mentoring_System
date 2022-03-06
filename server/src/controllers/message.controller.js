@@ -16,8 +16,8 @@ exports.createNewMessage = async (req, res, next) => {
             chat,
         });
 
-        await newMessage.save();
-        response.success(res, "Message created", newMessage);
+        const resMessage = await (await newMessage.save()).populate("sender").execPopulate();
+        response.success(res, "Message created", resMessage);
         next();
     } catch (err) {
         console.log("Error", err);
