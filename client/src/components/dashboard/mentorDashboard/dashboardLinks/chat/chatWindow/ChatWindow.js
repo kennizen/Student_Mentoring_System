@@ -17,15 +17,27 @@ const ChatWindow = ({ selectedChat }) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
+    const [socketConnected, setSocketConnected] = useState(false);
+
     useEffect(() => {
         socket = io(ENDPOINT);
+        socket.emit("setup", uid);
+        socket.on("connection", setSocketConnected(true));
     }, []);
+
+    useEffect(() => {
+        console.log("working everytime");
+        socket.on("message received", (message) => {
+            console.log("message from socket", message);
+            dispatch({ type: "ADD_MESSAGES", message });
+        });
+    });
 
     // api call to fetch all the messages for the selected chat
     useEffect(() => {
         if (selectedChat) {
             // console.log("selectedChat", selectedChat);
-            dispatch(getMessages(history, selectedChat));
+            dispatch(getMessages(history, selectedChat, socket));
         }
     }, [dispatch, selectedChat, history]);
 
@@ -48,7 +60,7 @@ const ChatWindow = ({ selectedChat }) => {
 
     // function to send the text message
     const sendMessage = () => {
-        dispatch(createMessage(history, message));
+        dispatch(createMessage(history, message, socket));
         contenteditable.innerHTML = "";
         contenteditable.focus();
         check();
@@ -70,11 +82,9 @@ const ChatWindow = ({ selectedChat }) => {
     const check = () => {
         // console.log("running");
         // console.log(contenteditable.innerHTML);
-        if (contenteditable.textContent.trim() === "") {
-            setDisable(true);
-        } else {
-            setDisable(false);
-        }
+        if (contenteditable.textContent.trim() === "") setDisable(true);
+        else setDisable(false);
+
         setMessage({
             content: contenteditable.textContent.trim(),
             chat: selectedChat,

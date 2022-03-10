@@ -4,6 +4,8 @@ const fs = require("fs");
 const morgan = require("morgan");
 const { Server } = require("socket.io");
 
+const Chat = require("./models/Chat");
+
 // mongoose config
 require("./config/mongoose");
 
@@ -58,4 +60,36 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
     console.log("connected to socket");
+
+    socket.on("setup", (userId) => {
+        socket.join(userId);
+        console.log("user connected", userId);
+        socket.emit("connected");
+    });
+
+    socket.on("join chat", (chatId) => {
+        socket.join(chatId);
+        console.log("chatId", chatId);
+    });
+
+    socket.on("newMessage", async (newMessage) => {
+        console.log("newMessage", newMessage);
+        if (!newMessage.data.chat) return console.log("error on chat id");
+        console.log("newMessage sender id", newMessage.data.sender._id);
+        const chat = await Chat.findById(newMessage.data.chat);
+        console.log("chat", chat);
+
+        // chat.users.forEach((user) => {
+        //     if (user.user === newMessage.data.sender._id) return;
+        //     console.log("message in socket", user.user);
+        //     socket.in(user.user).emit("message received", newMessage);
+        // });
+
+        for (let i = 0; i < chat.users.length; i++) {
+            if (chat.users[i].user !== newMessage.data.sender._id) {
+                console.log("message in socket", chat.users[i].user);
+                socket.in(chat.users[i].user).emit("message received", newMessage);
+            }
+        }
+    });
 });
