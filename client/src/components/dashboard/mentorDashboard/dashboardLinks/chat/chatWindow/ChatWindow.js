@@ -10,28 +10,20 @@ import io from "socket.io-client";
 const ENDPOINT = "http://localhost:5000";
 var socket;
 
-// getting uid of the logged in user
-const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+const ChatWindow = ({ selectedChat, setShowNotification }) => {
+    // getting uid of the logged in user
+    let uid = "";
+    if (localStorage.getItem("authData")) {
+        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+    }
 
-const ChatWindow = ({ selectedChat }) => {
     const dispatch = useDispatch();
     const history = useHistory();
-
-    const [socketConnected, setSocketConnected] = useState(false);
 
     useEffect(() => {
         socket = io(ENDPOINT);
         socket.emit("setup", uid);
-        socket.on("connection", setSocketConnected(true));
     }, []);
-
-    useEffect(() => {
-        console.log("working everytime");
-        socket.on("message received", (message) => {
-            console.log("message from socket", message);
-            dispatch({ type: "ADD_MESSAGES", message });
-        });
-    });
 
     // api call to fetch all the messages for the selected chat
     useEffect(() => {
@@ -39,7 +31,13 @@ const ChatWindow = ({ selectedChat }) => {
             // console.log("selectedChat", selectedChat);
             dispatch(getMessages(history, selectedChat, socket));
         }
-    }, [dispatch, selectedChat, history]);
+    }, [selectedChat]);
+
+    useEffect(() => {
+        socket.on("message received", (data) => {
+            dispatch({ type: "ADD_MESSAGES", data });
+        });
+    }, []);
 
     // state for custom placeholder in the input div
     const [placeHol, setPlaceHol] = useState("opacity-100");
@@ -93,6 +91,7 @@ const ChatWindow = ({ selectedChat }) => {
 
     console.log("message", message);
     console.log("messages", messages);
+    // console.log("selected chat", selectedChat);
 
     return (
         <>

@@ -63,33 +63,24 @@ io.on("connection", (socket) => {
 
     socket.on("setup", (userId) => {
         socket.join(userId);
-        console.log("user connected", userId);
-        socket.emit("connected");
+        // console.log("user connected", userId);
     });
 
     socket.on("join chat", (chatId) => {
         socket.join(chatId);
-        console.log("chatId", chatId);
+        // console.log("socked id", socket.id);
+        // console.log("chatId", chatId);
     });
 
     socket.on("newMessage", async (newMessage) => {
-        console.log("newMessage", newMessage);
         if (!newMessage.data.chat) return console.log("error on chat id");
-        console.log("newMessage sender id", newMessage.data.sender._id);
-        const chat = await Chat.findById(newMessage.data.chat);
-        console.log("chat", chat);
 
-        // chat.users.forEach((user) => {
-        //     if (user.user === newMessage.data.sender._id) return;
-        //     console.log("message in socket", user.user);
-        //     socket.in(user.user).emit("message received", newMessage);
-        // });
-
-        for (let i = 0; i < chat.users.length; i++) {
-            if (chat.users[i].user !== newMessage.data.sender._id) {
-                console.log("message in socket", chat.users[i].user);
-                socket.in(chat.users[i].user).emit("message received", newMessage);
-            }
-        }
+        socket
+            .in(newMessage.data.chat)
+            .to(newMessage.data.chat)
+            .emit("message received", newMessage);
     });
 });
+
+// to individual socketid (private message)
+// io.to(socketId).emit(/* ... */);

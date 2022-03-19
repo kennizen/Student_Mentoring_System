@@ -2,7 +2,7 @@ import React, { useState } from "react";
 // import { useDispatch } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
-const ChatSideBar = ({ chats, setSelectedChat }) => {
+const ChatSideBar = ({ chats, setSelectedChat, showNotification }) => {
     // getting uid of the logged in user
     const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
 
@@ -70,9 +70,23 @@ const ChatSideBar = ({ chats, setSelectedChat }) => {
                                     </div>
                                     <div className="px-3 flex flex-col items-center justify-evenly">
                                         <h6>a min ago</h6>
-                                        <div className="bg-red-200 p-2.5 h-3 w-3 rounded-full flex items-center justify-center">
-                                            <h6>2</h6>
-                                        </div>
+                                        {showNotification.chatId === chat._id &&
+                                        showNotification.isShow ? (
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-5 w-5"
+                                                viewBox="0 0 20 20"
+                                                fill="#ef5350"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                        ) : (
+                                            <div></div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="w-5/6 h-px bg-gray-200"></div>
