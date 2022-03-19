@@ -19,10 +19,13 @@ const Chat = () => {
     const [selectedChat, setSelectedChat] = useState("");
 
     //state variable to show notification when msg received from another chat
-    const [showNotification, setShowNotification] = useState({
-        chatId: "",
-        isShow: false,
-    });
+    const [showNotification, setShowNotification] = useState([]);
+
+    // set selected set
+    const setChatSelection = (id) => {
+        setSelectedChat(id);
+        localStorage.setItem("selectedChat", id);
+    };
 
     // refs used for css transition to work for the modal and the overlay
     const modalRef = useRef(null);
@@ -37,9 +40,11 @@ const Chat = () => {
     // api call to fetch all the chats
     useEffect(() => {
         dispatch(getAllChat(history));
+        localStorage.setItem("selectedChat", "");
     }, [dispatch, history]);
 
     console.log("chats", chats);
+    console.log("chat noti", showNotification);
 
     return (
         <>
@@ -75,12 +80,14 @@ const Chat = () => {
                 <div className="flex gap-x-5 h-cal">
                     <ChatSideBar
                         chats={chats}
-                        setSelectedChat={setSelectedChat}
+                        setSelectedChat={setChatSelection}
                         showNotification={showNotification}
+                        setShowNotification={setShowNotification}
                     />
                     <ChatWindow
                         selectedChat={selectedChat}
                         setShowNotification={setShowNotification}
+                        showNotification={showNotification}
                     />
                 </div>
             </div>

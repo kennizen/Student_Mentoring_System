@@ -2,7 +2,7 @@ import React, { useState } from "react";
 // import { useDispatch } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
-const ChatSideBar = ({ chats, setSelectedChat, showNotification }) => {
+const ChatSideBar = ({ chats, setSelectedChat, showNotification, setShowNotification }) => {
     // getting uid of the logged in user
     const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
 
@@ -50,6 +50,12 @@ const ChatSideBar = ({ chats, setSelectedChat, showNotification }) => {
                                     onClick={() => {
                                         setSelectedIndex(index);
                                         setSelectedChat(chat._id);
+                                        if (showNotification.includes(chat._id)) {
+                                            var tmp = showNotification.filter(
+                                                (id) => id != chat._id
+                                            );
+                                            setShowNotification(tmp);
+                                        }
                                     }}
                                     className={`grid w-full grid-cols-chatTab p-2 hover:bg-gray-200 cursor-pointer rounded-md transition-all ${
                                         selectedIndex === index ? "bg-gray-200" : ""
@@ -70,8 +76,7 @@ const ChatSideBar = ({ chats, setSelectedChat, showNotification }) => {
                                     </div>
                                     <div className="px-3 flex flex-col items-center justify-evenly">
                                         <h6>a min ago</h6>
-                                        {showNotification.chatId === chat._id &&
-                                        showNotification.isShow ? (
+                                        {showNotification.includes(chat._id) ? (
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 className="h-5 w-5"

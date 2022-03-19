@@ -10,7 +10,7 @@ import io from "socket.io-client";
 const ENDPOINT = "http://localhost:5000";
 var socket;
 
-const ChatWindow = ({ selectedChat, setShowNotification }) => {
+const ChatWindow = ({ selectedChat, setShowNotification, showNotification }) => {
     // getting uid of the logged in user
     let uid = "";
     if (localStorage.getItem("authData")) {
@@ -35,7 +35,14 @@ const ChatWindow = ({ selectedChat, setShowNotification }) => {
 
     useEffect(() => {
         socket.on("message received", (data) => {
-            dispatch({ type: "ADD_MESSAGES", data });
+            // console.log("selected Chat msg rcv", selectedChat);
+            // console.log("Chat msg rcv", data);
+            // if msg not intended for selected chat
+            if (localStorage.getItem("selectedChat") == data.data.chat.toString) {
+                dispatch({ type: "ADD_MESSAGES", data });
+            } else {
+                setShowNotification([...showNotification, data.data.chat]);
+            }
         });
     }, []);
 
