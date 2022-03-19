@@ -1,4 +1,5 @@
 const chat = (state = { chats: [], messages: [] }, action) => {
+    console.log(action)
     switch (action.type) {
         case "FETCH_CHATS":
             return { ...state, chats: action.data.data };
@@ -7,7 +8,7 @@ const chat = (state = { chats: [], messages: [] }, action) => {
         case "ADD_CHATS":
             return { ...state, chats: [...state.chats, ...action.data.data.newChatArray] };
         case "ADD_MESSAGES":
-            return { ...state, messages: [...state.messages, action.data.data] };
+            return { ...state, messages: [...state.messages, action.data] };
         default:
             return state;
     }

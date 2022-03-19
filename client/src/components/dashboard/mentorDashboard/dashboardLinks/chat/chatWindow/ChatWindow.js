@@ -10,10 +10,10 @@ import io from "socket.io-client";
 const ENDPOINT = "http://localhost:5000";
 var socket;
 
-// getting uid of the logged in user
-const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-
 const ChatWindow = ({ selectedChat }) => {
+    // getting uid of the logged in user
+    const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -27,9 +27,9 @@ const ChatWindow = ({ selectedChat }) => {
 
     useEffect(() => {
         console.log("working everytime");
-        socket.on("message received", (message) => {
-            console.log("message from socket", message);
-            dispatch({ type: "ADD_MESSAGES", message });
+        socket.on("message received", (data) => {
+            console.log("message from socket", data);
+            dispatch({ type: "ADD_MESSAGES", data });
         });
     });
 
