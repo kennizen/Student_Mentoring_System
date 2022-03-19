@@ -10,9 +10,12 @@ import io from "socket.io-client";
 const ENDPOINT = "http://localhost:5000";
 var socket;
 
-const ChatWindow = ({ selectedChat }) => {
+const ChatWindow = ({ selectedChat, setShowNotification }) => {
     // getting uid of the logged in user
-    const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+    let uid = "";
+    if (localStorage.getItem("authData")) {
+        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+    }
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -21,14 +24,6 @@ const ChatWindow = ({ selectedChat }) => {
         socket = io(ENDPOINT);
         socket.emit("setup", uid);
     }, []);
-
-    useEffect(() => {
-        console.log("working everytime");
-        socket.on("message received", (data) => {
-            console.log("message from socket", data);
-            dispatch({ type: "ADD_MESSAGES", data });
-        });
-    });
 
     // api call to fetch all the messages for the selected chat
     useEffect(() => {

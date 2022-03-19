@@ -78,7 +78,11 @@ io.on("connection", (socket) => {
     });
 
     socket.on("newMessage", async (newMessage) => {
+        console.log("newMessage", newMessage);
         if (!newMessage.data.chat) return console.log("error on chat id");
+        console.log("newMessage sender id", newMessage.data.sender._id);
+        const chat = await Chat.findById(newMessage.data.chat);
+        console.log("chat", chat);
 
         const receiver = chat.users.find(item => item.user !== newMessage.data.sender._id)
 
@@ -102,6 +106,3 @@ io.on("connection", (socket) => {
         io.to(socketMap[receiver.user]).emit("message received", newMessage.data);
     });
 });
-
-// to individual socketid (private message)
-// io.to(socketId).emit(/* ... */);
