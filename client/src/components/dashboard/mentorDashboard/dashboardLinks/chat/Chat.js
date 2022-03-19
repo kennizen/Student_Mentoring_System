@@ -18,6 +18,12 @@ const Chat = () => {
     // state variable for storing the selected chat id for the selected chat
     const [selectedChat, setSelectedChat] = useState("");
 
+    //state variable to show notification when msg received from another chat
+    const [showNotification, setShowNotification] = useState({
+        chatId: "",
+        isShow: false,
+    });
+
     // refs used for css transition to work for the modal and the overlay
     const modalRef = useRef(null);
     const overlayRef = useRef(null);
@@ -67,8 +73,15 @@ const Chat = () => {
                     </button>
                 </div>
                 <div className="flex gap-x-5 h-cal">
-                    <ChatSideBar chats={chats} setSelectedChat={setSelectedChat} />
-                    <ChatWindow selectedChat={selectedChat} />
+                    <ChatSideBar
+                        chats={chats}
+                        setSelectedChat={setSelectedChat}
+                        showNotification={showNotification}
+                    />
+                    <ChatWindow
+                        selectedChat={selectedChat}
+                        setShowNotification={setShowNotification}
+                    />
                 </div>
             </div>
         </>
