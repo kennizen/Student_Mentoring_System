@@ -1,3 +1,4 @@
+const Chat = require("../models/Chat");
 const Message = require("../models/Message");
 const response = require("../utils/responses.utils");
 
@@ -17,6 +18,9 @@ exports.createNewMessage = async (req, res, next) => {
         });
 
         const resMessage = await (await newMessage.save()).populate("sender").execPopulate();
+        await Chat.findByIdAndUpdate(resMessage.chat, {
+            latestMessage: resMessage._id,
+        });
         response.success(res, "Message created", resMessage);
         next();
     } catch (err) {

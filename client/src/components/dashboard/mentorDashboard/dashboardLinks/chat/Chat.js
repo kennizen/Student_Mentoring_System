@@ -18,9 +18,6 @@ const Chat = () => {
     // state variable for storing the selected chat id for the selected chat
     const [selectedChat, setSelectedChat] = useState("");
 
-    //state variable to show notification when msg received from another chat
-    const [showNotification, setShowNotification] = useState([]);
-
     // set selected set
     const setChatSelection = (id) => {
         setSelectedChat(id);
@@ -44,7 +41,6 @@ const Chat = () => {
     }, [dispatch, history]);
 
     console.log("chats", chats);
-    console.log("chat noti", showNotification);
 
     return (
         <>
@@ -78,17 +74,8 @@ const Chat = () => {
                     </button>
                 </div>
                 <div className="flex gap-x-5 h-cal">
-                    <ChatSideBar
-                        chats={chats}
-                        setSelectedChat={setChatSelection}
-                        showNotification={showNotification}
-                        setShowNotification={setShowNotification}
-                    />
-                    <ChatWindow
-                        selectedChat={selectedChat}
-                        setShowNotification={setShowNotification}
-                        showNotification={showNotification}
-                    />
+                    <ChatSideBar chats={chats} setSelectedChat={setChatSelection} />
+                    <ChatWindow selectedChat={selectedChat} />
                 </div>
             </div>
         </>

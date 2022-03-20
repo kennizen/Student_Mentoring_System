@@ -17,6 +17,15 @@ export const createChat = (history, setShowModal, chatIds) => async (dispatch) =
     }
 };
 
+export const UpdateLatestMessage = (data) => async (dispatch) => {
+    try {
+        const latestMessage = data.data;
+        dispatch({ type: "UPDATE_CHAT", latestMessage });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const getAllChat = (history) => async (dispatch) => {
     try {
         const { data } = await api.fetchChat();
@@ -43,6 +52,7 @@ export const createMessage = (history, message, socket) => async (dispatch) => {
             history.goBack();
         } else {
             dispatch({ type: "ADD_MESSAGES", data });
+            dispatch(UpdateLatestMessage(data));
             socket.emit("newMessage", data);
         }
     } catch (error) {

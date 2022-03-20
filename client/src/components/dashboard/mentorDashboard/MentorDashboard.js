@@ -4,6 +4,9 @@ import { useHistory } from "react-router";
 
 import { mentorGetDetails } from "../../../actions/mentor";
 import ChatAlt2Icon from "../../../assets/ChatAlt2Icon";
+import HomeIcon from "../../../assets/HomeIcon";
+import AnnotationIcon from "../../../assets/AnnotationIcon";
+import AcademicCapIcon from "../../../assets/AcademicCapIcon";
 import Loading from "../../loading/Loading";
 import Chat from "./dashboardLinks/chat/Chat";
 import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
@@ -120,14 +123,10 @@ const MentorDashboard = () => {
                         route.home && "text-gray-700"
                     } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`${route.home && "text-blue-600"} h-5 w-5 mr-3`}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                    </svg>
+                    <HomeIcon
+                        myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.home && "text-blue-600")}
+                        alt={true}
+                    />
                     Home
                 </button>
                 <button
@@ -137,18 +136,10 @@ const MentorDashboard = () => {
                         route.post && "text-gray-700"
                     } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`${route.post && "text-blue-600"} h-5 w-5 mr-3`}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                            fillRule="evenodd"
-                            d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
-                            clipRule="evenodd"
-                        />
-                    </svg>
+                    <AnnotationIcon
+                        myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.post && "text-blue-600")}
+                        alt={true}
+                    />
                     Post
                 </button>
                 <button
@@ -158,22 +149,12 @@ const MentorDashboard = () => {
                         route.menteeInfo && "text-gray-700"
                     } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`${route.menteeInfo && "text-blue-600"} h-5 w-5 mr-3`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-                        />
-                    </svg>
+                    <AcademicCapIcon
+                        myStyle={"h-5 w-5 mr-3"
+                            .concat(" ")
+                            .concat(route.menteeInfo && "text-blue-600")}
+                        alt={true}
+                    />
                     Mentee Info
                 </button>
                 <button

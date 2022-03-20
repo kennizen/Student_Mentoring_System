@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { createMessage, getMessages } from "../../../../../../actions/chat";
+import { createMessage, getMessages, UpdateLatestMessage } from "../../../../../../actions/chat";
 import { useSelector } from "react-redux";
 
 import io from "socket.io-client";
@@ -10,7 +10,7 @@ import io from "socket.io-client";
 const ENDPOINT = "http://localhost:5000";
 var socket;
 
-const ChatWindow = ({ selectedChat, setShowNotification, showNotification }) => {
+const ChatWindow = ({ selectedChat }) => {
     // getting uid of the logged in user
     let uid = "";
     if (localStorage.getItem("authData")) {
@@ -28,21 +28,22 @@ const ChatWindow = ({ selectedChat, setShowNotification, showNotification }) => 
     // api call to fetch all the messages for the selected chat
     useEffect(() => {
         if (selectedChat) {
-            // console.log("selectedChat", selectedChat);
             dispatch(getMessages(history, selectedChat, socket));
         }
     }, [selectedChat]);
 
+    // useeffect call when message is received
     useEffect(() => {
         socket.on("message received", (data) => {
-            // console.log("selected Chat msg rcv", selectedChat);
-            // console.log("Chat msg rcv", data);
             // if msg not intended for selected chat
-            if (localStorage.getItem("selectedChat") == data.data.chat.toString) {
+            if (localStorage.getItem("selectedChat") === data.data.chat.toString()) {
                 dispatch({ type: "ADD_MESSAGES", data });
             } else {
-                setShowNotification([...showNotification, data.data.chat]);
+                // if message for unintended person then store chat id in global store to show notification
+                const id = data.data.chat.toString();
+                dispatch({ type: "ADD_NOTIFICATION", id });
             }
+            dispatch(UpdateLatestMessage(data));
         });
     }, []);
 
@@ -55,8 +56,6 @@ const ChatWindow = ({ selectedChat, setShowNotification, showNotification }) => 
         content: "",
         chat: "",
     });
-    // state variable to store the fetched messages
-    // const [messages, setMessages] = useState([]);
 
     const { messages } = useSelector((state) => state.chat);
 
@@ -85,8 +84,6 @@ const ChatWindow = ({ selectedChat, setShowNotification, showNotification }) => 
 
     /* function to check if the custom input div is empty or not to control the send button disable status */
     const check = () => {
-        // console.log("running");
-        // console.log(contenteditable.innerHTML);
         if (contenteditable.textContent.trim() === "") setDisable(true);
         else setDisable(false);
 

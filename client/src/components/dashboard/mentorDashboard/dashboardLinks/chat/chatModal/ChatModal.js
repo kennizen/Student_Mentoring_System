@@ -54,7 +54,7 @@ const ChatModal = ({ setShowModal, nodeRef, chats }) => {
                     className={`max-h-500 overflow-y-auto max-w-7xl z-50 p-6 bg-white rounded-md`}
                 >
                     <div className="flex items-center justify-between mb-3">
-                        <h4>Create a chat</h4>
+                        <h4 className="mr-5">Create a chat</h4>
                         <button
                             onClick={() => {
                                 setShowModal(false);

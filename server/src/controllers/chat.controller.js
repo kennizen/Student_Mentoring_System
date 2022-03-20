@@ -89,11 +89,15 @@ exports.fetchAllChats = async (req, res, next) => {
     try {
         let chats;
         if (req.user.role === roles.Mentor) {
-            chats = await Chat.find({ "users.user": req.user._id }).populate("users.user");
+            chats = await Chat.find({ "users.user": req.user._id })
+                .populate("users.user")
+                .populate("latestMessage");
         }
 
         if (req.user.role === roles.Student) {
-            chats = await Chat.find({ "users.user": req.user._id }).populate("users.user");
+            chats = await Chat.find({ "users.user": req.user._id })
+                .populate("users.user")
+                .populate("latestMessage");
         }
         response.success(res, "", chats);
         next();

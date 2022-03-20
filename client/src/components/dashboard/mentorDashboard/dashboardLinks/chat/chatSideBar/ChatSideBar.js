@@ -1,16 +1,25 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import DotIcon from "../../../../../../assets/DotIcon";
+import SearchIcon from "../../../../../../assets/SearchIcon";
+
+import moment from "moment";
 // import { useDispatch } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
-const ChatSideBar = ({ chats, setSelectedChat, showNotification, setShowNotification }) => {
+const ChatSideBar = ({ chats, setSelectedChat }) => {
     // getting uid of the logged in user
     const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
 
     // state for activating the bg of the selected chat
     const [selectedIndex, setSelectedIndex] = useState(-1);
 
-    // const dispatch = useDispatch();
-    // const history = useHistory();
+    const dispatch = useDispatch();
+
+    // accessing global store for the notification array to show notifications
+    const { notifications } = useSelector((state) => state.chat);
+
+    console.log("notifications", notifications);
 
     return (
         <>
@@ -23,20 +32,7 @@ const ChatSideBar = ({ chats, setSelectedChat, showNotification, setShowNotifica
                             placeholder="Search chat..."
                         />
                         <div className="absolute top-2.5 left-3">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                />
-                            </svg>
+                            <SearchIcon myStyle={"h-5 w-5"} alt={true} />
                         </div>
                     </div>
                 </div>
@@ -50,11 +46,11 @@ const ChatSideBar = ({ chats, setSelectedChat, showNotification, setShowNotifica
                                     onClick={() => {
                                         setSelectedIndex(index);
                                         setSelectedChat(chat._id);
-                                        if (showNotification.includes(chat._id)) {
-                                            var tmp = showNotification.filter(
-                                                (id) => id != chat._id
+                                        if (notifications.includes(chat._id)) {
+                                            let tmp = notifications.filter(
+                                                (id) => id !== chat._id.toString()
                                             );
-                                            setShowNotification(tmp);
+                                            dispatch({ type: "UPDATE_NOTIFICATION", tmp });
                                         }
                                     }}
                                     className={`grid w-full grid-cols-chatTab p-2 hover:bg-gray-200 cursor-pointer rounded-md transition-all ${
@@ -72,23 +68,14 @@ const ChatSideBar = ({ chats, setSelectedChat, showNotification, setShowNotifica
                                     />
                                     <div className="flex mx-6 flex-col items-start justify-evenly">
                                         <h3>{`${thatUser?.user?.firstname} ${thatUser?.user?.middlename} ${thatUser?.user?.lastname}`}</h3>
-                                        <h6>{chat?.latestMessage}</h6>
+                                        <h6>{chat?.latestMessage?.content}</h6>
                                     </div>
                                     <div className="px-3 flex flex-col items-center justify-evenly">
-                                        <h6>a min ago</h6>
-                                        {showNotification.includes(chat._id) ? (
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-5 w-5"
-                                                viewBox="0 0 20 20"
-                                                fill="#ef5350"
-                                            >
-                                                <path
-                                                    fillRule="evenodd"
-                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                    clipRule="evenodd"
-                                                />
-                                            </svg>
+                                        <h6>{moment(chat?.latestMessage?.createdAt).calendar()}</h6>
+                                        {notifications.includes(chat._id) ? (
+                                            <DotIcon
+                                                myStyle={"h-3 w-3 bg-green-500 rounded-full"}
+                                            />
                                         ) : (
                                             <div></div>
                                         )}
