@@ -7,6 +7,7 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const response = require("../utils/responses.utils");
 const Semester = require("../models/Semester");
+const roles = require("../utils/roles");
 
 // including cloudinary configs
 require("../config/cloudinary");
@@ -315,7 +316,23 @@ module.exports = {
     // fetch all stduents under the mentor of current student
     getAllStudents: async (req, res, next) => {
         try {
-            const students = await Student.find({ mentoredBy: req.user.mentoredBy });
+            
+            let students = await Student.find({ mentoredBy: req.user.mentoredBy });
+            
+            if(!students){
+                throw new Error();
+            }
+            
+            // filtering out the requested user
+            students = students.filter((student) => {
+                if(student._id.toString() !== req.user._id.toString()){
+                    return student;
+                }
+            })
+
+            const mentor = await Mentor.findById(req.user.mentoredBy);
+            students.push(mentor);
+
             response.success(res, "", { count: students.length, students });
             next();
         } catch (err) {
