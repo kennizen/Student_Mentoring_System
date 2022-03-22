@@ -15,7 +15,7 @@ const ChatTiles = ({ mentee, handleChange }) => {
                 />
                 <div className="flex flex-col">
                     <h5>{`${mentee.firstname} ${mentee.middlename} ${mentee.lastname}`}</h5>
-                    <h6>{mentee.enrollment_no}</h6>
+                    <h6>{mentee.enrollment_no ? mentee.enrollment_no : "Mentor"}</h6>
                 </div>
             </div>
 

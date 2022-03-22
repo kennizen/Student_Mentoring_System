@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DotIcon from "../../../../../../assets/DotIcon";
 import SearchIcon from "../../../../../../assets/SearchIcon";
@@ -7,7 +7,7 @@ import moment from "moment";
 // import { useDispatch } from "react-redux";
 // import { useHistory } from "react-router-dom";
 
-const ChatSideBar = ({ chats, setSelectedChat }) => {
+const ChatSideBar = ({ chats, setChatSelection }) => {
     // getting uid of the logged in user
     const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
 
@@ -20,6 +20,13 @@ const ChatSideBar = ({ chats, setSelectedChat }) => {
     const { notifications } = useSelector((state) => state.chat);
 
     console.log("notifications", notifications);
+
+    useEffect(() => {
+        if (selectedIndex === -1 && localStorage.getItem("persistChat") !== null) {
+            const index = JSON.parse(localStorage.getItem("persistChat")).chatIndex;
+            setSelectedIndex(index);
+        }
+    }, []);
 
     return (
         <>
@@ -45,13 +52,20 @@ const ChatSideBar = ({ chats, setSelectedChat }) => {
                                 <div
                                     onClick={() => {
                                         setSelectedIndex(index);
-                                        setSelectedChat(chat._id);
+                                        setChatSelection(chat._id);
                                         if (notifications.includes(chat._id)) {
                                             let tmp = notifications.filter(
                                                 (id) => id !== chat._id.toString()
                                             );
                                             dispatch({ type: "UPDATE_NOTIFICATION", tmp });
                                         }
+                                        localStorage.setItem(
+                                            "persistChat",
+                                            JSON.stringify({
+                                                chatId: chat._id,
+                                                chatIndex: index,
+                                            })
+                                        );
                                     }}
                                     className={`grid w-full grid-cols-chatTab p-2 hover:bg-gray-200 cursor-pointer rounded-md transition-all ${
                                         selectedIndex === index ? "bg-gray-200" : ""

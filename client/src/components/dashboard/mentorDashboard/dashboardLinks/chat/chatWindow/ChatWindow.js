@@ -1,21 +1,47 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { createMessage, getMessages, UpdateLatestMessage } from "../../../../../../actions/chat";
+import {
+    createChat,
+    createMessage,
+    getAllChat,
+    getMessages,
+    UpdateLatestMessage,
+} from "../../../../../../actions/chat";
 import { useSelector } from "react-redux";
 
 import io from "socket.io-client";
+import Loading from "../../../../../loading/Loading";
 
 const ENDPOINT = "http://localhost:5000";
 var socket;
 
-const ChatWindow = ({ selectedChat }) => {
+const ChatWindow = ({ selectedChat, chats }) => {
     // getting uid of the logged in user
     let uid = "";
     if (localStorage.getItem("authData")) {
         uid = JSON.parse(localStorage.getItem("authData"))["uid"];
     }
+
+    // div seletor for the div used as text input
+    var contenteditable = document.querySelector("[contenteditable]");
+
+    /* function to check if the custom input div is empty or not to control the send button disable status */
+    const check = () => {
+        if (isLoading) setDisable(true);
+        else if (contenteditable.textContent.trim() === "") setDisable(true);
+        else setDisable(false);
+
+        var chatId = "";
+        if (localStorage.getItem("persistChat") !== null) {
+            chatId = JSON.parse(localStorage.getItem("persistChat")).chatId;
+        }
+        setMessage({
+            content: contenteditable.textContent.trim(),
+            chat: selectedChat !== "" ? selectedChat : chatId,
+        });
+    };
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -28,7 +54,22 @@ const ChatWindow = ({ selectedChat }) => {
     // api call to fetch all the messages for the selected chat
     useEffect(() => {
         if (selectedChat) {
-            dispatch(getMessages(history, selectedChat, socket));
+            dispatch(getMessages(history, selectedChat, socket, setIsLoading));
+            executeScroll();
+        } else if (localStorage.getItem("persistChat") !== null) {
+            const id = JSON.parse(localStorage.getItem("persistChat")).chatId;
+            dispatch(getMessages(history, id, socket, setIsLoading));
+            /* done this so that if selected chat is fetched from local storage
+             then if somebody sends a message and i am on this chat then notification
+             should not be shown */
+            localStorage.setItem("selectedChat", id);
+            executeScroll();
+        } else {
+            dispatch({ type: "CLEAR_MESSAGES" });
+        }
+        if (contenteditable !== null) {
+            contenteditable.innerHTML = "";
+            check();
         }
     }, [selectedChat]);
 
@@ -36,14 +77,19 @@ const ChatWindow = ({ selectedChat }) => {
     useEffect(() => {
         socket.on("message received", (data) => {
             // if msg not intended for selected chat
-            if (localStorage.getItem("selectedChat") === data.data.chat.toString()) {
+            if (!chats.includes(data.data.chat.toString())) {
+                dispatch(getAllChat(history));
+            }
+            if (localStorage.getItem("selectedChat") == data.data.chat) {
                 dispatch({ type: "ADD_MESSAGES", data });
+                dispatch(UpdateLatestMessage(data));
+                executeScroll();
             } else {
                 // if message for unintended person then store chat id in global store to show notification
                 const id = data.data.chat.toString();
                 dispatch({ type: "ADD_NOTIFICATION", id });
+                dispatch(UpdateLatestMessage(data));
             }
-            dispatch(UpdateLatestMessage(data));
         });
     }, []);
 
@@ -57,14 +103,14 @@ const ChatWindow = ({ selectedChat }) => {
         chat: "",
     });
 
-    const { messages } = useSelector((state) => state.chat);
+    // loading state
+    const [isLoading, setIsLoading] = useState(false);
 
-    // div seletor for the div used as text input
-    var contenteditable = document.querySelector("[contenteditable]");
+    const { messages } = useSelector((state) => state.chat);
 
     // function to send the text message
     const sendMessage = () => {
-        dispatch(createMessage(history, message, socket));
+        dispatch(createMessage(history, message, socket, executeScroll));
         contenteditable.innerHTML = "";
         contenteditable.focus();
         check();
@@ -82,14 +128,12 @@ const ChatWindow = ({ selectedChat }) => {
         }
     };
 
-    /* function to check if the custom input div is empty or not to control the send button disable status */
-    const check = () => {
-        if (contenteditable.textContent.trim() === "") setDisable(true);
-        else setDisable(false);
+    const scrollMessage = useRef();
 
-        setMessage({
-            content: contenteditable.textContent.trim(),
-            chat: selectedChat,
+    // function to make scroll focus to the recent post posted
+    const executeScroll = () => {
+        scrollMessage?.current?.scrollIntoView({
+            behavior: "smooth",
         });
     };
 
@@ -100,30 +144,46 @@ const ChatWindow = ({ selectedChat }) => {
     return (
         <>
             <div className="w-3/5 mt-5 p-2 bg-white rounded-md h-full overflow-auto">
-                <div className="w-full h-9/10 overflow-auto flex flex-col-reverse px-10 pb-7">
-                    {messages
-                        .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-                        .map((message) => {
-                            return (
-                                <div
-                                    key={message._id}
-                                    className={`w-full flex items-center mb-1 ${
-                                        message.sender._id === uid ? "justify-end" : "justify-start"
-                                    }`}
-                                >
-                                    <h5
-                                        className={`px-2 max-w-3/5 py-1 ${
+                {isLoading ? (
+                    <div className="w-full h-9/10 px-10 pb-7 flex items-center justify-center">
+                        <Loading height={"h-8"} width={"w-8"} />
+                    </div>
+                ) : (
+                    <div className="w-full h-9/10 overflow-auto flex items-center flex-col-reverse px-10 pb-7">
+                        <div ref={scrollMessage}></div>
+                        {messages
+                            .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+                            .map((message) => {
+                                return (
+                                    <div
+                                        key={message._id}
+                                        className={`w-full flex items-center mb-1 ${
                                             message.sender._id === uid
-                                                ? "bg-gray-200"
-                                                : "bg-blue-200"
-                                        } rounded-lg`}
+                                                ? "justify-end"
+                                                : "justify-start"
+                                        }`}
                                     >
-                                        {message.content}
-                                    </h5>
-                                </div>
-                            );
-                        })}
-                </div>
+                                        <h5
+                                            className={`px-2 max-w-3/5 py-1 ${
+                                                message.sender._id === uid
+                                                    ? "bg-gray-200"
+                                                    : "bg-blue-200"
+                                            } rounded-lg`}
+                                        >
+                                            {message.content}
+                                        </h5>
+                                    </div>
+                                );
+                            })}
+                        <button
+                            title="Load message"
+                            className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 text-xs bg-gray-100 mb-2`}
+                        >
+                            Load More
+                        </button>
+                    </div>
+                )}
+
                 <div className="w-full h-1/10">
                     <div className="flex items-center justify-center h-full px-10 gap-x-6">
                         <div className="w-full relative">

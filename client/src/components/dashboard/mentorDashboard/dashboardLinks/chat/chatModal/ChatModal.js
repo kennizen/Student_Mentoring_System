@@ -73,7 +73,9 @@ const ChatModal = ({ setShowModal, nodeRef, chats }) => {
                         {mentees.map((mentee) => {
                             if (
                                 chats.find((chat) =>
-                                    chat.users.find((user) => user.user._id === mentee._id)
+                                    chat.users.find(
+                                        (user) => user.user._id.toString() === mentee._id.toString()
+                                    )
                                 ) === undefined
                             ) {
                                 return (

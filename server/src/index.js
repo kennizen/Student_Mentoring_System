@@ -71,11 +71,11 @@ io.on("connection", (socket) => {
         socket.emit("connected");
     });
 
-    socket.on("join chat", (chatId) => {
-        socket.join(chatId);
-        console.log("chatId", chatId);
-        console.log(socketMap);
-    });
+    // socket.on("join chat", (chatId) => {
+    //     socket.join(chatId);
+    //     console.log("chatId", chatId);
+    //     console.log(socketMap);
+    // });
 
     socket.on("newMessage", async (newMessage) => {
         console.log("newMessage", newMessage);
@@ -88,22 +88,7 @@ io.on("connection", (socket) => {
             (item) => item.user != newMessage.data.sender._id.toString()
         );
         console.log("receiver", receiver);
-        // console.log("receiver Id: ", socketMap[chat.users[idx].user]);
 
-        // chat.users.forEach((user) => {
-        //     if (user.user === newMessage.data.sender._id) return;
-        //     console.log("message in socket", user.user);
-        //     socket.in(user.user).emit("message received", newMessage);
-        // });
-
-        // for (let i = 0; i < chat.users.length; i++) {
-        //     if (chat.users[i].user !== newMessage.data.sender._id) {
-        //         console.log("message in socket", chat.users[i].user);
-        //         socket.in(chat.users[i].user).emit("message received", newMessage);
-        //     }
-        // }
-
-        // socket.in(newMessage.data.chat).to(newMessage.data.chat).emit("message received", newMessage);
         io.to(socketMap[receiver.user]).emit("message received", newMessage);
     });
 });

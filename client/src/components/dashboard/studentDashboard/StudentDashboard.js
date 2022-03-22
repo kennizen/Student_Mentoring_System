@@ -27,6 +27,9 @@ const StudentDashboard = () => {
     // fetching the admin details
     useEffect(() => {
         dispatch(studentGetDetails(history));
+        if (localStorage.getItem("persistChat") !== null) {
+            localStorage.removeItem("persistChat");
+        }
     }, [dispatch, history]);
 
     // function to chnage the tabs screens of the dashboard
