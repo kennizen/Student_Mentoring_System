@@ -64,10 +64,11 @@ exports.createNewChat = async (req, res, next) => {
                     role: req.user.role,
                     user: req.user._id,
                 });
+                
                 const mentor = await Mentor.findById(chats[i]);
-
+                
                 // adding student to list
-                if (!mentor) {
+                if(!mentor){
                     chat.users.push({
                         role: roles.Student,
                         user: chats[i],
@@ -78,6 +79,7 @@ exports.createNewChat = async (req, res, next) => {
                         user: chats[i],
                     });
                 }
+               
                 const newChat = await (await chat.save()).populate("users.user").execPopulate();
                 newChatArray.push(newChat);
             }
