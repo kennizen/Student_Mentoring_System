@@ -79,7 +79,7 @@ exports.createNewChat = async (req, res, next) => {
                         user: chats[i],
                     });
                 }
-                
+               
                 const newChat = await (await chat.save()).populate("users.user").execPopulate();
                 newChatArray.push(newChat);
             }

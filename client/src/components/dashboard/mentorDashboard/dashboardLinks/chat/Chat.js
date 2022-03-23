@@ -37,7 +37,8 @@ const Chat = () => {
     // api call to fetch all the chats
     useEffect(() => {
         dispatch(getAllChat(history));
-        localStorage.setItem("selectedChat", "");
+        // why commented dont know
+        // localStorage.setItem("selectedChat", "");
     }, [dispatch, history]);
 
     console.log("chats", chats);
@@ -74,8 +75,8 @@ const Chat = () => {
                     </button>
                 </div>
                 <div className="flex gap-x-5 h-cal">
-                    <ChatSideBar chats={chats} setSelectedChat={setChatSelection} />
-                    <ChatWindow selectedChat={selectedChat} />
+                    <ChatSideBar chats={chats} setChatSelection={setChatSelection} />
+                    <ChatWindow selectedChat={selectedChat} chats={chats} />
                 </div>
             </div>
         </>
