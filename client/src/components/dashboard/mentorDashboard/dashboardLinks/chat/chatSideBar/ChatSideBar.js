@@ -30,7 +30,7 @@ const ChatSideBar = ({ chats, setChatSelection }) => {
 
     return (
         <>
-            <div className="w-2/5 mt-5 p-2 bg-white rounded-md h-full overflow-auto">
+            <div className="w-2/5 mt-5 p-2 bg-white rounded-md h-full overflow-auto flex-shrink-0">
                 <div className="sticky-top z-10">
                     <div className="relative mb-4">
                         <input

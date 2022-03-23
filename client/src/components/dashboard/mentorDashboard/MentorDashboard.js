@@ -11,6 +11,7 @@ import Loading from "../../loading/Loading";
 import Chat from "./dashboardLinks/chat/Chat";
 import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
 import Post from "./dashboardLinks/post/Post";
+import connectSocket from "../../../socket/socket";
 
 const MentorDashboard = () => {
     // state for maintaining the side nav bar
@@ -35,7 +36,13 @@ const MentorDashboard = () => {
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
         }
-    }, [dispatch, history]);
+    }, []);
+
+    useEffect(() => {
+        const socket = connectSocket();
+        console.log("socket", socket);
+        dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
+    }, []);
 
     // function to chnage the tabs screens of the dashboard
     const handleRouteChange = (e) => {

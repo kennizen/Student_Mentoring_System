@@ -1,10 +1,12 @@
-const mentor = (state = { mentorData: null, genPosts: [], comments: [] }, action) => {
+const mentor = (state = { mentorData: null, genPosts: [], comments: [], socket: null }, action) => {
     switch (action.type) {
         case "SIGN_IN_MENTOR":
             localStorage.setItem("authData", JSON.stringify({ ...action?.data?.data }));
             return state;
         case "FETCH_MENTOR":
             return { ...state, mentorData: action.data };
+        case "CONNECT_SOCKET_MENTOR":
+            return { ...state, socket: action.socket };
         case "SAVE_GEN_POSTS":
             return { ...state, genPosts: action.data.data.posts };
         case "SUBMIT_POST":

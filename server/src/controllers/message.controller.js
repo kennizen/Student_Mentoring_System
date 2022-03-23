@@ -31,7 +31,19 @@ exports.createNewMessage = async (req, res, next) => {
 exports.fetchAllMessage = async (req, res, next) => {
     try {
         const chatId = req.params.chatId;
-        const messages = await Message.find({ chat: chatId }).populate("sender");
+        const page = parseInt(req.query.page);
+        const limit = 20;
+
+        const totalDocuments = await Message.countDocuments({ chat: chatId });
+        const totalPages = Math.ceil(totalDocuments / limit);
+
+        console.log(totalDocuments, totalPages);
+
+        const messages = await Message.find({ chat: chatId })
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .populate("sender");
         response.success(res, "", messages);
     } catch (err) {
         console.log(err);

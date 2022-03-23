@@ -1,5 +1,5 @@
 const student = (
-    state = { studentData: null, profileData: {}, semData: [], pastEducation: {} },
+    state = { studentData: null, profileData: {}, semData: [], pastEducation: {}, socket: null },
     action
 ) => {
     switch (action.type) {
@@ -8,6 +8,8 @@ const student = (
             return { ...state, studentData: action?.data?.data };
         case "FETCH_STUDENT":
             return { ...state, studentData: action.data };
+        case "CONNECT_SOCKET_STUDENT":
+            return { ...state, socket: action.socket };
         case "FETCH_PROFILE":
             return { ...state, profileData: action.data.data.profileData };
         case "SAVE_SEM_DATA":

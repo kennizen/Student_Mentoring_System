@@ -8,6 +8,8 @@ const chat = (state = { chats: [], messages: [], notifications: [] }, action) =>
             return { ...state, messages: [] };
         case "ADD_CHATS":
             return { ...state, chats: [...state.chats, ...action.data.data.newChatArray] };
+        case "FETCH_OLDER_MESSAGES":
+            return { ...state, messages: [...state.messages, ...action.data.data] };
         case "UPDATE_CHAT":
             const id = action.latestMessage.chat;
             if (state.chats.length > 0) {

@@ -26,7 +26,7 @@ export const createMessage = (message) =>
     API.post(`/messages`, message).catch((error) => {
         return error.response;
     });
-export const getMessages = (chatId) =>
-    API.get(`/messages/${chatId}`).catch((error) => {
+export const getMessages = (chatId, page) =>
+    API.get(`/messages/${chatId}?page=${page}`).catch((error) => {
         return error.response;
     });

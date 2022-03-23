@@ -7,6 +7,7 @@ import Home from "../studentDashboard/dashboardLinks/home/Home";
 import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
 import Chat from "../mentorDashboard/dashboardLinks/chat/Chat";
 import Profile from "./dashboardLinks/profile/Profile";
+import connectSocket from "../../../socket/socket";
 
 const StudentDashboard = () => {
     // state for maintaining the side nav bar
@@ -31,6 +32,12 @@ const StudentDashboard = () => {
             localStorage.removeItem("persistChat");
         }
     }, [dispatch, history]);
+
+    useEffect(() => {
+        const socket = connectSocket();
+        console.log("socket", socket);
+        dispatch({ type: "CONNECT_SOCKET_STUDENT", socket });
+    }, []);
 
     // function to chnage the tabs screens of the dashboard
     const handleRouteChange = (e) => {

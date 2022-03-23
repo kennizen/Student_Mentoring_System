@@ -61,10 +61,10 @@ export const createMessage = (history, message, socket, executeScroll) => async 
     }
 };
 
-export const getMessages = (history, chatId, socket, setIsLoading) => async (dispatch) => {
+export const getMessages = (history, chatId, page, setIsLoading) => async (dispatch) => {
     try {
         setIsLoading(true);
-        const { data } = await api.getMessages(chatId);
+        const { data } = await api.getMessages(chatId, page);
         console.log("message get data", data);
         // setMessages(data.data);
         //check if the response data is error
@@ -73,7 +73,24 @@ export const getMessages = (history, chatId, socket, setIsLoading) => async (dis
         } else {
             dispatch({ type: "FETCH_MESSAGES", data });
             setIsLoading(false);
-            socket.emit("join chat", chatId);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getOlderMessages = (history, chatId, page, setIsLoading) => async (dispatch) => {
+    try {
+        setIsLoading(true);
+        const { data } = await api.getMessages(chatId, page);
+        console.log("older message get data", data);
+        // setMessages(data.data);
+        //check if the response data is error
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "FETCH_OLDER_MESSAGES", data });
+            setIsLoading(false);
         }
     } catch (error) {
         console.log(error);
