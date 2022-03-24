@@ -8,6 +8,7 @@ import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
 import Chat from "../mentorDashboard/dashboardLinks/chat/Chat";
 import Profile from "./dashboardLinks/profile/Profile";
 import connectSocket from "../../../socket/socket";
+import { getAllChat } from "../../../actions/chat";
 
 const StudentDashboard = () => {
     // state for maintaining the side nav bar
@@ -28,8 +29,18 @@ const StudentDashboard = () => {
     // fetching the admin details
     useEffect(() => {
         dispatch(studentGetDetails(history));
+        dispatch(getAllChat(history));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
+        }
+        if (localStorage.getItem("selectedChat") !== null) {
+            localStorage.removeItem("selectedChat");
+        }
+        if (localStorage.getItem("chats") !== null) {
+            localStorage.removeItem("chats");
+        }
+        if (localStorage.getItem("0") !== null) {
+            localStorage.removeItem("0");
         }
     }, [dispatch, history]);
 

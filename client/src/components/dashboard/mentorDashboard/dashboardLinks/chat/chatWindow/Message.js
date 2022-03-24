@@ -13,7 +13,7 @@ const Message = ({ message, uid }) => {
                     message.sender._id === uid ? "bg-gray-200" : "bg-blue-200"
                 } rounded-lg`}
             >
-                <h5 className="mr-5">{message.content}</h5>
+                <h5 className="mr-5 break-words">{message.content}</h5>
                 <h6 className="text-gray-500 place-self-end">
                     {moment(message.createdAt).format("LT")}
                 </h6>

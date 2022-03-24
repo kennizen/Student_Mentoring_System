@@ -135,7 +135,6 @@ const ChatWindow = ({ selectedChat }) => {
         const notification = (data) => {
             const id = data.data.chat.toString();
             dispatch({ type: "ADD_NOTIFICATION", id });
-
             playNotifySound();
         };
 
@@ -166,6 +165,8 @@ const ChatWindow = ({ selectedChat }) => {
                 notification(data);
                 dispatch(UpdateLatestMessage(data));
             }
+            let id = data.data.chat.toString();
+            dispatch({ type: "REORDER_CHATS", id });
         });
     }, []);
 
