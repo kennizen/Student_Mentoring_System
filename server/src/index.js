@@ -58,7 +58,8 @@ const io = new Server(server, {
     },
 });
 
-global.socketMap = {};
+global.msgSocketMap = {};
+global.notifySocketMap = {};
 
 io.on("connection", (socket) => {
     console.log("connected to socket");
@@ -67,28 +68,34 @@ io.on("connection", (socket) => {
         socket.join(userId);
         // console.log("socket id",socket.id)
         // console.log("user connected", userId);
-        socketMap[`${userId}`] = socket.id;
+        msgSocketMap[`${userId}`] = socket.id;
         socket.emit("connected");
+        console.log("msg socket map",msgSocketMap);
     });
 
-    // socket.on("join chat", (chatId) => {
-    //     socket.join(chatId);
-    //     console.log("chatId", chatId);
-    //     console.log(socketMap);
-    // });
+    socket.on("notify setup", (userId) => {
+        socket.join(userId);
+        console.log("user id", userId);
+        notifySocketMap[`${userId}`] = socket.id;
+        console.log("notify socket map", notifySocketMap);
+    });
 
     socket.on("newMessage", async (newMessage) => {
-        console.log("newMessage", newMessage);
+        // console.log("newMessage", newMessage);
         if (!newMessage.data.chat) return console.log("error on chat id");
-        console.log("newMessage sender id", newMessage.data.sender._id);
+        // console.log("newMessage sender id", newMessage.data.sender._id);
         const chat = await Chat.findById(newMessage.data.chat);
-        console.log("chat", chat);
+        // console.log("chat", chat);
 
         const receiver = chat.users.find(
             (item) => item.user != newMessage.data.sender._id.toString()
         );
-        console.log("receiver", receiver);
+        // console.log("receiver", receiver);
 
-        io.to(socketMap[receiver.user]).emit("message received", newMessage);
+        io.to(msgSocketMap[receiver.user]).emit("message received", newMessage);
     });
+
+    socket.on("newNotification", (data) => {
+        io.to(notifySocketMap["623573ecfb066724f78c3a51"]).emit("new Notification", data);
+    })
 });

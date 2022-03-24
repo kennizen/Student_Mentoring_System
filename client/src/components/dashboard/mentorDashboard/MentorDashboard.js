@@ -14,6 +14,9 @@ import Post from "./dashboardLinks/post/Post";
 import connectSocket from "../../../socket/socket";
 
 const MentorDashboard = () => {
+
+    var socket;
+
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
@@ -30,6 +33,12 @@ const MentorDashboard = () => {
 
     console.log("mentor data in dashboard", data);
 
+    // getting uid of the logged in user
+    let uid = "";
+    if (localStorage.getItem("authData")) {
+        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+    }
+
     // fetching the admin details
     useEffect(() => {
         dispatch(mentorGetDetails(history));
@@ -44,11 +53,23 @@ const MentorDashboard = () => {
         }
     }, []);
 
+    useEffect(() => {
+        socket = connectSocket();
+        console.log("notify socket", socket);
+        socket.emit("notify setup", uid);
+        // dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
+        // socket.emit("newNotification", { msg: "new notification received"});
+        socket.on("new Notification", (data) => {
+            console.log("new socket Notification", data);
+        })
+
+    }, []);
+
     // useEffect(() => {
-    //     const socket = connectSocket();
-    //     console.log("socket", socket);
-    //     dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
+    //     socket.on("new notification", (data) => {
+    //     console.log("new notification", data);
     // }, []);
+    // })
 
     // function to chnage the tabs screens of the dashboard
     const handleRouteChange = (e) => {
