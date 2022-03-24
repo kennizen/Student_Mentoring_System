@@ -21,6 +21,7 @@ module.exports = {
         extend: {
             inset: {
                 12.8: "12.8rem",
+                13.5: "13.5rem",
             },
             width: {
                 "9/20": "45%",

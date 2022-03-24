@@ -36,13 +36,19 @@ const MentorDashboard = () => {
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
         }
+        if (localStorage.getItem("selectedChat") !== null) {
+            localStorage.removeItem("selectedChat");
+        }
+        if (localStorage.getItem("chats") !== null) {
+            localStorage.removeItem("chats");
+        }
     }, []);
 
-    useEffect(() => {
-        const socket = connectSocket();
-        console.log("socket", socket);
-        dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
-    }, []);
+    // useEffect(() => {
+    //     const socket = connectSocket();
+    //     console.log("socket", socket);
+    //     dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
+    // }, []);
 
     // function to chnage the tabs screens of the dashboard
     const handleRouteChange = (e) => {

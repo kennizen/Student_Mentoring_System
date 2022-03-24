@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { mentorGetAllMentees } from "../../../../../../actions/mentor";
 import { createChat } from "../../../../../../actions/chat";
@@ -8,9 +8,12 @@ import ChatTiles from "./ChatTiles";
 import Plus from "../../../../../../assets/Plus";
 import { studentGetAllStudentsOfMentor } from "../../../../../../actions/student";
 
-const ChatModal = ({ setShowModal, nodeRef, chats }) => {
+const ChatModal = ({ setShowModal, nodeRef }) => {
     // state variable to store the fetched mentees from the api
     const [mentees, setMentees] = useState([]);
+
+    // accesing global state to fetch the chats
+    const { chats } = useSelector((state) => state.chat);
 
     const dispatch = useDispatch();
     const history = useHistory();

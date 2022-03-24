@@ -5,7 +5,7 @@ const ScrollToBottom = ({ scrollToBottom }) => {
         <svg
             onClick={() => scrollToBottom()}
             xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8 absolute bottom-24 right-12.8 cursor-pointer"
+            className="h-8 w-8 absolute bottom-28 right-13.5 cursor-pointer"
             viewBox="0 0 20 20"
             fill="#757575"
         >

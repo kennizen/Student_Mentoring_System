@@ -10,9 +10,16 @@ import ModalOverlay from "../../../../modal/ModalOverlay";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { getAllChat } from "../../../../../actions/chat";
-import { useSelector } from "react-redux";
 
 const Chat = () => {
+    // api call to fetch all the chats
+    useEffect(() => {
+        dispatch(getAllChat(history));
+        if (localStorage.getItem("visible") !== null) {
+            localStorage.removeItem("visible");
+        }
+    }, []);
+
     const [showModal, setShowModal] = useState(false);
 
     // state variable for storing the selected chat id for the selected chat
@@ -28,20 +35,8 @@ const Chat = () => {
     const modalRef = useRef(null);
     const overlayRef = useRef(null);
 
-    // accesing global state to fetch the chats
-    const { chats } = useSelector((state) => state.chat);
-
     const dispatch = useDispatch();
     const history = useHistory();
-
-    // api call to fetch all the chats
-    useEffect(() => {
-        dispatch(getAllChat(history));
-        // why commented dont know
-        // localStorage.setItem("selectedChat", "");
-    }, [dispatch, history]);
-
-    console.log("chats", chats);
 
     return (
         <>
@@ -62,9 +57,9 @@ const Chat = () => {
                     classNames="modal"
                     unmountOnExit
                 >
-                    <ChatModal nodeRef={modalRef} setShowModal={setShowModal} chats={chats} />
+                    <ChatModal nodeRef={modalRef} setShowModal={setShowModal} />
                 </CSSTransition>
-                <div className="bg-white flex items-center justify-between p-3 mt-2 rounded-lg">
+                <div className="bg-white flex w-full items-center justify-between p-3 mt-2 rounded-lg">
                     <h2 className="text-gray-500">Chat with your fellow mentees...</h2>
                     <button
                         onClick={() => setShowModal(true)}
@@ -74,9 +69,9 @@ const Chat = () => {
                         Create a chat
                     </button>
                 </div>
-                <div className="flex gap-x-5 h-cal">
-                    <ChatSideBar chats={chats} setChatSelection={setChatSelection} />
-                    <ChatWindow selectedChat={selectedChat} chats={chats} />
+                <div className="flex gap-x-5 h-cal w-full mt-5">
+                    <ChatSideBar setChatSelection={setChatSelection} />
+                    <ChatWindow selectedChat={selectedChat} />
                 </div>
             </div>
         </>

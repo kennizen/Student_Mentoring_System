@@ -1,6 +1,7 @@
 const chat = (state = { chats: [], messages: [], notifications: [] }, action) => {
     switch (action.type) {
         case "FETCH_CHATS":
+            localStorage.setItem("chats", JSON.stringify(action.data.data));
             return { ...state, chats: action.data.data };
         case "FETCH_MESSAGES":
             return { ...state, messages: action.data.data };

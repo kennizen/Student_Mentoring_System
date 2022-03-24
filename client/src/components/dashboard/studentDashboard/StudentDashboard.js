@@ -33,11 +33,11 @@ const StudentDashboard = () => {
         }
     }, [dispatch, history]);
 
-    useEffect(() => {
-        const socket = connectSocket();
-        console.log("socket", socket);
-        dispatch({ type: "CONNECT_SOCKET_STUDENT", socket });
-    }, []);
+    // useEffect(() => {
+    //     const socket = connectSocket();
+    //     console.log("socket", socket);
+    //     dispatch({ type: "CONNECT_SOCKET_STUDENT", socket });
+    // }, []);
 
     // function to chnage the tabs screens of the dashboard
     const handleRouteChange = (e) => {

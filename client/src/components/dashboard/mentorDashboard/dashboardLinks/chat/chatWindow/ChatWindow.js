@@ -14,12 +14,24 @@ import { useSelector } from "react-redux";
 import Loading from "../../../../../loading/Loading";
 import ScrollToBottom from "./ScrollToBottom";
 import NotifySound from "../../../../../../assets/sounds/light-562.ogg";
+import Message from "./Message";
 
-const ChatWindow = ({ selectedChat, chats }) => {
-    const { socket } = useSelector((state) => {
-        if (state.mentor.socket !== null) return state.mentor;
-        return state.student;
-    });
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:5000";
+var socket;
+
+const ChatWindow = ({ selectedChat }) => {
+    // const { socket } = useSelector((state) => {
+    //     if (state.mentor.socket !== null) return state.mentor;
+    //     return state.student;
+    // });
+
+    // accesing global state to fetch the chats
+    const { chats } = useSelector((state) => state.chat);
+
+    // accessing global store for the notification array to show notifications
+    const { notifications } = useSelector((state) => state.chat);
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -53,6 +65,7 @@ const ChatWindow = ({ selectedChat, chats }) => {
 
     // socket connection for the user
     useEffect(() => {
+        socket = io(ENDPOINT);
         socket.emit("setup", uid);
     }, []);
 
@@ -69,8 +82,16 @@ const ChatWindow = ({ selectedChat, chats }) => {
     const toggleVisible = () => {
         if (ele.scrollTop < -100) {
             setVisible(true);
+            localStorage.setItem("visible", true);
         } else {
             setVisible(false);
+            localStorage.removeItem("visible");
+            // notification removal for the move to bottom button when it is visible
+            if (localStorage.getItem("selectedChat") !== null) {
+                const sc = localStorage.getItem("selectedChat");
+                let tmp = notifications.filter((id) => id !== sc);
+                dispatch({ type: "UPDATE_NOTIFICATION", tmp });
+            }
         }
     };
 
@@ -90,7 +111,7 @@ const ChatWindow = ({ selectedChat, chats }) => {
         if (selectedChat) {
             dispatch(getMessages(history, selectedChat, 1, setIsLoading));
             executeScroll();
-            contenteditable.focus();
+            contenteditable !== null && contenteditable.focus();
         } else if (localStorage.getItem("persistChat") !== null) {
             const id = JSON.parse(localStorage.getItem("persistChat")).chatId;
             dispatch(getMessages(history, id, 1, setIsLoading));
@@ -111,22 +132,39 @@ const ChatWindow = ({ selectedChat, chats }) => {
 
     // useeffect call when message is received
     useEffect(() => {
+        const notification = (data) => {
+            const id = data.data.chat.toString();
+            dispatch({ type: "ADD_NOTIFICATION", id });
+
+            playNotifySound();
+        };
+
         socket.on("message received", (data) => {
             /* this is to create the chat automatically if chat not shown and message came in user chat */
-            if (!chats.includes(data.data.chat.toString())) {
-                dispatch(getAllChat(history));
+            if (localStorage.getItem("chats") !== null) {
+                let chats = JSON.parse(localStorage.getItem("chats"));
+                let val = false;
+                for (let i = 0; i < chats.length; i++) {
+                    if (chats[i]._id.toString() === data.data.chat.toString()) {
+                        val = true;
+                        break;
+                    }
+                }
+                if (val === false) dispatch(getAllChat(history));
             }
 
-            // if msg not intended for selected chat
             if (localStorage.getItem("selectedChat") === data.data.chat) {
+                if (
+                    localStorage.getItem("visible") !== null &&
+                    localStorage.getItem("visible") === "true" // visible val in string
+                )
+                    notification(data);
                 dispatch({ type: "ADD_MESSAGES", data });
                 dispatch(UpdateLatestMessage(data));
             } else {
                 // if message for unintended person then store chat id in global store to show notification
-                const id = data.data.chat.toString();
-                dispatch({ type: "ADD_NOTIFICATION", id });
+                notification(data);
                 dispatch(UpdateLatestMessage(data));
-                playNotifySound();
             }
         });
     }, []);
@@ -190,13 +228,14 @@ const ChatWindow = ({ selectedChat, chats }) => {
         dispatch(getOlderMessages(history, selectedChat, page, setIsLoading));
     };
 
+    console.log("chats", chats);
     console.log("message", message);
     console.log("messages", messages);
     // console.log("selected chat", selectedChat);
 
     return (
         <>
-            <div className="w-3/5 mt-5 p-2 bg-white rounded-md h-full flex-shrink-0">
+            <div className="w-3/5 py-2 bg-white rounded-md h-full flex-shrink-0">
                 {isLoading ? (
                     <div className="w-full h-9/10 px-10 pb-7 flex items-center justify-center">
                         <Loading height={"h-8"} width={"w-8"} />
@@ -205,34 +244,15 @@ const ChatWindow = ({ selectedChat, chats }) => {
                     <div
                         id="scrollable"
                         onScroll={toggleVisible}
-                        className="w-full h-9/10 overflow-auto flex items-center flex-col-reverse px-12 pb-7 relative"
+                        className="w-full h-9/10 overflow-auto flex items-center flex-col-reverse px-12 pb-5 relative"
                     >
                         <div ref={scrollMessage}></div>
                         {message.length !== 0 &&
                             messages
                                 .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-                                .map((message) => {
-                                    return (
-                                        <div
-                                            key={message._id}
-                                            className={`w-full flex items-center mb-1 ${
-                                                message.sender._id === uid
-                                                    ? "justify-end"
-                                                    : "justify-start"
-                                            }`}
-                                        >
-                                            <h5
-                                                className={`px-2 max-w-3/5 py-1 ${
-                                                    message.sender._id === uid
-                                                        ? "bg-gray-200"
-                                                        : "bg-blue-200"
-                                                } rounded-lg`}
-                                            >
-                                                {message.content}
-                                            </h5>
-                                        </div>
-                                    );
-                                })}
+                                .map((message) => (
+                                    <Message key={message._id} message={message} uid={uid} />
+                                ))}
                         {messages.length !== 0 && (
                             <button
                                 onClick={loadOlderMessages}
@@ -247,31 +267,33 @@ const ChatWindow = ({ selectedChat, chats }) => {
 
                 {visible && <ScrollToBottom scrollToBottom={scrollToBottom} />}
 
-                <div className="w-full h-1/10 flex items-center justify-center gap-x-6">
-                    <div className="w-17/20 flex-shrink-0 relative">
-                        <div
-                            onFocus={focusPlaceHol}
-                            onBlur={blurPlaceHol}
-                            onKeyUp={check}
-                            contentEditable={true}
-                            className="px-2 py-3 rounded-md max-h-16 bg-gray-100 outline-none break-words overflow-y-auto"
-                        ></div>
-                        <h4
-                            className={`text-gray-400 absolute top-3 left-2 pointer-events-none ${placeHol}`}
-                        >
-                            Type something...
-                        </h4>
-                    </div>
+                {localStorage.getItem("selectedChat") && (
+                    <div className="w-full h-1/10 bg-gray-200 flex items-center justify-center gap-x-6 mt-1">
+                        <div className="w-17/20 flex-shrink-0 relative">
+                            <div
+                                onFocus={focusPlaceHol}
+                                onBlur={blurPlaceHol}
+                                onKeyUp={check}
+                                contentEditable={true}
+                                className="px-2 py-3 rounded-md max-h-16 bg-gray-100 outline-none break-words overflow-y-auto"
+                            ></div>
+                            <h4
+                                className={`text-gray-400 absolute top-3 left-2 pointer-events-none ${placeHol}`}
+                            >
+                                Type something...
+                            </h4>
+                        </div>
 
-                    <button
-                        title="Send message"
-                        className={`bg-green-500 p-2.5 rounded-md disabled:opacity-50 text-white`}
-                        onClick={sendMessage}
-                        disabled={disable}
-                    >
-                        Send
-                    </button>
-                </div>
+                        <button
+                            title="Send message"
+                            className={`bg-green-500 p-2.5 rounded-md disabled:opacity-50 text-white`}
+                            onClick={sendMessage}
+                            disabled={disable}
+                        >
+                            Send
+                        </button>
+                    </div>
+                )}
             </div>
         </>
     );
