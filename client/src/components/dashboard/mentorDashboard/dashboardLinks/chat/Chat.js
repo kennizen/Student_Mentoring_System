@@ -14,7 +14,6 @@ import { getAllChat } from "../../../../../actions/chat";
 const Chat = () => {
     // api call to fetch all the chats
     useEffect(() => {
-        dispatch(getAllChat(history));
         if (localStorage.getItem("visible") !== null) {
             localStorage.removeItem("visible");
         }

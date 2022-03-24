@@ -7,7 +7,9 @@ export const createChat = (history, setShowModal, chatIds) => async (dispatch) =
         setShowModal(false);
 
         //check if the response data is error
-        if (data.code === 403) {
+        if (data.code === 409) {
+            dispatch(getAllChat(history));
+        } else if (data.code === 403) {
             history.goBack();
         } else {
             dispatch({ type: "ADD_CHATS", data });

@@ -9,6 +9,26 @@ const chat = (state = { chats: [], messages: [], notifications: [] }, action) =>
             return { ...state, messages: [] };
         case "ADD_CHATS":
             return { ...state, chats: [...state.chats, ...action.data.data.newChatArray] };
+        case "REORDER_CHATS":
+            const chatId = action.id;
+            if (state.chats.length > 0) {
+                let index = state.chats.findIndex(
+                    (chat) => chat._id.toString() === chatId.toString()
+                );
+                localStorage.setItem("0", 0);
+                localStorage.setItem(
+                    "persistChat",
+                    JSON.stringify({
+                        chatId: chatId,
+                        chatIndex: 0,
+                    })
+                );
+                let chat = state.chats[index];
+                state.chats.splice(index, 1);
+                state.chats.unshift(chat);
+                return { ...state, chats: [...state.chats] };
+            }
+            return state;
         case "FETCH_OLDER_MESSAGES":
             return { ...state, messages: [...state.messages, ...action.data.data] };
         case "UPDATE_CHAT":

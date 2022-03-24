@@ -29,7 +29,7 @@ exports.createNewChat = async (req, res, next) => {
 
                 // if chat already exists
                 if (chatExists.length > 0) {
-                    return response.error(res, "Chat already exists", {});
+                    return response.alreadyExist(res, "Chat already exist", {});
                 }
                 // adding mentor to list
                 chat.users.push({
@@ -57,18 +57,18 @@ exports.createNewChat = async (req, res, next) => {
 
                 // if chat already exists
                 if (chatExists.length > 0) {
-                    return response.error(res, "Chat already exists", {});
+                    return response.alreadyExist(res, "Chat already exist", {});
                 }
                 // adding creating student to list
                 chat.users.push({
                     role: req.user.role,
                     user: req.user._id,
                 });
-                
+
                 const mentor = await Mentor.findById(chats[i]);
-                
+
                 // adding student to list
-                if(!mentor){
+                if (!mentor) {
                     chat.users.push({
                         role: roles.Student,
                         user: chats[i],
@@ -79,7 +79,7 @@ exports.createNewChat = async (req, res, next) => {
                         user: chats[i],
                     });
                 }
-               
+
                 const newChat = await (await chat.save()).populate("users.user").execPopulate();
                 newChatArray.push(newChat);
             }

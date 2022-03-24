@@ -93,3 +93,17 @@ exports.notfound = (res, msg, data) => {
     }
     res.status(404).json(response);
 };
+
+/**
+ * @Desc The function returns Exist 409 (Already exist) to the client
+ * @param {*} res Reponse object provided by Express
+ * @param {*} msg Message for the response
+ * @param {*} data Data to be sent along with the response
+ */
+exports.alreadyExist = (res, msg, data) => {
+    const response = new Response(409, "exist", data, "Already Exist");
+    if (msg) {
+        response.msg = msg;
+    }
+    res.status(409).json(response);
+};

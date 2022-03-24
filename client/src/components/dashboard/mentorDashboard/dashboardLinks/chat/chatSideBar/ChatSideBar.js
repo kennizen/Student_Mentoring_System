@@ -13,7 +13,7 @@ const ChatSideBar = ({ setChatSelection }) => {
     const { chats } = useSelector((state) => state.chat);
 
     // state for activating the bg of the selected chat
-    const [selectedIndex, setSelectedIndex] = useState(-1);
+    // const [selectedIndex, setSelectedIndex] = useState(-1);
 
     const dispatch = useDispatch();
 
@@ -22,12 +22,12 @@ const ChatSideBar = ({ setChatSelection }) => {
 
     console.log("notifications", notifications);
 
-    useEffect(() => {
-        if (selectedIndex === -1 && localStorage.getItem("persistChat") !== null) {
-            const index = JSON.parse(localStorage.getItem("persistChat")).chatIndex;
-            setSelectedIndex(index);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (selectedIndex === -1 && localStorage.getItem("persistChat") !== null) {
+    //         const index = JSON.parse(localStorage.getItem("persistChat")).chatIndex;
+    //         localStorage.setItem("0", index);
+    //     }
+    // }, []);
 
     return (
         <>
@@ -52,7 +52,8 @@ const ChatSideBar = ({ setChatSelection }) => {
                             <div key={chat._id} className="mb-4 flex flex-col items-end">
                                 <div
                                     onClick={() => {
-                                        setSelectedIndex(index);
+                                        //setSelectedIndex(index);
+                                        localStorage.setItem("0", index);
                                         setChatSelection(chat._id);
                                         if (notifications.includes(chat._id)) {
                                             let tmp = notifications.filter(
@@ -69,7 +70,10 @@ const ChatSideBar = ({ setChatSelection }) => {
                                         );
                                     }}
                                     className={`grid w-full grid-cols-chatTab p-2 hover:bg-gray-200 cursor-pointer rounded-md transition-all ${
-                                        selectedIndex === index ? "bg-gray-200" : ""
+                                        localStorage.getItem("0") !== null &&
+                                        JSON.parse(localStorage.getItem("0")) === index
+                                            ? "bg-gray-200"
+                                            : ""
                                     }`}
                                 >
                                     <img
@@ -81,7 +85,7 @@ const ChatSideBar = ({ setChatSelection }) => {
                                         }
                                         alt="img"
                                     />
-                                    <div className="flex mx-6 flex-col items-start justify-evenly">
+                                    <div className="flex w-full mx-6 flex-col items-start justify-evenly overflow-hidden">
                                         <h3>{`${thatUser?.user?.firstname} ${thatUser?.user?.middlename} ${thatUser?.user?.lastname}`}</h3>
                                         <h6>{chat?.latestMessage?.content}</h6>
                                     </div>

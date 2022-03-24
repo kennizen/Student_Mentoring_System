@@ -11,7 +11,8 @@ import Loading from "../../loading/Loading";
 import Chat from "./dashboardLinks/chat/Chat";
 import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
 import Post from "./dashboardLinks/post/Post";
-import connectSocket from "../../../socket/socket";
+
+import { getAllChat } from "../../../actions/chat";
 
 const MentorDashboard = () => {
     // state for maintaining the side nav bar
@@ -33,6 +34,7 @@ const MentorDashboard = () => {
     // fetching the admin details
     useEffect(() => {
         dispatch(mentorGetDetails(history));
+        dispatch(getAllChat(history));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
         }
@@ -41,6 +43,9 @@ const MentorDashboard = () => {
         }
         if (localStorage.getItem("chats") !== null) {
             localStorage.removeItem("chats");
+        }
+        if (localStorage.getItem("0") !== null) {
+            localStorage.removeItem("0");
         }
     }, []);
 
