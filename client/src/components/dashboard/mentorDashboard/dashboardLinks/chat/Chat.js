@@ -7,9 +7,6 @@ import { CSSTransition } from "react-transition-group";
 import { useState, useRef } from "react";
 import ChatModal from "./chatModal/ChatModal";
 import ModalOverlay from "../../../../modal/ModalOverlay";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { getAllChat } from "../../../../../actions/chat";
 
 const Chat = () => {
     // api call to fetch all the chats
@@ -19,10 +16,17 @@ const Chat = () => {
         }
     }, []);
 
+    // state to control the modal show and dont show
     const [showModal, setShowModal] = useState(false);
 
     // state variable for storing the selected chat id for the selected chat
     const [selectedChat, setSelectedChat] = useState("");
+
+    // state for showing the selected chat at top of chat window
+    const [curChat, setCurChat] = useState({
+        avatar: "",
+        name: "",
+    });
 
     // set selected set
     const setChatSelection = (id) => {
@@ -34,9 +38,6 @@ const Chat = () => {
     const modalRef = useRef(null);
     const overlayRef = useRef(null);
 
-    const dispatch = useDispatch();
-    const history = useHistory();
-
     return (
         <>
             <div className="py-2 px-48 w-full h-full overflow-hidden relative">
@@ -47,7 +48,7 @@ const Chat = () => {
                     classNames="overlay"
                     unmountOnExit
                 >
-                    <ModalOverlay nodeRef={overlayRef} showModal={setShowModal} />
+                    <ModalOverlay nodeRef={overlayRef} setShowModal={setShowModal} />
                 </CSSTransition>
                 <CSSTransition
                     nodeRef={modalRef}
@@ -58,6 +59,7 @@ const Chat = () => {
                 >
                     <ChatModal nodeRef={modalRef} setShowModal={setShowModal} />
                 </CSSTransition>
+
                 <div className="bg-white flex w-full items-center justify-between p-3 mt-2 rounded-lg">
                     <h2 className="text-gray-500">Chat with your fellow mentees...</h2>
                     <button
@@ -69,8 +71,8 @@ const Chat = () => {
                     </button>
                 </div>
                 <div className="flex gap-x-5 h-cal w-full mt-5">
-                    <ChatSideBar setChatSelection={setChatSelection} />
-                    <ChatWindow selectedChat={selectedChat} />
+                    <ChatSideBar setChatSelection={setChatSelection} setCurChat={setCurChat} />
+                    <ChatWindow selectedChat={selectedChat} curChat={curChat} />
                 </div>
             </div>
         </>

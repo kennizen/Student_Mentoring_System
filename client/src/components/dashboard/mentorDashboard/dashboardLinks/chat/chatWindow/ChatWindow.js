@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import {
+    AddNotification,
+    AddSingleChat,
     createMessage,
-    getAllChat,
     getMessages,
     getOlderMessages,
+    ReorderChats,
     UpdateLatestMessage,
 } from "../../../../../../actions/chat";
 import { useSelector } from "react-redux";
@@ -21,7 +23,7 @@ import io from "socket.io-client";
 const ENDPOINT = "http://localhost:5000";
 var socket;
 
-const ChatWindow = ({ selectedChat }) => {
+const ChatWindow = ({ selectedChat, curChat }) => {
     // const { socket } = useSelector((state) => {
     //     if (state.mentor.socket !== null) return state.mentor;
     //     return state.student;
@@ -133,8 +135,9 @@ const ChatWindow = ({ selectedChat }) => {
     // useeffect call when message is received
     useEffect(() => {
         const notification = (data) => {
-            const id = data.data.chat.toString();
-            dispatch({ type: "ADD_NOTIFICATION", id });
+            const id = data.data.chat._id.toString();
+            dispatch(AddNotification(id));
+            dispatch(ReorderChats(id));
             playNotifySound();
         };
 
@@ -144,15 +147,17 @@ const ChatWindow = ({ selectedChat }) => {
                 let chats = JSON.parse(localStorage.getItem("chats"));
                 let val = false;
                 for (let i = 0; i < chats.length; i++) {
-                    if (chats[i]._id.toString() === data.data.chat.toString()) {
+                    if (chats[i]._id.toString() === data.data.chat._id.toString()) {
                         val = true;
                         break;
                     }
                 }
-                if (val === false) dispatch(getAllChat(history));
+                if (val === false) {
+                    dispatch(AddSingleChat(data.data.chat));
+                }
             }
 
-            if (localStorage.getItem("selectedChat") === data.data.chat) {
+            if (localStorage.getItem("selectedChat") === data.data.chat._id.toString()) {
                 if (
                     localStorage.getItem("visible") !== null &&
                     localStorage.getItem("visible") === "true" // visible val in string
@@ -165,8 +170,6 @@ const ChatWindow = ({ selectedChat }) => {
                 notification(data);
                 dispatch(UpdateLatestMessage(data));
             }
-            let id = data.data.chat.toString();
-            dispatch({ type: "REORDER_CHATS", id });
         });
     }, []);
 
@@ -189,6 +192,7 @@ const ChatWindow = ({ selectedChat }) => {
     // function to send the text message
     const sendMessage = () => {
         dispatch(createMessage(history, message, socket, executeScroll));
+        dispatch(ReorderChats(message.chat));
         contenteditable.innerHTML = "";
         contenteditable.focus();
         check();
@@ -236,16 +240,28 @@ const ChatWindow = ({ selectedChat }) => {
 
     return (
         <>
-            <div className="w-3/5 py-2 bg-white rounded-md h-full flex-shrink-0">
+            <div className="w-3/5 bg-white rounded-md h-full flex-shrink-0">
+                {localStorage.getItem("selectedChat") && (
+                    <div className="w-full h-1/10 bg-gray-200">
+                        <div className="flex items-center justify-start h-full px-5 gap-x-4">
+                            <img
+                                src={curChat.avatar}
+                                alt="IMG"
+                                className="h-12 w-12 rounded-full"
+                            />
+                            <h4>{curChat.name}</h4>
+                        </div>
+                    </div>
+                )}
                 {isLoading ? (
-                    <div className="w-full h-9/10 px-10 pb-7 flex items-center justify-center">
+                    <div className="w-full h-4/5 px-10 pb-7 flex items-center justify-center">
                         <Loading height={"h-8"} width={"w-8"} />
                     </div>
                 ) : (
                     <div
                         id="scrollable"
                         onScroll={toggleVisible}
-                        className="w-full h-9/10 overflow-auto flex items-center flex-col-reverse px-12 pb-5 relative"
+                        className="w-full h-4/5 overflow-auto flex items-center flex-col-reverse px-12 pb-5 relative"
                     >
                         <div ref={scrollMessage}></div>
                         {message.length !== 0 &&
@@ -258,7 +274,7 @@ const ChatWindow = ({ selectedChat }) => {
                             <button
                                 onClick={loadOlderMessages}
                                 title="Load message"
-                                className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 text-xs bg-gray-100 mb-2`}
+                                className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 text-xs bg-gray-100 mb-2 mt-1`}
                             >
                                 Load More
                             </button>

@@ -18,9 +18,13 @@ exports.createNewMessage = async (req, res, next) => {
         });
 
         const resMessage = await (await newMessage.save()).populate("sender").execPopulate();
-        await Chat.findByIdAndUpdate(resMessage.chat, {
-            latestMessage: resMessage._id,
-        });
+        resMessage.chat = await Chat.findByIdAndUpdate(
+            resMessage.chat,
+            {
+                latestMessage: resMessage._id,
+            },
+            { new: true }
+        ).populate("users.user");
         response.success(res, "Message created", resMessage);
         next();
     } catch (err) {
@@ -43,7 +47,8 @@ exports.fetchAllMessage = async (req, res, next) => {
             .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
             .limit(limit)
-            .populate("sender");
+            .populate("sender")
+            .populate("chat");
         response.success(res, "", messages);
     } catch (err) {
         console.log(err);

@@ -58,7 +58,7 @@ const io = new Server(server, {
     },
 });
 
-global.socketMap = {};
+global.msgSocketMap = {};
 
 io.on("connection", (socket) => {
     console.log("connected to socket");
@@ -67,7 +67,7 @@ io.on("connection", (socket) => {
         socket.join(userId);
         // console.log("socket id",socket.id)
         // console.log("user connected", userId);
-        socketMap[`${userId}`] = socket.id;
+        msgSocketMap[`${userId}`] = socket.id;
         socket.emit("connected");
     });
 
@@ -78,17 +78,11 @@ io.on("connection", (socket) => {
     // });
 
     socket.on("newMessage", async (newMessage) => {
-        console.log("newMessage", newMessage);
-        if (!newMessage.data.chat) return console.log("error on chat id");
-        console.log("newMessage sender id", newMessage.data.sender._id);
-        const chat = await Chat.findById(newMessage.data.chat);
-        console.log("chat", chat);
-
-        const receiver = chat.users.find(
-            (item) => item.user != newMessage.data.sender._id.toString()
+        if (!newMessage.data.chat._id) return console.log("error on chat id");
+        const users = newMessage.data.chat.users;
+        const receiver = users.find(
+            (item) => item.user._id.toString() !== newMessage.data.sender._id.toString()
         );
-        console.log("receiver", receiver);
-
-        io.to(socketMap[receiver.user]).emit("message received", newMessage);
+        io.to(msgSocketMap[receiver.user._id]).emit("message received", newMessage);
     });
 });

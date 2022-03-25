@@ -1,33 +1,77 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import DotIcon from "../../../../../../assets/DotIcon";
 import SearchIcon from "../../../../../../assets/SearchIcon";
+import ChatTile from "./ChatTile";
+import { useSelector } from "react-redux";
 
-import moment from "moment";
-
-const ChatSideBar = ({ setChatSelection }) => {
+const ChatSideBar = ({ setChatSelection, setCurChat }) => {
     // getting uid of the logged in user
     const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
 
     // accesing global state to fetch the chats
     const { chats } = useSelector((state) => state.chat);
 
-    // state for activating the bg of the selected chat
-    // const [selectedIndex, setSelectedIndex] = useState(-1);
+    useEffect(() => {
+        if (localStorage.getItem("persistChat") !== null) {
+            const index = JSON.parse(localStorage.getItem("persistChat")).chatIndex;
+            localStorage.setItem("0", index);
+        }
+    }, []);
 
-    const dispatch = useDispatch();
+    const [tmpList, setTmpList] = useState([]);
 
-    // accessing global store for the notification array to show notifications
-    const { notifications } = useSelector((state) => state.chat);
+    const handleSearch = (e) => {
+        let val = e.target.value;
+        let tmp = [];
 
-    console.log("notifications", notifications);
-
-    // useEffect(() => {
-    //     if (selectedIndex === -1 && localStorage.getItem("persistChat") !== null) {
-    //         const index = JSON.parse(localStorage.getItem("persistChat")).chatIndex;
-    //         localStorage.setItem("0", index);
-    //     }
-    // }, []);
+        if (
+            val !== "" &&
+            chats.find((chat) =>
+                chat.users.find(
+                    (user) => user.user["firstname"].toString().toLowerCase().indexOf(val) > -1
+                )
+            )
+        ) {
+            tmp.push(
+                chats.find((chat) =>
+                    chat.users.find(
+                        (user) => user.user["firstname"].toString().toLowerCase().indexOf(val) > -1
+                    )
+                )
+            );
+        } else if (
+            val !== "" &&
+            chats.find((chat) =>
+                chat.users.find(
+                    (user) => user.user["middlename"].toString().toLowerCase().indexOf(val) > -1
+                )
+            )
+        ) {
+            tmp.push(
+                chats.find((chat) =>
+                    chat.users.find(
+                        (user) => user.user["middlename"].toString().toLowerCase().indexOf(val) > -1
+                    )
+                )
+            );
+        } else if (
+            val !== "" &&
+            chats.find((chat) =>
+                chat.users.find(
+                    (user) => user.user["lastname"].toString().toLowerCase().indexOf(val) > -1
+                )
+            )
+        ) {
+            tmp.push(
+                chats.find((chat) =>
+                    chat.users.find(
+                        (user) => user.user["lastname"].toString().toLowerCase().indexOf(val) > -1
+                    )
+                )
+            );
+        }
+        //console.log(tmp);
+        setTmpList(tmp);
+    };
 
     return (
         <>
@@ -36,6 +80,7 @@ const ChatSideBar = ({ setChatSelection }) => {
                     <div className="relative mb-4">
                         <input
                             type="text"
+                            onChange={handleSearch}
                             className="pl-11 border-none w-full focus:outline-none focus:ring-0 bg-gray-100 rounded-md"
                             placeholder="Search chat..."
                         />
@@ -45,67 +90,47 @@ const ChatSideBar = ({ setChatSelection }) => {
                     </div>
                 </div>
 
-                {chats?.map((chat, index) => {
-                    if (chat.users.find((user) => user.user._id !== uid)) {
-                        let thatUser = chat.users.find((user) => user.user._id !== uid);
-                        return (
-                            <div key={chat._id} className="mb-4 flex flex-col items-end">
-                                <div
-                                    onClick={() => {
-                                        //setSelectedIndex(index);
-                                        localStorage.setItem("0", index);
-                                        setChatSelection(chat._id);
-                                        if (notifications.includes(chat._id)) {
-                                            let tmp = notifications.filter(
-                                                (id) => id !== chat._id.toString()
-                                            );
-                                            dispatch({ type: "UPDATE_NOTIFICATION", tmp });
-                                        }
-                                        localStorage.setItem(
-                                            "persistChat",
-                                            JSON.stringify({
-                                                chatId: chat._id,
-                                                chatIndex: index,
-                                            })
-                                        );
-                                    }}
-                                    className={`grid w-full grid-cols-chatTab p-2 hover:bg-gray-200 cursor-pointer rounded-md transition-all ${
-                                        localStorage.getItem("0") !== null &&
-                                        JSON.parse(localStorage.getItem("0")) === index
-                                            ? "bg-gray-200"
-                                            : ""
-                                    }`}
-                                >
-                                    <img
-                                        className="h-12 w-12 rounded-full"
-                                        src={
-                                            thatUser?.user?.avatar?.url === ""
-                                                ? `https://avatars.dicebear.com/api/initials/${thatUser?.user?.firstname}.svg`
-                                                : thatUser?.user?.avatar?.url
-                                        }
-                                        alt="img"
-                                    />
-                                    <div className="flex w-full mx-6 flex-col items-start justify-evenly overflow-hidden">
-                                        <h3>{`${thatUser?.user?.firstname} ${thatUser?.user?.middlename} ${thatUser?.user?.lastname}`}</h3>
-                                        <h6>{chat?.latestMessage?.content}</h6>
-                                    </div>
-                                    <div className="px-3 flex flex-col items-center justify-evenly">
-                                        <h6>{moment(chat?.latestMessage?.createdAt).calendar()}</h6>
-                                        {notifications.includes(chat._id) ? (
-                                            <DotIcon
-                                                myStyle={"h-3 w-3 bg-green-500 rounded-full"}
-                                            />
-                                        ) : (
-                                            <div></div>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="w-5/6 h-px bg-gray-200"></div>
-                            </div>
-                        );
-                    }
-                    return <div key={chat._id}></div>;
-                })}
+                {tmpList.length === 0
+                    ? chats?.map((chat, index) => {
+                          if (
+                              chat !== undefined &&
+                              chat.users.find((user) => user.user._id !== uid)
+                          ) {
+                              let thatUser = chat.users.find((user) => user.user._id !== uid);
+                              return (
+                                  <ChatTile
+                                      key={chat._id}
+                                      chat={chat}
+                                      index={index}
+                                      setChatSelection={setChatSelection}
+                                      thatUser={thatUser}
+                                      setCurChat={setCurChat}
+                                      setTmpList={setTmpList}
+                                  />
+                              );
+                          }
+                          return <div key={chat !== undefined && chat._id}></div>;
+                      })
+                    : tmpList?.map((chat, index) => {
+                          if (
+                              chat !== undefined &&
+                              chat.users.find((user) => user.user._id !== uid)
+                          ) {
+                              let thatUser = chat.users.find((user) => user.user._id !== uid);
+                              return (
+                                  <ChatTile
+                                      key={chat._id}
+                                      chat={chat}
+                                      index={index}
+                                      setChatSelection={setChatSelection}
+                                      thatUser={thatUser}
+                                      setCurChat={setCurChat}
+                                      setTmpList={setTmpList}
+                                  />
+                              );
+                          }
+                          return <div key={chat !== undefined && chat._id}></div>;
+                      })}
             </div>
         </>
     );

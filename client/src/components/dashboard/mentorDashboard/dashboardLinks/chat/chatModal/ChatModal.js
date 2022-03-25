@@ -69,7 +69,7 @@ const ChatModal = ({ setShowModal, nodeRef }) => {
                     </div>
 
                     <div className="mb-2">
-                        <h5>Selected - {chatIds.length}</h5>
+                        <h5>Selected - {chatIds.chats.length}</h5>
                     </div>
 
                     <div className="flex items-center flex-wrap justify-start gap-x-3">
