@@ -104,7 +104,7 @@ module.exports = {
     },
 
     // create or update profile 
-   updateProfile:  async (res, res, next) => {
+   updateProfile:  async (req, res, next) => {
        try {
            console.log("profile update")
        }
