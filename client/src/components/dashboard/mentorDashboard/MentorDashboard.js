@@ -15,10 +15,9 @@ import Post from "./dashboardLinks/post/Post";
 import { getAllChat } from "../../../actions/chat";
 import connectSocket from "../../../socket/socket";
 
+var socket;
+
 const MentorDashboard = () => {
-
-    var socket;
-
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
@@ -67,8 +66,7 @@ const MentorDashboard = () => {
         // socket.emit("newNotification", { msg: "new notification received"});
         socket.on("new Notification", (data) => {
             console.log("new socket Notification", data);
-        })
-
+        });
     }, []);
 
     // useEffect(() => {

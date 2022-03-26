@@ -19,6 +19,30 @@ export const createChat = (history, setShowModal, chatIds) => async (dispatch) =
     }
 };
 
+export const ReorderChats = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: "REORDER_CHATS", id });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const AddSingleChat = (chat) => async (dispatch) => {
+    try {
+        dispatch({ type: "ADD_SINGLE_CHAT", chat });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const AddNotification = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: "ADD_NOTIFICATION", id });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const UpdateLatestMessage = (data) => async (dispatch) => {
     try {
         const latestMessage = data.data;
