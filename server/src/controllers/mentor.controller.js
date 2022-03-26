@@ -102,4 +102,14 @@ module.exports = {
             response.error(res);
         }
     },
+
+    // create or update profile 
+   updateProfile:  async (res, res, next) => {
+       try {
+           console.log("profile update")
+       }
+       catch(err) {
+           console.log(err)
+       }
+   }
 };

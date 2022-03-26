@@ -21,18 +21,22 @@ module.exports = {
     COMMENT_CREATED: {
         type: "COMMENT_CREATED",
         detail: "Posted a new comment",
+        model: "Comment"
     },
     COMMENT_DELETED: {
         type: "COMMENT_DELETED",
         detail: "Deleted a comment",
+        model: "Comment"
     },
     POST_CREATED: {
         type: "POST_CREATED",
         detail: "Created a new post",
+        model: "Post"
     },
     POST_UPDATED: {
         type: "POST_UPDATED",
         detail: "Updated a new post",
+        model: "Post"
     },
     POST_DELETED: {
         type: "POST_DELETED",

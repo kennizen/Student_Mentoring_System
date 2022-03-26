@@ -37,4 +37,7 @@ router.get(
     mentorController.fetchStudentSemesters
 );
 
+// update profile;
+router.post("/profile", Auth, Authorize(Role.Mentor), mentorController.updateProfile);
+
 module.exports = router;

@@ -2,15 +2,12 @@ const mongoose = require("mongoose");
 
 const notificationModel = new mongoose.Schema(
     {
-        type: {
-            type: String,
-            trim: true,
-            required: true,
-            enum: ["Post", "Comment", "Meeting"]
+        event: {
+            type: Object,
         },
         creator: {
             type: mongoose.Schema.Types.ObjectId,
-            refPath: creatorModel,
+            refPath: "creatorModel",
             required: true,
         },
         creatorModel: {
@@ -21,15 +18,16 @@ const notificationModel = new mongoose.Schema(
         },
         content: {
             type: mongoose.Schema.Types.ObjectId,
-            refPath: contentModel,
+            refPath: "event.model",
             required: true
         },
-        contentModel: {
-            type: String,
-            trim: true,
-            required: true,
-            enum: ["Post", "Comment"]
-        }
+        receivers: [{
+            role: String,
+            user: { type: mongoose.Schema.Types.ObjectId, refPath: "receivers.role" },
+            read: { type: Boolean, default: false }
+        }],
+        // receivers will be set by the method which triggers the notification
+    
     },
     {
         timestamps: true,

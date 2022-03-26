@@ -3,11 +3,14 @@ const cors = require("cors");
 const fs = require("fs");
 const morgan = require("morgan");
 const { Server } = require("socket.io");
-
+const socket = require("./socket/socket");
+const dotenv = require("dotenv");
 const Chat = require("./models/Chat");
 
 // mongoose config
 require("./config/mongoose");
+//env config
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,6 +42,7 @@ const indexRoutes = require("./routes/index");
 const postRoutes = require("./routes/post");
 const chatRoutes = require("./routes/chat");
 const messageRoutes = require("./routes/message");
+const notificationRoutes = require("./routes/notification");
 
 // setting routes
 app.use("/", indexRoutes);
@@ -48,54 +52,19 @@ app.use("/student", studentRoutes);
 app.use("/posts", postRoutes);
 app.use("/chats", chatRoutes);
 app.use("/messages", messageRoutes);
+app.use("/notifications", notificationRoutes);
 
 const server = app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "http://localhost:3000",
+        origin: "*",
     },
 });
 
 global.msgSocketMap = {};
 global.notifySocketMap = {};
 
-io.on("connection", (socket) => {
-    console.log("connected to socket");
-
-    socket.on("setup", (userId) => {
-        socket.join(userId);
-        // console.log("socket id",socket.id)
-        // console.log("user connected", userId);
-        msgSocketMap[`${userId}`] = socket.id;
-        socket.emit("connected");
-        console.log("msg socket map",msgSocketMap);
-    });
-
-    socket.on("notify setup", (userId) => {
-        socket.join(userId);
-        console.log("user id", userId);
-        notifySocketMap[`${userId}`] = socket.id;
-        console.log("notify socket map", notifySocketMap);
-    });
-
-    socket.on("newMessage", async (newMessage) => {
-        // console.log("newMessage", newMessage);
-        if (!newMessage.data.chat) return console.log("error on chat id");
-        // console.log("newMessage sender id", newMessage.data.sender._id);
-        const chat = await Chat.findById(newMessage.data.chat);
-        // console.log("chat", chat);
-
-        const receiver = chat.users.find(
-            (item) => item.user != newMessage.data.sender._id.toString()
-        );
-        // console.log("receiver", receiver);
-
-        io.to(msgSocketMap[receiver.user]).emit("message received", newMessage);
-    });
-
-    socket.on("newNotification", (data) => {
-        io.to(notifySocketMap["623573ecfb066724f78c3a51"]).emit("new Notification", data);
-    })
-});
+// socket connection start
+socket.start(io);

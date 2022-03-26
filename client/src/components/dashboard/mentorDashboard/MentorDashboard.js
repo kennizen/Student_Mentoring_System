@@ -13,6 +13,7 @@ import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
 import Post from "./dashboardLinks/post/Post";
 
 import { getAllChat } from "../../../actions/chat";
+import connectSocket from "../../../socket/socket";
 
 const MentorDashboard = () => {
 

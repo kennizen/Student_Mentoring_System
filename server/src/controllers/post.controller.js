@@ -4,6 +4,8 @@ const Mentor = require("../models/Mentor");
 const Student = require("../models/Student");
 const response = require("../utils/responses.utils");
 const roles = require("../utils/roles");
+const notificationController = require("../controllers/notification.controller");
+const Events = require("../utils/logEvents");
 
 module.exports = {
     // create new post
@@ -31,6 +33,20 @@ module.exports = {
             newPost.author = req.user;
             const authorData = newPost.author;
             response.success(res, "Post created", { postData: newPost, authorData });
+
+            // creating a notification
+            if(req.user.role === roles.Mentor){
+                const mentees = await Student.find({mentoredBy: req.user._id});
+                notificationController.createPostNotification(Events.POST_CREATED, newPost, req.user, mentees);
+            }
+
+            if(req.user.role === roles.Student) {
+                const mentees = await Student.find({mentoredBy: req.user.mentoredBy});
+                const mentor = await Mentor.findById(req.user.mentoredBy);
+                mentees.push(mentor);
+                notificationController.createPostNotification(Events.POST_CREATED, newPost, req.user, mentees);
+            }
+            
             next();
         } catch (err) {
             console.log(err);

@@ -18,9 +18,9 @@ exports.createNewMessage = async (req, res, next) => {
         });
 
         const resMessage = await (await newMessage.save()).populate("sender").execPopulate();
-        await Chat.findByIdAndUpdate(resMessage.chat, {
+        resMessage.chat = await Chat.findByIdAndUpdate(resMessage.chat, {
             latestMessage: resMessage._id,
-        });
+        }, { new: true }).populate("users.user");
         response.success(res, "Message created", resMessage);
         next();
     } catch (err) {
