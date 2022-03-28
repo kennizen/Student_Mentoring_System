@@ -57,16 +57,29 @@ module.exports = {
     fetchAllPosts: async (req, res, next) => {
         try {
             let posts;
+            const page = parseInt(req.query.page);
+            const limit = 10;
+
             if (req.user.role === roles.Mentor) {
-                posts = await Post.find({ group_id: req.user._id }).populate("author");
+                const totalDocuments = await Post.countDocuments({ group_id: req.user._id });
+                const totalPages = Math.ceil(totalDocuments / limit);
+                posts = await Post.find({ group_id: req.user._id })
+                        .skip((page - 1) * limit)
+                        .limit(limit)        
+                        .populate("author");
             }
 
             if (req.user.role === roles.Student) {
-                posts = await Post.find({ group_id: req.user.mentoredBy }).populate("author");
+                const totalDocuments = await Post.countDocuments({ group_id: req.user.mentoredBy });
+                const totalPages = Math.ceil(totalDocuments / limit);
+                posts = await Post.find({ group_id: req.user.mentoredBy })
+                        .skip((page - 1) * limit)
+                        .limit(limit)
+                        .populate("author");
             }
 
             const allPosts = posts.map((post) => {
-                return { postData: post, authorData: post.author };
+                return { postData: {...post._doc, author:undefined }, authorData: post.author };
             });
             response.success(res, "", { posts: allPosts });
             next();
@@ -83,8 +96,8 @@ module.exports = {
                 throw new Error();
             }
             // check.. to allow only post authors to edit a post
-            if (post.author != req.user._id) {
-                return response.forbidden(res);
+            if (post.author.toString() != req.user._id.toString()) {
+                return response.forbidden(res, "You are not the author of the post");
             }
 
             post.body = editedPost;

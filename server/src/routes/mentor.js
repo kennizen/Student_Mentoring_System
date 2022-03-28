@@ -24,7 +24,7 @@ router.post("/signup", mentorController.mentorSignupHandler, Logger(events.SIGNU
 router.get("/dashboard", Auth, Authorize(Role.Mentor), mentorController.mentorDashboardHandler);
 
 // reset password
-router.post("/reset", mentorController.resetPassword);
+router.post("/resetPassword", mentorController.resetPassword);
 
 //get all students of mentored
 router.get("/getAllMentees", Auth, Authorize(Role.Mentor), mentorController.fetchAllMentees);
@@ -39,5 +39,8 @@ router.get(
 
 // update profile;
 router.post("/profile", Auth, Authorize(Role.Mentor), mentorController.updateProfile);
+
+// get profile
+router.get("/profile", Auth, Authorize(Role.Mentor), mentorController.getProfile);
 
 module.exports = router;

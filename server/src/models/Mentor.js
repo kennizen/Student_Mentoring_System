@@ -75,6 +75,7 @@ const mentorSchema = new mongoose.Schema(
                 },
             },
         ],
+        passwordResetToken: String,
     },
     {
         timestamps: true,
@@ -89,6 +90,7 @@ mentorSchema.methods.toJSON = function () {
     delete mentorObject.password;
     delete mentorObject.tokens;
     delete mentorObject.role;
+    delete mentorObject.passwordResetToken;
 
     return mentorObject;
 };

@@ -1,9 +1,15 @@
 const Mentor = require("../models/Mentor");
 const Post = require("../models/Post");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 const Student = require("../models/Student");
 const Semester = require("../models/Semester");
 const response = require("../utils/responses.utils");
+const emailService = require("../services/email.service");
+
+// env config 
+dotenv.config();
 
 module.exports = {
     // mentor login handler function
@@ -79,7 +85,30 @@ module.exports = {
         }
     },
 
-    resetPassword: async (req, res) => {},
+    // reset password handler
+    resetPassword: async (req, res, next) => {
+        try{
+            const mentor = await Mentor.findOne({ email: req.body.email });
+            
+            if(!mentor){
+                return response.notfound(res, "User not found");
+            }
+            
+            const token = jwt.sign({ uid: mentor._id.toString() }, process.env.JWT_SECRET, {
+                expiresIn: "1h",
+            });
+            mentor.passwordResetToken = token;
+            await mentor.save();
+            
+            // sending reset password link to the mentor
+            await emailService.sendPasswordResetMail(token, mentor.email);
+            response.success(res, "Password reset link sent");
+        }
+        catch(err){
+            console.log(err)
+            response.error(res);
+        }
+    },
 
     fetchAllMentees: async (req, res, next) => {
         try {
@@ -103,13 +132,37 @@ module.exports = {
         }
     },
 
+    // get mentor profile
+    getProfile: async (req, res, next) => {
+        try {
+            response.success(res, "", { profileData: req.user });
+            next();
+        } catch (err) {
+            response.error(res);
+        }
+    },
+
     // create or update profile 
    updateProfile:  async (req, res, next) => {
        try {
-           console.log("profile update")
+           const { firstname, middlename, lastname, phone, address, department, designation } = req.body;
+           const mentor = req.user;
+
+           // updating data
+           mentor.firstname = firstname || mentor.firstname;
+           mentor.middlename = middlename || "";
+           mentor.lastname = lastname || mentor.lastname;
+           mentor.phone = phone || mentor.phone;
+           mentor.address = address || mentor.address;
+           mentor.department = department || mentor.department;
+           mentor.designation = designation || mentor.designation;
+
+           await mentor.save();
+           response.success(res, "Profile updated", { profileData: mentor });
        }
        catch(err) {
-           console.log(err)
+           console.log(err);
+           response.error(res);
        }
    }
 };
