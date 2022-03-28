@@ -35,18 +35,28 @@ module.exports = {
             response.success(res, "Post created", { postData: newPost, authorData });
 
             // creating a notification
-            if(req.user.role === roles.Mentor){
-                const mentees = await Student.find({mentoredBy: req.user._id});
-                notificationController.createPostNotification(Events.POST_CREATED, newPost, req.user, mentees);
+            if (req.user.role === roles.Mentor) {
+                const mentees = await Student.find({ mentoredBy: req.user._id });
+                notificationController.createPostNotification(
+                    Events.POST_CREATED,
+                    newPost,
+                    req.user,
+                    mentees
+                );
             }
 
-            if(req.user.role === roles.Student) {
-                const mentees = await Student.find({mentoredBy: req.user.mentoredBy});
+            if (req.user.role === roles.Student) {
+                const mentees = await Student.find({ mentoredBy: req.user.mentoredBy });
                 const mentor = await Mentor.findById(req.user.mentoredBy);
                 mentees.push(mentor);
-                notificationController.createPostNotification(Events.POST_CREATED, newPost, req.user, mentees);
+                notificationController.createPostNotification(
+                    Events.POST_CREATED,
+                    newPost,
+                    req.user,
+                    mentees
+                );
             }
-            
+
             next();
         } catch (err) {
             console.log(err);
@@ -64,22 +74,22 @@ module.exports = {
                 const totalDocuments = await Post.countDocuments({ group_id: req.user._id });
                 const totalPages = Math.ceil(totalDocuments / limit);
                 posts = await Post.find({ group_id: req.user._id })
-                        .skip((page - 1) * limit)
-                        .limit(limit)        
-                        .populate("author");
+                    .skip((page - 1) * limit)
+                    .limit(limit)
+                    .populate("author");
             }
 
             if (req.user.role === roles.Student) {
                 const totalDocuments = await Post.countDocuments({ group_id: req.user.mentoredBy });
                 const totalPages = Math.ceil(totalDocuments / limit);
                 posts = await Post.find({ group_id: req.user.mentoredBy })
-                        .skip((page - 1) * limit)
-                        .limit(limit)
-                        .populate("author");
+                    .skip((page - 1) * limit)
+                    .limit(limit)
+                    .populate("author");
             }
 
             const allPosts = posts.map((post) => {
-                return { postData: {...post._doc, author:undefined }, authorData: post.author };
+                return { postData: { ...post._doc, author: undefined }, authorData: post.author };
             });
             response.success(res, "", { posts: allPosts });
             next();

@@ -54,7 +54,7 @@ const ChatModal = ({ setShowModal, nodeRef }) => {
             <div className="w-full h-full bg-transparent absolute top-0 left-0 flex items-center justify-center">
                 <div
                     ref={nodeRef}
-                    className={`max-h-500 overflow-y-auto max-w-7xl z-50 p-6 bg-white rounded-md`}
+                    className="max-h-500 overflow-y-auto max-w-7xl z-50 p-6 bg-white rounded-md"
                 >
                     <div className="flex items-center justify-between mb-3">
                         <h4 className="mr-5">Create a chat</h4>

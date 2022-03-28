@@ -21,34 +21,6 @@ export const fetchMentor = () =>
     API.get("/mentor/dashboard").catch((error) => {
         return error.response;
     });
-export const fetchAllMentorPost = () =>
-    API.get("/posts").catch((error) => {
-        return error.response;
-    });
-export const postMentorPost = (post) =>
-    API.post("/posts", post).catch((error) => {
-        return error.response;
-    });
-export const updateMentorPost = (post, postId) =>
-    API.post(`/posts/${postId}/edit`, post).catch((error) => {
-        return error.response;
-    });
-export const deleteMentorPost = (postId) =>
-    API.post(`/posts/${postId}/delete`).catch((error) => {
-        return error.response;
-    });
-export const fetchMentorComments = (postId) =>
-    API.get(`/posts/${postId}/comments`).catch((error) => {
-        return error.response;
-    });
-export const postMentorComment = (comment, postId) =>
-    API.post(`/posts/${postId}/comment`, comment).catch((error) => {
-        return error.response;
-    });
-export const deleteMentorComment = (commentId) =>
-    API.post(`/posts/comment/${commentId}/delete`).catch((error) => {
-        return error.response;
-    });
 export const getAllMentees = () =>
     API.get(`/mentor/getAllMentees`).catch((error) => {
         return error.response;

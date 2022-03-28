@@ -73,7 +73,7 @@ export const adminSaveGroup = (groupData, history) => async (dispatch) => {
     }
 };
 
-export const adminFetchLogs = (history, setlogs) => async (dispatch) => {
+export const adminFetchLogs = (history) => async (dispatch) => {
     try {
         const { data } = await api.fetchLogs();
         console.log("logs data in actions", data);
@@ -87,7 +87,7 @@ export const adminFetchLogs = (history, setlogs) => async (dispatch) => {
         } else if (data.code === 403) {
             history.goBack();
         } else {
-            setlogs(data.data.logs);
+            dispatch({ type: "FETCH_LOGS", data });
         }
     } catch (error) {
         console.log(error);

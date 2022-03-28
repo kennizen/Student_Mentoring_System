@@ -1,6 +1,6 @@
 import React from "react";
 
-const UserCircleIcon = ({ myStyle, alt }) => {
+const PencilIcon = ({ myStyle, alt }) => {
     if (alt) {
         return (
             <>
@@ -10,12 +10,12 @@ const UserCircleIcon = ({ myStyle, alt }) => {
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
+                    strokeWidth={2}
                 >
                     <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                     />
                 </svg>
             </>
@@ -30,14 +30,10 @@ const UserCircleIcon = ({ myStyle, alt }) => {
                 viewBox="0 0 20 20"
                 fill="currentColor"
             >
-                <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                    clipRule="evenodd"
-                />
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
             </svg>
         </>
     );
 };
 
-export default UserCircleIcon;
+export default PencilIcon;
