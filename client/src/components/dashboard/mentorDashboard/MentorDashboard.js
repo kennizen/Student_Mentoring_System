@@ -10,10 +10,12 @@ import AcademicCapIcon from "../../../assets/AcademicCapIcon";
 import Loading from "../../loading/Loading";
 import Chat from "./dashboardLinks/chat/Chat";
 import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
-import Post from "./dashboardLinks/post/Post";
+import Post from "../studentDashboard/dashboardLinks/post/Post";
 
 import { getAllChat } from "../../../actions/chat";
 import connectSocket from "../../../socket/socket";
+import LogoutIcon from "../../../assets/LogoutIcon";
+import UserCircleIcon from "../../../assets/UserCircleIcon";
 
 var socket;
 
@@ -161,8 +163,8 @@ const MentorDashboard = () => {
                     onClick={handleRouteChange}
                     id="home"
                     className={`${
-                        route.home && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.home ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
                     <HomeIcon
                         myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.home && "text-blue-600")}
@@ -174,8 +176,8 @@ const MentorDashboard = () => {
                     onClick={handleRouteChange}
                     id="post"
                     className={`${
-                        route.post && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.post ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
                     <AnnotationIcon
                         myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.post && "text-blue-600")}
@@ -187,8 +189,8 @@ const MentorDashboard = () => {
                     onClick={handleRouteChange}
                     id="menteeInfo"
                     className={`${
-                        route.menteeInfo && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.menteeInfo ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
                     <AcademicCapIcon
                         myStyle={"h-5 w-5 mr-3"
@@ -202,8 +204,8 @@ const MentorDashboard = () => {
                     onClick={handleRouteChange}
                     id="chat"
                     className={`${
-                        route.chat && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.chat ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
                     <ChatAlt2Icon
                         alt={true}
@@ -215,42 +217,23 @@ const MentorDashboard = () => {
                     onClick={handleRouteChange}
                     id="profile"
                     className={`${
-                        route.profile && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.profile ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`${route.profile && "text-blue-600"} h-5 w-5 mr-3`}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                            fillRule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                            clipRule="evenodd"
-                        />
-                    </svg>
+                    <UserCircleIcon
+                        alt={true}
+                        myStyle={"h-5 w-5 mr-3"
+                            .concat(" ")
+                            .concat(route.profile && "text-blue-600")}
+                    />
                     Profile
                 </button>
                 <button
                     onClick={handleLogout}
                     id="profile"
-                    className={`flex items-center text-left hover:bg-gray-100 text-gray-800 mt-10  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                    className={`flex items-center text-left hover:bg-red-200 text-gray-800 mt-10  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md bg-red-100 transition-all`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-red-500 mr-3"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
-                    </svg>
+                    <LogoutIcon myStyle={"h-5 w-5 mr-3 text-red-600"} alt={true} />
                     Logout
                 </button>
             </nav>

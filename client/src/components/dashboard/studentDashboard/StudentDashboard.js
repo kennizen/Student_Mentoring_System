@@ -7,20 +7,30 @@ import Home from "../studentDashboard/dashboardLinks/home/Home";
 import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
 import Chat from "../mentorDashboard/dashboardLinks/chat/Chat";
 import Profile from "./dashboardLinks/profile/Profile";
-import connectSocket from "../../../socket/socket";
+
 import { getAllChat } from "../../../actions/chat";
+import HomeIcon from "../../../assets/HomeIcon";
+import AnnotationIcon from "../../../assets/AnnotationIcon";
+import ChatAlt2Icon from "../../../assets/ChatAlt2Icon";
+import UserCircleIcon from "../../../assets/UserCircleIcon";
+import AcademicCapIcon from "../../../assets/AcademicCapIcon";
+import LogoutIcon from "../../../assets/LogoutIcon";
+import Post from "./dashboardLinks/post/Post";
 
 const StudentDashboard = () => {
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
+        post: false,
         chat: false,
         profile: false,
         academicDetails: false,
     });
+
     // setting the admin auth token
     const dispatch = useDispatch();
     const history = useHistory();
+
     // accessing the redux store state
     const data = useSelector((state) => state.student);
 
@@ -57,6 +67,7 @@ const StudentDashboard = () => {
             case "home":
                 setRoute({
                     home: true,
+                    post: false,
                     chat: false,
                     profile: false,
                     academicDetails: false,
@@ -68,6 +79,7 @@ const StudentDashboard = () => {
                     chat: false,
                     profile: true,
                     academicDetails: false,
+                    post: false,
                 });
                 break;
             case "academicDetails":
@@ -76,6 +88,7 @@ const StudentDashboard = () => {
                     chat: false,
                     profile: false,
                     academicDetails: true,
+                    post: false,
                 });
                 break;
             case "chat":
@@ -84,6 +97,16 @@ const StudentDashboard = () => {
                     chat: true,
                     profile: false,
                     academicDetails: false,
+                    post: false,
+                });
+                break;
+            case "post":
+                setRoute({
+                    home: false,
+                    chat: false,
+                    profile: false,
+                    academicDetails: false,
+                    post: true,
                 });
                 break;
             default:
@@ -122,107 +145,77 @@ const StudentDashboard = () => {
                     onClick={handleRouteChange}
                     id="home"
                     className={`${
-                        route.home && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.home ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`${route.home && "text-blue-600"} h-5 w-5 mr-3`}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                    </svg>
+                    <HomeIcon
+                        myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.home && "text-blue-600")}
+                        alt={true}
+                    />
                     Home
+                </button>
+                <button
+                    onClick={handleRouteChange}
+                    id="post"
+                    className={`${
+                        route.post ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                >
+                    <AnnotationIcon
+                        myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.post && "text-blue-600")}
+                        alt={true}
+                    />
+                    Post
                 </button>
                 <button
                     onClick={handleRouteChange}
                     id="chat"
                     className={`${
-                        route.chat && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.chat ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`${route.chat && "text-blue-600"} h-5 w-5 mr-3`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-                        />
-                    </svg>
+                    <ChatAlt2Icon
+                        myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.chat && "text-blue-600")}
+                        alt={true}
+                    />
                     Chat
                 </button>
                 <button
                     onClick={handleRouteChange}
                     id="profile"
                     className={`${
-                        route.profile && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.profile ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`${route.profile && "text-blue-600"} h-5 w-5 mr-3`}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                            fillRule="evenodd"
-                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                            clipRule="evenodd"
-                        />
-                    </svg>
-                    Mentee info
+                    <UserCircleIcon
+                        myStyle={"h-5 w-5 mr-3"
+                            .concat(" ")
+                            .concat(route.profile && "text-blue-600")}
+                        alt={true}
+                    />
+                    Profile
                 </button>
                 <button
                     onClick={handleRouteChange}
                     id="academicDetails"
                     className={`${
-                        route.academicDetails && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.academicDetails ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className={`${route.academicDetails && "text-blue-600"} h-5 w-5 mr-3`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                        <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-                        />
-                    </svg>
-                    Academic details
+                    <AcademicCapIcon
+                        myStyle={"h-5 w-5 mr-3"
+                            .concat(" ")
+                            .concat(route.academicDetails && "text-blue-600")}
+                        alt={true}
+                    />
+                    Academics
                 </button>
                 <button
                     onClick={handleLogout}
                     id="profile"
-                    className={`flex items-center text-left hover:bg-gray-100 text-gray-800 mt-10  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                    className={`flex items-center text-left hover:bg-red-200 text-gray-700 mt-10  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md bg-red-100 transition-all`}
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-red-500 mr-3"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
-                    </svg>
+                    <LogoutIcon myStyle={"h-5 w-5 mr-3 text-red-600"} alt={true} />
                     Logout
                 </button>
             </nav>
@@ -251,6 +244,7 @@ const StudentDashboard = () => {
                     {route.profile && <Profile />}
                     {route.home && <Home />}
                     {route.chat && <Chat />}
+                    {route.post && <Post />}
                 </div>
             </div>
         </div>

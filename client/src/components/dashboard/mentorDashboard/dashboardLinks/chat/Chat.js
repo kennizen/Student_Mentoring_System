@@ -48,7 +48,7 @@ const Chat = () => {
                     classNames="overlay"
                     unmountOnExit
                 >
-                    <ModalOverlay nodeRef={overlayRef} setShowModal={setShowModal} />
+                    <ModalOverlay nodeRef={overlayRef} />
                 </CSSTransition>
                 <CSSTransition
                     nodeRef={modalRef}

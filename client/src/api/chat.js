@@ -16,12 +16,10 @@ export const createChat = (chatIds) =>
     API.post(`/chats`, chatIds).catch((error) => {
         return error.response;
     });
-
 export const fetchChat = () =>
     API.get(`/chats`).catch((error) => {
         return error.response;
     });
-
 export const createMessage = (message) =>
     API.post(`/messages`, message).catch((error) => {
         return error.response;

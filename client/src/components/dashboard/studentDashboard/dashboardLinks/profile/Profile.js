@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import EditButton from "../../editButtonForMenteeInformation/EditButton";
 import StuModal from "./stuModal/StuModal";
 import { studentGetProfileDetails } from "../../../../../actions/student";
 import MenteeInfoProfilePhotoIcon from "../../../../../assets/MenteeInfoProfilePhotoIcon";
@@ -9,6 +8,7 @@ import ProfilePicModal from "./profilePicModal/ProfilePicModal";
 import ProfilePicDelModal from "./profilePicModal/ProfilePicDelModal";
 import MenteeInfoProfilePhotoChangeIcon from "../../../../../assets/MenteeInfoProfilePhotoChangeIcon";
 import MenteeInfoProfilePhotoRemoveIcon from "../../../../../assets/MenteeInfoProfilePhotoRemoveIcon";
+import PencilIcon from "../../../../../assets/PencilIcon";
 
 const Profile = () => {
     // state variable to change the hidden state of the update information modal
@@ -399,7 +399,14 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className="w-full flex items-center justify-end mt-5">
-                        <EditButton handleShowModal={handleShowModal} />
+                        <button
+                            onClick={handleShowModal}
+                            title="edit"
+                            className="flex items-center justify-between py-3 px-4 rounded-md bg-blue-600 hover:bg-blue-800 transition-colors text-white"
+                        >
+                            <PencilIcon alt={true} myStyle={"h-5 w-5 mr-2"} />
+                            Update Information
+                        </button>
                     </div>
                 </div>
             </div>

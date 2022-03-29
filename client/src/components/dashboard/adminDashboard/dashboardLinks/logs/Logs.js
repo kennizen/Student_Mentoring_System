@@ -1,6 +1,6 @@
 import moment from "moment";
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { adminFetchLogs } from "../../../../../actions/admin";
 import RefreshIcon from "../../../../../assets/RefreshIcon";
@@ -9,17 +9,19 @@ const Logs = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    // state variable to store the fetched logs from the db
-    const [logs, setlogs] = useState([]);
+    // // state variable to store the fetched logs from the db
+    // const [logs, setlogs] = useState([]);
+
+    const { logs } = useSelector((state) => state.admin);
 
     // useEffect hook as component did mount to fetch the logs from the db
     useEffect(() => {
-        dispatch(adminFetchLogs(history, setlogs));
-    }, [dispatch, history]);
+        dispatch(adminFetchLogs(history));
+    }, []);
 
     // function to reload the logs
     const handleReload = () => {
-        dispatch(adminFetchLogs(history, setlogs));
+        dispatch(adminFetchLogs(history));
     };
 
     console.log("logs", logs);

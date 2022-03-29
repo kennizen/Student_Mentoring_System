@@ -105,8 +105,8 @@ const AdminDashboard = () => {
                     onClick={handleRouteChange}
                     id="home"
                     className={`${
-                        route.home && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.home ? "text-gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
                     <HomeIcon
                         myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.home && "text-blue-600")}
@@ -118,14 +118,14 @@ const AdminDashboard = () => {
                     onClick={handleRouteChange}
                     id="profile"
                     className={`${
-                        route.profile && "text-gray-700"
-                    } flex items-center text-left hover:bg-gray-100 text-gray-400 mt-5  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        route.profile ? "text-gray-700 bg-gray-100" : "text-gray-400"
+                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
                     <UserCircleIcon
                         myStyle={"h-5 w-5 mr-3"
                             .concat(" ")
                             .concat(route.profile && "text-blue-600")}
-                        alt={false}
+                        alt={true}
                     />
                     Profile
                 </button>
@@ -145,9 +145,9 @@ const AdminDashboard = () => {
                 <button
                     onClick={handleLogout}
                     id="profile"
-                    className={`flex items-center text-left hover:bg-gray-100 text-gray-800 mt-10  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                    className={`flex items-center text-left hover:bg-red-200 text-gray-800 mt-10  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md bg-red-100 transition-all`}
                 >
-                    <LogoutIcon alt={true} myStyle={"h-5 w-5 text-red-500 mr-3"} />
+                    <LogoutIcon myStyle={"h-5 w-5 mr-3 text-red-600"} alt={true} />
                     Logout
                 </button>
             </nav>
