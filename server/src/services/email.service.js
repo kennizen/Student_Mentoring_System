@@ -12,7 +12,7 @@ module.exports = {
      * @param {String} email Email id of the receiver
      */
     sendPasswordResetMail: (token, email) => {
-        const resetPasswordUrl = `${process.env.RESET_PASSWORD_BASE_URL}/${token}`;
+        const resetPasswordUrl = `${process.env.CLIENT_PUBLIC_URL}/resetPassword/${token}`;
 
         const options = {
             from: process.env.NODEMAILER_SENDER_EMAIL,
@@ -39,7 +39,7 @@ module.exports = {
      * @param {String} email Email id of the receiver
      */
     sendEmailVerificationMail: (token, email) => {
-        const verifyEmailLink = `${process.env.RESET_PASSWORD_BASE_URL}/${token}`;
+        const verifyEmailLink = `${process.env.PUBLIC_URL}/verifyEmail/${token}`;
 
         const options = {
             from: process.env.NODEMAILER_SENDER_EMAIL,

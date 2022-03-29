@@ -1,11 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
+const path = require("path");
 const morgan = require("morgan");
 const { Server } = require("socket.io");
 const socket = require("./socket/socket");
 const dotenv = require("dotenv");
 const Chat = require("./models/Chat");
+
+// middlewares
+const { rateLimiter } = require("./middlewares/rateLimiter"); 
 
 // mongoose config
 require("./config/mongoose");
@@ -31,8 +35,15 @@ app.use(
     })
 );
 
+app.use(rateLimiter);
+
 // logging to console
 app.use(morgan("dev"));
+
+// define paths for express config
+const publicDirPath = path.join(__dirname, '../public');
+// serving public assets
+app.use(express.static(publicDirPath));
 
 // importing routes
 const adminRoutes = require("./routes/admin");

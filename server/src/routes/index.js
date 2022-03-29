@@ -17,4 +17,6 @@ router.get(
     indexController.userInfoHandler
 );
 
+router.get("/verifyEmail/:token", indexController.emailVerificationHandler);
+
 module.exports = router;

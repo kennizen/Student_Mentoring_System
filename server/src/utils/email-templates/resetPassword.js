@@ -35,7 +35,7 @@ module.exports = resetPasswordEmailTemplate = (resetPasswordUrl) => {
                         </tr>
                         <tr>
                             <td style="text-align:center;">
-                              <a href="${process.env.PUBLIC_URL}" title="logo" target="_blank">
+                              <a href="${process.env.CLIENT_PUBLIC_URL}" title="logo" target="_blank">
                                 <H1>${process.env.PUBLIC_APP_NAME}</H1>
                               </a>
                             </td>

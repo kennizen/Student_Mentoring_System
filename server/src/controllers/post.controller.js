@@ -57,12 +57,13 @@ module.exports = {
     fetchAllPosts: async (req, res, next) => {
         try {
             let posts;
+            let totalPages = 0;
             const page = parseInt(req.query.page);
             const limit = 10;
 
             if (req.user.role === roles.Mentor) {
                 const totalDocuments = await Post.countDocuments({ group_id: req.user._id });
-                const totalPages = Math.ceil(totalDocuments / limit);
+                totalPages = Math.ceil(totalDocuments / limit);
                 posts = await Post.find({ group_id: req.user._id })
                         .skip((page - 1) * limit)
                         .limit(limit)        
@@ -71,7 +72,7 @@ module.exports = {
 
             if (req.user.role === roles.Student) {
                 const totalDocuments = await Post.countDocuments({ group_id: req.user.mentoredBy });
-                const totalPages = Math.ceil(totalDocuments / limit);
+                totalPages = Math.ceil(totalDocuments / limit);
                 posts = await Post.find({ group_id: req.user.mentoredBy })
                         .skip((page - 1) * limit)
                         .limit(limit)
@@ -81,7 +82,7 @@ module.exports = {
             const allPosts = posts.map((post) => {
                 return { postData: {...post._doc, author:undefined }, authorData: post.author };
             });
-            response.success(res, "", { posts: allPosts });
+            response.success(res, "", { posts: allPosts, currentPage: page, totalPage: totalPages });
             next();
         } catch (err) {
             console.log(err);

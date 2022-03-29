@@ -26,6 +26,9 @@ router.get("/dashboard", Auth, Authorize(Role.Mentor), mentorController.mentorDa
 // reset password
 router.post("/resetPassword", mentorController.resetPassword);
 
+// setting new password
+router.put("/resetPassword", mentorController.setNewPassword);
+
 //get all students of mentored
 router.get("/getAllMentees", Auth, Authorize(Role.Mentor), mentorController.fetchAllMentees);
 
@@ -42,5 +45,11 @@ router.post("/profile", Auth, Authorize(Role.Mentor), mentorController.updatePro
 
 // get profile
 router.get("/profile", Auth, Authorize(Role.Mentor), mentorController.getProfile);
+
+// email verification
+router.get("/verifyEmail", mentorController.emailVerification);
+
+// generate email verification token 
+router.post("/verifyEmail", Auth, Authorize(Role.Mentor), mentorController.generateEmailVerificationToken);
 
 module.exports = router;

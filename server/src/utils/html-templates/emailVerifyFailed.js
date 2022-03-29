@@ -1,0 +1,77 @@
+module.exports = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verfication successfull</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+<style>
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+.wrapper {
+    width: 100%; 
+    height: 95vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.image {
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+}
+
+.title {
+    text-align: center;
+    margin-top: 20px;
+}
+a {
+    color: red;
+    margin-top: 20px;
+}
+.container {
+    width: 75%;
+    margin: 0 auto;
+}
+.subtitle{
+    color: #333;
+    margin-top: 20px;
+    text-align: center;
+}
+</style>
+<body>
+    <div class="container">
+        <div class="wrapper">
+            <div style="background-color: #eee; padding: 100px;">
+                <div class="image">
+                    <img src="../img/error_icon.svg" width="80px" height="80px"/>
+                 </div>
+                 <h2 class="title">Email verification failed</h2>
+                 <h4 class="subtitle">Some error occured while verifying your email. Please try again. Or, you can request for a new link. </h4>
+                <div style="text-align: center; padding: 10px;">
+                    <a href="javascript:close_window();">Close window</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function close_window() {
+            close()
+        }
+    </script>
+</body>
+</html>`

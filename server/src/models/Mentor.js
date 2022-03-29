@@ -76,6 +76,11 @@ const mentorSchema = new mongoose.Schema(
             },
         ],
         passwordResetToken: String,
+        emailVerifyToken: String,
+        isEmailVerified: {
+            type: Boolean,
+            default: false
+        }
     },
     {
         timestamps: true,

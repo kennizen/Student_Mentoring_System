@@ -94,7 +94,7 @@ module.exports = {
                 return response.notfound(res, "User not found");
             }
             
-            const token = jwt.sign({ uid: mentor._id.toString() }, process.env.JWT_SECRET, {
+            const token = jwt.sign({ _id: mentor._id.toString() }, process.env.JWT_SECRET, {
                 expiresIn: "1h",
             });
             mentor.passwordResetToken = token;
@@ -107,6 +107,45 @@ module.exports = {
         catch(err){
             console.log(err)
             response.error(res);
+        }
+    },
+    /**
+     * The method sets new passord of the user upon succcessful verification
+     */
+    setNewPassword: async (req, res, next) => {
+        try{
+            const {token, password, confirmPassword} = req.body;
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const mentor = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
+
+            // if mentor not found
+            if(!mentor) {
+                return response.error(res);
+            }
+
+            // checking if both password are provided
+            if(!password || !confirmPassword){
+                return response.error(res, "Both passwords are required");
+            }
+            
+            // checking if the passwords are similar
+            if(password != confirmPassword){
+                return response.error(res, "Passwords doesn't match");
+            }
+            
+            //setting new password
+            const hashedPassword = await bcrypt.hash(password, 8);
+            mentor.password = hashedPassword;
+            await mentor.save();
+            response.success(res, "Password updated", mentor);
+        }
+        catch(err){
+            console.log(err);
+            // if token expired
+            if(err.message.toString() == "jwt expired"){
+                return response.error(res, "Token expired");
+            }
+            response.error(res, "Invalid token");
         }
     },
 
@@ -163,6 +202,37 @@ module.exports = {
        catch(err) {
            console.log(err);
            response.error(res);
+       }
+   },
+
+   /**
+    * The method generates a new email verification token for a mentor
+    */
+   generateEmailVerificationToken: async (req, res, next) => {
+       try{
+            const mentor = req.user;
+            const token = await jwt.sign({ _id: mentor._id.toString(), role: mentor.role }, process.env.JWT_SECRET);
+            
+            mentor.emailVerifyToken = token;
+            await mentor.save();
+
+            await emailService.sendEmailVerificationMail(token, mentor.email);
+            response.success(res);
+        }
+       catch(err){
+           console.log(err)
+       }
+   },
+
+    /**
+    *  The method does the email verification for a mentor
+    */
+   emailVerification: async (req, res, next) => {
+       try{
+
+       }
+       catch(err){
+           console.log(err)
        }
    }
 };

@@ -4,7 +4,7 @@ dotenv.config();
 
 /**
  *  This method builds the email verification HTML email template
- * @param {String} resetPasswordUrl Accepts the email verification url string
+ * @param {String} verifyEmailLink Accepts the email verification url string
  */
 module.exports = verifyEmailTemplate = (verifyEmailLink) => {
     return `
@@ -33,7 +33,7 @@ module.exports = verifyEmailTemplate = (verifyEmailLink) => {
                         </tr>
                         <tr>
                             <td style="text-align:center;">
-                              <a href="${process.env.PUBLIC_URL}" title="logo" target="_blank">
+                              <a href="${process.env.CLIENT_PUBLIC_URL}" title="logo" target="_blank">
                                 <H1>${process.env.PUBLIC_APP_NAME}</H1>
                               </a>
                             </td>
@@ -58,7 +58,7 @@ module.exports = verifyEmailTemplate = (verifyEmailLink) => {
                                                 for you. To verify your email, click on the
                                                 following link.
                                             </p>
-                                            <a href=${resetPasswordUrl}
+                                            <a href=${verifyEmailLink}
                                                 style="background:#29ABE2;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">
                                                 Verify email</a>
                                         </td>
