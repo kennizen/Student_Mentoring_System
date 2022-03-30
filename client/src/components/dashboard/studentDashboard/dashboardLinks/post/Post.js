@@ -16,7 +16,7 @@ import SingleComment from "./singleComment/SingleComment";
 import CommentDeleteModal from "./postModals/CommentDeleteModal";
 import Loading from "../../../../loading/Loading";
 
-const Post = () => {
+const Post = ({socket}) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -24,6 +24,9 @@ const Post = () => {
     useEffect(() => {
         dispatch(getAllPosts(history, executeScroll, setPostLoading)); // to scroll when loading first time
         executeScroll(); // this is to scroll to bottom when coming from diff tab
+
+        console.log("notify socket", socket)
+
     }, []);
 
     // The sunEditor parameter will be set to the core suneditor instance when this function is called
@@ -89,7 +92,7 @@ const Post = () => {
     const handlePostSubmit = (e, postId, postContent) => {
         e.preventDefault();
         if (!postId) {
-            dispatch(submitPost(history, postBody, executeScroll));
+            dispatch(submitPost(history, postBody, socket, executeScroll));
             setPostBody({
                 body: "",
             });

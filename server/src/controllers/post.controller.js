@@ -75,6 +75,7 @@ module.exports = {
                 const totalDocuments = await Post.countDocuments({ group_id: req.user._id });
                 totalPages = Math.ceil(totalDocuments / limit);
                 posts = await Post.find({ group_id: req.user._id })
+                    .sort({createdAt: -1})
                     .skip((page - 1) * limit)
                     .limit(limit)
                     .populate("author");
@@ -84,6 +85,7 @@ module.exports = {
                 const totalDocuments = await Post.countDocuments({ group_id: req.user.mentoredBy });
                 totalPages = Math.ceil(totalDocuments / limit);
                 posts = await Post.find({ group_id: req.user.mentoredBy })
+                    .sort({createdAt: -1})
                     .skip((page - 1) * limit)
                     .limit(limit)
                     .populate("author");

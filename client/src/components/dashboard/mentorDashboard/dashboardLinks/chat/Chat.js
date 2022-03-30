@@ -8,12 +8,13 @@ import { useState, useRef } from "react";
 import ChatModal from "./chatModal/ChatModal";
 import ModalOverlay from "../../../../modal/ModalOverlay";
 
-const Chat = () => {
+const Chat = ({setNewMsgNotify}) => {
     // api call to fetch all the chats
     useEffect(() => {
         if (localStorage.getItem("visible") !== null) {
             localStorage.removeItem("visible");
         }
+        // setNewMsgNotify(false);
     }, []);
 
     // state to control the modal show and dont show

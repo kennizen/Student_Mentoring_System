@@ -16,6 +16,7 @@ import { getAllChat } from "../../../actions/chat";
 import connectSocket from "../../../socket/socket";
 import LogoutIcon from "../../../assets/LogoutIcon";
 import UserCircleIcon from "../../../assets/UserCircleIcon";
+import DotIcon from "../../../assets/DotIcon";
 
 var socket;
 
@@ -28,6 +29,9 @@ const MentorDashboard = () => {
         profile: false,
         chat: false,
     });
+
+    const [newMsgNotify, setNewMsgNotify] = useState(false);
+
     // setting the admin auth token
     const dispatch = useDispatch();
     const history = useHistory();
@@ -38,8 +42,10 @@ const MentorDashboard = () => {
 
     // getting uid of the logged in user
     let uid = "";
+    let token = "";
     if (localStorage.getItem("authData")) {
         uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+        token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
     }
 
     // fetching the admin details
@@ -60,22 +66,40 @@ const MentorDashboard = () => {
         }
     }, []);
 
+    // useEffect(() => {
+    //     socket = connectSocket();
+    //     console.log("notify socket", socket);
+    //     socket.emit("notify setup", uid);
+    //     // dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
+    //     // socket.emit("newNotification", { msg: "new notification received"});
+    //     socket.on("new Notification", (data) => {
+    //         console.log("new socket Notification", data);
+    //         alert(data);
+    //     });
+    // }, []);
+
     useEffect(() => {
-        socket = connectSocket();
+        socket = connectSocket(token);
         console.log("notify socket", socket);
         socket.emit("notify setup", uid);
-        // dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
-        // socket.emit("newNotification", { msg: "new notification received"});
+        
+        // upon a new notification 
         socket.on("new Notification", (data) => {
             console.log("new socket Notification", data);
+            alert("New post update");
         });
     }, []);
 
-    // useEffect(() => {
-    //     socket.on("new notification", (data) => {
-    //     console.log("new notification", data);
-    // }, []);
-    // })
+    useEffect(() => {
+        // new msg notification
+        socket.on("new message", (data) => {
+            if(route.chat){
+                setNewMsgNotify(false);
+            }else{
+                setNewMsgNotify(true); 
+            }  
+        });
+    }, [route]);
 
     // function to chnage the tabs screens of the dashboard
     const handleRouteChange = (e) => {
@@ -118,6 +142,7 @@ const MentorDashboard = () => {
                 });
                 break;
             case "chat":
+                setNewMsgNotify(false);
                 setRoute({
                     home: false,
                     post: false,
@@ -205,13 +230,16 @@ const MentorDashboard = () => {
                     id="chat"
                     className={`${
                         route.chat ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                    } flex items-center space-x-12 text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <ChatAlt2Icon
-                        alt={true}
-                        myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.chat && "text-blue-600")}
-                    />
-                    Chat
+                    <span className="flex items-center">
+                        <ChatAlt2Icon
+                            alt={true}
+                            myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.chat && "text-blue-600")}
+                        />
+                        Chat
+                    </span>
+                    { newMsgNotify && !route.chat && <DotIcon myStyle={"h-3 w-3 bg-green-500 rounded-full float-right"} />}
                 </button>
                 <button
                     onClick={handleRouteChange}
@@ -258,9 +286,9 @@ const MentorDashboard = () => {
                 </div>
                 <div className="h-9/10 bg-gray-100 overflow-hidden">
                     {/* conditional rendering of the inner tab screens */}
-                    {route.post && <Post />}
+                    {route.post && <Post socket={socket} />}
                     {route.menteeInfo && <MenteeInfo />}
-                    {route.chat && <Chat />}
+                    {route.chat && <Chat setNewMsgNotify={setNewMsgNotify} />}
                 </div>
             </div>
         </div>

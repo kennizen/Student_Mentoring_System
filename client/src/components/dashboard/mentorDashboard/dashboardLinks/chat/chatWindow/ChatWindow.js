@@ -40,8 +40,10 @@ const ChatWindow = ({ selectedChat, curChat }) => {
 
     // getting uid of the logged in user
     let uid = "";
+    let token = "";
     if (localStorage.getItem("authData")) {
         uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+        token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
     }
 
     // div seletor for the div used as text input
@@ -67,7 +69,9 @@ const ChatWindow = ({ selectedChat, curChat }) => {
 
     // socket connection for the user
     useEffect(() => {
-        socket = io(ENDPOINT);
+        socket = io(ENDPOINT, {
+            query: { auth: token}
+        });
         socket.emit("setup", uid);
     }, []);
 

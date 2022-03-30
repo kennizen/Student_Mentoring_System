@@ -19,7 +19,7 @@ export const getAllPosts = (history, executeScroll, setPostLoading) => async (di
     }
 };
 
-export const submitPost = (history, post, executeScroll) => async (dispatch) => {
+export const submitPost = (history, post, socket, executeScroll) => async (dispatch) => {
     try {
         const { data } = await api.submitPost(post);
         console.log("submit post in actions", data);
@@ -31,6 +31,7 @@ export const submitPost = (history, post, executeScroll) => async (dispatch) => 
             const post = data.data;
             dispatch({ type: "ADD_SINGLE_POST", post });
             executeScroll();
+            socket.emit("newNotification", post);
         }
     } catch (error) {
         console.log(error);

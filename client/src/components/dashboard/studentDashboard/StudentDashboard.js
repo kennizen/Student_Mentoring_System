@@ -16,8 +16,22 @@ import UserCircleIcon from "../../../assets/UserCircleIcon";
 import AcademicCapIcon from "../../../assets/AcademicCapIcon";
 import LogoutIcon from "../../../assets/LogoutIcon";
 import Post from "./dashboardLinks/post/Post";
+import DotIcon from "../../../assets/DotIcon";
+import connectSocket from "../../../socket/socket";
+
+var socket;
 
 const StudentDashboard = () => {
+
+    // getting uid of the logged in user
+    let uid = "";
+    let token = "";
+    if (localStorage.getItem("authData")) {
+        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+        token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
+    }
+
+
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
@@ -27,6 +41,8 @@ const StudentDashboard = () => {
         academicDetails: false,
     });
 
+    const [newMsgNotify, setNewMsgNotify] = useState(false);
+
     // setting the admin auth token
     const dispatch = useDispatch();
     const history = useHistory();
@@ -35,6 +51,29 @@ const StudentDashboard = () => {
     const data = useSelector((state) => state.student);
 
     console.log("student data in dashboard", data);
+
+    useEffect(() => {
+        socket = connectSocket(token);
+        console.log("notify socket", socket);
+        socket.emit("notify setup", uid);
+        // dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
+        
+        socket.on("new Notification", (data) => {
+            console.log("new socket Notification", data);
+            alert("New post update");
+        });
+    }, []);
+
+    useEffect(() => {
+        // new msg notification
+        socket.on("new message", (data) => {
+            if(route.chat){
+                setNewMsgNotify(false);
+            }else{
+                setNewMsgNotify(true); 
+            }  
+        });
+    }, [route]);
 
     // fetching the admin details
     useEffect(() => {
@@ -92,6 +131,7 @@ const StudentDashboard = () => {
                 });
                 break;
             case "chat":
+                setNewMsgNotify(false);
                 setRoute({
                     home: false,
                     chat: true,
@@ -172,13 +212,16 @@ const StudentDashboard = () => {
                     id="chat"
                     className={`${
                         route.chat ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                    } flex items-center space-x-12 text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <ChatAlt2Icon
-                        myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.chat && "text-blue-600")}
-                        alt={true}
-                    />
-                    Chat
+                    <span className="flex items-center">
+                        <ChatAlt2Icon
+                            myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.chat && "text-blue-600")}
+                            alt={true}
+                        />
+                        Chat
+                    </span>
+                    { newMsgNotify && !route.chat && <DotIcon myStyle={"h-3 w-3 bg-green-500 rounded-full float-right"} />}
                 </button>
                 <button
                     onClick={handleRouteChange}
@@ -243,7 +286,7 @@ const StudentDashboard = () => {
                     {route.academicDetails && <AcademicDetails />}
                     {route.profile && <Profile />}
                     {route.home && <Home />}
-                    {route.chat && <Chat />}
+                    {route.chat && <Chat setNewMsgNotify={setNewMsgNotify} />}
                     {route.post && <Post />}
                 </div>
             </div>
