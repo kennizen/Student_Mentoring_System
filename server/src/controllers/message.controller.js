@@ -41,7 +41,7 @@ exports.fetchAllMessage = async (req, res, next) => {
         const totalDocuments = await Message.countDocuments({ chat: chatId });
         const totalPages = Math.ceil(totalDocuments / limit);
         const messages = await Message.find({ chat: chatId })
-            .sort({createdAt: -1})
+            .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
             .limit(limit)
             .populate("sender")

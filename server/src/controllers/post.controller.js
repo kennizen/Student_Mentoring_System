@@ -69,13 +69,13 @@ module.exports = {
             let posts;
             let totalPages = 0;
             const page = parseInt(req.query.page);
-            const limit = 10;
+            const limit = 5;
 
             if (req.user.role === roles.Mentor) {
                 const totalDocuments = await Post.countDocuments({ group_id: req.user._id });
                 totalPages = Math.ceil(totalDocuments / limit);
                 posts = await Post.find({ group_id: req.user._id })
-                    .sort({createdAt: -1})
+                    .sort({ createdAt: -1 })
                     .skip((page - 1) * limit)
                     .limit(limit)
                     .populate("author");
@@ -85,7 +85,7 @@ module.exports = {
                 const totalDocuments = await Post.countDocuments({ group_id: req.user.mentoredBy });
                 totalPages = Math.ceil(totalDocuments / limit);
                 posts = await Post.find({ group_id: req.user.mentoredBy })
-                    .sort({createdAt: -1})
+                    .sort({ createdAt: -1 })
                     .skip((page - 1) * limit)
                     .limit(limit)
                     .populate("author");
@@ -94,7 +94,11 @@ module.exports = {
             const allPosts = posts.map((post) => {
                 return { postData: { ...post._doc, author: undefined }, authorData: post.author };
             });
-            response.success(res, "", { posts: allPosts, currentPage: page, totalPage: totalPages });
+            response.success(res, "", {
+                posts: allPosts,
+                currentPage: page,
+                totalPage: totalPages,
+            });
             next();
         } catch (err) {
             console.log(err);

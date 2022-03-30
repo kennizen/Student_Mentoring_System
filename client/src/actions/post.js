@@ -1,8 +1,8 @@
 import * as api from "../api/post";
 
-export const getAllPosts = (history, executeScroll, setPostLoading) => async (dispatch) => {
+export const getAllPosts = (history, page, setPostLoading) => async (dispatch) => {
     try {
-        const { data } = await api.fetchAllPost();
+        const { data } = await api.fetchAllPost(page);
         console.log("posts in actions", data);
 
         //check if the response data is error
@@ -12,7 +12,25 @@ export const getAllPosts = (history, executeScroll, setPostLoading) => async (di
             const posts = data.data.posts;
             dispatch({ type: "FETCH_POSTS", posts });
             setPostLoading(false);
-            executeScroll();
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getOlderPosts = (history, page) => async (dispatch) => {
+    try {
+        // setIsLoading(true);
+        const { data } = await api.fetchAllPost(page);
+        console.log("older posts get data", data);
+        // setMessages(data.data);
+        //check if the response data is error
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            const posts = data.data.posts;
+            dispatch({ type: "FETCH_OLDER_POSTS", posts });
+            // setIsLoading(false);
         }
     } catch (error) {
         console.log(error);

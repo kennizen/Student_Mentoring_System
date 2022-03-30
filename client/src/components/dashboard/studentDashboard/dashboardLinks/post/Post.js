@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { getAllPosts, submitComment, submitPost, updatePost } from "../../../../../actions/post";
+import {
+    getAllPosts,
+    getOlderPosts,
+    submitComment,
+    submitPost,
+    updatePost,
+} from "../../../../../actions/post";
 import SinglePost from "./singlePost/SinglePost";
 
 import SunEditor, { buttonList } from "suneditor-react";
@@ -16,17 +22,14 @@ import SingleComment from "./singleComment/SingleComment";
 import CommentDeleteModal from "./postModals/CommentDeleteModal";
 import Loading from "../../../../loading/Loading";
 
-const Post = ({socket}) => {
+const Post = ({ socket }) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
     // fetching all the posts for the user
     useEffect(() => {
-        dispatch(getAllPosts(history, executeScroll, setPostLoading)); // to scroll when loading first time
-        executeScroll(); // this is to scroll to bottom when coming from diff tab
-
-        console.log("notify socket", socket)
-
+        // execute scroll to scroll when loading first time
+        dispatch(getAllPosts(history, 1, setPostLoading));
     }, []);
 
     // The sunEditor parameter will be set to the core suneditor instance when this function is called
@@ -133,6 +136,16 @@ const Post = ({socket}) => {
         }, 1);
     };
 
+    // state to set the number of pages to fetch the old messages
+    const [page, setPage] = useState(2);
+
+    // load Older posts
+    const loadOlderPosts = () => {
+        console.log("load more msgs");
+        setPage(page + 1);
+        dispatch(getOlderPosts(history, page));
+    };
+
     return (
         <div className="w-full h-full grid grid-cols-12 relative">
             <CSSTransition
@@ -188,31 +201,44 @@ const Post = ({socket}) => {
                 />
             </CSSTransition>
             <div className="col-span-8 border-r-2 border-gray-200 flex flex-col overflow-y-auto p-2">
-                <div className="h-4/5 overflow-y-auto mb-3 p-3">
+                <div className="h-4/5 overflow-y-auto mb-3 p-3 flex flex-col-reverse">
+                    <div ref={scrollPost}></div>
                     {postLoading ? (
                         <Loading width={"w-10"} height={"h-10"} />
                     ) : (
-                        posts.map((post, index) => {
-                            return (
-                                <SinglePost
-                                    key={post.postData._id}
-                                    post={post.postData}
-                                    author={post.authorData}
-                                    setShowOverlay={setShowOverlay}
-                                    setShowPostEditModal={setShowPostEditModal}
-                                    setShowPostDeleteModal={setShowPostDeleteModal}
-                                    setSelectedPost={setSelectedPost}
-                                    setIsHidden={setIsHidden}
-                                    setSelectedPostIndex={setSelectedPostIndex}
-                                    selectedPostIndex={selectedPostIndex}
-                                    executeFocusInput={executeFocusInput}
-                                    setCommentLoading={setCommentLoading}
-                                    index={index}
-                                />
-                            );
-                        })
+                        posts
+                            .sort((a, b) => {
+                                return a.postData.createdAt < b.postData.createdAt ? 1 : -1;
+                            })
+                            .map((post, index) => {
+                                return (
+                                    <SinglePost
+                                        key={post.postData._id}
+                                        post={post.postData}
+                                        author={post.authorData}
+                                        setShowOverlay={setShowOverlay}
+                                        setShowPostEditModal={setShowPostEditModal}
+                                        setShowPostDeleteModal={setShowPostDeleteModal}
+                                        setSelectedPost={setSelectedPost}
+                                        setIsHidden={setIsHidden}
+                                        setSelectedPostIndex={setSelectedPostIndex}
+                                        selectedPostIndex={selectedPostIndex}
+                                        executeFocusInput={executeFocusInput}
+                                        setCommentLoading={setCommentLoading}
+                                        index={index}
+                                    />
+                                );
+                            })
                     )}
-                    <div ref={scrollPost}></div>
+                    {postLoading || (
+                        <button
+                            onClick={loadOlderPosts}
+                            title="Load message"
+                            className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 hover:text-gray-700 text-xs transition-all`}
+                        >
+                            Load More
+                        </button>
+                    )}
                 </div>
                 <form className="h-1/5 relative pl-3" onSubmit={handlePostSubmit}>
                     <div className="absolute z-10 right-5 top-3">

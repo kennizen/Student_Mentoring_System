@@ -4,6 +4,8 @@ const post = (state = { posts: [], comments: [] }, action) => {
             return { ...state, posts: action.posts };
         case "ADD_SINGLE_POST":
             return { ...state, posts: [...state.posts, action.post] };
+        case "FETCH_OLDER_POSTS":
+            return { ...state, posts: [...state.posts, ...action.posts] };
         case "UPDATE_POST":
             let pos;
             state.posts.forEach((post, i) => {

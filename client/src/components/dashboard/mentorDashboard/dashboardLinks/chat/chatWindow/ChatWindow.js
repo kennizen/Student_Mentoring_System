@@ -109,6 +109,7 @@ const ChatWindow = ({ selectedChat, curChat }) => {
     };
     // --------------------------------------------------------------
 
+    // state to set the number of pages to fetch the old messages
     const [page, setPage] = useState(2);
 
     // api call to fetch all the messages for the selected chat

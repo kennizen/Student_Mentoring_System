@@ -12,8 +12,8 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-export const fetchAllPost = () =>
-    API.get("/posts").catch((error) => {
+export const fetchAllPost = (page) =>
+    API.get(`/posts?page=${page}`).catch((error) => {
         return error.response;
     });
 

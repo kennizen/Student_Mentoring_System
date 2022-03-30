@@ -8,9 +8,13 @@ const chat = (state = { chats: [], messages: [], notifications: [] }, action) =>
         case "CLEAR_MESSAGES":
             return { ...state, messages: [] };
         case "ADD_CHATS":
-            return { ...state, chats: [...state.chats, ...action.data.data.newChatArray] };
+            let chatsExisting = [...state.chats, ...action.data.data.newChatArray];
+            localStorage.setItem("chats", JSON.stringify(chatsExisting));
+            return { ...state, chats: chatsExisting };
         case "ADD_SINGLE_CHAT":
-            return { ...state, chats: [...state.chats, action.chat] };
+            let chatsSingle = [...state.chats, action.chat];
+            localStorage.setItem("chats", JSON.stringify(chatsSingle));
+            return { ...state, chats: chatsSingle };
         case "REORDER_CHATS":
             const chatId = action.id;
             if (state.chats.length > 0) {

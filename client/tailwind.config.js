@@ -80,6 +80,7 @@ module.exports = {
             opacity: ["disabled"],
             backgroundColor: ["active"],
             textColor: ["active"],
+            fontSize: ["hover", "focus"],
         },
     },
     plugins: [require("@tailwindcss/forms"), require("tw-elements/dist/plugin")],
