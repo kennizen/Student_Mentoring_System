@@ -35,3 +35,7 @@ input[type="file"]::file-selector-button {
     margin-inline-start: -1rem;
     margin-inline-end: 1rem;
 }
+
+.sun-editor {
+    font-family: sans-serif !important;
+}

@@ -18,7 +18,7 @@ export const getAllPosts = (history, page, setPostLoading) => async (dispatch) =
     }
 };
 
-export const getOlderPosts = (history, page) => async (dispatch) => {
+export const getOlderPosts = (history, page, setOldPostLoading) => async (dispatch) => {
     try {
         // setIsLoading(true);
         const { data } = await api.fetchAllPost(page);
@@ -30,7 +30,7 @@ export const getOlderPosts = (history, page) => async (dispatch) => {
         } else {
             const posts = data.data.posts;
             dispatch({ type: "FETCH_OLDER_POSTS", posts });
-            // setIsLoading(false);
+            setOldPostLoading(false);
         }
     } catch (error) {
         console.log(error);

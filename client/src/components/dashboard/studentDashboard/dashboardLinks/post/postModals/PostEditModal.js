@@ -1,9 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
-import SunEditor, { buttonList } from "suneditor-react";
-
-import "suneditor/dist/css/suneditor.min.css";
 import PencilIcon from "../../../../../../assets/PencilIcon";
+import RichEditor from "../../../../../richEditor/RichEditor";
 
 const PostEditModal = ({
     nodeRef,
@@ -12,12 +10,6 @@ const PostEditModal = ({
     selectedPost,
     handlePostSubmit,
 }) => {
-    // The sunEditor parameter will be set to the core suneditor instance when this function is called
-    const editor = useRef();
-    const getSunEditorInstance = (sunEditor) => {
-        editor.current = sunEditor;
-    };
-
     // state to control the disable state of the update button
     const [isDisable, setIsDisable] = useState(true);
     // state variable to store the updated content to be sent
@@ -58,19 +50,12 @@ const PostEditModal = ({
                             setShowPostEditModal(false);
                         }}
                     >
-                        <SunEditor
-                            name="myEditor"
-                            onChange={handleChange}
-                            getSunEditorInstance={getSunEditorInstance}
+                        <RichEditor
+                            contents={postContent.body}
+                            handleChange={handleChange}
+                            isAutofocus={true}
+                            minHeight={"220px"}
                             defaultValue={selectedPost.body}
-                            autoFocus={true}
-                            setContents={postContent.body}
-                            setOptions={{
-                                buttonList: buttonList.basic,
-                                resizingBar: false,
-                                height: "100%",
-                                minHeight: "220px",
-                            }}
                         />
                         <div className="w-full flex items-center justify-end">
                             <button

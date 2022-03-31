@@ -3,13 +3,28 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { deletePost } from "../../../../../../actions/post";
 
-const PostDeleteModal = ({ nodeRef, setShowOverlay, setShowPostDeleteModal, id }) => {
+const PostDeleteModal = ({
+    nodeRef,
+    setShowOverlay,
+    setShowPostDeleteModal,
+    id,
+    setSelectedPost,
+    setSelectedPostIndex,
+}) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
     // function to delete the object with the given id
     const handleDelete = () => {
         dispatch(deletePost(history, id));
+        setSelectedPost(null);
+        setSelectedPostIndex(-1);
+    };
+
+    // function to hide modal from within the modal
+    const handleHideModalOperations = () => {
+        setShowOverlay(false);
+        setShowPostDeleteModal(false);
     };
 
     return (
@@ -21,13 +36,7 @@ const PostDeleteModal = ({ nodeRef, setShowOverlay, setShowPostDeleteModal, id }
                 >
                     <div className="flex items-center justify-between mb-3">
                         <h4 className="mr-5">Delete post</h4>
-                        <button
-                            onClick={() => {
-                                setShowOverlay(false);
-                                setShowPostDeleteModal(false);
-                            }}
-                            className="text-2xl"
-                        >
+                        <button onClick={handleHideModalOperations} className="text-2xl">
                             &times;
                         </button>
                     </div>
@@ -39,10 +48,7 @@ const PostDeleteModal = ({ nodeRef, setShowOverlay, setShowPostDeleteModal, id }
 
                     <div className="w-full flex items-center justify-end">
                         <button
-                            onClick={() => {
-                                setShowPostDeleteModal(false);
-                                setShowOverlay(false);
-                            }}
+                            onClick={handleHideModalOperations}
                             type="submit"
                             className="p-2 hover:bg-gray-200 rounded-md text-gray-600 mt-5 mr-3 transition-all"
                         >
@@ -50,8 +56,7 @@ const PostDeleteModal = ({ nodeRef, setShowOverlay, setShowPostDeleteModal, id }
                         </button>
                         <button
                             onClick={() => {
-                                setShowPostDeleteModal(false);
-                                setShowOverlay(false);
+                                handleHideModalOperations();
                                 handleDelete();
                             }}
                             type="submit"

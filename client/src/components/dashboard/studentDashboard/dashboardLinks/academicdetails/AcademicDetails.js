@@ -216,7 +216,7 @@ const AcademicDetails = () => {
                         className="rounded-md text-gray-900 bg-gray-200 w-full p-6 disabled:opacity-50 flex justify-center items-center gap-2"
                     >
                         {isLoading ? (
-                            <Loading width={"w-6"} height={"h-6"} />
+                            <Loading myStyle={"w-6 h-6"} />
                         ) : (
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

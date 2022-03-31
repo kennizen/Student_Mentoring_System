@@ -82,8 +82,8 @@ const MentorDashboard = () => {
         socket = connectSocket(token);
         console.log("notify socket", socket);
         socket.emit("notify setup", uid);
-        
-        // upon a new notification 
+
+        // upon a new notification
         socket.on("new Notification", (data) => {
             console.log("new socket Notification", data);
             alert("New post update");
@@ -93,11 +93,11 @@ const MentorDashboard = () => {
     useEffect(() => {
         // new msg notification
         socket.on("new message", (data) => {
-            if(route.chat){
+            if (route.chat) {
                 setNewMsgNotify(false);
-            }else{
-                setNewMsgNotify(true); 
-            }  
+            } else {
+                setNewMsgNotify(true);
+            }
         });
     }, [route]);
 
@@ -235,11 +235,15 @@ const MentorDashboard = () => {
                     <span className="flex items-center">
                         <ChatAlt2Icon
                             alt={true}
-                            myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.chat && "text-blue-600")}
+                            myStyle={"h-5 w-5 mr-3"
+                                .concat(" ")
+                                .concat(route.chat && "text-blue-600")}
                         />
                         Chat
                     </span>
-                    { newMsgNotify && !route.chat && <DotIcon myStyle={"h-3 w-3 bg-green-500 rounded-full float-right"} />}
+                    {newMsgNotify && !route.chat && (
+                        <DotIcon myStyle={"h-3 w-3 bg-blue-500 rounded-full float-right"} />
+                    )}
                 </button>
                 <button
                     onClick={handleRouteChange}

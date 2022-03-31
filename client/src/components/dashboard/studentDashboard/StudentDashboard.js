@@ -22,7 +22,6 @@ import connectSocket from "../../../socket/socket";
 var socket;
 
 const StudentDashboard = () => {
-
     // getting uid of the logged in user
     let uid = "";
     let token = "";
@@ -30,7 +29,6 @@ const StudentDashboard = () => {
         uid = JSON.parse(localStorage.getItem("authData"))["uid"];
         token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
     }
-
 
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
@@ -57,7 +55,7 @@ const StudentDashboard = () => {
         console.log("notify socket", socket);
         socket.emit("notify setup", uid);
         // dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
-        
+
         socket.on("new Notification", (data) => {
             console.log("new socket Notification", data);
             alert("New post update");
@@ -67,11 +65,11 @@ const StudentDashboard = () => {
     useEffect(() => {
         // new msg notification
         socket.on("new message", (data) => {
-            if(route.chat){
+            if (route.chat) {
                 setNewMsgNotify(false);
-            }else{
-                setNewMsgNotify(true); 
-            }  
+            } else {
+                setNewMsgNotify(true);
+            }
         });
     }, [route]);
 
@@ -216,12 +214,16 @@ const StudentDashboard = () => {
                 >
                     <span className="flex items-center">
                         <ChatAlt2Icon
-                            myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.chat && "text-blue-600")}
+                            myStyle={"h-5 w-5 mr-3"
+                                .concat(" ")
+                                .concat(route.chat && "text-blue-600")}
                             alt={true}
                         />
                         Chat
                     </span>
-                    { newMsgNotify && !route.chat && <DotIcon myStyle={"h-3 w-3 bg-green-500 rounded-full float-right"} />}
+                    {newMsgNotify && !route.chat && (
+                        <DotIcon myStyle={"h-3 w-3 bg-green-500 rounded-full float-right"} />
+                    )}
                 </button>
                 <button
                     onClick={handleRouteChange}
@@ -287,7 +289,7 @@ const StudentDashboard = () => {
                     {route.profile && <Profile />}
                     {route.home && <Home />}
                     {route.chat && <Chat setNewMsgNotify={setNewMsgNotify} />}
-                    {route.post && <Post />}
+                    {route.post && <Post socket={socket} />}
                 </div>
             </div>
         </div>

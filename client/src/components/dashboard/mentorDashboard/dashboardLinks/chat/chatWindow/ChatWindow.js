@@ -70,7 +70,7 @@ const ChatWindow = ({ selectedChat, curChat }) => {
     // socket connection for the user
     useEffect(() => {
         socket = io(ENDPOINT, {
-            query: { auth: token}
+            query: { auth: token },
         });
         socket.emit("setup", uid);
     }, []);
@@ -260,7 +260,7 @@ const ChatWindow = ({ selectedChat, curChat }) => {
                 )}
                 {isLoading ? (
                     <div className="w-full h-4/5 px-10 pb-7 flex items-center justify-center">
-                        <Loading height={"h-8"} width={"w-8"} />
+                        <Loading myStyle={"w-8 h-8"} />
                     </div>
                 ) : (
                     <div

@@ -1,11 +1,12 @@
 import React from "react";
 import Loading from "../../../../loading/Loading";
+import RichEditor from "../../../../richEditor/RichEditor";
 
 const Home = () => {
     return (
-        <>
-            <Loading width={"w-8"} height={"h-8"} />
-        </>
+        <div className="h-full bg-red-200">
+            <RichEditor />
+        </div>
     );
 };
 

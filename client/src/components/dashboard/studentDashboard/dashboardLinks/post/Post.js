@@ -8,11 +8,8 @@ import {
     submitPost,
     updatePost,
 } from "../../../../../actions/post";
+
 import SinglePost from "./singlePost/SinglePost";
-
-import SunEditor, { buttonList } from "suneditor-react";
-
-import "suneditor/dist/css/suneditor.min.css";
 import PaperAirplaneIcon from "../../../../../assets/PaperAirplaneIcon";
 import { CSSTransition } from "react-transition-group";
 import ModalOverlay from "../../../../modal/ModalOverlay";
@@ -21,6 +18,7 @@ import PostDeleteModal from "./postModals/PostDeleteModal";
 import SingleComment from "./singleComment/SingleComment";
 import CommentDeleteModal from "./postModals/CommentDeleteModal";
 import Loading from "../../../../loading/Loading";
+import RichEditor from "../../../../richEditor/RichEditor";
 
 const Post = ({ socket }) => {
     const dispatch = useDispatch();
@@ -32,12 +30,6 @@ const Post = ({ socket }) => {
         dispatch(getAllPosts(history, 1, setPostLoading));
     }, []);
 
-    // The sunEditor parameter will be set to the core suneditor instance when this function is called
-    const editor = useRef();
-    const getSunEditorInstance = (sunEditor) => {
-        editor.current = sunEditor;
-    };
-
     const [isHidden, setIsHidden] = useState(true);
     // state variable to show viewing pill on the selected post
     const [selectedPostIndex, setSelectedPostIndex] = useState(-1);
@@ -45,9 +37,12 @@ const Post = ({ socket }) => {
     const [selectedPost, setSelectedPost] = useState(null);
     // state variable to get the selected comment
     const [selectedComment, setSelectedComment] = useState(null);
+    // state to set the submit button disable
+    const [disablePost, setDisablePost] = useState(true);
 
     // states for loading
     const [postLoading, setPostLoading] = useState(true);
+    const [oldPostLoading, setOldPostLoading] = useState(false);
     const [commentLoading, setCommentLoading] = useState(false);
 
     // state to control the modal show and dont show
@@ -88,8 +83,13 @@ const Post = ({ socket }) => {
 
     // updating the state variable for post body
     const handleChange = (content) => {
+        let text = content.replace(/<[^>]+>/g, ""); // regex to convert html to plain text
+        if (text === "") setDisablePost(true);
+        else setDisablePost(false);
         setPostBody({ ...postBody, body: content });
     };
+
+    console.log(postBody.body);
 
     // function to handle the post submission
     const handlePostSubmit = (e, postId, postContent) => {
@@ -142,12 +142,13 @@ const Post = ({ socket }) => {
     // load Older posts
     const loadOlderPosts = () => {
         console.log("load more msgs");
+        setOldPostLoading(true);
         setPage(page + 1);
-        dispatch(getOlderPosts(history, page));
+        dispatch(getOlderPosts(history, page, setOldPostLoading));
     };
 
     return (
-        <div className="w-full h-full grid grid-cols-12 relative">
+        <div className="w-full h-full grid grid-cols-12 relative pl-2">
             <CSSTransition
                 nodeRef={overlayRef}
                 in={showOverlay}
@@ -184,6 +185,8 @@ const Post = ({ socket }) => {
                     setShowOverlay={setShowOverlay}
                     setShowPostDeleteModal={setShowPostDeleteModal}
                     id={selectedPost?._id}
+                    setSelectedPost={setSelectedPost}
+                    setSelectedPostIndex={setSelectedPostIndex}
                 />
             </CSSTransition>
             <CSSTransition
@@ -200,11 +203,15 @@ const Post = ({ socket }) => {
                     id={selectedComment?._id}
                 />
             </CSSTransition>
-            <div className="col-span-8 border-r-2 border-gray-200 flex flex-col overflow-y-auto p-2">
-                <div className="h-4/5 overflow-y-auto mb-3 p-3 flex flex-col-reverse">
+            <div className="col-span-8 border-r-2 border-gray-200 flex flex-col overflow-y-auto pt-2 pr-2">
+                <div
+                    className={`h-3/4 overflow-y-auto mb-3 pr-2 flex flex-col-reverse ${
+                        postLoading && "justify-center"
+                    }`}
+                >
                     <div ref={scrollPost}></div>
                     {postLoading ? (
-                        <Loading width={"w-10"} height={"h-10"} />
+                        <Loading myStyle={"w-10 h-10"} />
                     ) : (
                         posts
                             .sort((a, b) => {
@@ -226,45 +233,47 @@ const Post = ({ socket }) => {
                                         executeFocusInput={executeFocusInput}
                                         setCommentLoading={setCommentLoading}
                                         index={index}
+                                        posts={posts}
                                     />
                                 );
                             })
                     )}
-                    {postLoading || (
-                        <button
-                            onClick={loadOlderPosts}
-                            title="Load message"
-                            className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 hover:text-gray-700 text-xs transition-all`}
-                        >
-                            Load More
-                        </button>
+                    {!postLoading ? (
+                        oldPostLoading ? (
+                            <Loading myStyle={"w-6 h-6 mb-1"} />
+                        ) : (
+                            <button
+                                onClick={loadOlderPosts}
+                                title="Load message"
+                                className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 hover:text-gray-700 text-xs transition-all mb-1`}
+                            >
+                                Load More
+                            </button>
+                        )
+                    ) : (
+                        <div></div>
                     )}
                 </div>
-                <form className="h-1/5 relative pl-3" onSubmit={handlePostSubmit}>
-                    <div className="absolute z-10 right-5 top-3">
+                <form
+                    className="h-1/4 relative border border-solid border-b border-gray-200 flex flex-col items-center justify-start"
+                    onSubmit={handlePostSubmit}
+                >
+                    <div className="w-full flex items-center justify-end p-1">
                         <button
+                            disabled={disablePost}
                             type="submit"
                             title="Submit post"
-                            className="flex items-center justify-center transition-all text-gray-600 hover:text-gray-900"
+                            className="py-1 px-2 bg-blue-600 rounded-md text-white disabled:opacity-50 hover:bg-blue-800 transition-all flex items-center justify-between"
                         >
-                            <PaperAirplaneIcon
-                                alt={false}
-                                myStyle={"h-7 w-7 transform rotate-90"}
-                            />
+                            Submit
                         </button>
                     </div>
-                    <SunEditor
-                        name="myEditor"
-                        onChange={handleChange}
-                        setContents={postBody.body}
-                        getSunEditorInstance={getSunEditorInstance}
-                        setOptions={{
-                            buttonList: buttonList.basic,
-                            resizingBar: false,
-                            height: "100%",
-                            minHeight: "120px",
-                            placeholder: "Say something...",
-                        }}
+                    <RichEditor
+                        contents={postBody.body}
+                        handleChange={handleChange}
+                        isAutofocus={false}
+                        minHeight={"12vh"}
+                        height={"100%"}
                     />
                 </form>
             </div>
@@ -274,7 +283,7 @@ const Post = ({ socket }) => {
                     <div className="h-650 overflow-y-auto flex flex-col">
                         {selectedPostIndex !== -1 ? (
                             commentLoading ? (
-                                <Loading width={"w-7"} height={"h-7"} />
+                                <Loading myStyle={"w-7 h-7"} />
                             ) : (
                                 comments.map((comment) => {
                                     return (

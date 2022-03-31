@@ -20,6 +20,7 @@ const SinglePost = ({
     executeFocusInput,
     setCommentLoading,
     index,
+    posts,
 }) => {
     // getting uid of the logged in user
     let uid = "";
@@ -32,6 +33,19 @@ const SinglePost = ({
 
     // state variable to set the toggle visible state of the popup menu
     const [toggleMenu, setToggleMenu] = useState(false);
+
+    const handleBotButtons = () => {
+        setCommentLoading(true);
+        dispatch(fetchPostComments(history, post._id, setCommentLoading));
+        setSelectedPostIndex(index);
+        setIsHidden(false);
+        setSelectedPost(post);
+    };
+
+    const handlePostActions = () => {
+        setShowOverlay(true);
+        setSelectedPost(post);
+    };
 
     return (
         <div className="bg-white mb-5 py-3 px-4 rounded-md border flex flex-col">
@@ -90,9 +104,8 @@ const SinglePost = ({
                             >
                                 <h5
                                     onClick={() => {
-                                        setShowOverlay(true);
+                                        handlePostActions();
                                         setShowPostEditModal(true);
-                                        setSelectedPost(post);
                                     }}
                                     className="hover:bg-gray-200 px-4 flex py-1"
                                 >
@@ -100,9 +113,8 @@ const SinglePost = ({
                                 </h5>
                                 <h5
                                     onClick={() => {
-                                        setShowOverlay(true);
+                                        handlePostActions();
                                         setShowPostDeleteModal(true);
-                                        setSelectedPost(post);
                                     }}
                                     className="hover:bg-gray-200 px-4 py-1 flex"
                                 >
@@ -118,28 +130,18 @@ const SinglePost = ({
             <p className="mb-4 a-tag" dangerouslySetInnerHTML={{ __html: `${post.body}` }}></p>
             <div className="flex items-center justify-end">
                 <button
-                    onClick={() => {
-                        setCommentLoading(true);
-                        dispatch(fetchPostComments(history, post._id, setCommentLoading));
-                        setSelectedPostIndex(index);
-                        setIsHidden(false);
-                        setSelectedPost(post);
-                    }}
-                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md transition-all text-sm"
+                    onClick={handleBotButtons}
+                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-2 rounded-md transition-all text-sm"
                 >
                     <ChatIcon alt={true} myStyle={"h-4 w-4 mr-1"} />
                     comments {post.commentCount}
                 </button>
                 <button
                     onClick={() => {
-                        setCommentLoading(true);
-                        setSelectedPostIndex(index);
-                        setIsHidden(false);
-                        setSelectedPost(post);
+                        handleBotButtons();
                         executeFocusInput();
-                        dispatch(fetchPostComments(history, post._id, setCommentLoading));
                     }}
-                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-3 rounded-md transition-all text-sm"
+                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-2 rounded-md transition-all text-sm"
                 >
                     <ReplyIcon alt={false} myStyle={"h-4 w-4 mr-1"} />
                     reply
