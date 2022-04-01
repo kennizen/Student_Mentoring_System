@@ -3,31 +3,32 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import {
-    AddNotification,
-    AddSingleChat,
+    clearMessages,
     createMessage,
     getMessages,
     getOlderMessages,
-    ReorderChats,
-    UpdateLatestMessage,
+    updateNotification,
 } from "../../../../../../actions/chat";
 import { useSelector } from "react-redux";
 
 import Loading from "../../../../../loading/Loading";
 import ScrollToBottom from "./ScrollToBottom";
-import NotifySound from "../../../../../../assets/sounds/light-562.ogg";
 import Message from "./Message";
-
-import io from "socket.io-client";
-
-const ENDPOINT = "http://localhost:5000";
-var socket;
+import { SocketContext } from "../../../../../../socket/socket";
 
 const ChatWindow = ({ selectedChat, curChat }) => {
+    const socket = React.useContext(SocketContext);
+
     // const { socket } = useSelector((state) => {
     //     if (state.mentor.socket !== null) return state.mentor;
     //     return state.student;
     // });
+
+    // getting uid of the logged in user
+    let uid = "";
+    if (localStorage.getItem("authData")) {
+        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+    }
 
     // accesing global state to fetch the chats
     const { chats } = useSelector((state) => state.chat);
@@ -37,14 +38,6 @@ const ChatWindow = ({ selectedChat, curChat }) => {
 
     const dispatch = useDispatch();
     const history = useHistory();
-
-    // getting uid of the logged in user
-    let uid = "";
-    let token = "";
-    if (localStorage.getItem("authData")) {
-        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-        token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
-    }
 
     // div seletor for the div used as text input
     var contenteditable = document.querySelector("[contenteditable]");
@@ -67,14 +60,6 @@ const ChatWindow = ({ selectedChat, curChat }) => {
         });
     };
 
-    // socket connection for the user
-    useEffect(() => {
-        socket = io(ENDPOINT, {
-            query: { auth: token },
-        });
-        socket.emit("setup", uid);
-    }, []);
-
     // state for scroll to bottom element ----------------
     const [ele, setEle] = useState(null);
 
@@ -96,7 +81,7 @@ const ChatWindow = ({ selectedChat, curChat }) => {
             if (localStorage.getItem("selectedChat") !== null) {
                 const sc = localStorage.getItem("selectedChat");
                 let tmp = notifications.filter((id) => id !== sc);
-                dispatch({ type: "UPDATE_NOTIFICATION", tmp });
+                dispatch(updateNotification(tmp));
             }
         }
     };
@@ -128,7 +113,7 @@ const ChatWindow = ({ selectedChat, curChat }) => {
             localStorage.setItem("selectedChat", id);
             executeScroll();
         } else {
-            dispatch({ type: "CLEAR_MESSAGES" });
+            dispatch(clearMessages());
         }
         if (contenteditable !== null) {
             contenteditable.innerHTML = "";
@@ -136,47 +121,6 @@ const ChatWindow = ({ selectedChat, curChat }) => {
         }
         setVisible(false);
     }, [selectedChat]);
-
-    // useeffect call when message is received
-    useEffect(() => {
-        const notification = (data) => {
-            const id = data.data.chat._id.toString();
-            dispatch(AddNotification(id));
-            dispatch(ReorderChats(id));
-            playNotifySound();
-        };
-
-        socket.on("message received", (data) => {
-            /* this is to create the chat automatically if chat not shown and message came in user chat */
-            if (localStorage.getItem("chats") !== null) {
-                let chats = JSON.parse(localStorage.getItem("chats"));
-                let val = false;
-                for (let i = 0; i < chats.length; i++) {
-                    if (chats[i]._id.toString() === data.data.chat._id.toString()) {
-                        val = true;
-                        break;
-                    }
-                }
-                if (val === false) {
-                    dispatch(AddSingleChat(data.data.chat));
-                }
-            }
-
-            if (localStorage.getItem("selectedChat") === data.data.chat._id.toString()) {
-                if (
-                    localStorage.getItem("visible") !== null &&
-                    localStorage.getItem("visible") === "true" // visible val in string
-                )
-                    notification(data);
-                dispatch({ type: "ADD_MESSAGES", data });
-                dispatch(UpdateLatestMessage(data));
-            } else {
-                // if message for unintended person then store chat id in global store to show notification
-                notification(data);
-                dispatch(UpdateLatestMessage(data));
-            }
-        });
-    }, []);
 
     // state for custom placeholder in the input div
     const [placeHol, setPlaceHol] = useState("opacity-100");
@@ -197,7 +141,6 @@ const ChatWindow = ({ selectedChat, curChat }) => {
     // function to send the text message
     const sendMessage = () => {
         dispatch(createMessage(history, message, socket, executeScroll));
-        dispatch(ReorderChats(message.chat));
         contenteditable.innerHTML = "";
         contenteditable.focus();
         check();
@@ -225,17 +168,14 @@ const ChatWindow = ({ selectedChat, curChat }) => {
         });
     };
 
-    // play sound on notification
-    const playNotifySound = () => {
-        var audio = new Audio(NotifySound);
-        audio.play();
-    };
-
+    // state variable to control the loading for loding old messages
+    const [oldMessageLoading, setOldMessageLoading] = useState(false);
     // load Older msg
     const loadOlderMessages = () => {
         console.log("load more msgs");
         setPage(page + 1);
-        dispatch(getOlderMessages(history, selectedChat, page, setIsLoading));
+        setOldMessageLoading(true);
+        dispatch(getOlderMessages(history, selectedChat, page, setOldMessageLoading));
     };
 
     console.log("chats", chats);
@@ -247,8 +187,8 @@ const ChatWindow = ({ selectedChat, curChat }) => {
         <>
             <div className="w-3/5 bg-white rounded-md h-full flex-shrink-0">
                 {localStorage.getItem("selectedChat") && (
-                    <div className="w-full h-1/10 bg-gray-200">
-                        <div className="flex items-center justify-start h-full px-5 gap-x-4">
+                    <div className="w-full bg-gray-600 rounded-t-md">
+                        <div className="flex items-center justify-start h-full px-5 py-2.5 gap-x-4 text-white">
                             <img
                                 src={curChat.avatar}
                                 alt="IMG"
@@ -275,29 +215,32 @@ const ChatWindow = ({ selectedChat, curChat }) => {
                                 .map((message) => (
                                     <Message key={message._id} message={message} uid={uid} />
                                 ))}
-                        {messages.length !== 0 && (
-                            <button
-                                onClick={loadOlderMessages}
-                                title="Load message"
-                                className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 text-xs bg-gray-100 mb-2 mt-1`}
-                            >
-                                Load More
-                            </button>
-                        )}
+                        {messages.length !== 0 &&
+                            (oldMessageLoading ? (
+                                <Loading myStyle={"h-6 w-6 mb-2 mt-1"} />
+                            ) : (
+                                <button
+                                    onClick={loadOlderMessages}
+                                    title="Load message"
+                                    className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 text-xs bg-gray-100 mb-2 mt-1 hover:text-gray-600 transition-all`}
+                                >
+                                    Previous messages
+                                </button>
+                            ))}
                     </div>
                 )}
 
                 {visible && <ScrollToBottom scrollToBottom={scrollToBottom} />}
 
                 {localStorage.getItem("selectedChat") && (
-                    <div className="w-full h-1/10 bg-gray-200 flex items-center justify-center gap-x-6 mt-1">
+                    <div className="w-full h-1/10 bg-gray-600 flex items-center justify-center gap-x-6 mt-1 rounded-b-md">
                         <div className="w-17/20 flex-shrink-0 relative">
                             <div
                                 onFocus={focusPlaceHol}
                                 onBlur={blurPlaceHol}
                                 onKeyUp={check}
                                 contentEditable={true}
-                                className="px-2 py-3 rounded-md max-h-16 bg-gray-100 outline-none break-words overflow-y-auto"
+                                className="px-2 py-3 rounded-md max-h-16 bg-white outline-none break-words overflow-y-auto"
                             ></div>
                             <h4
                                 className={`text-gray-400 absolute top-3 left-2 pointer-events-none ${placeHol}`}

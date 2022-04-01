@@ -17,17 +17,26 @@ import AcademicCapIcon from "../../../assets/AcademicCapIcon";
 import LogoutIcon from "../../../assets/LogoutIcon";
 import Post from "./dashboardLinks/post/Post";
 import DotIcon from "../../../assets/DotIcon";
-import connectSocket from "../../../socket/socket";
 
-var socket;
+import {
+    addMessages,
+    addNotification,
+    addSingleChat,
+    reorderChats,
+    updateLatestMessage,
+} from "../../../actions/chat";
+
+import NotifySound from "../../../assets/sounds/light-562.ogg";
+
+import { SocketContext } from "../../../socket/socket";
 
 const StudentDashboard = () => {
+    const socket = React.useContext(SocketContext);
+
     // getting uid of the logged in user
     let uid = "";
-    let token = "";
     if (localStorage.getItem("authData")) {
         uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-        token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
     }
 
     // state for maintaining the side nav bar
@@ -51,32 +60,26 @@ const StudentDashboard = () => {
     console.log("student data in dashboard", data);
 
     useEffect(() => {
-        socket = connectSocket(token);
-        console.log("notify socket", socket);
-        socket.emit("notify setup", uid);
-        // dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
+        // socket = connectSocket(token);
+        // socket.emit("notify setup", uid);
+        socket.emit("setup", uid);
+        console.log("socket", socket);
 
         socket.on("new Notification", (data) => {
             console.log("new socket Notification", data);
             alert("New post update");
         });
-    }, []);
 
-    useEffect(() => {
-        // new msg notification
-        socket.on("new message", (data) => {
-            if (route.chat) {
-                setNewMsgNotify(false);
-            } else {
-                setNewMsgNotify(true);
-            }
-        });
-    }, [route]);
+        return (data) => {
+            socket.off("new Notification", data);
+        };
+    }, []);
 
     // fetching the admin details
     useEffect(() => {
         dispatch(studentGetDetails(history));
         dispatch(getAllChat(history));
+        localStorage.setItem("chatRoute", JSON.stringify(false));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
         }
@@ -91,17 +94,68 @@ const StudentDashboard = () => {
         }
     }, [dispatch, history]);
 
-    // useEffect(() => {
-    //     const socket = connectSocket();
-    //     console.log("socket", socket);
-    //     dispatch({ type: "CONNECT_SOCKET_STUDENT", socket });
-    // }, []);
+    // useeffect call when message is received
+    useEffect(() => {
+        const notification = (data) => {
+            const id = data.data.chat._id.toString();
+            dispatch(addNotification(id));
+            dispatch(reorderChats(id));
+            playNotifySound();
+        };
+
+        socket.on("message received", (data) => {
+            if (localStorage.getItem("chatRoute") !== null) {
+                let val = JSON.parse(localStorage.getItem("chatRoute"));
+                if (!val) setNewMsgNotify(true);
+            }
+
+            /* this is to create the chat automatically if chat not shown and message came in user chat */
+            if (localStorage.getItem("chats") !== null) {
+                let chats = JSON.parse(localStorage.getItem("chats"));
+                let val = false;
+                for (let i = 0; i < chats.length; i++) {
+                    if (chats[i]._id.toString() === data.data.chat._id.toString()) {
+                        val = true;
+                        break;
+                    }
+                }
+                if (val === false) {
+                    dispatch(addSingleChat(data.data.chat));
+                }
+            }
+
+            if (localStorage.getItem("selectedChat") === data.data.chat._id.toString()) {
+                if (
+                    localStorage.getItem("visible") !== null &&
+                    localStorage.getItem("visible") === "true" // visible val in string
+                )
+                    notification(data);
+                dispatch(addMessages(data));
+                dispatch(updateLatestMessage(data));
+            } else {
+                // if message for unintended person then store chat id in global store to show notification
+                notification(data);
+                dispatch(updateLatestMessage(data));
+            }
+        });
+
+        return (data) => {
+            socket.off("message received", data);
+        };
+    }, []);
+
+    // play sound on notification
+    const playNotifySound = () => {
+        var audio = new Audio(NotifySound);
+        audio.play();
+    };
 
     // function to chnage the tabs screens of the dashboard
     const handleRouteChange = (e) => {
         const selectedTab = e.target.id;
         switch (selectedTab) {
             case "home":
+                localStorage.setItem("chatRoute", JSON.stringify(false));
                 setRoute({
                     home: true,
                     post: false,
@@ -111,6 +165,7 @@ const StudentDashboard = () => {
                 });
                 break;
             case "profile":
+                localStorage.setItem("chatRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     chat: false,
@@ -120,6 +175,7 @@ const StudentDashboard = () => {
                 });
                 break;
             case "academicDetails":
+                localStorage.setItem("chatRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     chat: false,
@@ -129,6 +185,7 @@ const StudentDashboard = () => {
                 });
                 break;
             case "chat":
+                localStorage.setItem("chatRoute", JSON.stringify(true));
                 setNewMsgNotify(false);
                 setRoute({
                     home: false,
@@ -139,6 +196,7 @@ const StudentDashboard = () => {
                 });
                 break;
             case "post":
+                localStorage.setItem("chatRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     chat: false,
@@ -222,7 +280,7 @@ const StudentDashboard = () => {
                         Chat
                     </span>
                     {newMsgNotify && !route.chat && (
-                        <DotIcon myStyle={"h-3 w-3 bg-green-500 rounded-full float-right"} />
+                        <DotIcon myStyle={"h-3 w-3 bg-blue-500 rounded-full float-right"} />
                     )}
                 </button>
                 <button
@@ -288,7 +346,7 @@ const StudentDashboard = () => {
                     {route.academicDetails && <AcademicDetails />}
                     {route.profile && <Profile />}
                     {route.home && <Home />}
-                    {route.chat && <Chat setNewMsgNotify={setNewMsgNotify} />}
+                    {route.chat && <Chat />}
                     {route.post && <Post socket={socket} />}
                 </div>
             </div>

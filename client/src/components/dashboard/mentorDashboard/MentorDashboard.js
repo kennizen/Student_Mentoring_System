@@ -13,14 +13,32 @@ import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
 import Post from "../studentDashboard/dashboardLinks/post/Post";
 
 import { getAllChat } from "../../../actions/chat";
-import connectSocket from "../../../socket/socket";
 import LogoutIcon from "../../../assets/LogoutIcon";
 import UserCircleIcon from "../../../assets/UserCircleIcon";
 import DotIcon from "../../../assets/DotIcon";
+import { SocketContext } from "../../../socket/socket";
 
-var socket;
+import {
+    addMessages,
+    addNotification,
+    addSingleChat,
+    reorderChats,
+    updateLatestMessage,
+} from "../../../actions/chat";
+
+import NotifySound from "../../../assets/sounds/light-562.ogg";
 
 const MentorDashboard = () => {
+    // getting uid of the logged in user
+    let uid = "";
+    //let token = "";
+    if (localStorage.getItem("authData")) {
+        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+        //token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
+    }
+
+    const socket = React.useContext(SocketContext);
+
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
         home: true,
@@ -40,18 +58,11 @@ const MentorDashboard = () => {
 
     console.log("mentor data in dashboard", data);
 
-    // getting uid of the logged in user
-    let uid = "";
-    let token = "";
-    if (localStorage.getItem("authData")) {
-        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-        token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
-    }
-
     // fetching the admin details
     useEffect(() => {
         dispatch(mentorGetDetails(history));
         dispatch(getAllChat(history));
+        localStorage.setItem("chatRoute", JSON.stringify(false));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
         }
@@ -66,46 +77,79 @@ const MentorDashboard = () => {
         }
     }, []);
 
-    // useEffect(() => {
-    //     socket = connectSocket();
-    //     console.log("notify socket", socket);
-    //     socket.emit("notify setup", uid);
-    //     // dispatch({ type: "CONNECT_SOCKET_MENTOR", socket });
-    //     // socket.emit("newNotification", { msg: "new notification received"});
-    //     socket.on("new Notification", (data) => {
-    //         console.log("new socket Notification", data);
-    //         alert(data);
-    //     });
-    // }, []);
-
     useEffect(() => {
-        socket = connectSocket(token);
-        console.log("notify socket", socket);
-        socket.emit("notify setup", uid);
+        // console.log("notify socket", socket);
+        // socket.emit("notify setup", uid);
+        socket.emit("setup", uid);
+        console.log("socket", socket);
 
         // upon a new notification
         socket.on("new Notification", (data) => {
             console.log("new socket Notification", data);
             alert("New post update");
         });
+
+        return (data) => {
+            socket.off("new Notification", data);
+        };
     }, []);
 
+    // useeffect call when message is received
     useEffect(() => {
-        // new msg notification
-        socket.on("new message", (data) => {
-            if (route.chat) {
-                setNewMsgNotify(false);
+        const notification = (data) => {
+            const id = data.data.chat._id.toString();
+            dispatch(addNotification(id));
+            dispatch(reorderChats(id));
+            playNotifySound();
+        };
+
+        socket.on("message received", (data) => {
+            if (localStorage.getItem("chatRoute") !== null) {
+                let val = JSON.parse(localStorage.getItem("chatRoute"));
+                if (!val) setNewMsgNotify(true);
+                //playNotifySound();
+            }
+            /* this is to create the chat automatically if chat not shown and message came in user chat */
+            if (localStorage.getItem("chats") !== null) {
+                let chats = JSON.parse(localStorage.getItem("chats"));
+                let val = false;
+                for (let i = 0; i < chats.length; i++) {
+                    if (chats[i]._id.toString() === data.data.chat._id.toString()) {
+                        val = true;
+                        break;
+                    }
+                }
+                if (val === false) {
+                    dispatch(addSingleChat(data.data.chat));
+                }
+            }
+
+            if (localStorage.getItem("selectedChat") === data.data.chat._id.toString()) {
+                if (
+                    localStorage.getItem("visible") !== null &&
+                    localStorage.getItem("visible") === "true" // visible val in string
+                )
+                    notification(data);
+                dispatch(addMessages(data));
+                dispatch(updateLatestMessage(data));
             } else {
-                setNewMsgNotify(true);
+                // if message for unintended person then store chat id in global store to show notification
+                notification(data);
+                dispatch(updateLatestMessage(data));
             }
         });
-    }, [route]);
+
+        return (data) => {
+            socket.off("message received", data);
+        };
+    }, []);
 
     // function to chnage the tabs screens of the dashboard
     const handleRouteChange = (e) => {
         const selectedTab = e.target.id;
         switch (selectedTab) {
             case "home":
+                localStorage.setItem("chatRoute", JSON.stringify(false));
                 setRoute({
                     home: true,
                     post: false,
@@ -115,6 +159,7 @@ const MentorDashboard = () => {
                 });
                 break;
             case "post":
+                localStorage.setItem("chatRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     post: true,
@@ -124,6 +169,7 @@ const MentorDashboard = () => {
                 });
                 break;
             case "profile":
+                localStorage.setItem("chatRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     post: false,
@@ -133,6 +179,7 @@ const MentorDashboard = () => {
                 });
                 break;
             case "menteeInfo":
+                localStorage.setItem("chatRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     post: false,
@@ -142,6 +189,7 @@ const MentorDashboard = () => {
                 });
                 break;
             case "chat":
+                localStorage.setItem("chatRoute", JSON.stringify(true));
                 setNewMsgNotify(false);
                 setRoute({
                     home: false,
@@ -161,6 +209,12 @@ const MentorDashboard = () => {
         // calling dispatch directly without an action call from the actions folder because we dont need any api to be called for loging out.
         dispatch({ type: "LOGOUT_MENTOR" });
         history.push("/");
+    };
+
+    // play sound on notification
+    const playNotifySound = () => {
+        var audio = new Audio(NotifySound);
+        audio.play();
     };
 
     return (
@@ -232,7 +286,7 @@ const MentorDashboard = () => {
                         route.chat ? "text--gray-700 bg-gray-100" : "text-gray-400"
                     } flex items-center space-x-12 text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                 >
-                    <span className="flex items-center">
+                    <span className="flex items-center pointer-events-none">
                         <ChatAlt2Icon
                             alt={true}
                             myStyle={"h-5 w-5 mr-3"
@@ -241,7 +295,7 @@ const MentorDashboard = () => {
                         />
                         Chat
                     </span>
-                    {newMsgNotify && !route.chat && (
+                    {newMsgNotify && (
                         <DotIcon myStyle={"h-3 w-3 bg-blue-500 rounded-full float-right"} />
                     )}
                 </button>
@@ -292,7 +346,7 @@ const MentorDashboard = () => {
                     {/* conditional rendering of the inner tab screens */}
                     {route.post && <Post socket={socket} />}
                     {route.menteeInfo && <MenteeInfo />}
-                    {route.chat && <Chat setNewMsgNotify={setNewMsgNotify} />}
+                    {route.chat && <Chat />}
                 </div>
             </div>
         </div>

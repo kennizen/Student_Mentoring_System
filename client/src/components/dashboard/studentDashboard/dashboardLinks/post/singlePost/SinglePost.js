@@ -20,7 +20,6 @@ const SinglePost = ({
     executeFocusInput,
     setCommentLoading,
     index,
-    posts,
 }) => {
     // getting uid of the logged in user
     let uid = "";
@@ -72,7 +71,11 @@ const SinglePost = ({
                             <h6> {moment(post.createdAt).format("LLL")}</h6>
                             <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
                             <h6>
-                                {author.designation ? author.designation : "Designation not found"}
+                                {author.designation
+                                    ? author.designation
+                                    : author.role === "Mentor"
+                                    ? "Designation not found"
+                                    : "Student"}
                             </h6>
                             <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
                             <h6>

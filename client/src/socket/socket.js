@@ -1,12 +1,21 @@
 import io from "socket.io-client";
+import React from "react";
 
 const ENDPOINT = "http://localhost:5000";
 
-function connectSocket(token) {
-    var socket = io(ENDPOINT, {
-        query: { auth: token}
-    });
-    return socket;
-}
+// var socket;
 
-export default connectSocket;
+// function connectSocket(token) {
+//     socket = io(ENDPOINT, {
+//         query: { auth: token },
+//     });
+//     return socket;
+// }
+
+// const SocketContext = React.createContext(socket);
+
+// export default connectSocket;
+
+export const socket = io(ENDPOINT);
+
+export const SocketContext = React.createContext();
