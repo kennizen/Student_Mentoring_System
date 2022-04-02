@@ -105,7 +105,7 @@ studentSchema.methods.toJSON = function () {
 
     delete studentObject.password;
     delete studentObject.tokens;
-    delete studentObject.role;
+    // delete studentObject.role;
 
     return studentObject;
 };

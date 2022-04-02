@@ -79,6 +79,8 @@ module.exports = {
 
             socket.on("newNotification", async (post) => {
                 try {
+
+                    console.log("post noti", post);
                     if (post.authorData.role === roles.Mentor) {
                         const students = await Student.find({ mentoredBy: post.postData.group_id });
 
@@ -90,6 +92,17 @@ module.exports = {
                     if(post.authorData.role === roles.Student){
                         const students = await Student.find({ mentoredBy: post.postData.group_id });
                         const mentor = await Mentor.findById(post.postData.group_id);
+
+                        console.log("stu", students);
+                        console.log("Mentor", mentor);
+
+                        io.to(msgSocketMap[mentor._id]).emit("new Notification", post);
+                        students.forEach((student) => {
+                            if(student._id.toString() === post.authorData._id.toString()){
+                                return;
+                            }
+                            io.to(msgSocketMap[student._id]).emit("new Notification", post);
+                        });
                     }
 
                 } catch (err) {

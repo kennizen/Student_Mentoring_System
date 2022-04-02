@@ -335,11 +335,15 @@ const MentorDashboard = () => {
                             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
                         </svg>
                         <img
-                            src={data?.user?.avatar?.url}
+                            src={
+                                data?.mentorData?.data?.user?.avatar?.url === "" ?
+                                `https://avatars.dicebear.com/api/initials/${data?.mentorData?.data?.user?.firstname}%20${data?.mentorData?.data?.user?.lastname}.svg` :
+                                data?.mentorData?.data?.user?.avatar?.url
+                            }
                             alt="avatar"
                             className="w-14 h-14 rounded-full"
                         />
-                        <h4>{data?.user?.name}</h4>
+                        <h4>{`${data?.mentorData?.data?.user?.firstname} ${data?.mentorData?.data?.user?.middlename} ${data?.mentorData?.data?.user?.lastname}`}</h4>
                     </div>
                 </div>
                 <div className="h-9/10 bg-gray-100 overflow-hidden">
