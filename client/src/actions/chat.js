@@ -19,7 +19,7 @@ export const createChat = (history, setShowModal, chatIds) => async (dispatch) =
     }
 };
 
-export const ReorderChats = (id) => async (dispatch) => {
+export const reorderChats = (id) => async (dispatch) => {
     try {
         dispatch({ type: "REORDER_CHATS", id });
     } catch (error) {
@@ -27,7 +27,7 @@ export const ReorderChats = (id) => async (dispatch) => {
     }
 };
 
-export const AddSingleChat = (chat) => async (dispatch) => {
+export const addSingleChat = (chat) => async (dispatch) => {
     try {
         dispatch({ type: "ADD_SINGLE_CHAT", chat });
     } catch (error) {
@@ -35,7 +35,7 @@ export const AddSingleChat = (chat) => async (dispatch) => {
     }
 };
 
-export const AddNotification = (id) => async (dispatch) => {
+export const addNotification = (id) => async (dispatch) => {
     try {
         dispatch({ type: "ADD_NOTIFICATION", id });
     } catch (error) {
@@ -43,7 +43,7 @@ export const AddNotification = (id) => async (dispatch) => {
     }
 };
 
-export const UpdateLatestMessage = (data) => async (dispatch) => {
+export const updateLatestMessage = (data) => async (dispatch) => {
     try {
         const latestMessage = data.data;
         dispatch({ type: "UPDATE_CHAT", latestMessage });
@@ -77,9 +77,10 @@ export const createMessage = (history, message, socket, executeScroll) => async 
         if (data.code === 403) {
             history.goBack();
         } else {
-            dispatch({ type: "ADD_MESSAGES", data });
+            dispatch(addMessages(data));
             executeScroll();
-            dispatch(UpdateLatestMessage(data));
+            dispatch(updateLatestMessage(data));
+            dispatch(reorderChats(message.chat));
             socket.emit("newMessage", data);
         }
     } catch (error) {
@@ -105,19 +106,43 @@ export const getMessages = (history, chatId, page, setIsLoading) => async (dispa
     }
 };
 
-export const getOlderMessages = (history, chatId, page, setIsLoading) => async (dispatch) => {
+export const addMessages = (data) => async (dispatch) => {
     try {
-        setIsLoading(true);
-        const { data } = await api.getMessages(chatId, page);
-        console.log("older message get data", data);
-        // setMessages(data.data);
-        //check if the response data is error
-        if (data.code === 403) {
-            history.goBack();
-        } else {
-            dispatch({ type: "FETCH_OLDER_MESSAGES", data });
-            setIsLoading(false);
+        dispatch({ type: "ADD_MESSAGES", data });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getOlderMessages =
+    (history, chatId, page, setOldMessageLoading) => async (dispatch) => {
+        try {
+            const { data } = await api.getMessages(chatId, page);
+            console.log("older message get data", data);
+            // setMessages(data.data);
+            //check if the response data is error
+            if (data.code === 403) {
+                history.goBack();
+            } else {
+                dispatch({ type: "FETCH_OLDER_MESSAGES", data });
+            }
+            setOldMessageLoading(false);
+        } catch (error) {
+            console.log(error);
         }
+    };
+
+export const updateNotification = (tmp) => async (dispatch) => {
+    try {
+        dispatch({ type: "UPDATE_NOTIFICATION", tmp });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const clearMessages = () => async (dispatch) => {
+    try {
+        dispatch({ type: "CLEAR_MESSAGES" });
     } catch (error) {
         console.log(error);
     }

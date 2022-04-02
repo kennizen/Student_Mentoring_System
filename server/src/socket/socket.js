@@ -83,10 +83,7 @@ module.exports = {
                         const students = await Student.find({ mentoredBy: post.postData.group_id });
 
                         students.forEach((student) => {
-                            io.to(notifySocketMap[student._id.toString()]).emit(
-                                "new Notification",
-                                post
-                            );
+                            io.to(msgSocketMap[student._id]).emit("new Notification", post);
                         });
                     }
 

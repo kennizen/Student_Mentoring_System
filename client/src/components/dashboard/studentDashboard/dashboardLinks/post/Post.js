@@ -233,7 +233,6 @@ const Post = ({ socket }) => {
                                         executeFocusInput={executeFocusInput}
                                         setCommentLoading={setCommentLoading}
                                         index={index}
-                                        posts={posts}
                                     />
                                 );
                             })
@@ -247,7 +246,7 @@ const Post = ({ socket }) => {
                                 title="Load message"
                                 className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 hover:text-gray-700 text-xs transition-all mb-1`}
                             >
-                                Load More
+                                Load previous post
                             </button>
                         )
                     ) : (
