@@ -215,7 +215,8 @@ module.exports = {
             
             mentor.emailVerifyToken = token;
             await mentor.save();
-
+            
+            // sending email to mentor with link
             await emailService.sendEmailVerificationMail(token, mentor.email);
             response.success(res);
         }

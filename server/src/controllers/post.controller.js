@@ -12,6 +12,7 @@ module.exports = {
     createNewPost: async (req, res, next) => {
         try {
             const body = req.body.body;
+            const commentEnabled = req.body.commentEnabled;
 
             if (!body) {
                 return response.badrequest(res, "Please provide all required fields", {});
@@ -20,6 +21,7 @@ module.exports = {
             newPost.body = body;
             newPost.author = req.user._id;
             newPost.authorModel = req.user.role;
+            newPost.commentEnabled = commentEnabled;
 
             if (req.user.role === roles.Student) {
                 newPost.group_id = req.user.mentoredBy;
