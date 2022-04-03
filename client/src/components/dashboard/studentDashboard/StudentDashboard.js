@@ -31,6 +31,7 @@ import NotifySound from "../../../assets/sounds/light-562.ogg";
 import { SocketContext } from "../../../socket/socket";
 
 const StudentDashboard = () => {
+    // getting the socket context from the socket provider
     const socket = React.useContext(SocketContext);
 
     // getting uid of the logged in user
@@ -59,6 +60,9 @@ const StudentDashboard = () => {
 
     console.log("student data in dashboard", data);
 
+    // state variable to control the stream updated button
+    const [streamUpdated, setStreamUpdated] = useState(false);
+
     useEffect(() => {
         // socket = connectSocket(token);
         // socket.emit("notify setup", uid);
@@ -67,7 +71,12 @@ const StudentDashboard = () => {
 
         socket.on("new Notification", (data) => {
             console.log("new socket Notification", data);
-            alert("New post update");
+            if (
+                localStorage.getItem("postRoute") !== null &&
+                JSON.parse(localStorage.getItem("postRoute"))
+            ) {
+                setStreamUpdated(true);
+            }
         });
 
         return (data) => {
@@ -92,6 +101,8 @@ const StudentDashboard = () => {
         if (localStorage.getItem("0") !== null) {
             localStorage.removeItem("0");
         }
+        localStorage.setItem("chatRoute", false);
+        localStorage.setItem("postRoute", false);
     }, [dispatch, history]);
 
     // useeffect call when message is received
@@ -104,11 +115,6 @@ const StudentDashboard = () => {
         };
 
         socket.on("message received", (data) => {
-            if (localStorage.getItem("chatRoute") !== null) {
-                let val = JSON.parse(localStorage.getItem("chatRoute"));
-                if (!val) setNewMsgNotify(true);
-            }
-
             /* this is to create the chat automatically if chat not shown and message came in user chat */
             if (localStorage.getItem("chats") !== null) {
                 let chats = JSON.parse(localStorage.getItem("chats"));
@@ -127,9 +133,17 @@ const StudentDashboard = () => {
             if (localStorage.getItem("selectedChat") === data.data.chat._id.toString()) {
                 if (
                     localStorage.getItem("visible") !== null &&
-                    localStorage.getItem("visible") === "true" // visible val in string
+                    JSON.parse(localStorage.getItem("visible"))
                 )
-                    notification(data);
+                    notification(data); // notification when scroll to bottom button visible
+                else if (localStorage.getItem("chatRoute") !== null) {
+                    let val = JSON.parse(localStorage.getItem("chatRoute"));
+                    if (!val) {
+                        setNewMsgNotify(true);
+                        // notification when selected chat is same but in different tab
+                        notification(data);
+                    }
+                }
                 dispatch(addMessages(data));
                 dispatch(updateLatestMessage(data));
             } else {
@@ -156,6 +170,7 @@ const StudentDashboard = () => {
         switch (selectedTab) {
             case "home":
                 localStorage.setItem("chatRoute", JSON.stringify(false));
+                localStorage.setItem("postRoute", JSON.stringify(false));
                 setRoute({
                     home: true,
                     post: false,
@@ -166,6 +181,7 @@ const StudentDashboard = () => {
                 break;
             case "profile":
                 localStorage.setItem("chatRoute", JSON.stringify(false));
+                localStorage.setItem("postRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     chat: false,
@@ -176,6 +192,7 @@ const StudentDashboard = () => {
                 break;
             case "academicDetails":
                 localStorage.setItem("chatRoute", JSON.stringify(false));
+                localStorage.setItem("postRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     chat: false,
@@ -186,6 +203,7 @@ const StudentDashboard = () => {
                 break;
             case "chat":
                 localStorage.setItem("chatRoute", JSON.stringify(true));
+                localStorage.setItem("postRoute", JSON.stringify(false));
                 setNewMsgNotify(false);
                 setRoute({
                     home: false,
@@ -197,6 +215,7 @@ const StudentDashboard = () => {
                 break;
             case "post":
                 localStorage.setItem("chatRoute", JSON.stringify(false));
+                localStorage.setItem("postRoute", JSON.stringify(true));
                 setRoute({
                     home: false,
                     chat: false,
@@ -334,15 +353,15 @@ const StudentDashboard = () => {
                             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
                         </svg>
                         <img
-                             src={
-                                data?.studentData?.data?.user?.avatar?.url === "" ?
-                                `https://avatars.dicebear.com/api/initials/${data?.studentData?.data?.user?.firstname}%20${data?.studentData?.data?.user?.lastname}.svg` :
-                                data?.studentData?.data?.user?.avatar?.url
+                            src={
+                                data?.studentData?.data?.user?.avatar?.url === ""
+                                    ? `https://avatars.dicebear.com/api/initials/${data?.studentData?.data?.user?.firstname}%20${data?.studentData?.data?.user?.lastname}.svg`
+                                    : data?.studentData?.data?.user?.avatar?.url
                             }
                             alt="avatar"
                             className="w-14 h-14 rounded-full"
                         />
-                         <h4>{`${data?.studentData?.data?.user?.firstname} ${data?.studentData?.data?.user?.middlename} ${data?.studentData?.data?.user?.lastname}`}</h4>
+                        <h4>{`${data?.studentData?.data?.user?.firstname} ${data?.studentData?.data?.user?.middlename} ${data?.studentData?.data?.user?.lastname}`}</h4>
                     </div>
                 </div>
                 <div className="h-9/10 bg-gray-100 overflow-hidden">
@@ -351,7 +370,13 @@ const StudentDashboard = () => {
                     {route.profile && <Profile />}
                     {route.home && <Home />}
                     {route.chat && <Chat />}
-                    {route.post && <Post socket={socket} />}
+                    {route.post && (
+                        <Post
+                            socket={socket}
+                            streamUpdated={streamUpdated}
+                            setStreamUpdated={setStreamUpdated}
+                        />
+                    )}
                 </div>
             </div>
         </div>

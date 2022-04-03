@@ -31,15 +31,10 @@ module.exports = {
             }
             await newPost.save();
 
-            // updating author for sending in response instead of requesting to db
-            newPost.author = req.user;
-            const authorData = newPost.author;
-            response.success(res, "Post created", { postData: newPost, authorData });
-
             // creating a notification
             if (req.user.role === roles.Mentor) {
                 const mentees = await Student.find({ mentoredBy: req.user._id });
-                notificationController.createPostNotification(
+                await notificationController.createPostNotification(
                     Events.POST_CREATED,
                     newPost,
                     req.user,
@@ -51,13 +46,18 @@ module.exports = {
                 const mentees = await Student.find({ mentoredBy: req.user.mentoredBy });
                 const mentor = await Mentor.findById(req.user.mentoredBy);
                 mentees.push(mentor);
-                notificationController.createPostNotification(
+                await notificationController.createPostNotification(
                     Events.POST_CREATED,
                     newPost,
                     req.user,
                     mentees
                 );
             }
+
+            // updating author for sending in response instead of requesting to db
+            newPost.author = req.user;
+            const authorData = newPost.author;
+            response.success(res, "Post created", { postData: newPost, authorData });
 
             next();
         } catch (err) {

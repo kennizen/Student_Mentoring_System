@@ -49,7 +49,7 @@ export const submitPost = (history, post, socket, executeScroll) => async (dispa
             const post = data.data;
             dispatch({ type: "ADD_SINGLE_POST", post });
             executeScroll();
-            socket.emit("newNotification", post);
+            socket.emit("newNotification", post.postData);
         }
     } catch (error) {
         console.log(error);

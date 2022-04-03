@@ -49,7 +49,12 @@ router.get("/profile", Auth, Authorize(Role.Mentor), mentorController.getProfile
 // email verification
 router.get("/verifyEmail", mentorController.emailVerification);
 
-// generate email verification token 
-router.post("/verifyEmail", Auth, Authorize(Role.Mentor), mentorController.generateEmailVerificationToken);
+// generate email verification token
+router.post(
+    "/verifyEmail",
+    Auth,
+    Authorize(Role.Mentor),
+    mentorController.generateEmailVerificationToken
+);
 
 module.exports = router;
