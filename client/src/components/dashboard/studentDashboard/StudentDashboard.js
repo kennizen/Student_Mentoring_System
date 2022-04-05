@@ -77,6 +77,9 @@ const StudentDashboard = () => {
             ) {
                 setStreamUpdated(true);
             }
+            // else{
+
+            // }
         });
 
         return (data) => {

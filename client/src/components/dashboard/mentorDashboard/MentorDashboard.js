@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -29,41 +29,25 @@ import {
 import NotifySound from "../../../assets/sounds/light-562.ogg";
 import BellIcon from "../../../assets/BellIcon";
 import Notification from "../../notification/Notification";
+import { addGlobalNotification, getAllNotifications } from "../../../actions/notification";
+import { CSSTransition } from "react-transition-group";
+import NotificationCounter from "../../notification/NotificationCounter";
 
 const MentorDashboard = () => {
     // getting uid of the logged in user
     let uid = "";
-    //let token = "";
     if (localStorage.getItem("authData")) {
         uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-        //token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
     }
 
+    // getting the socket context from the provider
     const socket = React.useContext(SocketContext);
-
-    // state for maintaining the side nav bar
-    const [route, setRoute] = useState({
-        home: true,
-        post: false,
-        menteeInfo: false,
-        profile: false,
-        chat: false,
-    });
-
-    const [newMsgNotify, setNewMsgNotify] = useState(false);
-
-    // setting the admin auth token
-    const dispatch = useDispatch();
-    const history = useHistory();
-    // accessing the redux store state
-    const { mentorData } = useSelector((state) => state.mentor);
-
-    console.log("mentor data in dashboard", mentorData);
 
     // fetching the admin details
     useEffect(() => {
         dispatch(mentorGetDetails(history));
         dispatch(getAllChat(history));
+        dispatch(getAllNotifications(history));
         localStorage.setItem("chatRoute", JSON.stringify(false));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
@@ -81,6 +65,26 @@ const MentorDashboard = () => {
         localStorage.setItem("postRoute", false);
     }, []);
 
+    // state for maintaining the side nav bar
+    const [route, setRoute] = useState({
+        home: true,
+        post: false,
+        menteeInfo: false,
+        profile: false,
+        chat: false,
+    });
+
+    // state to control the chat notification on the dashboard tab
+    const [newMsgNotify, setNewMsgNotify] = useState(false);
+
+    // setting the admin auth token
+    const dispatch = useDispatch();
+    const history = useHistory();
+    // accessing the redux store state
+    const { mentorData } = useSelector((state) => state.mentor);
+
+    console.log("mentor data in dashboard", mentorData);
+
     // state variable to control the stream updated button
     const [streamUpdated, setStreamUpdated] = useState(false);
 
@@ -93,10 +97,14 @@ const MentorDashboard = () => {
         socket.on("new Notification", (data) => {
             console.log("new socket Notification", data);
             if (
-                localStorage.get("postRoute") !== null &&
+                localStorage.getItem("postRoute") !== null &&
                 JSON.parse(localStorage.getItem("postRoute"))
             ) {
                 setStreamUpdated(true);
+            } else {
+                if (data.event.type === "POST_CREATED") {
+                    dispatch(addGlobalNotification(data));
+                }
             }
         });
 
@@ -236,6 +244,12 @@ const MentorDashboard = () => {
         audio.play();
     };
 
+    // state to control notification panel show and dont show
+    const [showNotificationDropDown, setShowNotificationDropDown] = useState(false);
+
+    // node ref used in css transition for the notification panel
+    const notificationDropDown = useRef(null);
+
     return (
         <div className="h-screen flex bg-gray-50">
             {!mentorData && <Loading />}
@@ -345,10 +359,29 @@ const MentorDashboard = () => {
             <div className="w-17/20 h-screen">
                 <div className="relative w-full h-1/10 bg-white shadow-md flex items-center justify-end">
                     <div className="flex items-center justify-evenly w-1/5">
-                        <button className="hover:bg-gray-200 transition-all p-2 rounded-full relative">
-                            <BellIcon myStyle={"h-6 w-6 text-blue-600"} alt={true} />
-                            <Notification />
-                        </button>
+                        <div className="relative">
+                            <button
+                                onClick={() => {
+                                    setShowNotificationDropDown(!showNotificationDropDown);
+                                }}
+                                className="hover:bg-gray-200 transition-all p-2 rounded-full relative"
+                            >
+                                <BellIcon
+                                    myStyle={"h-7 w-7 text-blue-600"}
+                                    alt={!showNotificationDropDown}
+                                />
+                                <NotificationCounter />
+                            </button>
+                            <CSSTransition
+                                nodeRef={notificationDropDown}
+                                in={showNotificationDropDown}
+                                timeout={300}
+                                classNames="modal"
+                                unmountOnExit
+                            >
+                                <Notification nodeRef={notificationDropDown} />
+                            </CSSTransition>
+                        </div>
                         <span className="flex items-center justify-between gap-x-3">
                             <img
                                 src={

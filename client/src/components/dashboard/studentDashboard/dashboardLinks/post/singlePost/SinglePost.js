@@ -68,7 +68,7 @@ const SinglePost = ({
                     <div>
                         <h3>{`${author.firstname} ${author.middlename} ${author.lastname}`}</h3>
                         <div className="flex items-center justify-center">
-                            <h6> {moment(post.createdAt).format("LLL")}</h6>
+                            <h6>{moment(post.createdAt).format("LLL")}</h6>
                             <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
                             <h6>
                                 {author.designation
