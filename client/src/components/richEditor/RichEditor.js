@@ -32,7 +32,7 @@ const RichEditor = ({
                     ["bold", "underline", "italic"],
                     ["link", "list", "align"],
                     ["fontSize", "subscript", "superscript"],
-                    ["table", "undo", "redo"],
+                    ["undo", "redo"],
                 ],
                 defaultStyle: "font-family: sans-serif; font-size: 14px;",
                 resizingBar: false,

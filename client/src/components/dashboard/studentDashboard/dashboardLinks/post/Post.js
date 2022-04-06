@@ -20,7 +20,7 @@ import CommentDeleteModal from "./postModals/CommentDeleteModal";
 import Loading from "../../../../loading/Loading";
 import RichEditor from "../../../../richEditor/RichEditor";
 
-const Post = ({ socket }) => {
+const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -67,6 +67,7 @@ const Post = ({ socket }) => {
     // state variable to store the post body
     const [postBody, setPostBody] = useState({
         body: "",
+        commentEnabled: true,
     });
     // state variable to store the comment body
     const [commentBody, setCommentBody] = useState({
@@ -86,10 +87,18 @@ const Post = ({ socket }) => {
         let text = content.replace(/<[^>]+>/g, ""); // regex to convert html to plain text
         if (text === "") setDisablePost(true);
         else setDisablePost(false);
-        setPostBody({ ...postBody, body: content });
+        setPostBody((prevState) => ({ ...prevState, body: content }));
     };
 
-    console.log(postBody.body);
+    // fucntion to set the comment disable state
+    const handleToggleCommentDisable = () => {
+        setPostBody((prevState) => ({
+            ...prevState,
+            commentEnabled: !prevState.commentEnabled,
+        }));
+    };
+
+    console.log(postBody);
 
     // function to handle the post submission
     const handlePostSubmit = (e, postId, postContent) => {
@@ -98,6 +107,7 @@ const Post = ({ socket }) => {
             dispatch(submitPost(history, postBody, socket, executeScroll));
             setPostBody({
                 body: "",
+                commentEnabled: true,
             });
         } else {
             dispatch(updatePost(history, postId, postContent));
@@ -133,7 +143,7 @@ const Post = ({ socket }) => {
     const executeFocusInput = () => {
         setTimeout(() => {
             focusInput?.current?.focus();
-        }, 1);
+        }, 10);
     };
 
     // state to set the number of pages to fetch the old messages
@@ -203,7 +213,19 @@ const Post = ({ socket }) => {
                     id={selectedComment?._id}
                 />
             </CSSTransition>
-            <div className="col-span-8 border-r-2 border-gray-200 flex flex-col overflow-y-auto pt-2 pr-2">
+            <div className="col-span-8 border-r-2 border-gray-200 flex flex-col overflow-y-auto pt-2 pr-2 relative">
+                <button
+                    onClick={() => {
+                        setPostLoading(true);
+                        setStreamUpdated(false);
+                        dispatch(getAllPosts(history, 1, setPostLoading));
+                    }}
+                    className={`py-1 px-3 bg-white rounded-md text-blue-600 shadow-m32 hover:shadow-md transition-all flex items-center justify-between absolute left-1/2 transform -translate-x-1/2 -top-10 ${
+                        streamUpdated ? "translate-y-24" : ""
+                    } text-sm`}
+                >
+                    Stream updated
+                </button>
                 <div
                     className={`h-3/4 overflow-y-auto mb-3 pr-2 flex flex-col-reverse ${
                         postLoading && "justify-center"
@@ -258,6 +280,19 @@ const Post = ({ socket }) => {
                     onSubmit={handlePostSubmit}
                 >
                     <div className="w-full flex items-center justify-end p-1">
+                        <span className="flex items-center justify-between gap-x-2 mr-5 cursor-pointer text-sm bg-gray-200 py-1.5 px-2 rounded-md">
+                            <input
+                                className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer focus:ring-0 focus:ring-offset-0"
+                                type="checkbox"
+                                id="disableComment"
+                                onChange={handleToggleCommentDisable}
+                                checked={!postBody.commentEnabled}
+                            />
+                            <label className="cursor-pointer" htmlFor="disableComment">
+                                Disable comments
+                            </label>
+                        </span>
+
                         <button
                             disabled={disablePost}
                             type="submit"

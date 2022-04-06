@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -27,41 +27,27 @@ import {
 } from "../../../actions/chat";
 
 import NotifySound from "../../../assets/sounds/light-562.ogg";
+import BellIcon from "../../../assets/BellIcon";
+import Notification from "../../notification/Notification";
+import { addGlobalNotification, getAllNotifications } from "../../../actions/notification";
+import { CSSTransition } from "react-transition-group";
+import NotificationCounter from "../../notification/NotificationCounter";
 
 const MentorDashboard = () => {
     // getting uid of the logged in user
     let uid = "";
-    //let token = "";
     if (localStorage.getItem("authData")) {
         uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-        //token = JSON.parse(localStorage.getItem("authData"))["auth_token"];
     }
 
+    // getting the socket context from the provider
     const socket = React.useContext(SocketContext);
-
-    // state for maintaining the side nav bar
-    const [route, setRoute] = useState({
-        home: true,
-        post: false,
-        menteeInfo: false,
-        profile: false,
-        chat: false,
-    });
-
-    const [newMsgNotify, setNewMsgNotify] = useState(false);
-
-    // setting the admin auth token
-    const dispatch = useDispatch();
-    const history = useHistory();
-    // accessing the redux store state
-    const data = useSelector((state) => state.mentor);
-
-    console.log("mentor data in dashboard", data);
 
     // fetching the admin details
     useEffect(() => {
         dispatch(mentorGetDetails(history));
         dispatch(getAllChat(history));
+        dispatch(getAllNotifications(history));
         localStorage.setItem("chatRoute", JSON.stringify(false));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
@@ -75,18 +61,51 @@ const MentorDashboard = () => {
         if (localStorage.getItem("0") !== null) {
             localStorage.removeItem("0");
         }
+        localStorage.setItem("chatRoute", false);
+        localStorage.setItem("postRoute", false);
     }, []);
 
+    // state for maintaining the side nav bar
+    const [route, setRoute] = useState({
+        home: true,
+        post: false,
+        menteeInfo: false,
+        profile: false,
+        chat: false,
+    });
+
+    // state to control the chat notification on the dashboard tab
+    const [newMsgNotify, setNewMsgNotify] = useState(false);
+
+    // setting the admin auth token
+    const dispatch = useDispatch();
+    const history = useHistory();
+    // accessing the redux store state
+    const { mentorData } = useSelector((state) => state.mentor);
+
+    console.log("mentor data in dashboard", mentorData);
+
+    // state variable to control the stream updated button
+    const [streamUpdated, setStreamUpdated] = useState(false);
+
     useEffect(() => {
-        // console.log("notify socket", socket);
+        // socket = connectSocket(token);
         // socket.emit("notify setup", uid);
         socket.emit("setup", uid);
         console.log("socket", socket);
 
-        // upon a new notification
         socket.on("new Notification", (data) => {
             console.log("new socket Notification", data);
-            alert("New post update");
+            if (
+                localStorage.getItem("postRoute") !== null &&
+                JSON.parse(localStorage.getItem("postRoute"))
+            ) {
+                setStreamUpdated(true);
+            } else {
+                if (data.event.type === "POST_CREATED") {
+                    dispatch(addGlobalNotification(data));
+                }
+            }
         });
 
         return (data) => {
@@ -104,11 +123,6 @@ const MentorDashboard = () => {
         };
 
         socket.on("message received", (data) => {
-            if (localStorage.getItem("chatRoute") !== null) {
-                let val = JSON.parse(localStorage.getItem("chatRoute"));
-                if (!val) setNewMsgNotify(true);
-                //playNotifySound();
-            }
             /* this is to create the chat automatically if chat not shown and message came in user chat */
             if (localStorage.getItem("chats") !== null) {
                 let chats = JSON.parse(localStorage.getItem("chats"));
@@ -127,9 +141,17 @@ const MentorDashboard = () => {
             if (localStorage.getItem("selectedChat") === data.data.chat._id.toString()) {
                 if (
                     localStorage.getItem("visible") !== null &&
-                    localStorage.getItem("visible") === "true" // visible val in string
+                    JSON.parse(localStorage.getItem("visible"))
                 )
-                    notification(data);
+                    notification(data); // notification when scroll to bottom button visible
+                else if (localStorage.getItem("chatRoute") !== null) {
+                    let val = JSON.parse(localStorage.getItem("chatRoute"));
+                    if (!val) {
+                        setNewMsgNotify(true);
+                        // notification when selected chat is same but in different tab
+                        notification(data);
+                    }
+                }
                 dispatch(addMessages(data));
                 dispatch(updateLatestMessage(data));
             } else {
@@ -150,6 +172,7 @@ const MentorDashboard = () => {
         switch (selectedTab) {
             case "home":
                 localStorage.setItem("chatRoute", JSON.stringify(false));
+                localStorage.setItem("postRoute", JSON.stringify(false));
                 setRoute({
                     home: true,
                     post: false,
@@ -160,6 +183,7 @@ const MentorDashboard = () => {
                 break;
             case "post":
                 localStorage.setItem("chatRoute", JSON.stringify(false));
+                localStorage.setItem("postRoute", JSON.stringify(true));
                 setRoute({
                     home: false,
                     post: true,
@@ -170,6 +194,7 @@ const MentorDashboard = () => {
                 break;
             case "profile":
                 localStorage.setItem("chatRoute", JSON.stringify(false));
+                localStorage.setItem("postRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     post: false,
@@ -180,6 +205,7 @@ const MentorDashboard = () => {
                 break;
             case "menteeInfo":
                 localStorage.setItem("chatRoute", JSON.stringify(false));
+                localStorage.setItem("postRoute", JSON.stringify(false));
                 setRoute({
                     home: false,
                     post: false,
@@ -190,6 +216,7 @@ const MentorDashboard = () => {
                 break;
             case "chat":
                 localStorage.setItem("chatRoute", JSON.stringify(true));
+                localStorage.setItem("postRoute", JSON.stringify(false));
                 setNewMsgNotify(false);
                 setRoute({
                     home: false,
@@ -217,9 +244,15 @@ const MentorDashboard = () => {
         audio.play();
     };
 
+    // state to control notification panel show and dont show
+    const [showNotificationDropDown, setShowNotificationDropDown] = useState(false);
+
+    // node ref used in css transition for the notification panel
+    const notificationDropDown = useRef(null);
+
     return (
         <div className="h-screen flex bg-gray-50">
-            {!data && <Loading />}
+            {!mentorData && <Loading />}
             <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
                 <div className="h-1/10 flex items-center justify-center">
                     <svg
@@ -326,29 +359,55 @@ const MentorDashboard = () => {
             <div className="w-17/20 h-screen">
                 <div className="relative w-full h-1/10 bg-white shadow-md flex items-center justify-end">
                     <div className="flex items-center justify-evenly w-1/5">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-blue-600"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-                        </svg>
-                        <img
-                            src={
-                                data?.mentorData?.data?.user?.avatar?.url === "" ?
-                                `https://avatars.dicebear.com/api/initials/${data?.mentorData?.data?.user?.firstname}%20${data?.mentorData?.data?.user?.lastname}.svg` :
-                                data?.mentorData?.data?.user?.avatar?.url
-                            }
-                            alt="avatar"
-                            className="w-14 h-14 rounded-full"
-                        />
-                        <h4>{`${data?.mentorData?.data?.user?.firstname} ${data?.mentorData?.data?.user?.middlename} ${data?.mentorData?.data?.user?.lastname}`}</h4>
+                        <div className="relative">
+                            <button
+                                onClick={() => {
+                                    setShowNotificationDropDown(!showNotificationDropDown);
+                                }}
+                                className="hover:bg-gray-200 transition-all p-2 rounded-full relative"
+                            >
+                                <BellIcon
+                                    myStyle={"h-7 w-7 text-blue-600"}
+                                    alt={!showNotificationDropDown}
+                                />
+                                <NotificationCounter />
+                            </button>
+                            <CSSTransition
+                                nodeRef={notificationDropDown}
+                                in={showNotificationDropDown}
+                                timeout={300}
+                                classNames="modal"
+                                unmountOnExit
+                            >
+                                <Notification nodeRef={notificationDropDown} />
+                            </CSSTransition>
+                        </div>
+                        <span className="flex items-center justify-between gap-x-3">
+                            <img
+                                src={
+                                    mentorData?.data?.user?.avatar?.url === ""
+                                        ? `https://avatars.dicebear.com/api/initials/${mentorData?.data?.user?.firstname}.svg`
+                                        : mentorData?.data?.user?.avatar?.url
+                                }
+                                alt="avatar"
+                                className="w-14 h-14 rounded-full"
+                            />
+                            <span>
+                                <h3>{`${mentorData?.data?.user?.firstname} ${mentorData?.data?.user?.middlename} ${mentorData?.data?.user?.lastname}`}</h3>
+                                <h6>{`${mentorData?.data?.user?.email}`}</h6>
+                            </span>
+                        </span>
                     </div>
                 </div>
                 <div className="h-9/10 bg-gray-100 overflow-hidden">
                     {/* conditional rendering of the inner tab screens */}
-                    {route.post && <Post socket={socket} />}
+                    {route.post && (
+                        <Post
+                            socket={socket}
+                            streamUpdated={streamUpdated}
+                            setStreamUpdated={setStreamUpdated}
+                        />
+                    )}
                     {route.menteeInfo && <MenteeInfo />}
                     {route.chat && <Chat />}
                 </div>

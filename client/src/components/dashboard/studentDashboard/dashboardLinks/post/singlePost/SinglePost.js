@@ -68,7 +68,7 @@ const SinglePost = ({
                     <div>
                         <h3>{`${author.firstname} ${author.middlename} ${author.lastname}`}</h3>
                         <div className="flex items-center justify-center">
-                            <h6> {moment(post.createdAt).format("LLL")}</h6>
+                            <h6>{moment(post.createdAt).format("LLL")}</h6>
                             <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
                             <h6>
                                 {author.designation
@@ -131,25 +131,27 @@ const SinglePost = ({
                 </div>
             </div>
             <p className="mb-4 a-tag" dangerouslySetInnerHTML={{ __html: `${post.body}` }}></p>
-            <div className="flex items-center justify-end">
-                <button
-                    onClick={handleBotButtons}
-                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-2 rounded-md transition-all text-sm"
-                >
-                    <ChatIcon alt={true} myStyle={"h-4 w-4 mr-1"} />
-                    comments {post.commentCount}
-                </button>
-                <button
-                    onClick={() => {
-                        handleBotButtons();
-                        executeFocusInput();
-                    }}
-                    className="flex items-center justify-end hover:bg-gray-200 place-self-end p-2 rounded-md transition-all text-sm"
-                >
-                    <ReplyIcon alt={false} myStyle={"h-4 w-4 mr-1"} />
-                    reply
-                </button>
-            </div>
+            {post.commentEnabled && (
+                <div className="flex items-center justify-end">
+                    <button
+                        onClick={handleBotButtons}
+                        className="flex items-center justify-end hover:bg-gray-200 place-self-end p-2 rounded-md transition-all text-sm"
+                    >
+                        <ChatIcon alt={true} myStyle={"h-4 w-4 mr-1"} />
+                        comments {post.commentCount}
+                    </button>
+                    <button
+                        onClick={() => {
+                            handleBotButtons();
+                            executeFocusInput();
+                        }}
+                        className="flex items-center justify-end hover:bg-gray-200 place-self-end p-2 rounded-md transition-all text-sm"
+                    >
+                        <ReplyIcon alt={false} myStyle={"h-4 w-4 mr-1"} />
+                        reply
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
