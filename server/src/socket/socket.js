@@ -5,6 +5,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 const roles = require("../utils/roles");
 const Mentor = require("../models/Mentor");
 const Student = require("../models/Student");
+const Notification = require("../models/Notification");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 
@@ -77,38 +78,55 @@ module.exports = {
                 io.to(msgSocketMap[receiver.user._id]).emit("message received", newMessage);
             });
 
-            socket.on("newNotification", async (post) => {
+            // socket.on("newNotification", async (post) => {
+            //     try {
+
+            //         console.log("post noti", post);
+            //         if (post.authorData.role === roles.Mentor) {
+            //             const students = await Student.find({ mentoredBy: post.postData.group_id });
+
+            //             students.forEach((student) => {
+            //                 io.to(msgSocketMap[student._id]).emit("new Notification", post);
+            //             });
+            //         }
+
+            //         if(post.authorData.role === roles.Student){
+            //             const students = await Student.find({ mentoredBy: post.postData.group_id });
+            //             const mentor = await Mentor.findById(post.postData.group_id);
+
+            //             // console.log("stu", students);
+            //             // console.log("Mentor", mentor);
+
+            //             io.to(msgSocketMap[mentor._id]).emit("new Notification", post);
+            //             students.forEach((student) => {
+            //                 if(student._id.toString() === post.authorData._id.toString()){
+            //                     return;
+            //                 }
+            //                 io.to(msgSocketMap[student._id]).emit("new Notification", post);
+            //             });
+            //         }
+
+            //     } catch (err) {
+            //         console.log(err);
+            //     }
+            // });
+
+            socket.on("newNotification", async (content) => {
                 try {
-
-                    console.log("post noti", post);
-                    if (post.authorData.role === roles.Mentor) {
-                        const students = await Student.find({ mentoredBy: post.postData.group_id });
-
-                        students.forEach((student) => {
-                            io.to(msgSocketMap[student._id]).emit("new Notification", post);
-                        });
-                    }
-
-                    if(post.authorData.role === roles.Student){
-                        const students = await Student.find({ mentoredBy: post.postData.group_id });
-                        const mentor = await Mentor.findById(post.postData.group_id);
-
-                        console.log("stu", students);
-                        console.log("Mentor", mentor);
-
-                        io.to(msgSocketMap[mentor._id]).emit("new Notification", post);
-                        students.forEach((student) => {
-                            if(student._id.toString() === post.authorData._id.toString()){
-                                return;
-                            }
-                            io.to(msgSocketMap[student._id]).emit("new Notification", post);
-                        });
-                    }
-
-                } catch (err) {
+                    const notification = await Notification.findOne({ content: content._id }).populate(["content", "creator", "receivers.user"]);
+                    // emiting notifications to each 
+                    notification.receivers.forEach((receiver) => {
+                        if(receiver.user._id.toString() === creator._id.toString()){
+                            return;
+                        }
+                        io.to(msgSocketMap[receiver.user._id]).emit("new Notification", notification);
+                    })
+                }
+                catch(err){
                     console.log(err);
                 }
             });
+
         });
     },
 };

@@ -1,5 +1,6 @@
 const Notification = require("../models/Notification");
 const response = require("../utils/responses.utils");
+const roles = require("../utils/roles");
 
 module.exports = {
 
@@ -11,7 +12,7 @@ module.exports = {
      * @param {*} creator User who created the notification
      * @param {*} receivers Users who will receive notifications
      */
-    createPostNotification: async (event, content, creator, receivers) => {
+    createNotification: async (event, content, creator, receivers) => {
         console.log("Post Notification triggered..")
         try{
             const newNotify = new Notification({
@@ -46,5 +47,50 @@ module.exports = {
         catch(err){
             console.log(err)
         }
+    },
+
+    // fetch notification by id
+    getNotificationById: async (req, res, next) => {
+        try{
+            const notification = await Notification.findById(req.params.id);
+            response.success(res, "", notification);
+        }
+        catch(err){
+            console.log(err);
+            response.error(res);
+        }
+    },
+
+    // set notifications as read
+    setNotificationAsRead: async (req, res, next) => {
+        try{
+            const user = req.user;
+            const notifications = req.body.notificationIds;
+
+            notifications.forEach(async (item) => {
+
+                if(item.willReceive) {
+                    await Notification.findOneAndUpdate({ _id: item.id, "receivers.user": user._id }, {
+                        $set: {
+                            "receivers.$.read": true,
+                            "receivers.$.willReceive": true
+                        }
+                    })
+                } 
+                else {
+                    await Notification.findOneAndUpdate({ _id: item.id, "receivers.user": user._id }, {
+                        $set: {
+                            "receivers.$.read": true,
+                        }
+                    })
+                }
+            });
+            
+            response.success(res);
+        }
+        catch(err){
+            console.log(err)
+        }
     }
+
 }

@@ -94,7 +94,7 @@ module.exports = {
                 return response.notfound(res, "User not found");
             }
             
-            const token = jwt.sign({ _id: mentor._id.toString() }, process.env.JWT_SECRET, {
+            const token = jwt.sign({ _id: mentor._id.toString(), role: mentor.role }, process.env.JWT_SECRET, {
                 expiresIn: "1h",
             });
             mentor.passwordResetToken = token;

@@ -24,7 +24,8 @@ const notificationModel = new mongoose.Schema(
         receivers: [{
             role: String,
             user: { type: mongoose.Schema.Types.ObjectId, refPath: "receivers.role" },
-            read: { type: Boolean, default: false }
+            read: { type: Boolean, default: false },
+            willReceive: { type: Boolean, default: false }
         }],
         // receivers will be set by the method which triggers the notification
     

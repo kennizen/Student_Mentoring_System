@@ -6,7 +6,7 @@ const morgan = require("morgan");
 const { Server } = require("socket.io");
 const socket = require("./socket/socket");
 const dotenv = require("dotenv");
-const Chat = require("./models/Chat");
+const Chat = require("./models/Chat"); 
 
 // middlewares
 const { rateLimiter } = require("./middlewares/rateLimiter"); 
@@ -25,6 +25,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.set("trust proxy", true);
+app.set("view engine", "hbs");
 /** server HTTP request logging
  * :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"
  * */
@@ -79,3 +80,6 @@ global.notifySocketMap = {};
 
 // socket connection start
 socket.start(io);
+
+// crons
+require("./crons/interaction.cron");

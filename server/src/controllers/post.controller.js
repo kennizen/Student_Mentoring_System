@@ -5,7 +5,7 @@ const Student = require("../models/Student");
 const response = require("../utils/responses.utils");
 const roles = require("../utils/roles");
 const notificationController = require("../controllers/notification.controller");
-const Events = require("../utils/logEvents");
+const events = require("../utils/logEvents");
 
 module.exports = {
     // create new post
@@ -31,16 +31,12 @@ module.exports = {
             }
             await newPost.save();
 
-            // updating author for sending in response instead of requesting to db
-            newPost.author = req.user;
-            const authorData = newPost.author;
-            response.success(res, "Post created", { postData: newPost, authorData });
-
             // creating a notification
             if (req.user.role === roles.Mentor) {
                 const mentees = await Student.find({ mentoredBy: req.user._id });
-                notificationController.createPostNotification(
-                    Events.POST_CREATED,
+                // generating new post notification
+                await notificationController.createNotification(
+                    events.POST_CREATED,
                     newPost,
                     req.user,
                     mentees
@@ -48,17 +44,27 @@ module.exports = {
             }
 
             if (req.user.role === roles.Student) {
-                const mentees = await Student.find({ mentoredBy: req.user.mentoredBy });
+                const mentees = await Student.find({$and: [{
+                    _id: { $ne: req.user._id }
+                    },{ mentoredBy: req.user.mentoredBy }
+                ]});
+                console.log("mentees", mentees);
                 const mentor = await Mentor.findById(req.user.mentoredBy);
                 mentees.push(mentor);
-                notificationController.createPostNotification(
-                    Events.POST_CREATED,
+                // generating new post notification
+                await notificationController.createNotification(
+                    events.POST_CREATED,
                     newPost,
                     req.user,
                     mentees
                 );
             }
 
+            // updating author for sending in response instead of requesting to db
+            newPost.author = req.user;
+            const authorData = newPost.author;
+            response.success(res, "Post created", { postData: newPost, authorData });
+            
             next();
         } catch (err) {
             console.log(err);
