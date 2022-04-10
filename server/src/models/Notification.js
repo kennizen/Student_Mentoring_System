@@ -14,21 +14,22 @@ const notificationModel = new mongoose.Schema(
             type: String,
             trim: true,
             required: true,
-            enum: ["Mentor", "Student", "Admin"]
+            enum: ["Mentor", "Student", "Admin"],
         },
         content: {
             type: mongoose.Schema.Types.ObjectId,
             refPath: "event.model",
-            required: true
+            required: true,
         },
-        receivers: [{
-            role: String,
-            user: { type: mongoose.Schema.Types.ObjectId, refPath: "receivers.role" },
-            read: { type: Boolean, default: false },
-            willReceive: { type: Boolean, default: false }
-        }],
+        receivers: [
+            {
+                role: String,
+                user: { type: mongoose.Schema.Types.ObjectId, refPath: "receivers.role" },
+                read: { type: Boolean, default: false },
+                willReceive: { type: Boolean, default: true },
+            },
+        ],
         // receivers will be set by the method which triggers the notification
-    
     },
     {
         timestamps: true,

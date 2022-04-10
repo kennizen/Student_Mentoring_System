@@ -24,3 +24,19 @@ export const addGlobalNotification = (notification) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const markNotificationRead = (history, notificationIds) => async (dispatch) => {
+    try {
+        const { data } = await api.markNotificationRead(notificationIds);
+        console.log("notifications marked in action", data);
+
+        //check if the response data is error
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            dispatch({ type: "MARK_NOTIFICATION_READ", notificationIds });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

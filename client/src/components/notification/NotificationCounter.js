@@ -14,17 +14,19 @@ const NotificationCounter = () => {
     // function to find the no. of unread notifications
     useEffect(() => {
         let count = 0;
-        notifications.forEach((notification) => {
-            // console.log(notification.receivers.find((r) => r.user._id === uid));
-            if (
-                notification.receivers.find(
-                    (receiver) => receiver.user._id.toString() === uid.toString()
-                ).read === false
-            ) {
-                count++;
-            }
-        });
-        setReadNotifications(count);
+        if (notifications) {
+            notifications?.forEach((notification) => {
+                // console.log(notification.receivers.find((r) => r.user._id === uid));
+                if (
+                    notification.receivers.find(
+                        (receiver) => receiver.user._id.toString() === uid.toString()
+                    ).read === false
+                ) {
+                    count++;
+                }
+            });
+            setReadNotifications(count);
+        }
     }, [notifications]);
 
     // state to manage the unread notification count
@@ -32,7 +34,7 @@ const NotificationCounter = () => {
 
     if (readNotifications)
         return (
-            <h5 className="w-5 h-5 bg-red-500 text-center rounded-full text-white flex items-center justify-center absolute top-0 right-0">
+            <h5 className="bg-red-500 text-center w-5 h-5 rounded-full text-white flex items-center justify-center absolute top-0 right-0">
                 {readNotifications}
             </h5>
         );

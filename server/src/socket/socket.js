@@ -8,7 +8,6 @@ const Student = require("../models/Student");
 const Notification = require("../models/Notification");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const Notification = require("../models/Notification");
 
 // env config
 dotenv.config();
@@ -89,7 +88,9 @@ module.exports = {
 
                     if (notification) {
                         notification.receivers.forEach((receiver) => {
-                            if(receiver.user._id.toString() === creator._id.toString()){
+                            if (
+                                receiver.user._id.toString() === notification.creator._id.toString()
+                            ) {
                                 return;
                             }
                             io.to(msgSocketMap[receiver.user._id]).emit(
@@ -102,7 +103,6 @@ module.exports = {
                     console.log(err);
                 }
             });
-
         });
     },
 };
