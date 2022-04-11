@@ -63,13 +63,10 @@ module.exports = {
                 return res.render("emailVerifySuccess");
             }
             
-            res.send(`
-                <center> <h1>Page Not Found</h1> </center>
-            `)
+            res.render("notFound");
         }
         catch(err){
             console.log(err)
-            // res.send(emailVerifyFailedTemplate);
             res.render("emailVerifyFailed");
         }
     },
@@ -84,26 +81,24 @@ module.exports = {
 
             // if user is mentor
             if(decoded.role === roles.Mentor) {
-                user = await Mentor.findById(decoded._id); 
+                user = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token }); 
             }
             // if user is student
             if(decoded.role === roles.Student) {
-                user = await Student.findById(decoded._id); 
+                user = await Student.findOne({ _id: decoded._id, passwordResetToken: token });
             }
 
             if(!user){
-                response.error(res);
+                res.render("linkExpired");
             }
             res.render("resetPassword");
         }
         catch(err){
             console.log(err);
-            res.send(`
-                <p> Some error occured / Link expired</p>
-            `);
+            res.render("linkExpired")
         }
     },
-
+    
     setNewPassword: async (req, res) => {
         try {
             let user;
@@ -119,13 +114,9 @@ module.exports = {
                 user = await Student.findOne({ _id: decoded._id, passwordResetToken: token });
             }
 
-            if(!user.passwordResetToken){
-                return response.error(res, "Link may have expired");
-            }
-
             // if user not found
             if(!user) {
-                return response.notfound(res, "User not found");
+                return response.notfound(res, "Link may have expired");
             }
 
             // checking if both password are provided

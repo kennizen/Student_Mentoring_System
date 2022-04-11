@@ -66,6 +66,11 @@ app.use("/chats", chatRoutes);
 app.use("/messages", messageRoutes);
 app.use("/notifications", notificationRoutes);
 
+// route for 404 not found page
+app.get("*", (req, res) => {
+    res.render("notFound");
+})
+
 const server = app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 
 const io = new Server(server, {

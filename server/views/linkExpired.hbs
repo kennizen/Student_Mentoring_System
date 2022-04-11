@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Link Expired</title>
+    <!-- fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 100%;
+      height: 100%;
+      background-color: rgb(245, 245, 245);
+    }
+
+    .container {
+      width: 75%;
+      margin: 0 auto;
+    }
+    .wrapper {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      height: 100vh;
+    }
+    i {
+      color: #bfd1f1;
+      font-size: 3em;
+    }
+    .card {
+      max-width: 440px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    }
+    .toggler {
+      font-size: 0.6em;
+      color: #9ca3af;
+    }
+    #alert {
+      opacity: 0;
+    }
+    .text {
+        color: rgb(82, 82, 82);
+        text-align: center;
+        padding: 10px 0;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="wrapper">
+        <div class="flex justify-center">
+          <div class="card block p-6 rounded-md bg-white max-w-sm">
+            <center>
+                <i class="fa-solid fa-face-frown"></i>
+            </center>
+            <h2 class="text">Opps!</h2>
+            <p class="text">The link may have expired. Please generate a new link and try again.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

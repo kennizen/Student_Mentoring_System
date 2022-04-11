@@ -8,7 +8,6 @@ const Student = require("../models/Student");
 const Notification = require("../models/Notification");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const Notification = require("../models/Notification");
 
 // env config
 dotenv.config();
