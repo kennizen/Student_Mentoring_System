@@ -3,13 +3,28 @@ import DotIcon from "../../assets/DotIcon";
 import moment from "moment";
 import AnnotationIcon from "../../assets/AnnotationIcon";
 import DoubleTickIcon from "../../assets/DoubleTickIcon";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { markNotificationRead } from "../../actions/notification";
 
-const NotificationTile = ({ content, creator, event, receivers }) => {
+const NotificationTile = ({
+    content,
+    creator,
+    event,
+    receivers,
+    _id,
+    setShowNotificationModal,
+    setShowOverlay,
+    setModalContent,
+}) => {
     // getting uid of the logged in user
     let uid = "";
     if (localStorage.getItem("authData")) {
         uid = JSON.parse(localStorage.getItem("authData"))["uid"];
     }
+
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     // useeffect to show the post and find the users for which notification is unread
     useEffect(() => {
@@ -25,6 +40,7 @@ const NotificationTile = ({ content, creator, event, receivers }) => {
     const [text, setText] = useState("");
     const [user, setUser] = useState(null);
 
+    // function to return the appropiate icon based on the notification event type
     const returnIcon = () => {
         if (event?.type === "POST_CREATED") {
             return <AnnotationIcon myStyle={"h-10 w-10 text-blue-600 flex-shrink-0"} alt={false} />;
@@ -35,6 +51,17 @@ const NotificationTile = ({ content, creator, event, receivers }) => {
 
     return (
         <div
+            onClick={() => {
+                setShowNotificationModal(true);
+                setShowOverlay(true);
+                let modalCon = {
+                    content,
+                    creator,
+                    event,
+                };
+                setModalContent(modalCon);
+                dispatch(markNotificationRead(history, [{ id: _id, willReceive: true }]));
+            }}
             className={`${
                 !user?.read
                     ? "bg-gray-700 shadow-sm hover:shadow-md rounded-md"

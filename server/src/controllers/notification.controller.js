@@ -3,7 +3,6 @@ const response = require("../utils/responses.utils");
 const roles = require("../utils/roles");
 
 module.exports = {
-
     /**
      * createNotification: Creates new notification when an event is triggered
      * @Desc This method creates a new notification and saves it to db.
@@ -13,8 +12,8 @@ module.exports = {
      * @param {*} receivers Users who will receive notifications
      */
     createNotification: async (event, content, creator, receivers) => {
-        console.log("Post Notification triggered..")
-        try{
+        console.log("Post Notification triggered..");
+        try {
             const newNotify = new Notification({
                 event: event,
                 creator: creator._id,
@@ -27,35 +26,42 @@ module.exports = {
                 return {
                     role: receiver.role,
                     user: receiver._id,
-                    read: false
-                }
-            })
+                    read: false,
+                };
+            });
 
             await newNotify.save();
-        }
-        catch(err){
-            console.log(err)
+        } catch (err) {
+            console.log(err);
         }
     },
 
     // fetch all notification
     getAllNotifications: async (req, res, next) => {
-        try{
-            const notifications = await Notification.find({"receivers.user" : req.user._id}).populate(["creator", "content", "receivers.user"]);
+        try {
+            const notifications = await Notification.find({
+                "receivers.user": req.user._id,
+            }).populate(["creator", "content", "receivers.user"]);
+
+            // const newNotifications = [];
+            // notifications.forEach((notification) => {
+            //     if (notification.receivers.find((r) => r.willReceive === true));
+            //     newNotifications.push(notification);
+            // });
+
+            // console.log("new notifications", newNotifications);
             response.success(res, "", notifications);
-        }
-        catch(err){
-            console.log(err)
+        } catch (err) {
+            console.log(err);
         }
     },
 
     // fetch notification by id
     getNotificationById: async (req, res, next) => {
-        try{
+        try {
             const notification = await Notification.findById(req.params.id);
             response.success(res, "", notification);
-        }
-        catch(err){
+        } catch (err) {
             console.log(err);
             response.error(res);
         }
@@ -63,34 +69,37 @@ module.exports = {
 
     // set notifications as read
     setNotificationAsRead: async (req, res, next) => {
-        try{
+        try {
             const user = req.user;
-            const notifications = req.body.notificationIds;
+            const notifications = req.body;
+            console.log("in mark notification", req.body);
 
             notifications.forEach(async (item) => {
-
-                if(item.willReceive) {
-                    await Notification.findOneAndUpdate({ _id: item.id, "receivers.user": user._id }, {
-                        $set: {
-                            "receivers.$.read": true,
-                            "receivers.$.willReceive": true
+                if (!item.willReceive) {
+                    await Notification.findOneAndUpdate(
+                        { _id: item.id, "receivers.user": user._id },
+                        {
+                            $set: {
+                                "receivers.$.read": true,
+                                "receivers.$.willReceive": false,
+                            },
                         }
-                    })
-                } 
-                else {
-                    await Notification.findOneAndUpdate({ _id: item.id, "receivers.user": user._id }, {
-                        $set: {
-                            "receivers.$.read": true,
+                    );
+                } else {
+                    await Notification.findOneAndUpdate(
+                        { _id: item.id, "receivers.user": user._id },
+                        {
+                            $set: {
+                                "receivers.$.read": true,
+                            },
                         }
-                    })
+                    );
                 }
             });
-            
-            response.success(res);
-        }
-        catch(err){
-            console.log(err)
-        }
-    }
 
-}
+            response.success(res);
+        } catch (err) {
+            console.log(err);
+        }
+    },
+};

@@ -29,9 +29,15 @@ import {
 import NotifySound from "../../../assets/sounds/light-562.ogg";
 import BellIcon from "../../../assets/BellIcon";
 import Notification from "../../notification/Notification";
-import { addGlobalNotification, getAllNotifications } from "../../../actions/notification";
+import {
+    addGlobalNotification,
+    getAllNotifications,
+    markNotificationRead,
+} from "../../../actions/notification";
 import { CSSTransition } from "react-transition-group";
 import NotificationCounter from "../../notification/NotificationCounter";
+import NotificationModal from "../../notification/notificationModal/NotificationModal";
+import ModalOverlay from "../../modal/ModalOverlay";
 
 const MentorDashboard = () => {
     // getting uid of the logged in user
@@ -101,6 +107,14 @@ const MentorDashboard = () => {
                 JSON.parse(localStorage.getItem("postRoute"))
             ) {
                 setStreamUpdated(true);
+                // make the received notification as read
+                let notificationIds = [
+                    {
+                        id: data._id,
+                        willReceive: false,
+                    },
+                ];
+                dispatch(markNotificationRead(history, notificationIds));
             } else {
                 if (data.event.type === "POST_CREATED") {
                     dispatch(addGlobalNotification(data));
@@ -244,11 +258,18 @@ const MentorDashboard = () => {
         audio.play();
     };
 
+    // state variable to store and show the notification content in the notification modal
+    const [modalContent, setModalContent] = useState(null);
+
     // state to control notification panel show and dont show
     const [showNotificationDropDown, setShowNotificationDropDown] = useState(false);
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [showNotificationModal, setShowNotificationModal] = useState(false);
 
     // node ref used in css transition for the notification panel
-    const notificationDropDown = useRef(null);
+    const notificationDropDownRef = useRef(null);
+    const overlayRef = useRef(null);
+    const notificationModalRef = useRef(null);
 
     return (
         <div className="h-screen flex bg-gray-50">
@@ -357,6 +378,29 @@ const MentorDashboard = () => {
                 </button>
             </nav>
             <div className="w-17/20 h-screen">
+                <CSSTransition
+                    nodeRef={overlayRef}
+                    in={showOverlay}
+                    timeout={300}
+                    classNames="overlay"
+                    unmountOnExit
+                >
+                    <ModalOverlay nodeRef={overlayRef} />
+                </CSSTransition>
+                <CSSTransition
+                    nodeRef={notificationModalRef}
+                    in={showNotificationModal}
+                    timeout={300}
+                    classNames="modal"
+                    unmountOnExit
+                >
+                    <NotificationModal
+                        nodeRef={notificationDropDownRef}
+                        setShowNotificationModal={setShowNotificationModal}
+                        setShowOverlay={setShowOverlay}
+                        notification={modalContent}
+                    />
+                </CSSTransition>
                 <div className="relative w-full h-1/10 bg-white shadow-md flex items-center justify-end">
                     <div className="flex items-center justify-evenly w-1/5">
                         <div className="relative">
@@ -373,13 +417,18 @@ const MentorDashboard = () => {
                                 <NotificationCounter />
                             </button>
                             <CSSTransition
-                                nodeRef={notificationDropDown}
+                                nodeRef={notificationDropDownRef}
                                 in={showNotificationDropDown}
                                 timeout={300}
                                 classNames="modal"
                                 unmountOnExit
                             >
-                                <Notification nodeRef={notificationDropDown} />
+                                <Notification
+                                    nodeRef={notificationDropDownRef}
+                                    setShowNotificationModal={setShowNotificationModal}
+                                    setShowOverlay={setShowOverlay}
+                                    setModalContent={setModalContent}
+                                />
                             </CSSTransition>
                         </div>
                         <span className="flex items-center justify-between gap-x-3">
