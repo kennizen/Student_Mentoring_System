@@ -40,16 +40,12 @@ module.exports = {
     getAllNotifications: async (req, res, next) => {
         try {
             const notifications = await Notification.find({
-                "receivers.user": req.user._id,
+                $and: [
+                    { "receivers.user": req.user._id },
+                    { "receivers.willReceive": { $ne: false } },
+                ],
             }).populate(["creator", "content", "receivers.user"]);
 
-            // const newNotifications = [];
-            // notifications.forEach((notification) => {
-            //     if (notification.receivers.find((r) => r.willReceive === true));
-            //     newNotifications.push(notification);
-            // });
-
-            // console.log("new notifications", newNotifications);
             response.success(res, "", notifications);
         } catch (err) {
             console.log(err);
@@ -70,34 +66,37 @@ module.exports = {
     // set notifications as read
     setNotificationAsRead: async (req, res, next) => {
         try {
-            const user = req.user;
             const notifications = req.body;
             console.log("in mark notification", req.body);
 
-            notifications.forEach(async (item) => {
-                if (!item.willReceive) {
-                    await Notification.findOneAndUpdate(
-                        { _id: item.id, "receivers.user": user._id },
-                        {
-                            $set: {
-                                "receivers.$.read": true,
-                                "receivers.$.willReceive": false,
-                            },
-                        }
-                    );
-                } else {
-                    await Notification.findOneAndUpdate(
-                        { _id: item.id, "receivers.user": user._id },
-                        {
-                            $set: {
-                                "receivers.$.read": true,
-                            },
-                        }
-                    );
-                }
-            });
+            const readNotifications = [];
 
-            response.success(res);
+            for (let i = 0; i < notifications.length; i++) {
+                const item = notifications[i];
+                const doc = await Notification.findOneAndUpdate(
+                    { _id: item.id, "receivers.user": req.user._id },
+                    {
+                        $set: {
+                            "receivers.$.read": true,
+                            "receivers.$.willReceive": item.willReceive,
+                        },
+                    },
+                    { new: true }
+                );
+
+                console.log("doc", doc);
+
+                // generating response
+                readNotifications.push(
+                    await new Notification(doc).execPopulate([
+                        "creator",
+                        "content",
+                        "receivers.user",
+                    ])
+                );
+            }
+
+            response.success(res, "", { read: readNotifications });
         } catch (err) {
             console.log(err);
         }

@@ -6,19 +6,18 @@ const notification = (state = { notifications: [] }, action) => {
             state.notifications.push(action.notification);
             return { ...state, notifications: [...state.notifications] };
         case "MARK_NOTIFICATION_READ":
-            // let index = state.notifications.findIndex(
-            //     (notification) => notification._id.toString() === action.id.toString()
-            // );
-            // let uid = "";
-            // if (localStorage.getItem("authData")) {
-            //     uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-            // }
-            // state.notifications[index].receivers.forEach((r) => {
-            //     if (r.user._id.toString() === uid.toString()) {
-            //         r.read = true;
-            //     }
-            // });
-            return { ...state, notifications: [...state.notifications] };
+            let notiMap = {};
+            state.notifications.forEach((notification) => {
+                if (!notiMap[notification._id]) notiMap[notification._id] = notification;
+            });
+            action.ids.forEach((noti) => {
+                if (notiMap[noti._id]) notiMap[noti._id] = noti;
+            });
+            let updatedNotifications = [];
+            for (const n in notiMap) {
+                updatedNotifications.push(notiMap[n]);
+            }
+            return { ...state, notifications: updatedNotifications };
         default:
             return state;
     }

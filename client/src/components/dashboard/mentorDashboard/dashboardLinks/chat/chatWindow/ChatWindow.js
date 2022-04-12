@@ -19,11 +19,6 @@ import { SocketContext } from "../../../../../../socket/socket";
 const ChatWindow = ({ selectedChat, curChat }) => {
     const socket = React.useContext(SocketContext);
 
-    // const { socket } = useSelector((state) => {
-    //     if (state.mentor.socket !== null) return state.mentor;
-    //     return state.student;
-    // });
-
     // getting uid of the logged in user
     let uid = "";
     if (localStorage.getItem("authData")) {
@@ -224,7 +219,7 @@ const ChatWindow = ({ selectedChat, curChat }) => {
                                     title="Load message"
                                     className={`justify-self-center p-1.5 rounded-md disabled:opacity-50 text-gray-400 text-xs bg-gray-100 mb-2 mt-1 hover:text-gray-600 transition-all`}
                                 >
-                                    Previous messages
+                                    Load previous messages
                                 </button>
                             ))}
                     </div>

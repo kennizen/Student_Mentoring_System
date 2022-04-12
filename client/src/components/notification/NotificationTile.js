@@ -34,7 +34,7 @@ const NotificationTile = ({
         );
         setText(text);
         setUser(thisUser);
-    }, []);
+    }, [receivers]);
 
     // state for the unread user and text content
     const [text, setText] = useState("");
@@ -48,20 +48,22 @@ const NotificationTile = ({
     };
 
     // console.log("receiver user", user);
+    // function for notification tile clicked action
+    const handleAction = () => {
+        setShowNotificationModal(true);
+        setShowOverlay(true);
+        let modalCon = {
+            content,
+            creator,
+            event,
+        };
+        setModalContent(modalCon);
+        dispatch(markNotificationRead(history, [{ id: _id, willReceive: true }]));
+    };
 
     return (
         <div
-            onClick={() => {
-                setShowNotificationModal(true);
-                setShowOverlay(true);
-                let modalCon = {
-                    content,
-                    creator,
-                    event,
-                };
-                setModalContent(modalCon);
-                dispatch(markNotificationRead(history, [{ id: _id, willReceive: true }]));
-            }}
+            onClick={handleAction}
             className={`${
                 !user?.read
                     ? "bg-gray-700 shadow-sm hover:shadow-md rounded-md"

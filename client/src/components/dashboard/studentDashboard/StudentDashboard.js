@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -27,8 +27,19 @@ import {
 } from "../../../actions/chat";
 
 import NotifySound from "../../../assets/sounds/light-562.ogg";
+import { CSSTransition } from "react-transition-group";
+import NotificationCounter from "../../notification/NotificationCounter";
+import NotificationModal from "../../notification/notificationModal/NotificationModal";
+import ModalOverlay from "../../modal/ModalOverlay";
 
 import { SocketContext } from "../../../socket/socket";
+import BellIcon from "../../../assets/BellIcon";
+import Notification from "../../notification/Notification";
+import {
+    addGlobalNotification,
+    getAllNotifications,
+    markNotificationRead,
+} from "../../../actions/notification";
 
 const StudentDashboard = () => {
     // getting the socket context from the socket provider
@@ -56,9 +67,9 @@ const StudentDashboard = () => {
     const history = useHistory();
 
     // accessing the redux store state
-    const data = useSelector((state) => state.student);
+    const { studentData } = useSelector((state) => state.student);
 
-    console.log("student data in dashboard", data);
+    console.log("student data in dashboard", studentData);
 
     // state variable to control the stream updated button
     const [streamUpdated, setStreamUpdated] = useState(false);
@@ -76,10 +87,13 @@ const StudentDashboard = () => {
                 JSON.parse(localStorage.getItem("postRoute"))
             ) {
                 setStreamUpdated(true);
+                // make the received notification as read
+                dispatch(markNotificationRead(history, [{ id: data._id, willReceive: false }]));
+            } else {
+                if (data.event.type === "POST_CREATED") {
+                    dispatch(addGlobalNotification(data));
+                }
             }
-            // else{
-
-            // }
         });
 
         return (data) => {
@@ -91,6 +105,7 @@ const StudentDashboard = () => {
     useEffect(() => {
         dispatch(studentGetDetails(history));
         dispatch(getAllChat(history));
+        dispatch(getAllNotifications(history));
         localStorage.setItem("chatRoute", JSON.stringify(false));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
@@ -239,6 +254,19 @@ const StudentDashboard = () => {
         history.push("/");
     };
 
+    // state variable to store and show the notification content in the notification modal
+    const [modalContent, setModalContent] = useState(null);
+
+    // state to control notification panel show and dont show
+    const [showNotificationDropDown, setShowNotificationDropDown] = useState(false);
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [showNotificationModal, setShowNotificationModal] = useState(false);
+
+    // node ref used in css transition for the notification panel
+    const notificationDropDownRef = useRef(null);
+    const overlayRef = useRef(null);
+    const notificationModalRef = useRef(null);
+
     return (
         <div className="h-screen flex bg-gray-50">
             <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
@@ -345,26 +373,74 @@ const StudentDashboard = () => {
                 </button>
             </nav>
             <div className="w-17/20 h-screen">
-                <div className="w-full h-1/10 bg-white shadow-md flex items-center justify-end">
+                <CSSTransition
+                    nodeRef={overlayRef}
+                    in={showOverlay}
+                    timeout={300}
+                    classNames="overlay"
+                    unmountOnExit
+                >
+                    <ModalOverlay nodeRef={overlayRef} />
+                </CSSTransition>
+                <CSSTransition
+                    nodeRef={notificationModalRef}
+                    in={showNotificationModal}
+                    timeout={300}
+                    classNames="modal"
+                    unmountOnExit
+                >
+                    <NotificationModal
+                        nodeRef={notificationDropDownRef}
+                        setShowNotificationModal={setShowNotificationModal}
+                        setShowOverlay={setShowOverlay}
+                        notification={modalContent}
+                    />
+                </CSSTransition>
+                <div className="relative w-full h-1/10 bg-white shadow-md flex items-center justify-end">
                     <div className="flex items-center justify-evenly w-1/5">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-blue-600"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-                        </svg>
-                        <img
-                            src={
-                                data?.studentData?.data?.user?.avatar?.url === ""
-                                    ? `https://avatars.dicebear.com/api/initials/${data?.studentData?.data?.user?.firstname}%20${data?.studentData?.data?.user?.lastname}.svg`
-                                    : data?.studentData?.data?.user?.avatar?.url
-                            }
-                            alt="avatar"
-                            className="w-14 h-14 rounded-full"
-                        />
-                        <h4>{`${data?.studentData?.data?.user?.firstname} ${data?.studentData?.data?.user?.middlename} ${data?.studentData?.data?.user?.lastname}`}</h4>
+                        <div className="relative">
+                            <button
+                                onClick={() => {
+                                    setShowNotificationDropDown(!showNotificationDropDown);
+                                }}
+                                className="hover:bg-gray-200 transition-all p-2 rounded-full relative"
+                            >
+                                <BellIcon
+                                    myStyle={"h-7 w-7 text-blue-600"}
+                                    alt={!showNotificationDropDown}
+                                />
+                                <NotificationCounter />
+                            </button>
+                            <CSSTransition
+                                nodeRef={notificationDropDownRef}
+                                in={showNotificationDropDown}
+                                timeout={300}
+                                classNames="modal"
+                                unmountOnExit
+                            >
+                                <Notification
+                                    nodeRef={notificationDropDownRef}
+                                    setShowNotificationModal={setShowNotificationModal}
+                                    setShowOverlay={setShowOverlay}
+                                    setModalContent={setModalContent}
+                                />
+                            </CSSTransition>
+                        </div>
+                        <span className="flex items-center justify-between gap-x-3">
+                            <img
+                                src={
+                                    studentData?.data?.user?.avatar?.url === ""
+                                        ? `https://avatars.dicebear.com/api/initials/${studentData?.data?.user?.firstname}.svg`
+                                        : studentData?.data?.user?.avatar?.url
+                                }
+                                alt="avatar"
+                                className="w-14 h-14 rounded-full"
+                            />
+                            <span>
+                                <h3>{`${studentData?.data?.user?.firstname} ${studentData?.data?.user?.middlename} ${studentData?.data?.user?.lastname}`}</h3>
+                                <h6>{`${studentData?.data?.user?.email}`}</h6>
+                            </span>
+                        </span>
                     </div>
                 </div>
                 <div className="h-9/10 bg-gray-100 overflow-hidden">
