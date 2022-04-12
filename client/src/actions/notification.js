@@ -25,7 +25,7 @@ export const addGlobalNotification = (notification) => async (dispatch) => {
     }
 };
 
-export const markNotificationRead = (history, notificationIds) => async (dispatch) => {
+export const markNotificationRead = (history, notificationIds, setLoading) => async (dispatch) => {
     try {
         const { data } = await api.markNotificationRead(notificationIds);
         console.log("notifications marked in action", data);
@@ -34,7 +34,9 @@ export const markNotificationRead = (history, notificationIds) => async (dispatc
         if (data.code === 403) {
             history.goBack();
         } else {
-            dispatch({ type: "MARK_NOTIFICATION_READ", notificationIds });
+            const ids = data.data.read;
+            dispatch({ type: "MARK_NOTIFICATION_READ", ids });
+            if (setLoading) setLoading(false);
         }
     } catch (error) {
         console.log(error);

@@ -14,8 +14,8 @@ const NotificationCounter = () => {
     // function to find the no. of unread notifications
     useEffect(() => {
         let count = 0;
-        if (notifications) {
-            notifications?.forEach((notification) => {
+        if (notifications && notifications.length > 0) {
+            notifications.forEach((notification) => {
                 // console.log(notification.receivers.find((r) => r.user._id === uid));
                 if (
                     notification.receivers.find(

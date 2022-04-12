@@ -1,7 +1,10 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { markNotificationRead } from "../../actions/notification";
 import DoubleTickIcon from "../../assets/DoubleTickIcon";
 import NotificationTile from "./NotificationTile";
+import Loading from "../loading/Loading";
 
 const Notification = ({
     myStyle,
@@ -10,10 +13,37 @@ const Notification = ({
     setShowOverlay,
     setModalContent,
 }) => {
+    // getting uid of the logged in user
+    let uid = "";
+    if (localStorage.getItem("authData")) {
+        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+    }
+
+    const dispatch = useDispatch();
+    const history = useHistory();
+
     // getting all notifications from the state
     const { notifications } = useSelector((state) => state.notification);
 
     console.log("notifications from state", notifications);
+
+    const handleMarkAllRead = () => {
+        setLoading(true);
+        let ids = [];
+        notifications.forEach((notification) => {
+            if (
+                notification.receivers.find(
+                    (r) => r.user._id.toString() === uid.toString() && !r.read
+                )
+            ) {
+                ids.push({ id: notification._id, willReceive: true });
+            }
+        });
+        dispatch(markNotificationRead(history, ids, setLoading));
+    };
+
+    // loading state for mark all read
+    const [loading, setLoading] = useState(false);
 
     return (
         <div
@@ -40,9 +70,18 @@ const Notification = ({
                         ))}
                 </div>
                 <div className="w-full">
-                    <button className="text-white w-full bg-gray-700 p-2 hover:bg-gray-800 transition-all text-sm flex items-center justify-center gap-x-2 mt-2 rounded-md">
-                        <DoubleTickIcon myStyle={"h-4 w-4"} />
-                        Mark all read
+                    <button
+                        onClick={handleMarkAllRead}
+                        className="text-white w-full bg-gray-700 p-2 hover:bg-gray-800 transition-all text-sm flex items-center justify-center gap-x-2 mt-2 rounded-md"
+                    >
+                        {loading ? (
+                            <Loading myStyle={"h-5 w-5"} />
+                        ) : (
+                            <>
+                                <DoubleTickIcon myStyle={"h-4 w-4"} />
+                                Mark all read
+                            </>
+                        )}
                     </button>
                 </div>
             </div>

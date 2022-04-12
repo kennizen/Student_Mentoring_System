@@ -108,13 +108,7 @@ const MentorDashboard = () => {
             ) {
                 setStreamUpdated(true);
                 // make the received notification as read
-                let notificationIds = [
-                    {
-                        id: data._id,
-                        willReceive: false,
-                    },
-                ];
-                dispatch(markNotificationRead(history, notificationIds));
+                dispatch(markNotificationRead(history, [{ id: data._id, willReceive: false }]));
             } else {
                 if (data.event.type === "POST_CREATED") {
                     dispatch(addGlobalNotification(data));
