@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { studentUpdateProfilePicture } from "../../../../../../actions/student";
-import MenteeInfoProfilePhotoChangeIcon from "../../../../../../assets/MenteeInfoProfilePhotoChangeIcon";
+import UploadIcon from "../../../../../../assets/UploadIcon";
 
 const ProfilePicModal = ({ handleShowModal, history }) => {
     const [op, setOp] = useState("opacity-0");
@@ -79,7 +79,7 @@ const ProfilePicModal = ({ handleShowModal, history }) => {
                             type="submit"
                             className="p-2 bg-blue-600 border border-blue-600 hover:bg-blue-800 hover:border-blue-800 transition-all rounded-md text-white flex items-center justify-center"
                         >
-                            <MenteeInfoProfilePhotoChangeIcon />
+                            <UploadIcon alt={false} myStyle={"h-5 w-5"} />
                         </button>
                     </div>
                 </form>

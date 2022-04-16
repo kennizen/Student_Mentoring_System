@@ -1,5 +1,5 @@
 const student = (
-    state = { studentData: null, profileData: {}, semData: [], pastEducation: {}, socket: null },
+    state = { studentData: null, profileData: {}, semData: [], pastEducation: {} },
     action
 ) => {
     switch (action.type) {
