@@ -94,3 +94,20 @@ export const mentorGetProfile = (history) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const mentorUpdateProfile = (history, formData) => async (dispatch) => {
+    try {
+        const { data } = await api.updateProfile(formData);
+        console.log("mentor updated profile in actions", data);
+
+        //check if the response data is error
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            const profile = data.data.profileData;
+            dispatch({ type: "FETCH_MENTOR_PROFILE", profile });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

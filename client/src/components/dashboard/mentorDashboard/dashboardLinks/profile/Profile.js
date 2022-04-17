@@ -12,6 +12,7 @@ import UserCircleIcon from "../../../../../assets/UserCircleIcon";
 import UserGroupIcon from "../../../../../assets/UserGroupIcon";
 
 import ModalOverlay from "../../../../modal/ModalOverlay";
+import ProfilePicModal from "../../../studentDashboard/dashboardLinks/profile/profilePicModal/ProfilePicModal";
 import ProfileModal from "./ProfileModal";
 
 const Profile = () => {
@@ -36,36 +37,41 @@ const Profile = () => {
         address: "",
         department: "",
         designation: "",
+        studentCount: 0,
     });
 
     // state for modals show and hide
     const [showOverlay, setShowOverlay] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [hiddenProfilePicModal, setHiddenProfilePicModal] = useState(false);
 
     // refs used for css transition to work for the modal and the overlay
     const editModalRef = useRef(null);
     const overlayRef = useRef(null);
+    const profilePicEditModalOverlay = useRef(null);
 
     // function to handle modal show hide
     const handleShowModal = () => {
         setShowOverlay(true);
         setShowEditModal(true);
         setMentorProfileData({
-            firstname: profileData.firstname,
-            middlename: profileData.middlename,
-            lastname: profileData.lastname,
-            email: profileData.email,
-            phone: profileData.phone,
-            address: profileData.address,
-            department: profileData.department,
-            designation: profileData.designation,
+            firstname: profileData.firstname ? profileData.firstname : "",
+            middlename: profileData.middlename ? profileData.middlename : "",
+            lastname: profileData.lastname ? profileData.lastname : "",
+            email: profileData.email ? profileData.email : "",
+            phone: profileData.phone ? profileData.phone : "",
+            address: profileData.address ? profileData.address : "",
+            department: profileData.department ? profileData.department : "",
+            designation: profileData.designation ? profileData.designation : "",
+            studentCount: profileData.studentCount ? profileData.studentCount : 0,
         });
     };
 
     console.log("profile data", profileData);
+    console.log(mentorProfileData);
 
     return (
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center relative">
             <CSSTransition
                 nodeRef={overlayRef}
                 in={showOverlay}
@@ -85,11 +91,25 @@ const Profile = () => {
                 <ProfileModal
                     nodeRef={editModalRef}
                     mentorProfileData={mentorProfileData}
+                    setMentorProfileData={setMentorProfileData}
                     setShowOverlay={setShowOverlay}
                     setShowEditModal={setShowEditModal}
                 />
             </CSSTransition>
-            <div className="w-1/2 rounded-md p-4">
+            <CSSTransition
+                nodeRef={profilePicEditModalOverlay}
+                in={hiddenProfilePicModal}
+                timeout={300}
+                classNames="modal"
+                unmountOnExit
+            >
+                <ProfilePicModal
+                    setShowOverlay={setShowOverlay}
+                    setHiddenProfilePicModal={setHiddenProfilePicModal}
+                    nodeRef={profilePicEditModalOverlay}
+                />
+            </CSSTransition>
+            <div className="w-3/5 rounded-md p-4">
                 <div className="flex gap-x-2 mb-3">
                     <div className="bg-white px-5 py-10 shadow-md rounded-md">
                         <h3 className="mb-5 flex items-center">
@@ -107,7 +127,10 @@ const Profile = () => {
                             />
                             <div className="flex flex-col items-center justify-between">
                                 <button
-                                    // onClick={handleShowModalProfilePic}
+                                    onClick={() => {
+                                        setHiddenProfilePicModal(true);
+                                        setShowOverlay(true);
+                                    }}
                                     className="p-2 bg-blue-600 border border-blue-600 hover:bg-blue-800 hover:border-blue-800 transition-all rounded-md text-white flex items-center justify-between mb-5"
                                 >
                                     <UploadIcon alt={false} myStyle={"h-5 w-5 mr-2"} />
@@ -128,7 +151,7 @@ const Profile = () => {
                             Personal Information
                             <UserGroupIcon alt={false} myStyle={"h-5 w-5 ml-2"} />
                         </h3>
-                        <div className="grid grid-cols-3">
+                        <div className="grid grid-cols-3 w-full">
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">First Name</h4>
                                 <h4>{profileData?.firstname}</h4>
@@ -158,14 +181,14 @@ const Profile = () => {
                 </div>
                 <div className="bg-white px-5 py-10 shadow-md rounded-md">
                     <h3 className="mb-5 flex items-center">
-                        Professional Details{" "}
+                        Professional Details
                         <AcademicCapIcon alt={false} myStyle={"h-5 w-5 ml-2"} />
                     </h3>
                     <div className="flex items-end justify-between">
-                        <div className="grid grid-cols-2 flex-shrink-0">
+                        <div className="grid grid-cols-2 w-full">
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Department</h4>
-                                <h4>{profileData?.department}</h4>
+                                <h4 className="break-normal w-9/10">{profileData?.department}</h4>
                             </div>
                             <div className="flex items-start justify-center flex-col mb-4">
                                 <h4 className="text-gray-400">Designation</h4>
@@ -183,7 +206,7 @@ const Profile = () => {
                         <button
                             onClick={handleShowModal}
                             title="edit"
-                            className="flex items-center justify-between py-3 px-4 rounded-md bg-blue-600 hover:bg-blue-800 transition-colors text-white"
+                            className="flex items-center justify-between py-3 px-4 rounded-md bg-blue-600 hover:bg-blue-800 transition-colors text-white flex-shrink-0"
                         >
                             <PencilIcon alt={true} myStyle={"h-5 w-5 mr-2"} />
                             Update Information

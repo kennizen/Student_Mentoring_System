@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import StuModal from "./stuModal/StuModal";
@@ -14,6 +14,8 @@ import AcademicCapIcon from "../../../../../assets/AcademicCapIcon";
 import PhoneIcon from "../../../../../assets/PhoneIcon";
 import UserGroupIcon from "../../../../../assets/UserGroupIcon";
 import OfficeBuildingIcon from "../../../../../assets/OfficeBuildingIcon";
+import { CSSTransition } from "react-transition-group";
+import ModalOverlay from "../../../../modal/ModalOverlay";
 
 const Profile = () => {
     // state variable to change the hidden state of the update information modal
@@ -23,6 +25,7 @@ const Profile = () => {
     // state variable to change the hidden state of the remove profile pic modal
     const [hiddenProfilePicDelModal, setHiddenProfilePicDelModal] = useState(false);
 
+    // state to store the profile data fetched from the api
     const [stuProfileData, setStuProfileData] = useState({
         department: "",
         programme: "",
@@ -108,18 +111,43 @@ const Profile = () => {
         }
     };
 
-    // function to show modal for update profile pic
-    const handleShowModalProfilePic = () => {
-        setHiddenProfilePicModal(true);
-    };
-
     // function to show modal for remove profile picture
     const handleShowModalDelProfilePic = () => {
         setHiddenProfilePicDelModal(true);
     };
 
+    // state to control the modal hide and show
+    const [showOverlay, setShowOverlay] = useState(false);
+
+    // refs used for css transition to work for the modal and the overlay
+    const profilePicEditModalOverlay = useRef(null);
+    const overlayRef = useRef(null);
+
     return (
-        <div className="w-full h-845 p-2 relative">
+        <div className="w-full h-full p-2 relative">
+            <CSSTransition
+                nodeRef={overlayRef}
+                in={showOverlay}
+                timeout={300}
+                classNames="overlay"
+                unmountOnExit
+            >
+                <ModalOverlay nodeRef={overlayRef} />
+            </CSSTransition>
+            <CSSTransition
+                nodeRef={profilePicEditModalOverlay}
+                in={hiddenProfilePicModal}
+                timeout={300}
+                classNames="modal"
+                unmountOnExit
+            >
+                <ProfilePicModal
+                    setShowOverlay={setShowOverlay}
+                    setHiddenProfilePicModal={setHiddenProfilePicModal}
+                    nodeRef={profilePicEditModalOverlay}
+                />
+            </CSSTransition>
+
             {hidden && (
                 <StuModal
                     handleShowModal={handleShowModalFromModal}
@@ -128,9 +156,6 @@ const Profile = () => {
                     history={history}
                     dispatch={dispatch}
                 />
-            )}
-            {hiddenProfilePicModal && (
-                <ProfilePicModal handleShowModal={handleShowModalFromModal} history={history} />
             )}
             {hiddenProfilePicDelModal && (
                 <ProfilePicDelModal
@@ -161,7 +186,10 @@ const Profile = () => {
                             />
                             <div className="flex flex-col items-center justify-between">
                                 <button
-                                    onClick={handleShowModalProfilePic}
+                                    onClick={() => {
+                                        setHiddenProfilePicModal(true);
+                                        setShowOverlay(true);
+                                    }}
                                     className="p-2 bg-blue-600 border border-blue-600 hover:bg-blue-800 hover:border-blue-800 transition-all rounded-md text-white flex items-center justify-between mb-5"
                                 >
                                     <UploadIcon alt={false} myStyle={"h-5 w-5 mr-2"} />

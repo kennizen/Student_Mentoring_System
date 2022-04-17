@@ -26,3 +26,8 @@ export const getProfile = () =>
     API.get(`/mentor/profile`).catch((error) => {
         return error.response;
     });
+
+export const updateProfile = (data) =>
+    API.post(`/mentor/profile`, data).catch((error) => {
+        return error.response;
+    });
