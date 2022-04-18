@@ -38,6 +38,7 @@ import { CSSTransition } from "react-transition-group";
 import NotificationCounter from "../../notification/NotificationCounter";
 import NotificationModal from "../../notification/notificationModal/NotificationModal";
 import ModalOverlay from "../../modal/ModalOverlay";
+import Profile from "./dashboardLinks/profile/Profile";
 
 const MentorDashboard = () => {
     // getting uid of the logged in user
@@ -453,6 +454,7 @@ const MentorDashboard = () => {
                     )}
                     {route.menteeInfo && <MenteeInfo />}
                     {route.chat && <Chat />}
+                    {route.profile && <Profile />}
                 </div>
             </div>
         </div>

@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import StuModal from "./stuModal/StuModal";
 import { studentGetProfileDetails } from "../../../../../actions/student";
-import MenteeInfoProfilePhotoIcon from "../../../../../assets/MenteeInfoProfilePhotoIcon";
+import UserCircleIcon from "../../../../../assets/UserCircleIcon";
 import ProfilePicModal from "./profilePicModal/ProfilePicModal";
 import ProfilePicDelModal from "./profilePicModal/ProfilePicDelModal";
-import MenteeInfoProfilePhotoChangeIcon from "../../../../../assets/MenteeInfoProfilePhotoChangeIcon";
-import MenteeInfoProfilePhotoRemoveIcon from "../../../../../assets/MenteeInfoProfilePhotoRemoveIcon";
+
 import PencilIcon from "../../../../../assets/PencilIcon";
+import UploadIcon from "../../../../../assets/UploadIcon";
+import TrashIcon from "../../../../../assets/TrashIcon";
+import AcademicCapIcon from "../../../../../assets/AcademicCapIcon";
+import PhoneIcon from "../../../../../assets/PhoneIcon";
+import UserGroupIcon from "../../../../../assets/UserGroupIcon";
+import OfficeBuildingIcon from "../../../../../assets/OfficeBuildingIcon";
+import { CSSTransition } from "react-transition-group";
+import ModalOverlay from "../../../../modal/ModalOverlay";
 
 const Profile = () => {
     // state variable to change the hidden state of the update information modal
@@ -18,6 +25,7 @@ const Profile = () => {
     // state variable to change the hidden state of the remove profile pic modal
     const [hiddenProfilePicDelModal, setHiddenProfilePicDelModal] = useState(false);
 
+    // state to store the profile data fetched from the api
     const [stuProfileData, setStuProfileData] = useState({
         department: "",
         programme: "",
@@ -103,18 +111,43 @@ const Profile = () => {
         }
     };
 
-    // function to show modal for update profile pic
-    const handleShowModalProfilePic = () => {
-        setHiddenProfilePicModal(true);
-    };
-
     // function to show modal for remove profile picture
     const handleShowModalDelProfilePic = () => {
         setHiddenProfilePicDelModal(true);
     };
 
+    // state to control the modal hide and show
+    const [showOverlay, setShowOverlay] = useState(false);
+
+    // refs used for css transition to work for the modal and the overlay
+    const profilePicEditModalOverlay = useRef(null);
+    const overlayRef = useRef(null);
+
     return (
-        <div className="w-full h-845 p-2 relative">
+        <div className="w-full h-full p-2 relative">
+            <CSSTransition
+                nodeRef={overlayRef}
+                in={showOverlay}
+                timeout={300}
+                classNames="overlay"
+                unmountOnExit
+            >
+                <ModalOverlay nodeRef={overlayRef} />
+            </CSSTransition>
+            <CSSTransition
+                nodeRef={profilePicEditModalOverlay}
+                in={hiddenProfilePicModal}
+                timeout={300}
+                classNames="modal"
+                unmountOnExit
+            >
+                <ProfilePicModal
+                    setShowOverlay={setShowOverlay}
+                    setHiddenProfilePicModal={setHiddenProfilePicModal}
+                    nodeRef={profilePicEditModalOverlay}
+                />
+            </CSSTransition>
+
             {hidden && (
                 <StuModal
                     handleShowModal={handleShowModalFromModal}
@@ -123,9 +156,6 @@ const Profile = () => {
                     history={history}
                     dispatch={dispatch}
                 />
-            )}
-            {hiddenProfilePicModal && (
-                <ProfilePicModal handleShowModal={handleShowModalFromModal} history={history} />
             )}
             {hiddenProfilePicDelModal && (
                 <ProfilePicDelModal
@@ -142,7 +172,7 @@ const Profile = () => {
                     <div className="w-full shadow-m32 py-6 px-3 rounded-md mb-6 bg-white">
                         <h2 className="mb-5 text-gray-700 flex items-center justify-start">
                             Profile Photo
-                            <MenteeInfoProfilePhotoIcon />
+                            <UserCircleIcon alt={false} myStyle={"h-5 w-5 ml-2"} />
                         </h2>
                         <div className="flex items-center justify-start">
                             <img
@@ -156,17 +186,20 @@ const Profile = () => {
                             />
                             <div className="flex flex-col items-center justify-between">
                                 <button
-                                    onClick={handleShowModalProfilePic}
+                                    onClick={() => {
+                                        setHiddenProfilePicModal(true);
+                                        setShowOverlay(true);
+                                    }}
                                     className="p-2 bg-blue-600 border border-blue-600 hover:bg-blue-800 hover:border-blue-800 transition-all rounded-md text-white flex items-center justify-between mb-5"
                                 >
-                                    <MenteeInfoProfilePhotoChangeIcon margin={"mr-2"} />
+                                    <UploadIcon alt={false} myStyle={"h-5 w-5 mr-2"} />
                                     Change
                                 </button>
                                 <button
                                     onClick={handleShowModalDelProfilePic}
                                     className="p-2 border border-red-600 text-red-600 rounded-md flex items-center justify-between hover:bg-red-600 hover:text-white transition-all"
                                 >
-                                    <MenteeInfoProfilePhotoRemoveIcon margin={"mr-2"} />
+                                    <TrashIcon alt={false} myStyle={"h-5 w-5 mr-2"} />
                                     Remove
                                 </button>
                             </div>
@@ -176,22 +209,7 @@ const Profile = () => {
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-gray-700 flex items-center justify-start">
                                 Academic Information
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6 ml-2"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-                                    />
-                                </svg>
+                                <AcademicCapIcon alt={false} myStyle={"h-5 w-5 ml-2"} />
                             </h2>
                         </div>
                         <div className="grid grid-cols-6">
@@ -229,20 +247,7 @@ const Profile = () => {
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-gray-700 flex items-center justify-start">
                                 Contact Details
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6 ml-2"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                                    />
-                                </svg>
+                                <PhoneIcon alt={false} myStyle={"h-5 w-5 ml-2"} />
                             </h2>
                         </div>
                         <div className="">
@@ -266,20 +271,7 @@ const Profile = () => {
                         <div className="flex items-center justify-between mb-5">
                             <h2 className="text-gray-700 flex items-center justify-start">
                                 Personal Information
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-6 w-6 ml-2"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                    />
-                                </svg>
+                                <UserGroupIcon alt={false} myStyle={"h-5 w-5 ml-2"} />
                             </h2>
                         </div>
 
@@ -335,20 +327,7 @@ const Profile = () => {
                     <div className="w-full bg-white shadow-m32 py-5 px-3 rounded-md mb-3">
                         <h2 className="mb-5 text-gray-700 flex items-center justify-start">
                             Hostel Details
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6 ml-2"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                                />
-                            </svg>
+                            <OfficeBuildingIcon alt={false} myStyle={"h-5 w-5 ml-2"} />
                         </h2>
                         <div className="grid grid-cols-2 gap-x-2">
                             <div className="col-span-1 grid grid-cols-2 border-r border-gray-300">
