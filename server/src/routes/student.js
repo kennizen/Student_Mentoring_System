@@ -39,25 +39,6 @@ router.post(
     Logger(events.PROFILE_UPDATED)
 );
 
-//  edit or change avatar
-router.post(
-    "/avatar",
-    Auth,
-    Authorize(Role.Student),
-    upload.single("avatar"),
-    studentController.editAvatar,
-    Logger(events.AVATAR_UPDATED)
-);
-
-//  edit or change avatar
-router.delete(
-    "/avatar",
-    Auth,
-    Authorize(Role.Student),
-    studentController.deleteAvatar,
-    Logger(events.AVATAR_UPDATED)
-);
-
 // get semester all/specific information
 router.get("/semester", Auth, Authorize(Role.Student), studentController.getSemesterInfo);
 //add semester info

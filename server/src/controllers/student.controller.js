@@ -169,49 +169,6 @@ module.exports = {
         }
     },
 
-    // add/edit avatar image
-    editAvatar: async (req, res, next) => {
-        try {
-            const result = await cloudinary.uploader.upload(req.file.path, {
-                tags: "avatar",
-                width: 200,
-                height: 200,
-                quality: "auto:eco",
-            });
-            fs.unlinkSync(req.file.path);
-            if (!result) {
-                throw new Error();
-            }
-
-            req.user.avatar.url = result.secure_url;
-            req.user.avatar.id = result.public_id;
-            await req.user.save();
-
-            response.success(res, "Avatar updated", { user: req.user });
-            next();
-        } catch (err) {
-            console.log("err", err);
-            response.error(res);
-        }
-    },
-
-    // delete avatar
-    deleteAvatar: async (req, res, next) => {
-        try {
-            const result = await cloudinary.uploader.destroy(req.user.avatar.id);
-            if (!result) {
-                throw new Error();
-            }
-            req.user.avatar.url = "";
-            req.user.avatar.id = "";
-            await req.user.save();
-            response.success(res, "Avatar deleted successfully", {});
-        } catch (err) {
-            console.log("err", err);
-            response.error(res);
-        }
-    },
-
     getSemesterInfo: async (req, res, next) => {
         try {
             const semesters = await Semester.find({ student_id: req.user._id }).sort({

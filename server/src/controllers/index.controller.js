@@ -6,9 +6,15 @@ const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 const roles = require("../utils/roles");
 const response = require("../utils/responses.utils");
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 // env config 
 dotenv.config();
+
+// including cloudinary configs
+require("../config/cloudinary");
 
 module.exports = {
     // get user info via id handler
@@ -140,5 +146,56 @@ module.exports = {
         catch(err){
             console.log(err);
         }
-    }
+    },
+
+    // set or update avatar image
+    editAvatar: async (req, res, next) => {
+        try {
+            // if profile picture already exists
+            if(req.user.avatar.url) {
+                const isDeleted = await cloudinary.uploader.destroy(req.user.avatar.id);
+                if (!isDeleted) {
+                    throw new Error();
+                }
+            }
+
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                tags: "avatar",
+                width: 200,
+                height: 200,
+                quality: "auto:eco",
+            });
+            fs.unlinkSync(req.file.path);
+            if (!result) {
+                throw new Error();
+            }
+
+            req.user.avatar.url = result.secure_url;
+            req.user.avatar.id = result.public_id;
+            await req.user.save();
+
+            response.success(res, "Avatar updated", { user: req.user });
+            next();
+        } catch (err) {
+            console.log("err", err);
+            response.error(res);
+        }
+    },
+
+    // delete avatar image
+    deleteAvatar: async (req, res, next) => {
+        try {
+            const result = await cloudinary.uploader.destroy(req.user.avatar.id);
+            if (!result) {
+                throw new Error();
+            }
+            req.user.avatar.url = "";
+            req.user.avatar.id = "";
+            await req.user.save();
+            response.success(res, "Avatar deleted successfully", {});
+        } catch (err) {
+            console.log("err", err);
+            response.error(res);
+        }
+    },
 };
