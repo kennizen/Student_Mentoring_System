@@ -17,7 +17,7 @@ import OfficeBuildingIcon from "../../../../../assets/OfficeBuildingIcon";
 import { CSSTransition } from "react-transition-group";
 import ModalOverlay from "../../../../modal/ModalOverlay";
 
-const Profile = () => {
+const Profile = ({ profileData }) => {
     // state variable to change the hidden state of the update information modal
     const [hidden, setHidden] = useState(false);
     // state variable to change the hidden state of the change profile pic modal
@@ -62,7 +62,7 @@ const Profile = () => {
         dispatch(studentGetProfileDetails(history));
     }, [history, dispatch]);
 
-    const { profileData } = useSelector((state) => state.student);
+    // const { profileData } = useSelector((state) => state.student);
 
     // function to show modal
     const handleShowModalFromModal = (setOp, setSc) => {
@@ -120,7 +120,8 @@ const Profile = () => {
     const [showOverlay, setShowOverlay] = useState(false);
 
     // refs used for css transition to work for the modal and the overlay
-    const profilePicEditModalOverlay = useRef(null);
+    const profilePicEditModalRef = useRef(null);
+    const profilePicDeleteModalRef = useRef(null);
     const overlayRef = useRef(null);
 
     return (
@@ -135,7 +136,7 @@ const Profile = () => {
                 <ModalOverlay nodeRef={overlayRef} />
             </CSSTransition>
             <CSSTransition
-                nodeRef={profilePicEditModalOverlay}
+                nodeRef={profilePicEditModalRef}
                 in={hiddenProfilePicModal}
                 timeout={300}
                 classNames="modal"
@@ -144,7 +145,20 @@ const Profile = () => {
                 <ProfilePicModal
                     setShowOverlay={setShowOverlay}
                     setHiddenProfilePicModal={setHiddenProfilePicModal}
-                    nodeRef={profilePicEditModalOverlay}
+                    nodeRef={profilePicEditModalRef}
+                />
+            </CSSTransition>
+            <CSSTransition
+                nodeRef={profilePicDeleteModalRef}
+                in={hiddenProfilePicDelModal}
+                timeout={300}
+                classNames="modal"
+                unmountOnExit
+            >
+                <ProfilePicDelModal
+                    setShowOverlay={setShowOverlay}
+                    setHiddenProfilePicDelModal={setHiddenProfilePicDelModal}
+                    nodeRef={profilePicDeleteModalRef}
                 />
             </CSSTransition>
 
@@ -155,16 +169,6 @@ const Profile = () => {
                     setStuProfileData={setStuProfileData}
                     history={history}
                     dispatch={dispatch}
-                />
-            )}
-            {hiddenProfilePicDelModal && (
-                <ProfilePicDelModal
-                    handleShowModal={handleShowModalFromModal}
-                    b1Text="Cancel"
-                    b2Text="Remove"
-                    body="If you remove the profile picture then it will be reverted back to the default image."
-                    header="Remove profile picture ?"
-                    history={history}
                 />
             )}
             <div className="grid grid-cols-12 gap-x-1">
@@ -196,7 +200,10 @@ const Profile = () => {
                                     Change
                                 </button>
                                 <button
-                                    onClick={handleShowModalDelProfilePic}
+                                    onClick={() => {
+                                        setShowOverlay(true);
+                                        setHiddenProfilePicDelModal(true);
+                                    }}
                                     className="p-2 border border-red-600 text-red-600 rounded-md flex items-center justify-between hover:bg-red-600 hover:text-white transition-all"
                                 >
                                     <TrashIcon alt={false} myStyle={"h-5 w-5 mr-2"} />

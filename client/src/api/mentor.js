@@ -31,3 +31,8 @@ export const updateProfile = (data) =>
     API.post(`/mentor/profile`, data).catch((error) => {
         return error.response;
     });
+
+export const updateMentorProfilePicutre = (avatar) =>
+    API.post("/avatar", avatar).catch((error) => {
+        return error.response;
+    });

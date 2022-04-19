@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { studentGetDetails } from "../../../actions/student";
+import { studentGetDetails, studentGetProfileDetails } from "../../../actions/student";
 import Home from "../studentDashboard/dashboardLinks/home/Home";
 import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
 import Chat from "../mentorDashboard/dashboardLinks/chat/Chat";
@@ -67,7 +67,7 @@ const StudentDashboard = () => {
     const history = useHistory();
 
     // accessing the redux store state
-    const { studentData } = useSelector((state) => state.student);
+    const { studentData, profileData } = useSelector((state) => state.student);
 
     console.log("student data in dashboard", studentData);
 
@@ -106,6 +106,7 @@ const StudentDashboard = () => {
         dispatch(studentGetDetails(history));
         dispatch(getAllChat(history));
         dispatch(getAllNotifications(history));
+        dispatch(studentGetProfileDetails(history));
         localStorage.setItem("chatRoute", JSON.stringify(false));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
@@ -118,6 +119,9 @@ const StudentDashboard = () => {
         }
         if (localStorage.getItem("0") !== null) {
             localStorage.removeItem("0");
+        }
+        if (localStorage.getItem("visible") !== null) {
+            localStorage.removeItem("visible");
         }
         localStorage.setItem("chatRoute", false);
         localStorage.setItem("postRoute", false);
@@ -154,17 +158,15 @@ const StudentDashboard = () => {
                     JSON.parse(localStorage.getItem("visible"))
                 )
                     notification(data); // notification when scroll to bottom button visible
-                else if (localStorage.getItem("chatRoute") !== null) {
-                    let val = JSON.parse(localStorage.getItem("chatRoute"));
-                    if (!val) {
-                        setNewMsgNotify(true);
-                        // notification when selected chat is same but in different tab
-                        notification(data);
-                    }
+                else if (!JSON.parse(localStorage.getItem("chatRoute"))) {
+                    setNewMsgNotify(true);
+                    // notification when selected chat is same but in different tab
+                    notification(data);
                 }
                 dispatch(addMessages(data));
                 dispatch(updateLatestMessage(data));
             } else {
+                if (!JSON.parse(localStorage.getItem("chatRoute"))) setNewMsgNotify(true);
                 // if message for unintended person then store chat id in global store to show notification
                 notification(data);
                 dispatch(updateLatestMessage(data));
@@ -329,7 +331,7 @@ const StudentDashboard = () => {
                         />
                         Chat
                     </span>
-                    {newMsgNotify && !route.chat && (
+                    {newMsgNotify && (
                         <DotIcon myStyle={"h-3 w-3 bg-blue-500 rounded-full float-right"} />
                     )}
                 </button>
@@ -429,9 +431,9 @@ const StudentDashboard = () => {
                         <span className="flex items-center justify-between gap-x-3">
                             <img
                                 src={
-                                    studentData?.data?.user?.avatar?.url === ""
-                                        ? `https://avatars.dicebear.com/api/initials/${studentData?.data?.user?.firstname}.svg`
-                                        : studentData?.data?.user?.avatar?.url
+                                    profileData?.avatar?.url === ""
+                                        ? `https://avatars.dicebear.com/api/initials/${profileData?.firstname}.svg`
+                                        : profileData?.avatar?.url
                                 }
                                 alt="avatar"
                                 className="w-14 h-14 rounded-full"
@@ -446,7 +448,7 @@ const StudentDashboard = () => {
                 <div className="h-9/10 bg-gray-100 overflow-hidden">
                     {/* conditional rendering of the inner tab screens */}
                     {route.academicDetails && <AcademicDetails />}
-                    {route.profile && <Profile />}
+                    {route.profile && <Profile profileData={profileData} />}
                     {route.home && <Home />}
                     {route.chat && <Chat />}
                     {route.post && (

@@ -19,6 +19,7 @@ const PostDeleteModal = ({
         dispatch(deletePost(history, id));
         setSelectedPost(null);
         setSelectedPostIndex(-1);
+        handleHideModalOperations();
     };
 
     // function to hide modal from within the modal
@@ -55,10 +56,7 @@ const PostDeleteModal = ({
                             Cancel
                         </button>
                         <button
-                            onClick={() => {
-                                handleHideModalOperations();
-                                handleDelete();
-                            }}
+                            onClick={handleDelete}
                             type="submit"
                             className="p-2 hover:bg-red-300 rounded-md text-gray-800 mt-5 bg-red-200 transition-all"
                         >

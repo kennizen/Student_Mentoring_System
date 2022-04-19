@@ -1,31 +1,67 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { mentorUpdateProfilePicture } from "../../../../../../actions/mentor";
 import { studentUpdateProfilePicture } from "../../../../../../actions/student";
 import UploadIcon from "../../../../../../assets/UploadIcon";
 
+import Resizer from "react-image-file-resizer";
+
 const ProfilePicModal = ({ setHiddenProfilePicModal, setShowOverlay, nodeRef }) => {
+    // getting role of the logged in user
+    let role = "";
+    if (localStorage.getItem("authData")) {
+        role = JSON.parse(localStorage.getItem("authData"))["role"];
+    }
+
+    // state to set the image to be displayed
     const [image, setImage] = useState(null);
+    // state to store the selected image data to be sent to save
     const [imageToBeSent, setImageToBeSent] = useState(null);
 
     const dispatch = useDispatch();
     const history = useHistory();
 
+    // function to resize image
+    const resizeFile = (file) =>
+        new Promise((resolve) => {
+            Resizer.imageFileResizer(
+                file, // Is the file of the image which will resized.
+                200, //Is the maxWidth of the resized new image.
+                200, // Is the maxHeight of the resized new image.
+                "JPEG", // Is the compressFormat of the resized new image. (JPEG, PNG or WEBP)
+                90, // Is the quality of the resized new image. (0-100)
+                0, // Is the degree of clockwise rotation. (0, 90, 180, 270, 360)
+                (uri) => resolve(uri), // Is the callBack function of the resized new image URI.
+                "file" // Is the output type of the resized new image. (file, base64 or blob)
+            );
+        });
+
+    // function to handle the image submit
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData();
         formData.append("avatar", imageToBeSent);
-        dispatch(studentUpdateProfilePicture(history, formData));
+        if (role === "MENTOR") {
+            dispatch(mentorUpdateProfilePicture(history, formData));
+        } else {
+            dispatch(studentUpdateProfilePicture(history, formData));
+        }
         handleModalActions();
     };
 
-    const onImageChange = (event) => {
+    // async function to set the image data for the newly selected image
+    const onImageChange = async (event) => {
         if (event.target.files && event.target.files[0]) {
             setImage(URL.createObjectURL(event.target.files[0]));
-            setImageToBeSent(event.target.files[0]);
+            const file = event.target.files[0];
+            const image = await resizeFile(file);
+            console.log(file, image);
+            setImageToBeSent(image);
         }
     };
 
+    // function to set the modal state to hide
     const handleModalActions = () => {
         setHiddenProfilePicModal(false);
         setShowOverlay(false);

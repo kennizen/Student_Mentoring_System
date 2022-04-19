@@ -1,4 +1,5 @@
 import * as api from "../api/mentor";
+import { deleteProfilePicutre, updateProfilePicutre } from "../api/profilePicture";
 
 export const mentorSignIn = (fields, history) => async (dispatch) => {
     try {
@@ -106,6 +107,44 @@ export const mentorUpdateProfile = (history, formData) => async (dispatch) => {
         } else {
             const profile = data.data.profileData;
             dispatch({ type: "FETCH_MENTOR_PROFILE", profile });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const mentorUpdateProfilePicture = (history, image) => async (dispatch) => {
+    try {
+        const { data } = await updateProfilePicutre(image);
+        console.log("mentor profile picture data in actions", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            // again calling fetch student profile so that we get the updated avatar url
+            dispatch(mentorGetProfile(history));
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const mentorDeleteProfilePicture = (history) => async (dispatch) => {
+    try {
+        const { data } = await deleteProfilePicutre();
+        console.log("mentor deleted profile picture data in actions", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            // again calling fetch student profile so that we get the updated avatar url
+            dispatch(mentorGetProfile(history));
         }
     } catch (error) {
         console.log(error);

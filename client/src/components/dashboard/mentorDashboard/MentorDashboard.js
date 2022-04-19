@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { mentorGetDetails } from "../../../actions/mentor";
+import { mentorGetDetails, mentorGetProfile } from "../../../actions/mentor";
 import ChatAlt2Icon from "../../../assets/ChatAlt2Icon";
 import HomeIcon from "../../../assets/HomeIcon";
 import AnnotationIcon from "../../../assets/AnnotationIcon";
@@ -55,6 +55,7 @@ const MentorDashboard = () => {
         dispatch(mentorGetDetails(history));
         dispatch(getAllChat(history));
         dispatch(getAllNotifications(history));
+        dispatch(mentorGetProfile(history));
         localStorage.setItem("chatRoute", JSON.stringify(false));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
@@ -67,6 +68,9 @@ const MentorDashboard = () => {
         }
         if (localStorage.getItem("0") !== null) {
             localStorage.removeItem("0");
+        }
+        if (localStorage.getItem("visible") !== null) {
+            localStorage.removeItem("visible");
         }
         localStorage.setItem("chatRoute", false);
         localStorage.setItem("postRoute", false);
@@ -87,8 +91,9 @@ const MentorDashboard = () => {
     // setting the admin auth token
     const dispatch = useDispatch();
     const history = useHistory();
+
     // accessing the redux store state
-    const { mentorData } = useSelector((state) => state.mentor);
+    const { mentorData, profileData } = useSelector((state) => state.mentor);
 
     console.log("mentor data in dashboard", mentorData);
 
@@ -153,17 +158,15 @@ const MentorDashboard = () => {
                     JSON.parse(localStorage.getItem("visible"))
                 )
                     notification(data); // notification when scroll to bottom button visible
-                else if (localStorage.getItem("chatRoute") !== null) {
-                    let val = JSON.parse(localStorage.getItem("chatRoute"));
-                    if (!val) {
-                        setNewMsgNotify(true);
-                        // notification when selected chat is same but in different tab
-                        notification(data);
-                    }
+                else if (!JSON.parse(localStorage.getItem("chatRoute"))) {
+                    setNewMsgNotify(true);
+                    // notification when selected chat is same but in different tab
+                    notification(data);
                 }
                 dispatch(addMessages(data));
                 dispatch(updateLatestMessage(data));
             } else {
+                if (!JSON.parse(localStorage.getItem("chatRoute"))) setNewMsgNotify(true);
                 // if message for unintended person then store chat id in global store to show notification
                 notification(data);
                 dispatch(updateLatestMessage(data));
@@ -429,9 +432,9 @@ const MentorDashboard = () => {
                         <span className="flex items-center justify-between gap-x-3">
                             <img
                                 src={
-                                    mentorData?.data?.user?.avatar?.url === ""
-                                        ? `https://avatars.dicebear.com/api/initials/${mentorData?.data?.user?.firstname}.svg`
-                                        : mentorData?.data?.user?.avatar?.url
+                                    profileData?.avatar?.url === ""
+                                        ? `https://avatars.dicebear.com/api/initials/${profileData?.firstname}.svg`
+                                        : profileData?.avatar?.url
                                 }
                                 alt="avatar"
                                 className="w-14 h-14 rounded-full"
@@ -454,7 +457,7 @@ const MentorDashboard = () => {
                     )}
                     {route.menteeInfo && <MenteeInfo />}
                     {route.chat && <Chat />}
-                    {route.profile && <Profile />}
+                    {route.profile && <Profile profileData={profileData} />}
                 </div>
             </div>
         </div>

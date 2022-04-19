@@ -12,10 +12,11 @@ import UserCircleIcon from "../../../../../assets/UserCircleIcon";
 import UserGroupIcon from "../../../../../assets/UserGroupIcon";
 
 import ModalOverlay from "../../../../modal/ModalOverlay";
+import ProfilePicDelModal from "../../../studentDashboard/dashboardLinks/profile/profilePicModal/ProfilePicDelModal";
 import ProfilePicModal from "../../../studentDashboard/dashboardLinks/profile/profilePicModal/ProfilePicModal";
 import ProfileModal from "./ProfileModal";
 
-const Profile = () => {
+const Profile = ({ profileData }) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -25,7 +26,7 @@ const Profile = () => {
     }, []);
 
     // accessing the global state for the mentor profile data
-    const { profileData } = useSelector((state) => state.mentor);
+    // const { profileData } = useSelector((state) => state.mentor);
 
     // state for the modal field values
     const [mentorProfileData, setMentorProfileData] = useState({
@@ -43,12 +44,14 @@ const Profile = () => {
     // state for modals show and hide
     const [showOverlay, setShowOverlay] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [hiddenProfilePicDelModal, setHiddenProfilePicDelModal] = useState(false);
     const [hiddenProfilePicModal, setHiddenProfilePicModal] = useState(false);
 
     // refs used for css transition to work for the modal and the overlay
     const editModalRef = useRef(null);
     const overlayRef = useRef(null);
     const profilePicEditModalOverlay = useRef(null);
+    const profilePicDeleteModalRef = useRef(null);
 
     // function to handle modal show hide
     const handleShowModal = () => {
@@ -67,8 +70,8 @@ const Profile = () => {
         });
     };
 
-    console.log("profile data", profileData);
-    console.log(mentorProfileData);
+    // console.log("profile data", profileData);
+    // console.log(mentorProfileData);
 
     return (
         <div className="w-full h-full flex items-center justify-center relative">
@@ -109,6 +112,19 @@ const Profile = () => {
                     nodeRef={profilePicEditModalOverlay}
                 />
             </CSSTransition>
+            <CSSTransition
+                nodeRef={profilePicDeleteModalRef}
+                in={hiddenProfilePicDelModal}
+                timeout={300}
+                classNames="modal"
+                unmountOnExit
+            >
+                <ProfilePicDelModal
+                    setShowOverlay={setShowOverlay}
+                    setHiddenProfilePicDelModal={setHiddenProfilePicDelModal}
+                    nodeRef={profilePicDeleteModalRef}
+                />
+            </CSSTransition>
             <div className="w-3/5 rounded-md p-4">
                 <div className="flex gap-x-2 mb-3">
                     <div className="bg-white px-5 py-10 shadow-md rounded-md">
@@ -137,7 +153,10 @@ const Profile = () => {
                                     Change
                                 </button>
                                 <button
-                                    // onClick={handleShowModalDelProfilePic}
+                                    onClick={() => {
+                                        setHiddenProfilePicDelModal(true);
+                                        setShowOverlay(true);
+                                    }}
                                     className="p-2 border border-red-600 text-red-600 rounded-md flex items-center justify-between hover:bg-red-600 hover:text-white transition-all"
                                 >
                                     <TrashIcon alt={false} myStyle={"h-5 w-5 mr-2"} />

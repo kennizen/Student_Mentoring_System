@@ -1,4 +1,5 @@
 import * as api from "../api/student";
+import { updateProfilePicutre, deleteProfilePicutre } from "../api/profilePicture";
 
 export const studentSignIn = (fields, history) => async (dispatch) => {
     try {
@@ -84,8 +85,27 @@ export const studentUpdateProfileDetails = (history, fields) => async (dispatch)
 
 export const studentUpdateProfilePicture = (history, image) => async (dispatch) => {
     try {
-        const { data } = await api.updateStudentProfilePicutre(image);
+        const { data } = await updateProfilePicutre(image);
         console.log("student profile picture data in actions", data);
+
+        // check if the response data is error
+        // if yes then call dispatch logout
+        // and redirect to "/"
+        if (data.code === 403) {
+            history.goBack();
+        } else {
+            // again calling fetch student profile so that we get the updated avatar url
+            dispatch(studentGetProfileDetails(history));
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const studentDeleteProfilePicture = (history) => async (dispatch) => {
+    try {
+        const { data } = await deleteProfilePicutre();
+        console.log("student deleted profile picture data in actions", data);
 
         // check if the response data is error
         // if yes then call dispatch logout

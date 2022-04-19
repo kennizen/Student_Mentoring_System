@@ -10,7 +10,7 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
-// env config 
+// env config
 dotenv.config();
 
 // including cloudinary configs
@@ -41,14 +41,14 @@ module.exports = {
 
     // email verification handler
     emailVerificationHandler: async (req, res) => {
-        try{
+        try {
             const token = req.params.token;
             const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-            
-            if(decoded.role === roles.Mentor){
+
+            if (decoded.role === roles.Mentor) {
                 const mentor = await Mentor.findById(decoded._id);
-    
-                if(!mentor){
+
+                if (!mentor) {
                     throw new Error("User not found");
                 }
                 mentor.isEmailVerified = true;
@@ -57,10 +57,10 @@ module.exports = {
                 return res.render("emailVerifySuccess");
             }
 
-            if(decoded.role === roles.Student){
+            if (decoded.role === roles.Student) {
                 const student = await Student.findById(decoded._id);
-    
-                if(!student){
+
+                if (!student) {
                     throw new Error("User not found");
                 }
                 student.isEmailVerified = true;
@@ -68,11 +68,10 @@ module.exports = {
                 await student.save();
                 return res.render("emailVerifySuccess");
             }
-            
+
             res.render("notFound");
-        }
-        catch(err){
-            console.log(err)
+        } catch (err) {
+            console.log(err);
             res.render("emailVerifyFailed");
         }
     },
@@ -82,59 +81,58 @@ module.exports = {
         try {
             const token = req.params.token;
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            
+
             let user;
 
             // if user is mentor
-            if(decoded.role === roles.Mentor) {
-                user = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token }); 
+            if (decoded.role === roles.Mentor) {
+                user = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
             }
             // if user is student
-            if(decoded.role === roles.Student) {
+            if (decoded.role === roles.Student) {
                 user = await Student.findOne({ _id: decoded._id, passwordResetToken: token });
             }
 
-            if(!user){
+            if (!user) {
                 res.render("linkExpired");
             }
             res.render("resetPassword");
-        }
-        catch(err){
+        } catch (err) {
             console.log(err);
-            res.render("linkExpired")
+            res.render("linkExpired");
         }
     },
-    
+
     setNewPassword: async (req, res) => {
         try {
             let user;
             const token = req.params.token;
-            const { password, confirmPassword} = req.body;
+            const { password, confirmPassword } = req.body;
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            
-            if(decoded.role === roles.Mentor){
-                user = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
-            } 
 
-            if(decoded.role === roles.Student){
+            if (decoded.role === roles.Mentor) {
+                user = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
+            }
+
+            if (decoded.role === roles.Student) {
                 user = await Student.findOne({ _id: decoded._id, passwordResetToken: token });
             }
 
             // if user not found
-            if(!user) {
+            if (!user) {
                 return response.notfound(res, "Link may have expired");
             }
 
             // checking if both password are provided
-            if(!password || !confirmPassword){
+            if (!password || !confirmPassword) {
                 return response.error(res, "Both passwords are required");
             }
-            
+
             // checking if the passwords are similar
-            if(password != confirmPassword){
+            if (password != confirmPassword) {
                 return response.error(res, "Passwords doesn't match");
             }
-            
+
             //setting new password
             const hashedPassword = await bcrypt.hash(password, 8);
             user.password = hashedPassword;
@@ -142,8 +140,7 @@ module.exports = {
             await user.save();
 
             response.success(res, "Password updated");
-        }
-        catch(err){
+        } catch (err) {
             console.log(err);
         }
     },
@@ -152,7 +149,7 @@ module.exports = {
     editAvatar: async (req, res, next) => {
         try {
             // if profile picture already exists
-            if(req.user.avatar.url) {
+            if (req.user.avatar.url) {
                 const isDeleted = await cloudinary.uploader.destroy(req.user.avatar.id);
                 if (!isDeleted) {
                     throw new Error();
@@ -165,6 +162,7 @@ module.exports = {
                 height: 200,
                 quality: "auto:eco",
             });
+
             fs.unlinkSync(req.file.path);
             if (!result) {
                 throw new Error();
