@@ -14,25 +14,13 @@ import SemesterDelModal from "./academicModal/SemesterDelModal";
 import Loading from "../../../../loading/Loading";
 
 const AcademicDetails = () => {
+    // state variables
     const [showModal, setShowModal] = useState(false);
     const [showSemesterModal, setShowSemesterModal] = useState(false);
     const [showDelModal, setShowDelModal] = useState(false);
     const [overflow, setOverflow] = useState(true);
     const [semNo, setSemNo] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const history = useHistory();
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(studentGetSemesterDetails(history));
-        dispatch(studentGetPastEduDetails(history));
-    }, [dispatch, history]);
-
-    const { semData, pastEducation } = useSelector((state) => state.student);
-
-    console.log("semData", semData);
-    console.log("past", pastEducation);
-
     const [pastDetails, setPastDetails] = useState({
         10: {
             board: "",
@@ -45,13 +33,24 @@ const AcademicDetails = () => {
             marks: "",
         },
     });
-
     const [semesterDetails, setSemesterDetails] = useState({
         semester: 0,
         courses: [],
     });
-
     const [semesterCourses, setSemesterCourses] = useState([]);
+
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(studentGetSemesterDetails(history));
+        dispatch(studentGetPastEduDetails(history));
+    }, [dispatch, history]);
+
+    const { semData, pastEducation } = useSelector((state) => state.student);
+
+    console.log("semData", semData);
+    console.log("past", pastEducation);
 
     // function to show modal
     const handleShowModalFromModal = (setOp, setSc) => {

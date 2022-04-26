@@ -7,10 +7,11 @@ import ChatAlt2Icon from "../../../assets/ChatAlt2Icon";
 import HomeIcon from "../../../assets/HomeIcon";
 import AnnotationIcon from "../../../assets/AnnotationIcon";
 import AcademicCapIcon from "../../../assets/AcademicCapIcon";
-import Loading from "../../loading/Loading";
 import Chat from "./dashboardLinks/chat/Chat";
 import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
-import Post from "../studentDashboard/dashboardLinks/post/Post";
+import Post from "./dashboardLinks/post/Post";
+import Profile from "./dashboardLinks/profile/Profile";
+import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
 
 import { getAllChat } from "../../../actions/chat";
 import LogoutIcon from "../../../assets/LogoutIcon";
@@ -38,13 +39,18 @@ import { CSSTransition } from "react-transition-group";
 import NotificationCounter from "../../notification/NotificationCounter";
 import NotificationModal from "../../notification/notificationModal/NotificationModal";
 import ModalOverlay from "../../modal/ModalOverlay";
-import Profile from "./dashboardLinks/profile/Profile";
+import { studentGetDetails, studentGetProfileDetails } from "../../../actions/student";
+
+const MENTOR = "MENTOR";
+const STUDENT = "STUDENT";
 
 const MentorDashboard = () => {
     // getting uid of the logged in user
     let uid = "";
+    let role = "";
     if (localStorage.getItem("authData")) {
         uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+        role = JSON.parse(localStorage.getItem("authData"))["role"];
     }
 
     // getting the socket context from the provider
@@ -52,10 +58,17 @@ const MentorDashboard = () => {
 
     // fetching the admin details
     useEffect(() => {
-        dispatch(mentorGetDetails(history));
+        if (role === MENTOR) {
+            dispatch(mentorGetDetails(history));
+            dispatch(mentorGetProfile(history));
+        } else if (role === STUDENT) {
+            dispatch(studentGetDetails(history));
+            dispatch(studentGetProfileDetails(history));
+        }
+
         dispatch(getAllChat(history));
         dispatch(getAllNotifications(history));
-        dispatch(mentorGetProfile(history));
+
         localStorage.setItem("chatRoute", JSON.stringify(false));
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
@@ -83,6 +96,7 @@ const MentorDashboard = () => {
         menteeInfo: false,
         profile: false,
         chat: false,
+        academicDetails: false,
     });
 
     // state to control the chat notification on the dashboard tab
@@ -92,10 +106,13 @@ const MentorDashboard = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    // accessing the redux store state
-    const { mentorData, profileData } = useSelector((state) => state.mentor);
+    // accessing profile data of the required user
+    const { profileData } = useSelector((state) => {
+        if (role === MENTOR) return state.mentor;
+        else if (role === STUDENT) return state.student;
+    });
 
-    console.log("mentor data in dashboard", mentorData);
+    console.log("profile data in dashboard", profileData);
 
     // state variable to control the stream updated button
     const [streamUpdated, setStreamUpdated] = useState(false);
@@ -191,6 +208,7 @@ const MentorDashboard = () => {
                     menteeInfo: false,
                     profile: false,
                     chat: false,
+                    academicDetails: false,
                 });
                 break;
             case "post":
@@ -202,6 +220,7 @@ const MentorDashboard = () => {
                     menteeInfo: false,
                     profile: false,
                     chat: false,
+                    academicDetails: false,
                 });
                 break;
             case "profile":
@@ -213,6 +232,7 @@ const MentorDashboard = () => {
                     menteeInfo: false,
                     profile: true,
                     chat: false,
+                    academicDetails: false,
                 });
                 break;
             case "menteeInfo":
@@ -224,6 +244,7 @@ const MentorDashboard = () => {
                     menteeInfo: true,
                     profile: false,
                     chat: false,
+                    academicDetails: false,
                 });
                 break;
             case "chat":
@@ -236,6 +257,19 @@ const MentorDashboard = () => {
                     menteeInfo: false,
                     profile: false,
                     chat: true,
+                    academicDetails: false,
+                });
+                break;
+            case "academicDetails":
+                localStorage.setItem("chatRoute", JSON.stringify(false));
+                localStorage.setItem("postRoute", JSON.stringify(false));
+                setRoute({
+                    home: false,
+                    post: false,
+                    menteeInfo: false,
+                    profile: false,
+                    chat: false,
+                    academicDetails: true,
                 });
                 break;
             default:
@@ -271,7 +305,6 @@ const MentorDashboard = () => {
 
     return (
         <div className="h-screen flex bg-gray-50">
-            {!mentorData && <Loading />}
             <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
                 <div className="h-1/10 flex items-center justify-center">
                     <svg
@@ -288,7 +321,8 @@ const MentorDashboard = () => {
                             d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
                         />
                     </svg>
-                    <h1>Mentor</h1>
+                    {role === MENTOR && <h1>Mentor</h1>}
+                    {role === STUDENT && <h1>Student</h1>}
                 </div>
                 <button
                     onClick={handleRouteChange}
@@ -316,21 +350,40 @@ const MentorDashboard = () => {
                     />
                     Post
                 </button>
-                <button
-                    onClick={handleRouteChange}
-                    id="menteeInfo"
-                    className={`${
-                        route.menteeInfo ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                >
-                    <AcademicCapIcon
-                        myStyle={"h-5 w-5 mr-3"
-                            .concat(" ")
-                            .concat(route.menteeInfo && "text-blue-600")}
-                        alt={true}
-                    />
-                    Mentee Info
-                </button>
+                {role === MENTOR && (
+                    <button
+                        onClick={handleRouteChange}
+                        id="menteeInfo"
+                        className={`${
+                            route.menteeInfo ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                    >
+                        <AcademicCapIcon
+                            myStyle={"h-5 w-5 mr-3"
+                                .concat(" ")
+                                .concat(route.menteeInfo && "text-blue-600")}
+                            alt={true}
+                        />
+                        Mentee Info
+                    </button>
+                )}
+                {role === STUDENT && (
+                    <button
+                        onClick={handleRouteChange}
+                        id="academicDetails"
+                        className={`${
+                            route.academicDetails ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                    >
+                        <AcademicCapIcon
+                            myStyle={"h-5 w-5 mr-3"
+                                .concat(" ")
+                                .concat(route.academicDetails && "text-blue-600")}
+                            alt={true}
+                        />
+                        Academics
+                    </button>
+                )}
                 <button
                     onClick={handleRouteChange}
                     id="chat"
@@ -440,8 +493,8 @@ const MentorDashboard = () => {
                                 className="w-14 h-14 rounded-full"
                             />
                             <span>
-                                <h3>{`${mentorData?.data?.user?.firstname} ${mentorData?.data?.user?.middlename} ${mentorData?.data?.user?.lastname}`}</h3>
-                                <h6>{`${mentorData?.data?.user?.email}`}</h6>
+                                <h3>{`${profileData?.firstname} ${profileData?.middlename} ${profileData?.lastname}`}</h3>
+                                <h6>{`${profileData?.email}`}</h6>
                             </span>
                         </span>
                     </div>
@@ -458,6 +511,7 @@ const MentorDashboard = () => {
                     {route.menteeInfo && <MenteeInfo />}
                     {route.chat && <Chat />}
                     {route.profile && <Profile profileData={profileData} />}
+                    {route.academicDetails && <AcademicDetails />}
                 </div>
             </div>
         </div>
