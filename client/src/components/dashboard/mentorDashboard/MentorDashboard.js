@@ -110,6 +110,7 @@ const MentorDashboard = () => {
     const { profileData } = useSelector((state) => {
         if (role === MENTOR) return state.mentor;
         else if (role === STUDENT) return state.student;
+        return state;
     });
 
     console.log("profile data in dashboard", profileData);
