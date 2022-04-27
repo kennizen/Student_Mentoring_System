@@ -118,9 +118,8 @@ const MentorDashboard = () => {
     // state variable to control the stream updated button
     const [streamUpdated, setStreamUpdated] = useState(false);
 
+    // socket to setup the user for the socket and to listen to new notification
     useEffect(() => {
-        // socket = connectSocket(token);
-        // socket.emit("notify setup", uid);
         socket.emit("setup", uid);
         console.log("socket", socket);
 

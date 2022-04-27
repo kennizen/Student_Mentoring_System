@@ -12,13 +12,17 @@ import {
 } from "../../../../../actions/student";
 import SemesterDelModal from "./academicModal/SemesterDelModal";
 import Loading from "../../../../loading/Loading";
+import { CSSTransition } from "react-transition-group";
+import ModalOverlay from "../../../../modal/ModalOverlay";
+import Plus from "../../../../../assets/Plus";
 
 const AcademicDetails = () => {
+    useEffect(() => {
+        dispatch(studentGetSemesterDetails(history));
+        dispatch(studentGetPastEduDetails(history));
+    }, []);
+
     // state variables
-    const [showModal, setShowModal] = useState(false);
-    const [showSemesterModal, setShowSemesterModal] = useState(false);
-    const [showDelModal, setShowDelModal] = useState(false);
-    const [overflow, setOverflow] = useState(true);
     const [semNo, setSemNo] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [pastDetails, setPastDetails] = useState({
@@ -42,42 +46,10 @@ const AcademicDetails = () => {
     const history = useHistory();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(studentGetSemesterDetails(history));
-        dispatch(studentGetPastEduDetails(history));
-    }, [dispatch, history]);
-
     const { semData, pastEducation } = useSelector((state) => state.student);
 
     console.log("semData", semData);
     console.log("past", pastEducation);
-
-    // function to show modal
-    const handleShowModalFromModal = (setOp, setSc) => {
-        setOp("opacity-0");
-        setSc("scale-0");
-        setTimeout(() => {
-            setShowModal(false);
-            setShowSemesterModal(false);
-            setShowDelModal(false);
-        }, 100);
-    };
-
-    const handleShowModal = () => {
-        setShowModal(true);
-        setPastDetails({
-            10: {
-                board: pastEducation["10"].board,
-                studied: pastEducation["10"].studied,
-                marks: pastEducation["10"].marks,
-            },
-            12: {
-                board: pastEducation["12"].board,
-                studied: pastEducation["12"].studied,
-                marks: pastEducation["12"].marks,
-            },
-        });
-    };
 
     // logic to add semester dynamically
     const mount = useRef();
@@ -117,6 +89,23 @@ const AcademicDetails = () => {
         setIsLoading(true);
     };
 
+    const handleShowModal = () => {
+        setShowModal(true);
+        setShowOverlay(true);
+        setPastDetails({
+            10: {
+                board: pastEducation["10"].board,
+                studied: pastEducation["10"].studied,
+                marks: pastEducation["10"].marks,
+            },
+            12: {
+                board: pastEducation["12"].board,
+                studied: pastEducation["12"].studied,
+                marks: pastEducation["12"].marks,
+            },
+        });
+    };
+
     const handleSemesterModal = (index) => {
         if (semData.length !== 0) {
             let tempC = [];
@@ -134,55 +123,93 @@ const AcademicDetails = () => {
             setSemesterCourses([...tempC]);
         }
         setShowSemesterModal(true);
+        setShowOverlay(true);
     };
 
     const handleDelSemModal = () => {
+        setShowOverlay(true);
         setShowDelModal(true);
     };
 
+    // ref variables
+    const overlayRef = useRef(null);
+    const academicModalRef = useRef(null);
+    const semesterModalRef = useRef(null);
+    const semesterModalDelRef = useRef(null);
+
+    // state variables
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [showSemesterModal, setShowSemesterModal] = useState(false);
+    const [showDelModal, setShowDelModal] = useState(false);
+    const [overflow, setOverflow] = useState(true);
+
     return (
-        <div className="w-full relative">
+        <div className="w-full h-full relative">
             <div
-                className={`w-full h-845 pt-4 px-4 ${
+                className={`w-full h-full pt-4 px-4 ${
                     overflow ? "overflow-y-auto" : "overflow-y-hidden"
                 } `}
             >
-                {showModal && (
+                <CSSTransition
+                    nodeRef={overlayRef}
+                    in={showOverlay}
+                    timeout={300}
+                    classNames="overlay"
+                    unmountOnExit
+                >
+                    <ModalOverlay nodeRef={overlayRef} />
+                </CSSTransition>
+                <CSSTransition
+                    nodeRef={academicModalRef}
+                    in={showModal}
+                    timeout={300}
+                    classNames="modal"
+                    unmountOnExit
+                >
                     <AcademicModal
-                        header="Past Details"
-                        handleShowModal={handleShowModalFromModal}
+                        nodeRef={academicModalRef}
+                        setShowOverlay={setShowOverlay}
+                        setShowModal={setShowModal}
                         setOverflow={setOverflow}
                         pastDetails={pastDetails}
                         setPastDetails={setPastDetails}
-                        history={history}
                     />
-                )}
-
-                {showSemesterModal && (
+                </CSSTransition>
+                <CSSTransition
+                    nodeRef={semesterModalRef}
+                    in={showSemesterModal}
+                    timeout={300}
+                    classNames="modal"
+                    unmountOnExit
+                >
                     <SemesterModal
-                        handleShowModal={handleShowModalFromModal}
+                        nodeRef={semesterModalRef}
+                        setShowOverlay={setShowOverlay}
+                        setShowSemesterModal={setShowSemesterModal}
                         setOverflow={setOverflow}
-                        semesterCourses={semesterCourses}
-                        semesterDetails={semesterDetails}
-                        setSemesterCourses={setSemesterCourses}
                         semNo={semNo}
                         setSemesterDetails={setSemesterDetails}
-                        history={history}
+                        setSemesterCourses={setSemesterCourses}
+                        semesterCourses={semesterCourses}
+                        semesterDetails={semesterDetails}
                     />
-                )}
-
-                {showDelModal && (
+                </CSSTransition>
+                <CSSTransition
+                    nodeRef={semesterModalDelRef}
+                    in={showDelModal}
+                    timeout={300}
+                    classNames="modal"
+                    unmountOnExit
+                >
                     <SemesterDelModal
                         semNo={semNo}
-                        handleShowModal={handleShowModalFromModal}
-                        b1Text="Cancel"
-                        b2Text="Delete"
-                        body="If you delete the semester than all the course details for this semester will also be deleted."
-                        header="Delete semester details ?"
-                        history={history}
+                        nodeRef={semesterModalDelRef}
+                        setShowOverlay={setShowOverlay}
+                        setShowDelModal={setShowDelModal}
                         setOverflow={setOverflow}
                     />
-                )}
+                </CSSTransition>
 
                 <PastDetails
                     handleShowModal={handleShowModal}
@@ -212,25 +239,12 @@ const AcademicDetails = () => {
                     <button
                         onClick={() => addSemester(semData.length)}
                         type="button"
-                        className="rounded-md text-gray-900 bg-gray-200 w-full p-6 disabled:opacity-50 flex justify-center items-center gap-2"
+                        className="rounded-md text-gray-900 bg-gray-200 w-full p-6 disabled:opacity-50 flex justify-center items-center gap-2 mb-2"
                     >
                         {isLoading ? (
                             <Loading myStyle={"w-6 h-6"} />
                         ) : (
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M12 4v16m8-8H4"
-                                />
-                            </svg>
+                            <Plus alt={true} myStyle={"w-6 h-6"} />
                         )}
                         Add Semester
                     </button>
