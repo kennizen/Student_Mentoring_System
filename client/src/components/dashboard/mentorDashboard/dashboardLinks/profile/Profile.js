@@ -204,6 +204,7 @@ const Profile = ({ profileData }) => {
                     nodeRef={profilePicDeleteModalRef}
                 />
             </CSSTransition>
+
             {role === MENTOR && (
                 <CSSTransition
                     nodeRef={editModalRef}
@@ -334,6 +335,7 @@ const Profile = ({ profileData }) => {
                     </div>
                 </div>
             )}
+
             {role === STUDENT && (
                 <CSSTransition
                     nodeRef={stuProfileModalRef}

@@ -150,3 +150,11 @@ export const mentorDeleteProfilePicture = (history) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const logoutMentor = () => async (dispatch) => {
+    try {
+        dispatch({ type: "LOGOUT_MENTOR" });
+    } catch (error) {
+        console.log(error);
+    }
+};

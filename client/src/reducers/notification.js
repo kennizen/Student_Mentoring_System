@@ -18,6 +18,8 @@ const notification = (state = { notifications: [] }, action) => {
                 updatedNotifications.push(notiMap[n]);
             }
             return { ...state, notifications: updatedNotifications };
+        case "LOGOUT_NOTIFICATIONS":
+            return { ...state, notifications: [] };
         default:
             return state;
     }

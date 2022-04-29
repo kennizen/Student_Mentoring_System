@@ -78,7 +78,7 @@ const MenteeInfo = () => {
                     <div>
                         <h2 className="font-medium mb-3">Mentee Information</h2>
                         <h5 className="font-light flex justify-start items-center">
-                            <p className="font-semibold mr-1">{mentees.length}</p> mentees found
+                            <p className=" mr-1">{mentees.length}</p> mentees found
                         </h5>
                     </div>
                     <div className="flex justify-end items-end">
@@ -110,13 +110,13 @@ const MenteeInfo = () => {
                 </div>
                 <div className="grid grid-cols-custom bg-white rounded-md py-1 px-2">
                     <div className="flex justify-start items-center">
-                        <h5 className="font-semibold">Sl No.</h5>
+                        <h5 className="">Sl No.</h5>
                     </div>
                     <div className="">
                         <button
                             name="name"
                             onClick={sortBasedOnTerm}
-                            className="font-semibold flex justify-between items-center text-sm gap-1 py-1 rounded-md"
+                            className=" flex justify-between items-center text-sm gap-1 py-1 rounded-md"
                         >
                             Name
                             <svg
@@ -140,7 +140,7 @@ const MenteeInfo = () => {
                         <button
                             name="roll"
                             onClick={sortBasedOnTerm}
-                            className="font-semibold flex justify-between items-center text-sm gap-1 py-1 rounded-md"
+                            className=" flex justify-between items-center text-sm gap-1 py-1 rounded-md"
                         >
                             Roll No.
                             <svg
@@ -162,16 +162,16 @@ const MenteeInfo = () => {
                     </div>
 
                     <div className="col-span-2 flex justify-start items-center">
-                        <h5 className="font-semibold">Address</h5>
+                        <h5 className="">Address</h5>
                     </div>
                     <div className="flex justify-start items-center">
-                        <h5 className="font-semibold">Department</h5>
+                        <h5 className="">Department</h5>
                     </div>
                     <div className="">
                         <button
                             name="semester"
                             onClick={sortBasedOnTerm}
-                            className="font-semibold flex justify-between items-center text-sm gap-1 py-1 rounded-md"
+                            className=" flex justify-between items-center text-sm gap-1 py-1 rounded-md"
                         >
                             Semester
                             <svg
@@ -192,10 +192,10 @@ const MenteeInfo = () => {
                         </button>
                     </div>
                     <div className="flex justify-start items-center">
-                        <h5 className="font-semibold">Mobile No.</h5>
+                        <h5 className="">Mobile No.</h5>
                     </div>
                     <div className="flex justify-start items-center">
-                        <h5 className="font-semibold">Actions</h5>
+                        <h5 className="">Actions</h5>
                     </div>
                 </div>
                 {mentees.length === 0 ? (

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { mentorGetDetails, mentorGetProfile } from "../../../actions/mentor";
+import { logoutMentor, mentorGetDetails, mentorGetProfile } from "../../../actions/mentor";
 import ChatAlt2Icon from "../../../assets/ChatAlt2Icon";
 import HomeIcon from "../../../assets/HomeIcon";
 import AnnotationIcon from "../../../assets/AnnotationIcon";
@@ -13,7 +13,7 @@ import Post from "./dashboardLinks/post/Post";
 import Profile from "./dashboardLinks/profile/Profile";
 import AcademicDetails from "./dashboardLinks/academicdetails/AcademicDetails";
 
-import { getAllChat } from "../../../actions/chat";
+import { getAllChat, logoutChats } from "../../../actions/chat";
 import LogoutIcon from "../../../assets/LogoutIcon";
 import UserCircleIcon from "../../../assets/UserCircleIcon";
 import DotIcon from "../../../assets/DotIcon";
@@ -33,13 +33,20 @@ import Notification from "../../notification/Notification";
 import {
     addGlobalNotification,
     getAllNotifications,
+    logoutNotifications,
     markNotificationRead,
 } from "../../../actions/notification";
 import { CSSTransition } from "react-transition-group";
 import NotificationCounter from "../../notification/NotificationCounter";
 import NotificationModal from "../../notification/notificationModal/NotificationModal";
 import ModalOverlay from "../../modal/ModalOverlay";
-import { studentGetDetails, studentGetProfileDetails } from "../../../actions/student";
+import {
+    logoutStudent,
+    studentGetDetails,
+    studentGetProfileDetails,
+} from "../../../actions/student";
+import Home from "./dashboardLinks/home/Home";
+import { logoutPosts } from "../../../actions/post";
 
 const MENTOR = "MENTOR";
 const STUDENT = "STUDENT";
@@ -279,8 +286,11 @@ const MentorDashboard = () => {
 
     // function to handle the logout
     const handleLogout = () => {
-        // calling dispatch directly without an action call from the actions folder because we dont need any api to be called for loging out.
-        dispatch({ type: "LOGOUT_MENTOR" });
+        if (role === MENTOR) dispatch(logoutMentor());
+        else if (role === STUDENT) dispatch(logoutStudent());
+        dispatch(logoutChats());
+        dispatch(logoutNotifications());
+        dispatch(logoutPosts());
         history.push("/");
     };
 
@@ -364,7 +374,7 @@ const MentorDashboard = () => {
                                 .concat(route.menteeInfo && "text-blue-600")}
                             alt={true}
                         />
-                        Mentee Info
+                        Mentees
                     </button>
                 )}
                 {role === STUDENT && (
@@ -512,6 +522,11 @@ const MentorDashboard = () => {
                     {route.chat && <Chat />}
                     {route.profile && <Profile profileData={profileData} />}
                     {route.academicDetails && <AcademicDetails />}
+                    {route.home && (
+                        <Home
+                            name={`${profileData?.firstname} ${profileData?.middlename} ${profileData?.lastname}`}
+                        />
+                    )}
                 </div>
             </div>
         </div>

@@ -147,3 +147,11 @@ export const clearMessages = () => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const logoutChats = () => async (dispatch) => {
+    try {
+        dispatch({ type: "LOGOUT_CHATS" });
+    } catch (error) {
+        console.log(error);
+    }
+};

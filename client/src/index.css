@@ -24,6 +24,11 @@
     }
 }
 
+@font-face{
+    font-family: "natoSans";
+    src: url("./fonts/NotoSans-Regular.ttf");
+}
+
 html {
     scroll-behavior: smooth;
 }

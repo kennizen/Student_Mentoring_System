@@ -42,3 +42,11 @@ export const markNotificationRead = (history, notificationIds, setLoading) => as
         console.log(error);
     }
 };
+
+export const logoutNotifications = () => async (dispatch) => {
+    try {
+        dispatch({ type: "LOGOUT_NOTIFICATIONS" });
+    } catch (error) {
+        console.log(error);
+    }
+};

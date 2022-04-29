@@ -11,6 +11,8 @@ const NotificationCounter = () => {
     // accessing the global notification store
     const { notifications } = useSelector((state) => state.notification);
 
+    console.log("notifications in counter", notifications);
+
     // function to find the no. of unread notifications
     useEffect(() => {
         let count = 0;

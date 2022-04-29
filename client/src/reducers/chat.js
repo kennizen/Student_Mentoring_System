@@ -61,6 +61,8 @@ const chat = (state = { chats: [], messages: [], notifications: [] }, action) =>
             return { ...state, notifications: [...state.notifications, action.id] };
         case "UPDATE_NOTIFICATION":
             return { ...state, notifications: action.tmp };
+        case "LOGOUT_CHATS":
+            return { ...state, chats: [], messages: [], notifications: [] };
         default:
             return state;
     }

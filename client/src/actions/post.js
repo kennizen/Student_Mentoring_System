@@ -147,3 +147,11 @@ export const deleteComment = (history, commentId) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const logoutPosts = () => async (dispatch) => {
+    try {
+        dispatch({ type: "LOGOUT_POSTS" });
+    } catch (error) {
+        console.log(error);
+    }
+};

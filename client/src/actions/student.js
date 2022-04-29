@@ -251,3 +251,11 @@ export const studentGetAllStudentsOfMentor = (history, setAllMentees) => async (
         console.log(error);
     }
 };
+
+export const logoutStudent = () => async (dispatch) => {
+    try {
+        dispatch({ type: "LOGOUT_STUDENT" });
+    } catch (error) {
+        console.log(error);
+    }
+};

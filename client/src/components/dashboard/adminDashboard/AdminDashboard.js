@@ -98,7 +98,7 @@ const AdminDashboard = () => {
                     onClick={handleRouteChange}
                     className={`flex items-center justify-between text-left bg-blue-600 hover:bg-blue-800 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
                 >
-                    Manage Groups
+                    Manage groups
                     <Plus alt={true} myStyle={"h-6 w-6 text-white"} />
                 </button>
                 <button

@@ -36,6 +36,8 @@ const post = (state = { posts: [], comments: [] }, action) => {
                 }
             });
             return { ...state, comments: filteredComments };
+        case "LOGOUT_POSTS":
+            return { ...state, posts: [], comments: [] };
         default:
             return state;
     }

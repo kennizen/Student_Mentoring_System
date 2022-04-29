@@ -1,10 +1,9 @@
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
     purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
     darkMode: false, // or 'media' or 'class'
     theme: {
-        fontFamily: {
-            sans: ['"Open Sans"', "sans-serif"],
-        },
         fontSize: {
             xs: ["0.556vw", "unset"],
             sm: ["0.875rem", "unset"],
@@ -19,6 +18,9 @@ module.exports = {
             4: "4 4 0%",
         },
         extend: {
+            fontFamily: {
+                sans: ["natoSans", ...defaultTheme.fontFamily.sans],
+            },
             inset: {
                 12.8: "12.8rem",
                 13.5: "13.5rem",
