@@ -9,6 +9,7 @@ const meetingSchema = new mongoose.Schema({
         user: mongoose.Schema.Types.ObjectId,
         ref: "Student"
     }],
+    description: String,
     date: {
         type: Date,
         required: true 

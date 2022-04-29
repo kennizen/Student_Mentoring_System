@@ -9,6 +9,7 @@ const response = require("../utils/responses.utils");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
+const axios = require("axios");
 
 // env config
 dotenv.config();
@@ -196,4 +197,26 @@ module.exports = {
             response.error(res);
         }
     },
+
+
+    // get all holidays
+    getAllHolidays: async (req, res, next) => {
+        try {
+            const options = {
+            method: 'GET',
+            url: 'https://holidays-by-api-ninjas.p.rapidapi.com/v1/holidays',
+            params: {country: 'in', year: new Date().getFullYear().toString()},
+            headers: {
+                    'X-RapidAPI-Host': process.env.RAPID_API_HOST,
+                    'X-RapidAPI-Key': process.env.RAPID_API_KEY
+                }
+            };
+
+            const {data} = await axios.request(options);
+            response.success(res, "", data);
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
 };

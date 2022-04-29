@@ -48,4 +48,6 @@ router.delete(
     Logger(events.AVATAR_UPDATED)
 );
 
+router.get("/holidays", Auth, Authorize([roles.Mentor, roles.Student]), indexController.getAllHolidays);
+
 module.exports = router;
