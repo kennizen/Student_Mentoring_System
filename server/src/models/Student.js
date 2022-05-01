@@ -66,6 +66,7 @@ const studentSchema = new mongoose.Schema(
         mentoredBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Mentor",
+            default: "",
         },
         assigned: {
             type: String,
@@ -90,8 +91,8 @@ const studentSchema = new mongoose.Schema(
         emailVerifyToken: String,
         isEmailVerified: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     {
         timestamps: true,
