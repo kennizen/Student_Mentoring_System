@@ -4,7 +4,7 @@ import AcademicCapIcon from "../../../../../assets/AcademicCapIcon";
 const Home = ({ name }) => {
     return (
         <div className="w-full h-full px-36 py-10 grid grid-cols-4">
-            <div className="w-full col-span-3">
+            {/* <div className="w-full col-span-3">
                 <h1>Welcome back {name}!</h1>
                 <div className="flex">
                     <div className="p-3 bg-red-400 rounded-md">
@@ -29,7 +29,7 @@ const Home = ({ name }) => {
                     </div>
                 </div>
             </div>
-            <div className="w-full bg-green-200">hi</div>
+            <div className="w-full bg-green-200">hi</div> */}
         </div>
     );
 };

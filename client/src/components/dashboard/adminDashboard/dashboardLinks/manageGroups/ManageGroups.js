@@ -1,265 +1,186 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { adminGetMentorMentee, adminSaveGroup } from "../../../../../actions/admin";
-import Check from "../../../../../assets/Check";
-import ChevronDown from "../../../../../assets/ChevronDown";
-import GenPopupMenu from "../../../../modal/GenPopupMenu";
-import ListComponent from "./listComponent/ListComponent";
-import TickComponent from "./tickComponent/TickComponent";
+import { adminGetMentorMentee } from "../../../../../actions/admin";
+
+import MentorTile from "./MentorTile";
+import SearchIcon from "../../../../../assets/SearchIcon";
+import AcademicCapIcon from "../../../../../assets/AcademicCapIcon";
+import MentorIcon from "../../../../../assets/MentorIcon";
+import { CSSTransition } from "react-transition-group";
+import ModalOverlay from "../../../../modal/ModalOverlay";
+import AssignModal from "./manageGroupModals/AssignModal";
+import ViewModal from "./manageGroupModals/ViewModal";
 
 const ManageGroups = () => {
     const dispatch = useDispatch();
     const history = useHistory();
+
+    // accessing global state for fetching the list of mentors and mentees
+    const {
+        mentorMenteeDetails: { mentors, students },
+    } = useSelector((state) => state.admin);
+
+    // fetching mentor mentee details
+    useEffect(() => {
+        dispatch(adminGetMentorMentee(history));
+    }, []);
+
+    console.log("mentor mentee data in manage groups", mentors, students);
+
     // state variable to save the group state and send to the backend
     const [group, setGroup] = useState({
         mentorId: "",
         studentIds: [],
     });
 
-    // mentor list in third form
-    const [mentor, setMentor] = useState([]);
-    // mentor list in third form
-    const [students, setStudents] = useState([]);
+    // state variables
+    const [assignMentees, setAssignMentees] = useState([]);
+    const [viewMentees, setViewMentees] = useState([]);
+    const [selectedMentor, setSelectedMentor] = useState(undefined);
 
-    const [toggleMenu, setToggleMenu] = useState(false);
+    // states for modals
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [showAssignModal, setShowAssignModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
 
-    const progArray = ["Phd", "M.Tech(CSE)", "M.Tech(IT)", "MCA", "B.Tech"]; // temporary
+    // noderefs for modal
+    const overlayRef = useRef(null);
+    const assignModalRef = useRef(null);
+    const viewModalRef = useRef(null);
 
-    // accessing global state for fetching the list of mentors and mentees
-    const { mentorMenteeDetails } = useSelector((state) => state.admin);
+    // function to handle assign
+    const handleAssign = () => {
+        let newMentees = [];
+        newMentees = students.filter((student) => student.mentoredBy === "");
+        setAssignMentees(newMentees);
+        setShowOverlay(true);
+        setShowAssignModal(true);
+    };
 
-    console.log("mentor mentee data in manage groups", mentorMenteeDetails);
+    // function to handle view
+    const handleView = (mentorId) => {
+        let newMentees = [];
+        newMentees = students.filter((student) => student.mentoredBy === mentorId.toString());
+        setViewMentees(newMentees);
+        setShowOverlay(true);
+        setShowViewModal(true);
+    };
 
-    useEffect(() => {
-        dispatch(adminGetMentorMentee(history));
-    }, [dispatch, history]);
-
-    // function to handle the change for setting mentor
-    const handleSelectedMentor = (id) => {
-        let alreadyAssignedStudents = [];
-        let assignedStudentIds = [];
-
-        if (id === group.mentorId) {
+    // function to handle assign selection
+    const handleSelection = (mid, sid) => {
+        if (group.studentIds.includes(sid)) {
+            let newGroup = group.studentIds.filter((id) => id !== sid.toString());
             setGroup({
-                ...group,
-                mentorId: "",
-                studentIds: [],
-            });
-            setMentor([]);
-            setStudents([]);
-        } else if (group.mentorId === "") {
-            setMentor(mentorMenteeDetails.mentors.filter((mentor) => mentor._id === id));
-            console.log("running 1");
-            for (let i = 0; i < mentorMenteeDetails.students.length; i++) {
-                if (id === mentorMenteeDetails.students[i].mentoredBy) {
-                    alreadyAssignedStudents.push(mentorMenteeDetails.students[i]);
-                    assignedStudentIds.push(mentorMenteeDetails.students[i]._id);
-                }
-            }
-            console.log("already assigned 1", alreadyAssignedStudents);
-            setStudents(alreadyAssignedStudents);
-            setGroup({
-                ...group,
-                mentorId: id,
-                studentIds: assignedStudentIds,
+                mentorId: mid,
+                studentIds: newGroup,
             });
         } else {
-            setMentor(mentorMenteeDetails.mentors.filter((mentor) => mentor._id === id));
-            console.log("running 2");
-            for (let i = 0; i < mentorMenteeDetails.students.length; i++) {
-                if (id === mentorMenteeDetails.students[i].mentoredBy) {
-                    alreadyAssignedStudents.push(mentorMenteeDetails.students[i]);
-                    assignedStudentIds.push(mentorMenteeDetails.students[i]._id);
-                }
-            }
-            console.log("already assigned 2", alreadyAssignedStudents);
-            setStudents(alreadyAssignedStudents);
             setGroup({
-                ...group,
-                mentorId: id,
-                studentIds: assignedStudentIds,
-            }); /// just testing the outcome working 30% to make it perfect ///
+                mentorId: mid,
+                studentIds: [...group.studentIds, sid],
+            });
         }
     };
-
-    // function to handle the change for setting students
-    const handleSelectedStudent = (id) => {
-        if (!group.studentIds.includes(id)) {
-            setGroup({
-                ...group,
-                studentIds: [...group.studentIds, id],
-            });
-            const stu = mentorMenteeDetails.students.find((st) => st._id === id);
-            setStudents([...students, stu]);
-        } else {
-            setGroup({
-                ...group,
-                studentIds: [...group.studentIds].filter((stuid) => stuid !== id),
-            });
-            setStudents([...students].filter((student) => student._id !== id));
-        }
-    };
-
-    // function to save the formed group
-    const handleSaveGroup = () => {
-        dispatch(adminSaveGroup(group, history));
-        setMentor([]);
-        setStudents([]);
-        setGroup({
-            mentorId: "",
-            studentIds: [],
-        });
-    };
-
-    const handleToggleMenu = () => {
-        setToggleMenu(!toggleMenu);
-    };
-
-    console.log("group mentor id", group.mentorId);
-    console.log("group studentids", group.studentIds);
-    console.log("mentor", mentor);
-    console.log("students", students);
 
     return (
-        <div className="w-100 pl-4 pr-4 pb-4">
-            {mentorMenteeDetails === null ? (
-                <h1>LOADING...</h1>
-            ) : (
-                <div className="w-full">
-                    <div className="grid grid-cols-12 py-3 gap-x-4">
-                        <div className="bg-white col-span-3 flex flex-col py-2 px-3 rounded-md shadow-md">
-                            <div className="mb-1 flex items-center justify-end">
-                                <button className="text-gray-600 flex items-center justify-between py-px px-3 mb-1 text-sm hover:bg-gray-300 bg-gray-200 rounded-full">
-                                    Department
-                                    <ChevronDown myStyle={"ml-1 h-4 w-4"} alt={true} />
-                                </button>
+        <div className="h-full w-full px-5 py-5 relative">
+            <CSSTransition
+                nodeRef={overlayRef}
+                in={showOverlay}
+                timeout={300}
+                classNames="overlay"
+                unmountOnExit
+            >
+                <ModalOverlay nodeRef={overlayRef} />
+            </CSSTransition>
+            <CSSTransition
+                nodeRef={assignModalRef}
+                in={showAssignModal}
+                timeout={300}
+                classNames="modal"
+                unmountOnExit
+            >
+                <AssignModal
+                    nodeRef={assignModalRef}
+                    assignMentees={assignMentees}
+                    setShowOverlay={setShowOverlay}
+                    setShowAssignModal={setShowAssignModal}
+                    selectedMentor={selectedMentor}
+                    group={group}
+                    handleSelection={handleSelection}
+                    setGroup={setGroup}
+                />
+            </CSSTransition>
+            <CSSTransition
+                nodeRef={viewModalRef}
+                in={showViewModal}
+                timeout={300}
+                classNames="modal"
+                unmountOnExit
+            >
+                <ViewModal
+                    nodeRef={viewModalRef}
+                    viewMentees={viewMentees}
+                    setShowOverlay={setShowOverlay}
+                    setShowViewModal={setShowViewModal}
+                    selectedMentor={selectedMentor}
+                    group={group}
+                    handleSelection={handleSelection}
+                    setGroup={setGroup}
+                />
+            </CSSTransition>
+            <div className="w-full p-3 rounded-md h-full">
+                <div className="w-full mb-10 flex items-end justify-between">
+                    <div className="flex items-end justify-start gap-x-4">
+                        <h5 className="flex justify-start items-center p-5 bg-white shadow-sm rounded-md gap-x-4">
+                            <div className="rounded-full p-3 bg-blue-100">
+                                <MentorIcon alt={true} myStyle={"h-5 w-5 text-blue-600"} />
                             </div>
-                            <div className="h-450 overflow-y-auto">
-                                {mentorMenteeDetails.mentors.map((mentor) => {
-                                    return (
-                                        <div
-                                            onClick={() => handleSelectedMentor(mentor._id)}
-                                            key={mentor._id}
-                                            title={mentor.name}
-                                            className="p-2 grid grid-cols-7 gap-2 hover:bg-gray-100 cursor-pointer rounded-md border-gray-200 border-solid border mb-2"
-                                        >
-                                            <ListComponent
-                                                {...mentor}
-                                                isInGroup={false}
-                                                isStudent={false}
-                                            />
-                                            {group.mentorId === mentor._id ? (
-                                                <TickComponent color="#2563EB" isCross={false} />
-                                            ) : (
-                                                <TickComponent color="" />
-                                            )}
-                                        </div>
-                                    );
-                                })}
+                            <div className="flex flex-col">
+                                <h3>{mentors?.length}</h3>
+                                <h5 className="text-gray-500">Total Mentors</h5>
                             </div>
-                        </div>
-                        <div className="bg-white col-span-9 flex flex-col py-2 px-3 rounded-md shadow-md">
-                            <div className="mb-1 flex items-center justify-start px-3">
-                                <button
-                                    onClick={handleToggleMenu}
-                                    className="text-gray-600 flex items-center justify-between py-px px-3 mb-1 text-sm hover:bg-gray-300 bg-gray-200 rounded-full relative"
-                                >
-                                    Programme
-                                    <ChevronDown myStyle={"ml-1 h-4 w-4"} alt={true} />
-                                    <GenPopupMenu
-                                        toggleMenu={toggleMenu}
-                                        top={8}
-                                        right={0}
-                                        handleToggleMenu={handleToggleMenu}
-                                        itemArray={progArray}
-                                    />
-                                </button>
+                        </h5>
+                        <h5 className="flex justify-start items-center p-5 bg-white shadow-sm rounded-md gap-x-4">
+                            <div className="rounded-full p-3 bg-orange-100">
+                                <AcademicCapIcon alt={true} myStyle={"text-orange-500 w-5 h-5"} />
                             </div>
-                            <div className="h-450 overflow-y-auto grid grid-cols-3 grid-rows-6">
-                                {mentorMenteeDetails.students.map((student) => {
-                                    return (
-                                        <div
-                                            onClick={() => handleSelectedStudent(student._id)}
-                                            key={student._id}
-                                            className="py-2 px-4 grid grid-cols-7 hover:bg-gray-100 cursor-pointer place-self-center rounded-md border-gray-200 border-solid border"
-                                        >
-                                            <ListComponent
-                                                {...student}
-                                                isInGroup={false}
-                                                isStudent={true}
-                                            />
-                                            {group.studentIds.includes(student._id) ? (
-                                                <TickComponent color="#2563EB" isCross={false} />
-                                            ) : (
-                                                <TickComponent color="" />
-                                            )}
-                                        </div>
-                                    );
-                                })}
+                            <div className="flex flex-col">
+                                <h3>{students?.length}</h3>
+                                <h5 className="text-gray-500">Total Mentees</h5>
                             </div>
-                        </div>
+                        </h5>
                     </div>
-                    <div className="grid grid-cols-12 py-3 gap-x-4">
-                        <div className="bg-white col-span-3 py-2 px-3 rounded-md shadow-md">
-                            <div className="h-450 flex items-center justify-center">
-                                {mentor.map((m) => {
-                                    return (
-                                        <div key={m._id} className="flex flex-col p-2 items-center">
-                                            <img
-                                                src={
-                                                    m.avatar.url === ""
-                                                        ? `https://avatars.dicebear.com/api/initials/${m.firstname}.svg`
-                                                        : m.avatar.url
-                                                }
-                                                alt={`${m.firstname} ${m.middlename} ${m.lastname}`}
-                                                className="h-24 w-24 mb-3 rounded-full"
-                                            />
-                                            <div className="text-center">
-                                                <h2>{`${m.firstname} ${m.middlename} ${m.lastname}`}</h2>
-                                                <div className="flex items-center justify-between">
-                                                    <h6 className="mb-1 select-none">
-                                                        {m.designation}
-                                                    </h6>
-                                                    <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
-                                                    <h6>{m.department}</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                        <div className="bg-white col-span-9 flex flex-col py-2 px-3 rounded-md shadow-md">
-                            <div className="place-self-end mr-3">
-                                <button
-                                    onClick={handleSaveGroup}
-                                    disabled={mentor.length === 0 ? true : false}
-                                    className="p-2 bg-blue-600 rounded-md text-white flex items-center justify-between disabled:opacity-50"
-                                >
-                                    <Check myStyle={"mr-1 h-5 w-5"} alt={true} />
-                                    Save
-                                </button>
-                            </div>
-                            <div className="h-450 overflow-y-auto grid grid-cols-3 grid-rows-6">
-                                {students.map((s) => {
-                                    return (
-                                        <div
-                                            key={s._id}
-                                            onClick={() => handleSelectedStudent(s._id)}
-                                            className="py-2 px-4 grid grid-cols-7 hover:bg-gray-100 cursor-pointer place-self-center rounded-md border-gray-200 border-solid border"
-                                        >
-                                            <ListComponent {...s} isInGroup={true} />
-                                            <TickComponent color="#DC2610" isCross={true} />
-                                        </div>
-                                    );
-                                })}
+                    <div className="flex justify-end items-end">
+                        <div className="relative">
+                            <input
+                                //onChange={handleSearch}
+                                type="text"
+                                className="pl-11 rounded-md xl:w-96 border-0 shadow-sm"
+                                placeholder="Search by department..."
+                            />
+                            <div className="absolute top-2.5 left-3">
+                                <SearchIcon alt={true} myStyle={"h-5 w-5 mr-2"} />
                             </div>
                         </div>
                     </div>
                 </div>
-            )}
+                <div className="h-4/5 overflow-y-auto pr-2 flex flex-wrap items-start justify-start gap-x-5 gap-y-3">
+                    {mentors?.map((mentor) => {
+                        return (
+                            <MentorTile
+                                key={mentor._id}
+                                mentor={mentor}
+                                handleAssign={handleAssign}
+                                handleView={handleView}
+                                setSelectedMentor={setSelectedMentor}
+                            />
+                        );
+                    })}
+                </div>
+            </div>
         </div>
     );
 };

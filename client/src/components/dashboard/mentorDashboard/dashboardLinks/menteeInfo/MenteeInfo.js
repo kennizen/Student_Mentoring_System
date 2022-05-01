@@ -72,8 +72,8 @@ const MenteeInfo = () => {
     };
 
     return (
-        <div className="h-845 w-full px-5 py-5">
-            <div className="w-full bg-gray-100 p-3 rounded-md shadow-md h-800 overflow-y-auto">
+        <div className="h-full w-full px-5 py-5">
+            <div className="w-full p-3 rounded-md h-full">
                 <div className="w-full mb-10 flex items-end justify-between">
                     <div>
                         <h2 className="font-medium mb-3">Mentee Information</h2>
@@ -108,7 +108,7 @@ const MenteeInfo = () => {
                         </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-custom bg-white rounded-md py-1 px-2">
+                <div className="grid grid-cols-custom bg-white rounded-md py-1 px-2 mb-2 mr-2">
                     <div className="flex justify-start items-center">
                         <h5 className="">Sl No.</h5>
                     </div>
@@ -198,31 +198,33 @@ const MenteeInfo = () => {
                         <h5 className="">Actions</h5>
                     </div>
                 </div>
-                {mentees.length === 0 ? (
-                    <div></div>
-                ) : tempList.length === 0 ? (
-                    mentees.map((mentee, index) => {
-                        return (
-                            <MenteeTile
-                                key={index}
-                                slno={index + 1}
-                                mentee={mentee}
-                                history={history}
-                            />
-                        );
-                    })
-                ) : (
-                    tempList.map((mentee, index) => {
-                        return (
-                            <MenteeTile
-                                key={index}
-                                slno={index + 1}
-                                mentee={mentee}
-                                history={history}
-                            />
-                        );
-                    })
-                )}
+                <div className="h-4/5 overflow-y-auto pr-2">
+                    {mentees.length === 0 ? (
+                        <></>
+                    ) : tempList.length === 0 ? (
+                        mentees.map((mentee, index) => {
+                            return (
+                                <MenteeTile
+                                    key={index}
+                                    slno={index + 1}
+                                    mentee={mentee}
+                                    history={history}
+                                />
+                            );
+                        })
+                    ) : (
+                        tempList.map((mentee, index) => {
+                            return (
+                                <MenteeTile
+                                    key={index}
+                                    slno={index + 1}
+                                    mentee={mentee}
+                                    history={history}
+                                />
+                            );
+                        })
+                    )}
+                </div>
             </div>
         </div>
     );
