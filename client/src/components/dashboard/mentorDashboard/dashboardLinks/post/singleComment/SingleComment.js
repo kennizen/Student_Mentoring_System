@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import TrashIcon from "../../../../../../assets/TrashIcon";
+import TrashIcon from "../../../../../../assets/icons/TrashIcon";
 
 const SingleComment = ({
     comment,

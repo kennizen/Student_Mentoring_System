@@ -1,5 +1,5 @@
 import React from "react";
-import TrashIcon from "../../../../../../assets/TrashIcon";
+import TrashIcon from "../../../../../../assets/icons/TrashIcon";
 
 const Semester = ({
     semester,

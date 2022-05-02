@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { mentorUpdateProfilePicture } from "../../../../../../actions/mentor";
 import { studentUpdateProfilePicture } from "../../../../../../actions/student";
-import UploadIcon from "../../../../../../assets/UploadIcon";
+import UploadIcon from "../../../../../../assets/icons/UploadIcon";
 
 import Resizer from "react-image-file-resizer";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import ChevronDown from "../../../../../../assets/ChevronDown";
+import ChevronDown from "../../../../../../assets/icons/ChevronDown";
 
 const ScrollToBottom = ({ scrollToBottom }) => {
     return (

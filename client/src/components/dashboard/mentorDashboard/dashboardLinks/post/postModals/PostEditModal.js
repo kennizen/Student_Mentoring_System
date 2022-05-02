@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import PencilIcon from "../../../../../../assets/PencilIcon";
+import PencilIcon from "../../../../../../assets/icons/PencilIcon";
 import RichEditor from "../../../../../richEditor/RichEditor";
 
 const PostEditModal = ({

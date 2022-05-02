@@ -5,9 +5,9 @@ import { useHistory } from "react-router";
 import { adminGetMentorMentee } from "../../../../../actions/admin";
 
 import MentorTile from "./MentorTile";
-import SearchIcon from "../../../../../assets/SearchIcon";
-import AcademicCapIcon from "../../../../../assets/AcademicCapIcon";
-import MentorIcon from "../../../../../assets/MentorIcon";
+import SearchIcon from "../../../../../assets/icons/SearchIcon";
+import AcademicCapIcon from "../../../../../assets/icons/AcademicCapIcon";
+import MentorIcon from "../../../../../assets/icons/MentorIcon";
 import { CSSTransition } from "react-transition-group";
 import ModalOverlay from "../../../../modal/ModalOverlay";
 import AssignModal from "./manageGroupModals/AssignModal";

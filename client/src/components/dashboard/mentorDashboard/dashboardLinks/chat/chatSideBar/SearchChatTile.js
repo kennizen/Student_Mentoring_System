@@ -1,5 +1,5 @@
 import React from "react";
-import DotIcon from "../../../../../../assets/DotIcon";
+import DotIcon from "../../../../../../assets/icons/DotIcon";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 

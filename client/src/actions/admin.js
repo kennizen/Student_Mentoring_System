@@ -93,3 +93,11 @@ export const adminFetchLogs = (history) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const logoutAdmin = () => async (dispatch) => {
+    try {
+        dispatch({ type: "LOGOUT_ADMIN" });
+    } catch (error) {
+        console.log(error);
+    }
+};

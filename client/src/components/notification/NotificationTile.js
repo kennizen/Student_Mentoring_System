@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import DotIcon from "../../assets/DotIcon";
+import DotIcon from "../../assets/icons/DotIcon";
 import moment from "moment";
-import AnnotationIcon from "../../assets/AnnotationIcon";
-import DoubleTickIcon from "../../assets/DoubleTickIcon";
+import AnnotationIcon from "../../assets/icons/AnnotationIcon";
+import DoubleTickIcon from "../../assets/icons/DoubleTickIcon";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { markNotificationRead } from "../../actions/notification";

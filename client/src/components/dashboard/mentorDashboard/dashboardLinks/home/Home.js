@@ -1,15 +1,15 @@
 import React from "react";
-import AcademicCapIcon from "../../../../../assets/AcademicCapIcon";
+import AcademicCapIcon from "../../../../../assets/icons/AcademicCapIcon";
 
 const Home = ({ name }) => {
     return (
         <div className="w-full h-full px-36 py-10 grid grid-cols-4">
-            {/* <div className="w-full col-span-3">
-                <h1>Welcome back {name}!</h1>
+            <div className="w-full col-span-3">
+                <h1>Welcome back, {name}!</h1>
                 <div className="flex">
-                    <div className="p-3 bg-red-400 rounded-md">
+                    <div className="p-3 bg-rose-400 rounded-md bg-bg-1">
                         <div className="mb-2 flex items-center justify-between">
-                            <span className="bg-black bg-opacity-30 p-1 rounded-md">
+                            <span className="bg-black bg-opacity-1 p-1 rounded-md">
                                 <AcademicCapIcon alt={false} myStyle={"w-5 h-5 text-white"} />
                             </span>
 
@@ -29,7 +29,7 @@ const Home = ({ name }) => {
                     </div>
                 </div>
             </div>
-            <div className="w-full bg-green-200">hi</div> */}
+            <div className="w-full bg-green-200">hi</div>
         </div>
     );
 };

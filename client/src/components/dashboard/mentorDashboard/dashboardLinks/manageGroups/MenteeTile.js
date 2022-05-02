@@ -1,5 +1,5 @@
 import React from "react";
-import DotIcon from "../../../../../assets/DotIcon";
+import DotIcon from "../../../../../assets/icons/DotIcon";
 import { Abbreviate } from "../../../../../utility";
 
 const MenteeTile = ({ mentee, handleChange }) => {

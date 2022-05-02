@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import moment from "moment";
-import ReplyIcon from "../../../../../../assets/ReplyIcon";
-import ChatIcon from "../../../../../../assets/ChatIcon";
-import DotsVertivalIcon from "../../../../../../assets/DotsVertivalIcon";
+import ReplyIcon from "../../../../../../assets/icons/ReplyIcon";
+import ChatIcon from "../../../../../../assets/icons/ChatIcon";
+import DotsVertivalIcon from "../../../../../../assets/icons/DotsVertivalIcon";
 import { useDispatch } from "react-redux";
 import { fetchPostComments } from "../../../../../../actions/post";
 import { useHistory } from "react-router-dom";

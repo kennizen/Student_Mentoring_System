@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { adminFetchLogs } from "../../../../../actions/admin";
-import RefreshIcon from "../../../../../assets/RefreshIcon";
+import RefreshIcon from "../../../../../assets/icons/RefreshIcon";
 
 const Logs = () => {
     const dispatch = useDispatch();

@@ -47,6 +47,12 @@ module.exports = {
             4: "4 4 0%",
         },
         extend: {
+            backgroundImage: {
+                "bg-1": "url(/src/assets/images/bg-1.png)",
+            },
+            zIndex: {
+                "-10": "-10",
+            },
             fontFamily: {
                 sans: ["natoSans", ...defaultTheme.fontFamily.sans],
             },

@@ -14,7 +14,7 @@ import SemesterDelModal from "./academicModal/SemesterDelModal";
 import Loading from "../../../../loading/Loading";
 import { CSSTransition } from "react-transition-group";
 import ModalOverlay from "../../../../modal/ModalOverlay";
-import Plus from "../../../../../assets/Plus";
+import Plus from "../../../../../assets/icons/Plus";
 
 const AcademicDetails = () => {
     useEffect(() => {

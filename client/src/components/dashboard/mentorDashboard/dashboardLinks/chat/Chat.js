@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import ChatAlt2Icon from "../../../../../assets/ChatAlt2Icon";
+import ChatAlt2Icon from "../../../../../assets/icons/ChatAlt2Icon";
 import ChatSideBar from "./chatSideBar/ChatSideBar";
 import ChatWindow from "./chatWindow/ChatWindow";
 

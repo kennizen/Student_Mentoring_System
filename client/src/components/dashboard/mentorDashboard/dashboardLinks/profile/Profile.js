@@ -5,14 +5,14 @@ import { CSSTransition } from "react-transition-group";
 import { mentorGetProfile } from "../../../../../actions/mentor";
 import { studentGetProfileDetails } from "../../../../../actions/student";
 
-import AcademicCapIcon from "../../../../../assets/AcademicCapIcon";
-import OfficeBuildingIcon from "../../../../../assets/OfficeBuildingIcon";
-import PencilIcon from "../../../../../assets/PencilIcon";
-import PhoneIcon from "../../../../../assets/PhoneIcon";
-import TrashIcon from "../../../../../assets/TrashIcon";
-import UploadIcon from "../../../../../assets/UploadIcon";
-import UserCircleIcon from "../../../../../assets/UserCircleIcon";
-import UserGroupIcon from "../../../../../assets/UserGroupIcon";
+import AcademicCapIcon from "../../../../../assets/icons/AcademicCapIcon";
+import OfficeBuildingIcon from "../../../../../assets/icons/OfficeBuildingIcon";
+import PencilIcon from "../../../../../assets/icons/PencilIcon";
+import PhoneIcon from "../../../../../assets/icons/PhoneIcon";
+import TrashIcon from "../../../../../assets/icons/TrashIcon";
+import UploadIcon from "../../../../../assets/icons/UploadIcon";
+import UserCircleIcon from "../../../../../assets/icons/UserCircleIcon";
+import UserGroupIcon from "../../../../../assets/icons/UserGroupIcon";
 
 import ModalOverlay from "../../../../modal/ModalOverlay";
 import ProfilePicDelModal from "./profilePicModal/ProfilePicDelModal";

@@ -5,7 +5,7 @@ import { mentorGetAllMentees } from "../../../../../../actions/mentor";
 import { createChat } from "../../../../../../actions/chat";
 import ChatTiles from "./ChatTiles";
 
-import Plus from "../../../../../../assets/Plus";
+import Plus from "../../../../../../assets/icons/Plus";
 import { studentGetAllStudentsOfMentor } from "../../../../../../actions/student";
 
 const ChatModal = ({ setShowModal, nodeRef }) => {

@@ -32,7 +32,7 @@ const MentorTile = ({ mentor, handleAssign, setSelectedMentor, handleView }) => 
                 </div>
             </div>
             <div className="flex mb-3">
-                <Chip name={`student count ${mentor.studentCount}`} myStyle={"mr-2"} />
+                <Chip name={`Assigned mentees ${mentor.studentCount}`} myStyle={"mr-2"} />
                 <Chip name={`${mentor.designation}`} myStyle={"mr-2"} />
                 <Chip name={Abbreviate(mentor.department)} />
             </div>

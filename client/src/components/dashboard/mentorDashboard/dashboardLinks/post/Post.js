@@ -10,7 +10,7 @@ import {
 } from "../../../../../actions/post";
 
 import SinglePost from "./singlePost/SinglePost";
-import PaperAirplaneIcon from "../../../../../assets/PaperAirplaneIcon";
+import PaperAirplaneIcon from "../../../../../assets/icons/PaperAirplaneIcon";
 import { CSSTransition } from "react-transition-group";
 import ModalOverlay from "../../../../modal/ModalOverlay";
 import PostEditModal from "./postModals/PostEditModal";

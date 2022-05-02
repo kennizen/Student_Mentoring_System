@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SearchIcon from "../../../../../../assets/SearchIcon";
+import SearchIcon from "../../../../../../assets/icons/SearchIcon";
 import ChatTile from "./ChatTile";
 import { useSelector } from "react-redux";
 import SearchChatTile from "./SearchChatTile";

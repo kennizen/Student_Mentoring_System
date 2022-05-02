@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { markNotificationRead } from "../../actions/notification";
-import DoubleTickIcon from "../../assets/DoubleTickIcon";
+import DoubleTickIcon from "../../assets/icons/DoubleTickIcon";
 import NotificationTile from "./NotificationTile";
 import Loading from "../loading/Loading";
 

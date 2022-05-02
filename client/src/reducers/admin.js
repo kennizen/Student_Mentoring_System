@@ -6,7 +6,7 @@ const admin = (state = { mentorMenteeDetails: {}, adminData: null, logs: [] }, a
         case "FETCH_LOGS":
             return { ...state, logs: action.data.data.logs };
         case "FETCH_ADMIN":
-            return { ...state, adminData: action.data };
+            return { ...state, adminData: action.data.data.user };
         case "FETCH_MENTOR_MENTEE":
             return { ...state, mentorMenteeDetails: action.data.data };
         case "LOGOUT_ADMIN":
