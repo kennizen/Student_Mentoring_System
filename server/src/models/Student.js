@@ -68,10 +68,10 @@ const studentSchema = new mongoose.Schema(
             ref: "Mentor",
             default: "",
         },
-        assigned: {
-            type: String,
-            default: "",
-        },
+        // assigned: {
+        //     type: String,
+        //     default: "",
+        // },
         avatar: {
             url: {
                 type: String,

@@ -55,6 +55,7 @@ const postRoutes = require("./routes/post");
 const chatRoutes = require("./routes/chat");
 const messageRoutes = require("./routes/message");
 const notificationRoutes = require("./routes/notification");
+const meetingRoutes = require("./routes/meeting");
 
 // setting routes
 app.use("/", indexRoutes);
@@ -65,6 +66,7 @@ app.use("/posts", postRoutes);
 app.use("/chats", chatRoutes);
 app.use("/messages", messageRoutes);
 app.use("/notifications", notificationRoutes);
+app.use("/meetings", meetingRoutes);
 
 // route for 404 not found page
 // app.get("*", (req, res) => {

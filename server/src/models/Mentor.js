@@ -52,10 +52,10 @@ const mentorSchema = new mongoose.Schema(
             type: String,
             default: Role.Mentor,
         },
-        assigned: {
-            type: String,
-            default: "unassigned",
-        },
+        // assigned: {
+        //     type: String,
+        //     default: "unassigned",
+        // },
         studentCount: {
             type: Number,
             default: 0,

@@ -3,20 +3,20 @@ const mongoose = require("mongoose");
 const meetingSchema = new mongoose.Schema({
     host: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Mentor"
+        ref: 'Mentor'
     },
     participants: [{
-        user: mongoose.Schema.Types.ObjectId,
-        ref: "Student"
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Student"
+        }
     }],
     description: String,
     date: {
-        type: Date,
-        required: true 
+        type: Date
     },
     url: {
         type: String,
-        required: true,
         trim: true
     }
 }, {

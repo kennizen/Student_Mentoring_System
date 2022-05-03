@@ -92,7 +92,7 @@ module.exports = {
                 if (!newStudentsList[oldStudents[i]]) {
                     const oldStudent = await Student.findById(oldStudents[i]);
                     oldStudent.mentoredBy = undefined;
-                    oldStudent.assigned = "";
+                    // oldStudent.assigned = "";
                     await oldStudent.save();
                 }
             }
@@ -108,7 +108,7 @@ module.exports = {
                 }
                 student.mentoredBy = mentor._id;
                 // setting student to assigned
-                student.assigned = "in a group";
+                // student.assigned = "in a group";
                 await student.save();
             }
 
@@ -116,19 +116,19 @@ module.exports = {
                 for (let mentorId in mentorCountToUpdate) {
                     const newMentor = await Mentor.findById(mentorId);
                     newMentor.studentCount -= mentorCountToUpdate[mentorId];
-                    if (newMentor.studentCount < 1) {
-                        newMentor.assigned = "unassigned"; // "" empty string is used to set false
-                    }
+                    // if (newMentor.studentCount < 1) {
+                    //     newMentor.assigned = "unassigned"; // "" empty string is used to set false
+                    // }
                     await newMentor.save();
                 }
             }
 
             // setting mentor to assigned
-            if (students.length === 0) {
-                mentor.assigned = "unassigned";
-            } else {
-                mentor.assigned = "assigned";
-            }
+            // if (students.length === 0) {
+            //     mentor.assigned = "unassigned";
+            // } else {
+            //     mentor.assigned = "assigned";
+            // }
             // setting no of students
             mentor.studentCount = students.length;
             await mentor.save();
@@ -150,6 +150,76 @@ module.exports = {
             response.error(res);
         }
     },
+    // this handler assign students to a mentor
+    assignMentees: async (req, res, next) => {
+        try {
+            const { mentorId, studentIds } = req.body;
+
+            // data not provided
+            if(!mentorId || !studentIds || studentIds.length < 1) {
+                return response.badrequest(res);
+            }
+            // getting mentor profile
+            const mentor = await Mentor.findById(mentorId);
+            
+            for await (const studentId of studentIds) {
+                const student = await Student.findById(studentId);
+                
+                // checking if mentor is already assigned to another mentor  
+                if(student.mentoredBy) {
+                   return response.error(res, "Mentee already assigned to another mentor"); 
+                }
+                student.mentoredBy = mentor._id;
+                await student.save();
+            }
+
+            const studentCount = await Student.countDocuments({ mentoredBy: mentor._id});
+            mentor.studentCount = studentCount;
+            await mentor.save();
+            response.success(res);
+            next();
+        }
+        catch(err){
+            console.log(err);
+            response.error(res);
+        }
+    },
+    // remove mentees from under a mentor
+    removeMentees: async (req, res, next) => {
+        try {
+            const { mentorId, studentIds } = req.body;
+
+            // data not provided
+            if(!mentorId || !studentIds || studentIds.length < 1) {
+                return response.badrequest(res);
+            }
+
+            // getting mentor profile
+            const mentor = await Mentor.findById(mentorId);
+
+            for await (const studentId of studentIds) {
+                const student = await Student.findById(studentId);
+                
+                // checking if mentor is already assigned to a mentor  
+                if(student.mentoredBy) {
+                   student.mentoredBy = "";
+                   await student.save();
+                }
+            }
+
+            const studentCount = await Student.countDocuments({ mentoredBy: mentor._id});
+            mentor.studentCount = studentCount;
+            await mentor.save();
+            response.success(res);
+            next();
+        }
+        catch(err){
+            console.log(err);
+            response.error(res);
+        }
+    },
+
+    // get all logs
     getAllLogs: async (req, res, next) => {
         try {
             const allLogs = await Log.find().populate("user");
@@ -157,6 +227,39 @@ module.exports = {
             next();
         } catch (err) {
             console.log(err);
+            response.error(res);
         }
     },
+
+    // get admin profile
+    getProfile: async (req, res, next) => {
+        try {
+            const admin = req.user;
+            response.success(res, "", admin);
+            next();
+        }
+        catch(err){
+            console.log(err);
+            response.error(res);
+        }
+    }, 
+
+    // update Profile
+    updateProfile: async (req, res, next) => {
+        try {
+            const {firstname, middlename, lastname } = req.body;
+            const admin = req.user;
+    
+            admin.firstname = firstname || admin.firstname;
+            admin.middlename = middlename || admin.middlename;
+            admin.lastname = lastname ||  admin.lastname;
+            await admin.save();
+            response.success(res, "", admin);
+            next();
+        }
+        catch(err){
+            console.log(err);
+            response.error(res);
+        }
+    }
 };

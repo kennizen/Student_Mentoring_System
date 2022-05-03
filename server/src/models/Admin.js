@@ -15,7 +15,14 @@ const adminSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        name: {
+        firstname: {
+            type: String,
+            required: true,
+        },
+        middlename: {
+            type: String
+        },
+        lastname: {
             type: String,
             required: true,
         },
