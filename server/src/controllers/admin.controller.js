@@ -156,30 +156,29 @@ module.exports = {
             const { mentorId, studentIds } = req.body;
 
             // data not provided
-            if(!mentorId || !studentIds || studentIds.length < 1) {
+            if (!mentorId || !studentIds || studentIds.length < 1) {
                 return response.badrequest(res);
             }
             // getting mentor profile
             const mentor = await Mentor.findById(mentorId);
-            
+
             for await (const studentId of studentIds) {
                 const student = await Student.findById(studentId);
-                
-                // checking if mentor is already assigned to another mentor  
-                if(student.mentoredBy) {
-                   return response.error(res, "Mentee already assigned to another mentor"); 
+
+                // checking if mentee is already assigned to another mentor
+                if (student.mentoredBy) {
+                    return response.error(res, "Mentee already assigned to another mentor");
                 }
                 student.mentoredBy = mentor._id;
                 await student.save();
             }
 
-            const studentCount = await Student.countDocuments({ mentoredBy: mentor._id});
+            const studentCount = await Student.countDocuments({ mentoredBy: mentor._id });
             mentor.studentCount = studentCount;
             await mentor.save();
             response.success(res);
             next();
-        }
-        catch(err){
+        } catch (err) {
             console.log(err);
             response.error(res);
         }
@@ -190,7 +189,7 @@ module.exports = {
             const { mentorId, studentIds } = req.body;
 
             // data not provided
-            if(!mentorId || !studentIds || studentIds.length < 1) {
+            if (!mentorId || !studentIds || studentIds.length < 1) {
                 return response.badrequest(res);
             }
 
@@ -199,21 +198,20 @@ module.exports = {
 
             for await (const studentId of studentIds) {
                 const student = await Student.findById(studentId);
-                
-                // checking if mentor is already assigned to a mentor  
-                if(student.mentoredBy) {
-                   student.mentoredBy = "";
-                   await student.save();
+
+                // checking if mentor is already assigned to a mentor
+                if (student.mentoredBy) {
+                    student.mentoredBy = "";
+                    await student.save();
                 }
             }
 
-            const studentCount = await Student.countDocuments({ mentoredBy: mentor._id});
+            const studentCount = await Student.countDocuments({ mentoredBy: mentor._id });
             mentor.studentCount = studentCount;
             await mentor.save();
             response.success(res);
             next();
-        }
-        catch(err){
+        } catch (err) {
             console.log(err);
             response.error(res);
         }
@@ -237,29 +235,27 @@ module.exports = {
             const admin = req.user;
             response.success(res, "", admin);
             next();
-        }
-        catch(err){
+        } catch (err) {
             console.log(err);
             response.error(res);
         }
-    }, 
+    },
 
     // update Profile
     updateProfile: async (req, res, next) => {
         try {
-            const {firstname, middlename, lastname } = req.body;
+            const { firstname, middlename, lastname } = req.body;
             const admin = req.user;
-    
+
             admin.firstname = firstname || admin.firstname;
             admin.middlename = middlename || admin.middlename;
-            admin.lastname = lastname ||  admin.lastname;
+            admin.lastname = lastname || admin.lastname;
             await admin.save();
             response.success(res, "", admin);
             next();
-        }
-        catch(err){
+        } catch (err) {
             console.log(err);
             response.error(res);
         }
-    }
+    },
 };

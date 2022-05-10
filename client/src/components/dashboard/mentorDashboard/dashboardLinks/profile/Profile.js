@@ -19,9 +19,7 @@ import ProfilePicDelModal from "./profilePicModal/ProfilePicDelModal";
 import ProfilePicModal from "./profilePicModal/ProfilePicModal";
 import ProfileModal from "./ProfileModal";
 import StuModal from "./stuModal/StuModal";
-
-const MENTOR = "MENTOR";
-const STUDENT = "STUDENT";
+import { Roles } from "../../../../../utility";
 
 const Profile = ({ profileData }) => {
     // getting uid of the logged in user
@@ -35,9 +33,9 @@ const Profile = ({ profileData }) => {
 
     // function to fetch profile data for the mentor
     useEffect(() => {
-        if (role === MENTOR) {
+        if (role === Roles.MENTOR) {
             dispatch(mentorGetProfile(history));
-        } else if (role === STUDENT) {
+        } else if (role === Roles.STUDENT) {
             dispatch(studentGetProfileDetails(history));
         }
     }, []);
@@ -105,7 +103,7 @@ const Profile = ({ profileData }) => {
     // function to handle modal show hide
     const handleShowModal = () => {
         setShowOverlay(true);
-        if (role === MENTOR) {
+        if (role === Roles.MENTOR) {
             setShowEditModal(true);
             setMentorProfileData({
                 firstname: profileData.firstname ? profileData.firstname : "",
@@ -118,7 +116,7 @@ const Profile = ({ profileData }) => {
                 designation: profileData.designation ? profileData.designation : "",
                 studentCount: profileData.studentCount ? profileData.studentCount : 0,
             });
-        } else if (role === STUDENT) {
+        } else if (role === Roles.STUDENT) {
             setShowStuProfileModal(true);
             setStuProfileData({
                 department: profileData.department ? profileData.department : "",
@@ -165,9 +163,9 @@ const Profile = ({ profileData }) => {
 
     return (
         <div
-            className={`w-full h-full ${role === MENTOR && "flex items-center justify-center"} ${
-                role === STUDENT && "p2"
-            } relative`}
+            className={`w-full h-full ${
+                role === Roles.MENTOR && "flex items-center justify-center"
+            } ${role === Roles.STUDENT && "p2"} relative`}
         >
             <CSSTransition
                 nodeRef={overlayRef}
@@ -205,7 +203,7 @@ const Profile = ({ profileData }) => {
                 />
             </CSSTransition>
 
-            {role === MENTOR && (
+            {role === Roles.MENTOR && (
                 <CSSTransition
                     nodeRef={editModalRef}
                     in={showEditModal}
@@ -222,7 +220,7 @@ const Profile = ({ profileData }) => {
                     />
                 </CSSTransition>
             )}
-            {role === MENTOR && (
+            {role === Roles.MENTOR && (
                 <div className="w-3/5 rounded-md p-4">
                     <div className="flex gap-x-2 mb-3">
                         <div className="bg-white px-5 py-10 shadow-md rounded-md">
@@ -336,7 +334,7 @@ const Profile = ({ profileData }) => {
                 </div>
             )}
 
-            {role === STUDENT && (
+            {role === Roles.STUDENT && (
                 <CSSTransition
                     nodeRef={stuProfileModalRef}
                     in={showStuProfileModal}
@@ -353,7 +351,7 @@ const Profile = ({ profileData }) => {
                     />
                 </CSSTransition>
             )}
-            {role === STUDENT && (
+            {role === Roles.STUDENT && (
                 <div className="grid grid-cols-12 gap-x-1">
                     <div className="col-span-4 p-2">
                         <div className="w-full shadow-m32 py-6 px-3 rounded-md mb-6 bg-white">

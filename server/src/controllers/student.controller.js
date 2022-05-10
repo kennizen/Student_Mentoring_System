@@ -273,19 +273,18 @@ module.exports = {
     // fetch all stduents under the mentor of current student
     getAllStudents: async (req, res, next) => {
         try {
-            
             let students = await Student.find({ mentoredBy: req.user.mentoredBy });
-            
-            if(!students){
+
+            if (!students) {
                 throw new Error();
             }
-            
+
             // filtering out the requested user
             students = students.filter((student) => {
-                if(student._id.toString() !== req.user._id.toString()){
+                if (student._id.toString() !== req.user._id.toString()) {
                     return student;
                 }
-            })
+            });
 
             const mentor = await Mentor.findById(req.user.mentoredBy);
             students.push(mentor);

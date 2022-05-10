@@ -7,15 +7,15 @@ const ChatTiles = ({ mentee, handleChange }) => {
                 <img
                     className="h-10 w-10 rounded-full mr-3"
                     src={
-                        mentee.avatar.url === ""
-                            ? `https://avatars.dicebear.com/api/initials/${mentee.firstname}.svg`
-                            : mentee.avatar.url
+                        mentee?.avatar?.url === ""
+                            ? `https://avatars.dicebear.com/api/initials/${mentee?.firstname}.svg`
+                            : mentee?.avatar?.url
                     }
                     alt=""
                 />
                 <div className="flex flex-col">
-                    <h5>{`${mentee.firstname} ${mentee.middlename} ${mentee.lastname}`}</h5>
-                    <h6>{mentee.enrollment_no ? mentee.enrollment_no : "Mentor"}</h6>
+                    <h5>{`${mentee?.firstname} ${mentee?.middlename} ${mentee?.lastname}`}</h5>
+                    <h6>{mentee?.enrollment_no ? mentee?.enrollment_no : "Mentor"}</h6>
                 </div>
             </div>
 
@@ -24,7 +24,7 @@ const ChatTiles = ({ mentee, handleChange }) => {
                     className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer focus:ring-0 focus:ring-offset-0"
                     type="checkbox"
                     value=""
-                    id={mentee._id}
+                    id={mentee?._id}
                     onChange={(e) => handleChange(e)}
                 />
             </div>
