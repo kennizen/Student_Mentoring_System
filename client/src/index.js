@@ -4,10 +4,10 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 
+// import "tw-elements";
 import reducers from "./reducers/index";
 import "./index.css";
 import App from "./App";
-import "tw-elements";
 
 const store = createStore(reducers, compose(applyMiddleware(thunk)));
 

@@ -3,30 +3,29 @@ const response = require("../utils/responses.utils");
 const roles = require("../utils/roles");
 const ObjectId = require("mongoose").Schema.Types.ObjectId;
 /**
- *  The method fetches all the available meeting of the current user 
+ *  The method fetches all the available meeting of the current user
  */
 module.exports.getAllMeetings = async (req, res, next) => {
     try {
         let meetings = [];
 
         // if request is from mentor
-        if(req.user.role === roles.Mentor){
-            meetings = await Meeting.find({ "host": req.user._id });
+        if (req.user.role === roles.Mentor) {
+            meetings = await Meeting.find({ host: req.user._id });
         }
 
         // if request is from student/mentee
-        if(req.user.role === roles.Student){
+        if (req.user.role === roles.Student) {
             meetings = await Meeting.find({ "participants.user": req.user._id });
         }
 
         response.success(res, "", meetings);
         next();
-    }
-    catch(err) {
+    } catch (err) {
         console.log(err);
         response.error(res);
     }
-}
+};
 
 /**
  *  The method creates and schedules new meetings with link
@@ -36,7 +35,7 @@ module.exports.createMeeting = async (req, res, next) => {
         const { participants, description, date, url } = req.body;
 
         // checking if all fields are provided
-        if(!participants || participants.length < 1 || !description || !date || !url ) {
+        if (!participants || participants.length < 1 || !description || !date || !url) {
             return response.badrequest(res);
         }
 
@@ -51,8 +50,8 @@ module.exports.createMeeting = async (req, res, next) => {
 
         for (let i = 0; i < participants.length; i++) {
             newMeeting.participants.push({
-                user: participants[i]
-            })
+                user: participants[i],
+            });
         }
 
         newMeeting.host = req.user._id;
@@ -60,13 +59,11 @@ module.exports.createMeeting = async (req, res, next) => {
         newMeeting.description = description;
         newMeeting.url = url;
 
-
-        await newMeeting.save();
-        response.success(res);
+        await (await newMeeting.save()).populate("participants.user").execPopulate();
+        response.success(res, newMeeting);
         next();
-    }
-    catch(err){
+    } catch (err) {
         console.log(err);
         response.error(res);
     }
-}
+};

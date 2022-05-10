@@ -1,35 +1,50 @@
 import React from "react";
 import AcademicCapIcon from "../../../../../assets/icons/AcademicCapIcon";
+import AnnotationIcon from "../../../../../assets/icons/AnnotationIcon";
+import ChatAltIcon from "../../../../../assets/icons/ChatAltIcon";
+
+import InfoCards from "./InfoCards";
+import MeetingForm from "./MeetingForm";
 
 const Home = ({ name }) => {
     return (
-        <div className="w-full h-full px-36 py-10 grid grid-cols-4">
-            <div className="w-full col-span-3">
-                <h1>Welcome back, {name}!</h1>
-                <div className="flex">
-                    <div className="p-3 bg-rose-400 rounded-md bg-bg-1">
-                        <div className="mb-2 flex items-center justify-between">
-                            <span className="bg-black bg-opacity-1 p-1 rounded-md">
-                                <AcademicCapIcon alt={false} myStyle={"w-5 h-5 text-white"} />
-                            </span>
-
-                            <button className="py px-2 bg-red-200 border-2 border-red-500 rounded-md text-sm">
-                                view
-                            </button>
-                        </div>
-                        <div className="mb-2 flex items-center justify-between text-white">
-                            <h4>Total mentees</h4>
-                            <span className="py-1 px-2 bg-black bg-opacity-20 rounded-full text-white">
-                                <p>56</p>
-                            </span>
-                        </div>
-                        <div className="text-white">
-                            <h4>There is something here</h4>
-                        </div>
-                    </div>
+        <div className="w-full h-full px-36 py-10 grid grid-cols-5 relative">
+            <div className="w-full col-span-3 flex flex-col justify-between">
+                <h1 className="">Welcome back, {name}!</h1>
+                <div className="flex flex-wrap items-center justify-between">
+                    <InfoCards
+                        myStyle={"p-4 bg-rose-500 rounded-md bg-right-top w-60 shadow-md"}
+                        total={53}
+                        text={"Total Mentees"}
+                    >
+                        <AcademicCapIcon alt={true} myStyle={"w-6 h-6 text-white"} />
+                    </InfoCards>
+                    <InfoCards
+                        myStyle={"p-4 bg-purple-500 rounded-md bg-right-top w-60 shadow-md"}
+                        total={34}
+                        text={"Total Posts"}
+                    >
+                        <AnnotationIcon alt={true} myStyle={"w-6 h-6 text-white"} />
+                    </InfoCards>
+                    <InfoCards
+                        myStyle={"p-4 bg-cyan-500 rounded-md bg-right-top w-60 shadow-md"}
+                        total={`${34} / ${102}`}
+                        text={"Total Comments"}
+                    >
+                        <ChatAltIcon alt={true} myStyle={"w-6 h-6 text-white"} />
+                    </InfoCards>
                 </div>
+                <div className="w-full bg-red-200 h-60">chart</div>
+                <div className="w-full bg-blue-200 h-60">Recent activities</div>
             </div>
-            <div className="w-full bg-green-200">hi</div>
+            <div className="col-span-2 py-4 flex flex-col items-end">
+                <h4 className="w-3/4 mb-3 text-left">Schedule a meeting</h4>
+                <div className="bg-white p-2 rounded-md w-3/4">
+                    <MeetingForm />
+                </div>
+                <h4 className="w-3/4 mb-3 text-left">Upcoming meetings</h4>
+                <div className="bg-white p-2 rounded-md w-3/4">meeting meeting</div>
+            </div>
         </div>
     );
 };
