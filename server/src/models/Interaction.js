@@ -14,9 +14,15 @@ const interactionSchema = new mongoose.Schema({
         ref: "Student"
     },
     interactions: {
-        message: Boolean,
-        post: Boolean,
-        comment: Boolean
+        messages: Number,
+        posts: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post"
+        }],
+        meetings: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Meeting"
+        }]
     }
 }, {
     timestamps: true

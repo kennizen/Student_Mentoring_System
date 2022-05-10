@@ -40,15 +40,9 @@ module.exports.createMeeting = async (req, res, next) => {
             return response.badrequest(res);
         }
 
-        // const newMeeting = new Meeting({
-        //     host: req.user._id,
-        //     description,
-        //     date,
-        //     url
-        // });
-
         const newMeeting = new Meeting();
 
+        // adding participants
         for (let i = 0; i < participants.length; i++) {
             newMeeting.participants.push({
                 user: participants[i]
