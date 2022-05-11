@@ -56,10 +56,12 @@ module.exports = {
             });
 
             socket.on("setup", (userId) => {
-                socket.join(userId);
-                msgSocketMap[`${userId}`] = socket.id;
-                socket.emit("connected");
-                console.log("msg socket map", msgSocketMap);
+                if(userId) {
+                    socket.join(userId);
+                    msgSocketMap[`${userId}`] = socket.id;
+                    socket.emit("connected");
+                    console.log("msg socket map", msgSocketMap);
+                }
             });
 
             // socket.on("notify setup", (userId) => {
