@@ -13,28 +13,30 @@ const NotificationModal = ({ notification, nodeRef, setShowNotificationModal, se
                             <img
                                 className="h-12 w-12 rounded-full mr-5"
                                 src={
-                                    notification.creator.avatar.url === ""
-                                        ? `https://avatars.dicebear.com/api/initials/${notification.creator.firstname}.svg`
-                                        : notification.creator.avatar.url
+                                    notification?.creator.avatar.url === ""
+                                        ? `https://avatars.dicebear.com/api/initials/${notification?.creator.firstname}.svg`
+                                        : notification?.creator.avatar.url
                                 }
                                 alt="authorImage"
                             />
                             <div>
-                                <h3>{`${notification.creator.firstname} ${notification.creator.middlename} ${notification.creator.lastname}`}</h3>
+                                <h3>{`${notification?.creator.firstname} ${notification?.creator.middlename} ${notification?.creator.lastname}`}</h3>
                                 <div className="flex items-center justify-center">
-                                    <h6>{moment(notification.content.createdAt).format("LLL")}</h6>
+                                    <h6>
+                                        {moment(notification?.content?.createdAt).format("LLL")}
+                                    </h6>
                                     <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
                                     <h6>
-                                        {notification.creator.designation
-                                            ? notification.creator.designation
-                                            : notification.creator.role === "Mentor"
+                                        {notification?.creator.designation
+                                            ? notification?.creator.designation
+                                            : notification?.creator.role === "Mentor"
                                             ? "Designation not found"
                                             : "Student"}
                                     </h6>
                                     <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
                                     <h6>
-                                        {notification.creator.department
-                                            ? notification.creator.department
+                                        {notification?.creator.department
+                                            ? notification?.creator.department
                                             : "Department not found"}
                                     </h6>
                                 </div>
@@ -44,7 +46,7 @@ const NotificationModal = ({ notification, nodeRef, setShowNotificationModal, se
                     </div>
                     <p
                         className="mb-4 a-tag"
-                        dangerouslySetInnerHTML={{ __html: `${notification.content.body}` }}
+                        dangerouslySetInnerHTML={{ __html: `${notification?.content.body}` }}
                     ></p>
                 </div>
             );

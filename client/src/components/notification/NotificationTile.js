@@ -80,9 +80,9 @@ const NotificationTile = ({
                     <h4 className="text-left">{event?.detail}</h4>
                     <h5 className="w-56 text-truncate">{text}</h5>
                     <div className="text-gray-400 flex items-center justify-start">
-                        <h6 className="text-left">{`${creator?.firstname} ${creator?.middlename} ${creator.lastname}`}</h6>
+                        <h6 className="text-left">{`${creator?.firstname} ${creator?.middlename} ${creator?.lastname}`}</h6>
                         <div className="mx-2 w-1.5 h-1.5 rounded-full bg-gray-400"></div>
-                        <h6>{moment(content.createdAt).format("LLL")}</h6>
+                        <h6>{moment(content?.createdAt).format("LLL")}</h6>
                     </div>
                 </div>
             </div>

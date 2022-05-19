@@ -5,6 +5,7 @@ import student from "./student";
 import chat from "./chat";
 import post from "./post";
 import notification from "./notification";
+import meeting from "./meeting";
 
 export default combineReducers({
     admin: admin,
@@ -13,4 +14,5 @@ export default combineReducers({
     chat: chat,
     post: post,
     notification: notification,
+    meeting: meeting,
 });

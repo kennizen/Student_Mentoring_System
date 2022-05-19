@@ -145,7 +145,7 @@ const MentorDashboard = () => {
         socket.emit("setup", uid);
         console.log("socket", socket);
 
-        socket.on("new Notification", (data) => {
+        const handleNewNoti = (data) => {
             console.log("new socket Notification", data);
             if (
                 localStorage.getItem("postRoute") !== null &&
@@ -159,10 +159,12 @@ const MentorDashboard = () => {
                     dispatch(addGlobalNotification(data));
                 }
             }
-        });
+        };
 
-        return (data) => {
-            socket.off("new Notification", data);
+        socket.on("new Notification", handleNewNoti);
+
+        return () => {
+            socket.off("new Notification", handleNewNoti);
         };
     }, []);
 
@@ -175,47 +177,49 @@ const MentorDashboard = () => {
             playNotifySound();
         };
 
-        if (role !== Roles.ADMIN) {
-            socket.on("message received", (data) => {
-                /* this is to create the chat automatically if chat not shown and message came in user chat */
-                if (localStorage.getItem("chats") !== null) {
-                    let chats = JSON.parse(localStorage.getItem("chats"));
-                    let val = false;
-                    for (let i = 0; i < chats.length; i++) {
-                        if (chats[i]._id.toString() === data.data.chat._id.toString()) {
-                            val = true;
-                            break;
-                        }
-                    }
-                    if (val === false) {
-                        dispatch(addSingleChat(data.data.chat));
+        const handleMsgRec = (data) => {
+            /* this is to create the chat automatically if chat not shown and message came in user chat */
+            if (localStorage.getItem("chats") !== null) {
+                let chats = JSON.parse(localStorage.getItem("chats"));
+                let val = false;
+                for (let i = 0; i < chats.length; i++) {
+                    if (chats[i]._id.toString() === data.data.chat._id.toString()) {
+                        val = true;
+                        break;
                     }
                 }
+                if (val === false) {
+                    dispatch(addSingleChat(data.data.chat));
+                }
+            }
 
-                if (localStorage.getItem("selectedChat") === data.data.chat._id.toString()) {
-                    if (
-                        localStorage.getItem("visible") !== null &&
-                        JSON.parse(localStorage.getItem("visible"))
-                    )
-                        notification(data); // notification when scroll to bottom button visible
-                    else if (!JSON.parse(localStorage.getItem("chatRoute"))) {
-                        setNewMsgNotify(true);
-                        // notification when selected chat is same but in different tab
-                        notification(data);
-                    }
-                    dispatch(addMessages(data));
-                    dispatch(updateLatestMessage(data));
-                } else {
-                    if (!JSON.parse(localStorage.getItem("chatRoute"))) setNewMsgNotify(true);
-                    // if message for unintended person then store chat id in global store to show notification
+            if (localStorage.getItem("selectedChat") === data.data.chat._id.toString()) {
+                if (
+                    localStorage.getItem("visible") !== null &&
+                    JSON.parse(localStorage.getItem("visible"))
+                )
+                    notification(data); // notification when scroll to bottom button visible
+                else if (!JSON.parse(localStorage.getItem("chatRoute"))) {
+                    setNewMsgNotify(true);
+                    // notification when selected chat is same but in different tab
                     notification(data);
-                    dispatch(updateLatestMessage(data));
                 }
-            });
+                dispatch(addMessages(data));
+                dispatch(updateLatestMessage(data));
+            } else {
+                if (!JSON.parse(localStorage.getItem("chatRoute"))) setNewMsgNotify(true);
+                // if message for unintended person then store chat id in global store to show notification
+                notification(data);
+                dispatch(updateLatestMessage(data));
+            }
+        };
+
+        if (role !== Roles.ADMIN) {
+            socket.on("message received", handleMsgRec);
         }
 
-        return (data) => {
-            socket.off("message received", data);
+        return () => {
+            socket.off("message received", handleMsgRec);
         };
     }, []);
 
@@ -368,7 +372,7 @@ const MentorDashboard = () => {
     const notificationModalRef = useRef(null);
 
     return (
-        <div className="h-screen flex bg-gray-50">
+        <div className="h-screen flex bg-gray-50 overflow-hidden">
             <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
                 <div className="h-1/10 flex items-center justify-center">
                     <svg
@@ -620,7 +624,7 @@ const MentorDashboard = () => {
                         </span>
                     </div>
                 </div>
-                <div className="h-9/10 bg-gray-100 overflow-hidden">
+                <div className={`h-9/10 bg-gray-100 overflow-hidden}`}>
                     {/* conditional rendering of the inner tab screens */}
                     {route.post && (
                         <Post
