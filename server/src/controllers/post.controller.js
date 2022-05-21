@@ -6,6 +6,8 @@ const response = require("../utils/responses.utils");
 const roles = require("../utils/roles");
 const notificationController = require("../controllers/notification.controller");
 const events = require("../utils/logEvents");
+const interactionController = require("./interaction.controller");
+const interactionEvents = require("../utils/interactions.utils");
 
 module.exports = {
     // create new post
@@ -41,6 +43,10 @@ module.exports = {
                     req.user,
                     mentees
                 );
+
+                for await (const mentee of mentees) {
+                    const interaction = await interactionController.createInteraction(interactionEvents.POST, req.user._id, mentee._id, newPost);
+                }
             }
 
             if (req.user.role === roles.Student) {

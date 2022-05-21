@@ -14,7 +14,10 @@ const interactionSchema = new mongoose.Schema({
         ref: "Student"
     },
     interactions: {
-        messages: Number,
+        messages: {
+            type: Number,
+            default: 0
+        },
         posts: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Post"
@@ -30,4 +33,4 @@ const interactionSchema = new mongoose.Schema({
 
 const Interaction = mongoose.model("Interaction", interactionSchema);
 
-moduyle.exports = Interaction;
+module.exports = Interaction;

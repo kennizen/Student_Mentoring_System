@@ -62,4 +62,12 @@ module.exports = {
         type: "UPDATED_PAST_EDUCATION",
         detail: "Updated past education",
     },
+    MEETING_CREATED: {
+        type: "MEETING_CREATED",
+        detail: "Scheduled a meeting",
+    },
+    MEETING_DELETED: {
+        type: "MEETING_DELETED",
+        detail: "Deleted a scheduled meeting",
+    } 
 };

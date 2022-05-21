@@ -2,6 +2,10 @@ const Meeting = require("../models/Meeting");
 const response = require("../utils/responses.utils");
 const roles = require("../utils/roles");
 const ObjectId = require("mongoose").Schema.Types.ObjectId;
+const events = require("../utils/logEvents");
+const notificationController = require("../controllers/notification.controller");
+const interactionController = require("./interaction.controller");
+const interactionEvents = require("../utils/interactions.utils");
 /**
  *  The method fetches all the available meeting of the current user
  */
@@ -55,6 +59,31 @@ module.exports.createMeeting = async (req, res, next) => {
 
         await (await newMeeting.save()).populate("participants.user").execPopulate();
         response.success(res, newMeeting);
+
+        // creating a notification
+        if (req.user.role === roles.Mentor) {
+            // generating new post notification
+
+            const receivers = newMeeting.participants.map((item) => {
+                return {
+                    _id: item.user,
+                    role: roles.Student
+                }
+            })
+
+            await notificationController.createNotification(
+                events.MEETING_CREATED,
+                newMeeting,
+                req.user,
+                receivers
+            );
+            
+            // generating interactions on meeting
+            for await (const mentee of receivers) {
+                const interaction = await interactionController.createInteraction(interactionEvents.MEETING, req.user._id, mentee._id, newMeeting);
+            }
+        }
+
         next();
     } catch (err) {
         console.log(err);

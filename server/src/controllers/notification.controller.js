@@ -68,7 +68,7 @@ module.exports = {
     setNotificationAsRead: async (req, res, next) => {
         try {
             const notifications = req.body;
-            console.log("in mark notification", req.body);
+            // console.log("in mark notification", req.body);
 
             const readNotifications = [];
             
