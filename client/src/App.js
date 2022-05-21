@@ -13,18 +13,18 @@ const App = () => {
     return (
         <React.StrictMode>
             <BrowserRouter>
-                <SocketContext.Provider value={socket}>
-                    <Switch>
-                        <Route path="/" exact component={Main} />
-                        <Route path="/admin" exact component={Auth} />
-                        <Route path="/mentor" exact component={Auth} />
-                        <Route path="/mentee" exact component={Auth} />
+                <Switch>
+                    <Route path="/" exact component={Main} />
+                    <Route path="/admin" exact component={Auth} />
+                    <Route path="/mentor" exact component={Auth} />
+                    <Route path="/mentee" exact component={Auth} />
+                    <SocketContext.Provider value={socket}>
                         <Route path="/admin/dashboard" exact component={MentorDashboard} />
                         <Route path="/mentor/dashboard" exact component={MentorDashboard} />
                         <Route path="/mentee/dashboard" exact component={MentorDashboard} />
-                        <Route path="/error" exact component={Error403} />
-                    </Switch>
-                </SocketContext.Provider>
+                    </SocketContext.Provider>
+                    <Route path="/error" exact component={Error403} />
+                </Switch>
             </BrowserRouter>
         </React.StrictMode>
     );

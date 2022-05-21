@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { createMeeting } from "../../../../../../actions/meeting";
 import { mentorGetAllMentees } from "../../../../../../actions/mentor";
+import { homeContext } from "../../../../../../contexts/homeContexts";
 import ChatTiles from "../../chat/chatModal/ChatTiles";
 
 const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting, meeting }) => {
     const dispatch = useDispatch();
     const history = useHistory();
+    const setOverflow = useContext(homeContext);
 
     const [mentees, setMentees] = useState([]);
 
@@ -20,7 +22,7 @@ const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting
         setShowOverlay(false);
         setShowMeetingModal(false);
         setMeeting({ ...meeting, participants: [] });
-        handleMeetingSubmission();
+        handleCreateMeeting();
     };
 
     // function to add and remove the chat ids from the state variable chatIds
@@ -44,7 +46,7 @@ const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting
     };
 
     // function to schedule the meeting
-    const handleMeetingSubmission = () => {
+    const handleCreateMeeting = () => {
         dispatch(createMeeting(meeting, history));
     };
 

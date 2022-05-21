@@ -15,12 +15,16 @@ module.exports.getAllMeetings = async (req, res, next) => {
 
         // if request is from mentor
         if (req.user.role === roles.Mentor) {
-            meetings = await Meeting.find({ host: req.user._id });
+            meetings = await Meeting.find({ host: req.user._id })
+                .populate("host")
+                .populate("participants.user");
         }
 
         // if request is from student/mentee
         if (req.user.role === roles.Student) {
-            meetings = await Meeting.find({ "participants.user": req.user._id });
+            meetings = await Meeting.find({ "participants.user": req.user._id })
+                .populate("host")
+                .populate("participants.user");
         }
 
         response.success(res, "", meetings);
@@ -57,7 +61,10 @@ module.exports.createMeeting = async (req, res, next) => {
         newMeeting.description = description;
         newMeeting.url = url;
 
-        await (await newMeeting.save()).populate("participants.user").execPopulate();
+        await (await newMeeting.save())
+            .populate("participants.user")
+            .populate("host")
+            .execPopulate();
         response.success(res, newMeeting);
 
         // creating a notification

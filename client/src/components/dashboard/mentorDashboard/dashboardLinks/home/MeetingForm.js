@@ -96,6 +96,7 @@ const MeetingForm = () => {
                     meeting={meeting}
                 />
             </CSSTransition>
+            <h4 className="w-3/4 mb-3 text-left">Schedule a meeting</h4>
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col mb-3">
                     <textarea
