@@ -9,7 +9,7 @@ const interactionEvents = require("../utils/interactions.utils");
 /**
  *  The method fetches all the available meeting of the current user
  */
-module.exports.getAllMeetings = async (req, res, next) => {
+const getAllMeetings = async (req, res, next) => {
     try {
         let meetings = [];
 
@@ -38,7 +38,7 @@ module.exports.getAllMeetings = async (req, res, next) => {
 /**
  *  The method creates and schedules new meetings with link
  */
-module.exports.createMeeting = async (req, res, next) => {
+const createMeeting = async (req, res, next) => {
     try {
         const { participants, description, date, url } = req.body;
 
@@ -97,3 +97,34 @@ module.exports.createMeeting = async (req, res, next) => {
         response.error(res);
     }
 };
+
+const updateMeeting = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { participants, date, description, url } = req.body;
+
+        const meeting = await Meeting.findById(id);
+
+        if(!meeting) {
+            return response.notfound(res);
+        }
+
+        meeting.description = participants.length > 0 ? participants : meeting.participants;
+        meeting.date = date || meeting.date;
+        meeting.description = description || meeting.description;
+        meeting.url = url || meeting.url;
+
+        await meeting.save();
+        response.success(res, "Meeting updated");
+        next();
+    }
+    catch(err) {
+        console.log(err);
+    }
+}
+
+module.exports = { 
+    createMeeting,
+    getAllMeetings,
+    updateMeeting
+}

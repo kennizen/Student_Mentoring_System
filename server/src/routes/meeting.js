@@ -13,4 +13,7 @@ router.get("/", Auth, Authorize([roles.Mentor, roles.Student]), meetingControlle
 // create a new meeting
 router.post("/", Auth, Authorize([roles.Mentor]), meetingController.createMeeting);
 
+// update a new meeting
+router.patch("/:id", Auth, Authorize([roles.Mentor]), meetingController.updateMeeting);
+
 module.exports = router;
