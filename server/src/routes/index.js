@@ -50,4 +50,6 @@ router.delete(
 
 router.get("/holidays", Auth, Authorize([roles.Mentor, roles.Student]), indexController.getAllHolidays);
 
+router.get("/getStats", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), indexController.getStats);
+
 module.exports = router;
