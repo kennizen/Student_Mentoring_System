@@ -40,13 +40,6 @@ const NotificationTile = ({
     const [text, setText] = useState("");
     const [user, setUser] = useState(null);
 
-    // function to return the appropiate icon based on the notification event type
-    const returnIcon = () => {
-        if (event?.type === "POST_CREATED") {
-            return <AnnotationIcon myStyle={"h-10 w-10 text-blue-600 flex-shrink-0"} alt={false} />;
-        }
-    };
-
     // console.log("receiver user", user);
     // function for notification tile clicked action
     const handleAction = () => {
@@ -86,7 +79,9 @@ const NotificationTile = ({
                     </div>
                 </div>
             </div>
-            {returnIcon()}
+            {event?.type === "POST_CREATED" && (
+                <AnnotationIcon myStyle={"h-10 w-10 text-blue-600 flex-shrink-0"} alt={false} />
+            )}
         </div>
     );
 };

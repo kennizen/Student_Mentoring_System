@@ -6,6 +6,7 @@ import DotsVertivalIcon from "../../../../../../assets/icons/DotsVertivalIcon";
 import { useDispatch } from "react-redux";
 import { fetchPostComments } from "../../../../../../actions/post";
 import { useHistory } from "react-router-dom";
+import DotIcon from "../../../../../../assets/icons/DotIcon";
 
 const SinglePost = ({
     post,
@@ -67,9 +68,9 @@ const SinglePost = ({
                     />
                     <div>
                         <h3>{`${author.firstname} ${author.middlename} ${author.lastname}`}</h3>
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center gap-x-2">
                             <h6>{moment(post.createdAt).format("LLL")}</h6>
-                            <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
+                            <DotIcon alt={true} myStyle={"h-1 w-1"} />
                             <h6>
                                 {author.designation
                                     ? author.designation
@@ -77,7 +78,7 @@ const SinglePost = ({
                                     ? "Designation not found"
                                     : "Student"}
                             </h6>
-                            <div className="ml-2 mr-2 w-1 h-1 rounded-full bg-black"></div>
+                            <DotIcon alt={true} myStyle={"h-1 w-1"} />
                             <h6>
                                 {author.department ? author.department : "Department not found"}
                             </h6>

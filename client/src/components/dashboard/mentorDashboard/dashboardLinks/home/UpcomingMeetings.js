@@ -1,103 +1,54 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { CSSTransition } from "react-transition-group";
-import { getMeetings } from "../../../../../actions/meeting";
-import ModalOverlay from "../../../../modal/ModalOverlay";
-import MeetingDetailsModal from "./meetingModal/MeetingDetailsModal";
+import React from "react";
+import { useSelector } from "react-redux";
 import MeetingTile from "./MeetingTile";
 
 const date = new Date();
 
 const UpcomingMeetings = () => {
-    const dispatch = useDispatch();
-    const history = useHistory();
-
-    useEffect(() => {
-        dispatch(getMeetings(history));
-    }, []);
-
     const { meetings } = useSelector((state) => state.meeting);
 
-    // console.log("meetings", meetings);
-
-    const [selectedMeeting, setSelectedMeeting] = useState(null);
-
-    // modal refs
-    const overlayRef = useRef(null);
-    const meetingDetailsModalRef = useRef(null);
-
-    // modal states
-    const [showOverlay, setShowOverlay] = useState(false);
-    const [showMeetingDetailsModal, setShowMeetingDetailsModal] = useState(false);
-
-    // function to handle modal
-    const handleModal = (mId) => {
-        let i = meetings.findIndex((m) => m._id === mId);
-        setSelectedMeeting(meetings[i]);
-        setShowMeetingDetailsModal(true);
-        setShowOverlay(true);
-    };
-
     return (
-        <>
-            <CSSTransition
-                nodeRef={overlayRef}
-                in={showOverlay}
-                timeout={300}
-                classNames="overlay"
-                unmountOnExit
-            >
-                <ModalOverlay nodeRef={overlayRef} />
-            </CSSTransition>
-            <CSSTransition
-                nodeRef={meetingDetailsModalRef}
-                in={showMeetingDetailsModal}
-                timeout={300}
-                classNames="modal"
-                unmountOnExit
-            >
-                <MeetingDetailsModal
-                    nodeRef={meetingDetailsModalRef}
-                    setShowOverlay={setShowOverlay}
-                    setShowMeetingDetailsModal={setShowMeetingDetailsModal}
-                    selectedMeeting={selectedMeeting}
-                />
-            </CSSTransition>
-            <h4 className="mb-3">Upcoming Meetings</h4>
-            <div className="overflow-y-auto h-60 mb-6">
-                {meetings?.map((meeting, i) => {
-                    if (meeting.date > date.toISOString()) {
-                        return (
-                            <MeetingTile
-                                key={meeting._id}
-                                {...meeting}
-                                myStyle={"hover:bg-gray-100"}
-                                handleModal={handleModal}
-                            />
-                        );
-                    }
-                    return "";
-                })}
+        <div className="bg-white py-2 rounded-md w-10/12 h-full overflow-y-auto px-4 flex flex-col items-start gap-y-3">
+            <h4 className="">Upcoming Meetings</h4>
+            <div className="overflow-y-auto w-full h-80 p-1">
+                {meetings
+                    ?.sort((a, b) => {
+                        return a.date > b.date ? 1 : -1;
+                    })
+                    ?.map((meeting) => {
+                        if (meeting.date > date.toISOString()) {
+                            return (
+                                <MeetingTile
+                                    key={meeting._id}
+                                    {...meeting}
+                                    myStyle2={"border-b border-gray-300"}
+                                />
+                            );
+                        }
+                        return "";
+                    })}
             </div>
-            <hr className="bg-gray-200 h-0.5" />
-            <h4 className="mb-3 mt-4">Past Meetings</h4>
-            <div className="overflow-y-auto h-60">
-                {meetings?.map((meeting, i) => {
-                    if (meeting.date <= date.toISOString()) {
-                        return (
-                            <MeetingTile
-                                key={meeting._id}
-                                {...meeting}
-                                myStyle={"bg-gray-100"}
-                                handleModal={handleModal}
-                            />
-                        );
-                    }
-                    return "";
-                })}
+            <hr className="bg-gray-200 h-0.5 w-full" />
+            <h4 className="">Held Meetings</h4>
+            <div className="overflow-y-auto w-full h-80 p-1">
+                {meetings
+                    ?.sort((a, b) => {
+                        return a.date < b.date ? 1 : -1;
+                    })
+                    ?.map((meeting) => {
+                        if (meeting.date <= date.toISOString()) {
+                            return (
+                                <MeetingTile
+                                    key={meeting._id}
+                                    {...meeting}
+                                    myStyle={"bg-gray-100"}
+                                />
+                            );
+                        }
+                        return "";
+                    })}
             </div>
-        </>
+        </div>
     );
 };
 

@@ -24,7 +24,7 @@ export const adminGetDetails = (history) => async (dispatch) => {
         } else if (data.code === 403) {
             history.goBack();
         } else {
-            dispatch({ type: "FETCH_ADMIN", data });
+            return dispatch({ type: "FETCH_ADMIN", data });
         }
     } catch (error) {
         console.log(error);

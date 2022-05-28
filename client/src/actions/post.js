@@ -9,9 +9,9 @@ export const getAllPosts = (history, page, setPostLoading) => async (dispatch) =
         if (data.code === 403) {
             history.goBack();
         } else {
+            if (setPostLoading !== undefined) setPostLoading(false);
             const posts = data.data.posts;
-            dispatch({ type: "FETCH_POSTS", posts });
-            setPostLoading(false);
+            return dispatch({ type: "FETCH_POSTS", posts });
         }
     } catch (error) {
         console.log(error);

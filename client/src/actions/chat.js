@@ -61,7 +61,7 @@ export const getAllChat = (history) => async (dispatch) => {
         if (data.code === 403) {
             history.goBack();
         } else {
-            dispatch({ type: "FETCH_CHATS", data });
+            return dispatch({ type: "FETCH_CHATS", data });
         }
     } catch (error) {
         console.log(error);

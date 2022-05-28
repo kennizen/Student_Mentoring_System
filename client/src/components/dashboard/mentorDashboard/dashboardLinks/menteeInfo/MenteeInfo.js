@@ -1,27 +1,15 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { mentorGetAllMentees } from "../../../../../actions/mentor";
 import MenteeTile from "./menteeTile/MenteeTile";
 
 const MenteeInfo = () => {
-    const dispatch = useDispatch();
     const history = useHistory();
-
-    const [mentees, setMentees] = useState([]);
-
     // temporary array to store the filtered results of the search
     const [tempList, setTempList] = useState([]);
 
-    // func to set all the mentees fetched from db
-    const setAllMentees = (mentees) => {
-        setMentees(mentees);
-    };
-
-    useEffect(() => {
-        dispatch(mentorGetAllMentees(history, setAllMentees));
-    }, [dispatch, history]);
+    const { mentees } = useSelector((state) => state.mentor);
 
     // search function to search for mentees
     const handleSearch = (e) => {

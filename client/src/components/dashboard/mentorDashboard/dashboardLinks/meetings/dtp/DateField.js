@@ -10,7 +10,7 @@ const DateField = ({ inputRef, inputProps }) => {
                 {...inputProps}
                 ref={inputRef}
                 type="text"
-                className="rounded-lg border-blueGray-200 border-2 focus:ring-0 w-full"
+                className="rounded-lg border-blueGray-300 border focus:ring-0 w-full"
                 placeholder="Select date and time"
             />
             <div className="absolute top-2.5 right-12">

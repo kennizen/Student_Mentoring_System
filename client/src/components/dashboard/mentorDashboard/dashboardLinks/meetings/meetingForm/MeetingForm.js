@@ -1,51 +1,35 @@
 import React, { useRef, useState } from "react";
-import DTP from "./dtp/DTP";
+import DTP from "../dtp/DTP";
 import EventIcon from "@mui/icons-material/Event";
 import LinkIcon from "@mui/icons-material/Link";
 import { CSSTransition } from "react-transition-group";
-import ModalOverlay from "../../../../modal/ModalOverlay";
-import MeetingModal from "./meetingModal/MeetingModal";
+import ModalOverlay from "../../../../../modal/ModalOverlay";
+import MeetingModal from "../meetingModal/MeetingModal";
 
-const MeetingForm = () => {
-    const [date, setDate] = useState(null);
+const MeetingForm = ({ meeting, setMeeting }) => {
     const [isValidDateTime, setIsValidDateTime] = useState(true);
-    const [meeting, setMeeting] = useState({
-        participants: [],
-        description: "",
-        url: "",
-        date: null,
-    });
-    const [disabled, setDisabled] = useState(true);
+    const [dateProvided, setDateProvided] = useState(true);
 
     // function to handle the date change adn logic to prevent previous date selection
     const handleDateChange = (newDate) => {
-        if (newDate === null) {
-            setDisabled(true);
-            setMeeting({ ...meeting, date: null });
-            setDate(newDate);
+        if (newDate == null) {
+            setMeeting({ ...meeting, date: newDate });
             setIsValidDateTime(true);
         } else {
-            let date = new Date();
-            if (newDate.toISOString() < date.toISOString()) {
+            const curDate = new Date();
+            if (newDate.toISOString() < curDate.toISOString()) {
                 setIsValidDateTime(false);
-                setDisabled(true);
                 setMeeting({ ...meeting, date: null });
             } else {
                 setIsValidDateTime(true);
-                setDisabled(false);
+                setDateProvided(true);
                 setMeeting({ ...meeting, date: newDate.toISOString() });
             }
-            setDate(newDate);
         }
     };
 
     // function to handle change of the state value of the meeting state obj
     const handleChange = (e) => {
-        if (meeting.date === null) {
-            setDisabled(true);
-        } else {
-            setDisabled(false);
-        }
         setMeeting({
             ...meeting,
             [e.target.name]: e.target.value,
@@ -55,12 +39,15 @@ const MeetingForm = () => {
     // function to handle form submit
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (meeting.date == null) {
+            setDateProvided(false);
+            return;
+        }
         setShowMeetingModal(true);
         setShowOverlay(true);
     };
 
-    console.log("date", date);
-    console.log("meeting", meeting);
+    console.log("date", meeting.date);
 
     // state to control the modal show and dont show
     const [showOverlay, setShowOverlay] = useState(false);
@@ -96,19 +83,18 @@ const MeetingForm = () => {
                     meeting={meeting}
                 />
             </CSSTransition>
-            <h4 className="w-3/4 mb-3 text-left">Schedule a meeting</h4>
+            <h3 className="px-4 py-3 mb-4 rounded-md bg-gray-200">Schedule a meeting</h3>
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col mb-3">
                     <textarea
                         onChange={handleChange}
                         value={meeting.description}
                         required
-                        style={{}}
                         name="description"
                         id="description"
-                        rows={2}
+                        rows={4}
                         placeholder="Meeting description"
-                        className="resize-none rounded-md border-blueGray-200 border-2 focus:ring-0"
+                        className="resize-y rounded-md border-gray-300 border focus:ring-0"
                     ></textarea>
                     {meeting.description ? (
                         <h6 className="ml-2 text-gray-500">Meeting description</h6>
@@ -126,7 +112,7 @@ const MeetingForm = () => {
                         name="url"
                         type="text"
                         placeholder="Meeting link if any"
-                        className="rounded-lg border-blueGray-200 border-2 focus:ring-0 pr-10"
+                        className="rounded-lg border-blueGray-300 border focus:ring-0 pr-10"
                     />
                     <div className="absolute top-2.5 right-3">
                         <LinkIcon className="text-gray-500" />
@@ -134,19 +120,15 @@ const MeetingForm = () => {
                     {meeting.url ? <h6 className="ml-2 text-gray-500">Meeting url</h6> : <></>}
                 </div>
 
-                <DTP date={date} handleDateChange={handleDateChange} />
-                {meeting.date ? (
-                    <h6 className="ml-2 text-gray-500">Meeting date and time</h6>
-                ) : (
-                    <></>
-                )}
-                {isValidDateTime ? <></> : <h6 className="ml-2 text-red-600">Invalid time</h6>}
+                <DTP date={meeting.date} handleDateChange={handleDateChange} />
+                {meeting.date ? <h6 className="ml-2 text-gray-500">Meeting date and time</h6> : ""}
+                {isValidDateTime ? "" : <h6 className="ml-2 text-red-600">Invalid time</h6>}
+                {dateProvided ? "" : <h6 className="ml-2 text-blue-600">Date required</h6>}
 
-                <div className="w-full flex items-end justify-end mt-3">
+                <div className="w-full flex items-center mt-3">
                     <button
-                        disabled={disabled}
                         type="submit"
-                        className="flex items-center gap-x-2 py-1 px-2 hover:bg-blue-600 rounded-md text-white bg-blue-500 transition-all disabled:opacity-50"
+                        className="w-full flex items-center justify-center gap-x-2 py-1.5 px-2 hover:bg-blue-600 rounded-md text-white bg-blue-500 transition-all disabled:opacity-50"
                     >
                         <EventIcon fontSize="small" />
                         Schedule

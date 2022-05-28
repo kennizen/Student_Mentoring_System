@@ -1,15 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { createMeeting } from "../../../../../../actions/meeting";
+import { createMeeting, updateMeeting } from "../../../../../../actions/meeting";
 import { mentorGetAllMentees } from "../../../../../../actions/mentor";
-import { homeContext } from "../../../../../../contexts/homeContexts";
-import ChatTiles from "../../chat/chatModal/ChatTiles";
+import MeetingChip from "../meetingChip/MeetingChip";
 
 const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting, meeting }) => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const setOverflow = useContext(homeContext);
 
     const [mentees, setMentees] = useState([]);
 
@@ -21,8 +19,6 @@ const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting
     const handleHideModalOperations = () => {
         setShowOverlay(false);
         setShowMeetingModal(false);
-        setMeeting({ ...meeting, participants: [] });
-        handleCreateMeeting();
     };
 
     // function to add and remove the chat ids from the state variable chatIds
@@ -46,8 +42,21 @@ const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting
     };
 
     // function to schedule the meeting
-    const handleCreateMeeting = () => {
-        dispatch(createMeeting(meeting, history));
+    const handleCreateMeeting = (e) => {
+        const name = e.target.name;
+        if (name === "update") {
+            dispatch(updateMeeting(history, meeting));
+        } else {
+            dispatch(createMeeting(history, meeting));
+        }
+        handleHideModalOperations();
+        setMeeting({
+            id: "",
+            participants: [],
+            description: "",
+            url: "",
+            date: null,
+        });
     };
 
     console.log(mentees);
@@ -68,25 +77,39 @@ const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting
 
                     <h5 className="mb-3">Selected - {meeting.participants.length}</h5>
                     <div className="flex items-center flex-wrap justify-start gap-x-3">
-                        {mentees.map((mentee) => {
-                            return (
-                                <ChatTiles
-                                    key={mentee._id}
-                                    mentee={mentee}
-                                    handleChange={handleChange}
-                                />
-                            );
-                        })}
+                        {mentees.length > 0 &&
+                            mentees.map((mentee) => {
+                                return (
+                                    <MeetingChip
+                                        key={mentee._id}
+                                        mentee={mentee}
+                                        participants={meeting.participants}
+                                        handleChange={handleChange}
+                                    />
+                                );
+                            })}
                     </div>
 
-                    <div className="w-full flex items-center justify-end">
+                    <div className="w-full flex items-center justify-end gap-x-4">
+                        {meeting.id !== "" && (
+                            <button
+                                name="update"
+                                disabled={meeting.participants.length > 0 ? false : true}
+                                onClick={handleCreateMeeting}
+                                type="submit"
+                                className="mt-3 py-1 px-2 hover:bg-blue-600 rounded-md text-white bg-blue-500 transition-all disabled:opacity-50"
+                            >
+                                Update
+                            </button>
+                        )}
                         <button
+                            name="createNew"
                             disabled={meeting.participants.length > 0 ? false : true}
-                            onClick={handleHideModalOperations}
+                            onClick={handleCreateMeeting}
                             type="submit"
                             className="mt-3 py-1 px-2 hover:bg-blue-600 rounded-md text-white bg-blue-500 transition-all disabled:opacity-50"
                         >
-                            Schedule
+                            Create new
                         </button>
                     </div>
                 </div>

@@ -2,7 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { logoutMentor, mentorGetDetails, mentorGetProfile } from "../../../actions/mentor";
+import {
+    logoutMentor,
+    mentorGetAllMentees,
+    mentorGetDetails,
+    mentorGetProfile,
+} from "../../../actions/mentor";
 import ChatAlt2Icon from "../../../assets/icons/ChatAlt2Icon";
 import HomeIcon from "../../../assets/icons/HomeIcon";
 import AnnotationIcon from "../../../assets/icons/AnnotationIcon";
@@ -48,11 +53,14 @@ import {
     studentGetProfileDetails,
 } from "../../../actions/student";
 import Home from "./dashboardLinks/home/Home";
-import { logoutPosts } from "../../../actions/post";
+import { getAllPosts, logoutPosts } from "../../../actions/post";
 import { Roles } from "../../../utility";
 import DocumentTextIcon from "../../../assets/icons/DocumentTextIcon";
 import Plus from "../../../assets/icons/Plus";
+import UserGroupIcon from "../../../assets/icons/UserGroupIcon";
 import { adminGetDetails, logoutAdmin } from "../../../actions/admin";
+import Meetings from "./dashboardLinks/meetings/Meetings";
+import { getMeetings } from "../../../actions/meeting";
 
 const MentorDashboard = () => {
     // getting uid of the logged in user
@@ -68,20 +76,30 @@ const MentorDashboard = () => {
 
     // fetching details
     useEffect(() => {
+        const dis = [];
         if (role === Roles.ADMIN) {
-            dispatch(adminGetDetails(history));
+            dis.push(dispatch(adminGetDetails(history)));
         } else {
             if (role === Roles.MENTOR) {
-                dispatch(mentorGetDetails(history));
-                dispatch(mentorGetProfile(history));
+                dis.push(dispatch(mentorGetDetails(history)));
+                dis.push(dispatch(mentorGetProfile(history)));
+                dis.push(dispatch(mentorGetAllMentees(history)));
             } else if (role === Roles.STUDENT) {
-                dispatch(studentGetDetails(history));
-                dispatch(studentGetProfileDetails(history));
+                dis.push(dispatch(studentGetDetails(history)));
+                dis.push(dispatch(studentGetProfileDetails(history)));
             }
 
-            dispatch(getAllChat(history));
-            dispatch(getAllNotifications(history));
+            dis.push(dispatch(getAllPosts(history, 1)));
+            dis.push(dispatch(getAllChat(history)));
+            dis.push(dispatch(getAllNotifications(history)));
+            dis.push(dispatch(getMeetings(history)));
         }
+
+        const func = async (disArray) => {
+            await Promise.all(disArray);
+            console.log("waiting");
+        };
+        func(dis);
 
         if (localStorage.getItem("persistChat") !== null) {
             localStorage.removeItem("persistChat");
@@ -112,6 +130,7 @@ const MentorDashboard = () => {
         academicDetails: false,
         manageGroups: false,
         logs: false,
+        meetings: false,
     });
 
     // state to control the chat notification on the dashboard tab
@@ -244,6 +263,7 @@ const MentorDashboard = () => {
                     academicDetails: false,
                     manageGroups: false,
                     logs: false,
+                    meetings: false,
                 });
                 break;
             case "post":
@@ -257,6 +277,7 @@ const MentorDashboard = () => {
                     academicDetails: false,
                     manageGroups: false,
                     logs: false,
+                    meetings: false,
                 });
                 break;
             case "profile":
@@ -270,6 +291,7 @@ const MentorDashboard = () => {
                     academicDetails: false,
                     manageGroups: false,
                     logs: false,
+                    meetings: false,
                 });
                 break;
             case "menteeInfo":
@@ -283,6 +305,7 @@ const MentorDashboard = () => {
                     academicDetails: false,
                     manageGroups: false,
                     logs: false,
+                    meetings: false,
                 });
                 break;
             case "chat":
@@ -297,6 +320,7 @@ const MentorDashboard = () => {
                     academicDetails: false,
                     manageGroups: false,
                     logs: false,
+                    meetings: false,
                 });
                 break;
             case "academicDetails":
@@ -310,6 +334,7 @@ const MentorDashboard = () => {
                     academicDetails: true,
                     manageGroups: false,
                     logs: false,
+                    meetings: false,
                 });
                 break;
             case "manageGroups":
@@ -322,6 +347,7 @@ const MentorDashboard = () => {
                     academicDetails: false,
                     manageGroups: true,
                     logs: false,
+                    meetings: false,
                 });
                 break;
             case "logs":
@@ -334,6 +360,21 @@ const MentorDashboard = () => {
                     academicDetails: false,
                     manageGroups: false,
                     logs: true,
+                    meetings: false,
+                });
+                break;
+            case "meetings":
+                setVals({ chatRoute: false, postRoute: false });
+                setRoute({
+                    home: false,
+                    post: false,
+                    menteeInfo: false,
+                    profile: false,
+                    chat: false,
+                    academicDetails: false,
+                    manageGroups: false,
+                    logs: false,
+                    meetings: true,
                 });
                 break;
             default:
@@ -344,8 +385,8 @@ const MentorDashboard = () => {
     // function to handle the logout
     const handleLogout = () => {
         if (role === Roles.MENTOR) dispatch(logoutMentor());
-        else if (role === Roles.STUDENT) dispatch(logoutStudent());
-        else if (role === Roles.ADMIN) dispatch(logoutAdmin());
+        if (role === Roles.STUDENT) dispatch(logoutStudent());
+        if (role === Roles.ADMIN) dispatch(logoutAdmin());
         dispatch(logoutChats());
         dispatch(logoutNotifications());
         dispatch(logoutPosts());
@@ -431,6 +472,23 @@ const MentorDashboard = () => {
                             alt={true}
                         />
                         Post
+                    </button>
+                )}
+                {role !== Roles.ADMIN && (
+                    <button
+                        onClick={handleRouteChange}
+                        id="meetings"
+                        className={`${
+                            route.meetings ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                    >
+                        <UserGroupIcon
+                            myStyle={"h-5 w-5 mr-3"
+                                .concat(" ")
+                                .concat(route.meetings && "text-blue-600")}
+                            alt={true}
+                        />
+                        Meetings
                     </button>
                 )}
                 {role === Roles.MENTOR && (
@@ -644,6 +702,7 @@ const MentorDashboard = () => {
                     )}
                     {route.manageGroups && <ManageGroups />}
                     {route.logs && <Logs />}
+                    {route.meetings && <Meetings />}
                 </div>
             </div>
         </div>

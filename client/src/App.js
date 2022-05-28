@@ -7,8 +7,6 @@ import Error403 from "./components/error/Error403";
 
 import { SocketContext, socket } from "./socket/socket";
 
-import "./App.css";
-
 const App = () => {
     return (
         <React.StrictMode>

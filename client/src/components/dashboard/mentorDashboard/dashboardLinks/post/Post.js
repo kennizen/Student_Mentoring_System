@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import {
@@ -24,12 +24,6 @@ const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    // fetching all the posts for the user
-    useEffect(() => {
-        // execute scroll to scroll when loading first time
-        dispatch(getAllPosts(history, 1, setPostLoading));
-    }, []);
-
     const [isHidden, setIsHidden] = useState(true);
     // state variable to show viewing pill on the selected post
     const [selectedPostIndex, setSelectedPostIndex] = useState(-1);
@@ -41,7 +35,7 @@ const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
     const [disablePost, setDisablePost] = useState(true);
 
     // states for loading
-    const [postLoading, setPostLoading] = useState(true);
+    const [postLoading, setPostLoading] = useState(false);
     const [oldPostLoading, setOldPostLoading] = useState(false);
     const [commentLoading, setCommentLoading] = useState(false);
 

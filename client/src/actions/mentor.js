@@ -39,14 +39,14 @@ export const mentorGetDetails = (history) => async (dispatch) => {
         } else if (data.code === 403) {
             history.goBack();
         } else {
-            dispatch({ type: "FETCH_MENTOR", data });
+            return dispatch({ type: "FETCH_MENTOR", data });
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const mentorGetAllMentees = (history, setAllMentees) => async (dispatch) => {
+export const mentorGetAllMentees = (history) => async (dispatch) => {
     try {
         const { data } = await api.getAllMentees();
         console.log("mentor all mentees in actions", data);
@@ -55,7 +55,8 @@ export const mentorGetAllMentees = (history, setAllMentees) => async (dispatch) 
         if (data.code === 403) {
             history.goBack();
         } else {
-            setAllMentees(data.data.mentees);
+            const mentees = data.data.mentees;
+            return dispatch({ type: "STORE_MENTEES", mentees });
         }
     } catch (error) {
         console.log(error);
@@ -89,7 +90,7 @@ export const mentorGetProfile = (history) => async (dispatch) => {
             history.goBack();
         } else {
             const profile = data.data.profileData;
-            dispatch({ type: "FETCH_MENTOR_PROFILE", profile });
+            return dispatch({ type: "FETCH_MENTOR_PROFILE", profile });
         }
     } catch (error) {
         console.log(error);

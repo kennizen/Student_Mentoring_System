@@ -65,7 +65,7 @@ const createMeeting = async (req, res, next) => {
             .populate("participants.user")
             .populate("host")
             .execPopulate();
-        response.success(res, newMeeting);
+        response.success(res, "Meeting created", newMeeting);
 
         // creating a notification
         if (req.user.role === roles.Mentor) {
@@ -74,9 +74,9 @@ const createMeeting = async (req, res, next) => {
             const receivers = newMeeting.participants.map((item) => {
                 return {
                     _id: item.user,
-                    role: roles.Student
-                }
-            })
+                    role: roles.Student,
+                };
+            });
 
             await notificationController.createNotification(
                 events.MEETING_CREATED,
@@ -84,10 +84,15 @@ const createMeeting = async (req, res, next) => {
                 req.user,
                 receivers
             );
-            
+
             // generating interactions on meeting
             for await (const mentee of receivers) {
-                interactionController.createInteraction(interactionEvents.MEETING, req.user._id, mentee._id, newMeeting);
+                interactionController.createInteraction(
+                    interactionEvents.MEETING,
+                    req.user._id,
+                    mentee._id,
+                    newMeeting
+                );
             }
         }
 
@@ -105,26 +110,33 @@ const updateMeeting = async (req, res, next) => {
 
         const meeting = await Meeting.findById(id);
 
-        if(!meeting) {
+        if (!meeting) {
             return response.notfound(res);
         }
 
-        meeting.description = participants.length > 0 ? participants : meeting.participants;
+        const part = [];
+
+        // adding participants
+        for (let i = 0; i < participants.length; i++) {
+            part.push({
+                user: participants[i],
+            });
+        }
+        meeting.participants = part;
         meeting.date = date || meeting.date;
         meeting.description = description || meeting.description;
         meeting.url = url || meeting.url;
 
-        await meeting.save();
-        response.success(res, "Meeting updated");
+        await (await meeting.save()).populate("participants.user").populate("host").execPopulate();
+        response.success(res, "Meeting updated", meeting);
         next();
-    }
-    catch(err) {
+    } catch (err) {
         console.log(err);
     }
-}
+};
 
-module.exports = { 
+module.exports = {
     createMeeting,
     getAllMeetings,
-    updateMeeting
-}
+    updateMeeting,
+};

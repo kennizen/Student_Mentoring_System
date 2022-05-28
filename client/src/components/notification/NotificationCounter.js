@@ -34,13 +34,17 @@ const NotificationCounter = () => {
     // state to manage the unread notification count
     const [readNotifications, setReadNotifications] = useState(0);
 
-    if (readNotifications)
-        return (
-            <h5 className="bg-red-500 text-center w-5 h-5 rounded-full text-white flex items-center justify-center absolute top-0 right-0">
-                {readNotifications}
-            </h5>
-        );
-    return <div></div>;
+    return (
+        <>
+            {readNotifications > 0 ? (
+                <h5 className="bg-red-500 text-center w-5 h-5 rounded-full text-white flex items-center justify-center absolute top-0 right-0">
+                    {readNotifications}
+                </h5>
+            ) : (
+                <></>
+            )}
+        </>
+    );
 };
 
 export default NotificationCounter;

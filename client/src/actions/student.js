@@ -39,7 +39,7 @@ export const studentGetDetails = (history) => async (dispatch) => {
         } else if (data.code === 403) {
             history.goBack();
         } else {
-            dispatch({ type: "FETCH_STUDENT", data });
+            return dispatch({ type: "FETCH_STUDENT", data });
         }
     } catch (error) {
         console.log(error);
@@ -57,7 +57,7 @@ export const studentGetProfileDetails = (history) => async (dispatch) => {
         if (data.code === 403) {
             history.goBack();
         } else {
-            dispatch({ type: "FETCH_PROFILE", data });
+            return dispatch({ type: "FETCH_PROFILE", data });
         }
     } catch (error) {
         console.log(error);

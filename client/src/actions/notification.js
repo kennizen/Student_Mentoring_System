@@ -10,7 +10,7 @@ export const getAllNotifications = (history) => async (dispatch) => {
             history.goBack();
         } else {
             const notifications = data.data;
-            dispatch({ type: "FETCH_NOTIFICATIONS", notifications });
+            return dispatch({ type: "FETCH_NOTIFICATIONS", notifications });
         }
     } catch (error) {
         console.log(error);
