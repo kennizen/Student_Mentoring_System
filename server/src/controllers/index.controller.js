@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Student = require("../models/Student");
 const Mentor = require("../models/Mentor");
+const Post = require("../models/Post");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
@@ -216,6 +217,63 @@ module.exports = {
             response.success(res, "", data);
         }
         catch(err){
+            console.log(err)
+        }
+    },
+
+    // gets all the stats 
+    getStats: async (req, res, next) => {
+        try {
+
+            let commentsCount = 0;
+            let postsCount = 0
+            let studentsCount = 0;
+
+            // if mentor
+            if(req.user.role === roles.Mentor) {
+                // postsCount = await Post.countDocuments({
+                //     group_id: req.user._id
+                // })
+                const posts = await Post.find({
+                        group_id: req.user._id
+                })
+
+                postsCount = posts.length;
+                commentsCount = posts.reduce((prev, curr) => prev + curr.commentCount, 0)
+                studentsCount = await Student.countDocuments({
+                    mentoredBy: req.user._id
+                })
+            }
+
+            // if user is student
+            if(req.user.role === roles.Student) {
+                // getting total posts by the user
+                const posts = await Post.find({
+                    author: req.user._id
+                })
+
+                postsCount = posts.length;
+                commentsCount = posts.reduce((prev, curr) => prev + curr.commentCount, 0)
+                studentsCount = await Student.countDocuments({
+                    mentoredBy: req.user.mentoredBy
+                })
+            }
+
+            // if user is admin
+            if(req.user.role === roles.Admin) {
+                // fetch all posts
+                const posts = await Post.find();
+                postsCount = posts.length;
+                commentsCount = posts.reduce((prev, curr) => prev + curr.commentCount, 0)
+                studentsCount = await Student.countDocuments();
+            }
+
+            response.success(res, "", {commentsCount, postsCount, studentsCount})
+
+            next();
+
+        }
+        catch(err) {
             console.log(err)
         }
     }

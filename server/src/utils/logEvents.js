@@ -1,5 +1,7 @@
 /**
  * List of events being performed by the users throughout the system
+ * Its is required to specify the models of the events which we are using notifications
+ * They are used to populate the content of the notifications
  */
 module.exports = {
     SIGNUP: {
@@ -65,9 +67,11 @@ module.exports = {
     MEETING_CREATED: {
         type: "MEETING_CREATED",
         detail: "Scheduled a meeting",
+        model: "Meeting"
     },
     MEETING_DELETED: {
         type: "MEETING_DELETED",
         detail: "Deleted a scheduled meeting",
+        model: "Meeting"
     } 
 };
