@@ -217,17 +217,6 @@ module.exports = {
         }
     },
 
-    // get all logs
-    getAllLogs: async (req, res, next) => {
-        try {
-            const allLogs = await Log.find().populate("user");
-            response.success(res, "", { logs: allLogs });
-            next();
-        } catch (err) {
-            console.log(err);
-            response.error(res);
-        }
-    },
 
     // get admin profile
     getProfile: async (req, res, next) => {

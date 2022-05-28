@@ -2,9 +2,18 @@ const Interaction = require("../models/Interaction");
 const Mentor = require("../models/Mentor");
 const Student = require("../models/Student");
 const interactionEvents = require("../utils/interactions.utils");
+const roles = require("../utils/roles");
+const response = require("../utils/responses.utils");
 
 module.exports = {
-// create a new interaction between a mentor and mentee
+
+    /**
+     * @Desc create a new interaction between a mentor and mentee
+     * @param {*} event Interaction event
+     * @param {*} mentor Mentor ID
+     * @param {*} student Student ID
+     * @param {*} data Interaction event content
+     */
 createInteraction: async (event, mentor, student, data) => {
     try {
 
@@ -80,7 +89,33 @@ createInteraction: async (event, mentor, student, data) => {
         console.log();
     }
 
-    }
+    },
 
+    /**
+     * @Desc Fetchs all interactions for the current user
+     */
+     getAllInteractions: async (req, res, next) => {
+
+        try {
+            let interactions = []
+            
+            if(req.user.role === roles.Admin) {
+                interactions = await Interaction.find();
+            }
+
+            if(req.user.role === roles.Mentor) {
+                interactions = await Interaction.find({ mentor: req.user._id});
+            }
+
+            if(req.user.role === roles.Student) {
+                interactions = await Interaction.find({ student: req.user._id});
+            }
+
+            response.success(res, "", { interactions } )
+        }
+        catch(err) {
+            console.log(err);
+        }
+    }
 
 }

@@ -8,6 +8,7 @@ const events = require("../utils/logEvents");
 
 // importing contollers/handlers
 const indexController = require("../controllers/index.controller");
+const interactionsControler = require("../controllers/interaction.controller");
 
 /**   This file consists all the routes shared by all users of the system   */
 
@@ -51,5 +52,11 @@ router.delete(
 router.get("/holidays", Auth, Authorize([roles.Mentor, roles.Student]), indexController.getAllHolidays);
 
 router.get("/getStats", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), indexController.getStats);
+
+// fetching all logs from db
+router.get("/logs", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), indexController.getAllLogs);
+
+// fetching all interactions from db
+router.get("/interactions", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), interactionsControler.getAllInteractions);
 
 module.exports = router;

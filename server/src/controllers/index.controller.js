@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const Student = require("../models/Student");
 const Mentor = require("../models/Mentor");
 const Post = require("../models/Post");
+const Log = require("../models/Log");
+const Interaction = require("../models/Interaction");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
@@ -276,5 +278,32 @@ module.exports = {
         catch(err) {
             console.log(err)
         }
+    },
+
+    // get all logs handler
+    getAllLogs: async (req, res, next) => {
+        try {
+            // calculating the past 7th day from today
+            const startDate = new Date()
+            startDate.setDate(startDate.getDate() - 6);
+            startDate.setHours(0,0,0,0);
+
+            let allLogs = [];
+            if(req.user.role === roles.Admin) {
+                allLogs = await Log.find().populate("user");
+            }
+
+            if (req.user.role === roles.Mentor || req.user.role === roles.Student) {
+                allLogs = await Log.find({ user: req.user._id, createdAt: { $gte: startDate } }).populate("user");
+            }
+
+            response.success(res, "", { count: allLogs.length, logs: allLogs } );
+
+            next();
+        } catch (err) {
+            console.log(err);
+            response.error(res);
+        }
     }
+
 };

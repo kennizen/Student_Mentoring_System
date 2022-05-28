@@ -38,9 +38,6 @@ router.post("/assignMentees", Auth, Authorize(Role.Admin), adminController.assig
 // assign mentees 
 router.post("/removeMentees", Auth, Authorize(Role.Admin), adminController.removeMentees, Logger(events.GROUP_UPDATE));
 
-// fetching all logs from db
-router.get("/logs", Auth, Authorize(Role.Admin), adminController.getAllLogs);
-
 router.get("/profile", Auth, Authorize(Role.Admin), adminController.getProfile);
 
 router.post("/profile", Auth, Authorize(Role.Admin), adminController.updateProfile);
