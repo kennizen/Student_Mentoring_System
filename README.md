@@ -1,2 +1,1 @@
-# Student_Mentoring_System
- 
+Student Mentoring System
