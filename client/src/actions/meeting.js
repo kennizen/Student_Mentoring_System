@@ -1,6 +1,6 @@
 import * as api from "../api/meeting";
 
-export const createMeeting = (history, meeting) => async (dispatch) => {
+export const createMeeting = (history, meeting, socket) => async (dispatch) => {
     try {
         const { data } = await api.createMeeting(meeting);
         console.log("create meeting data in actions", data);
@@ -9,6 +9,7 @@ export const createMeeting = (history, meeting) => async (dispatch) => {
         } else {
             const newMeeting = data.data;
             dispatch({ type: "ADD_MEETING", newMeeting });
+            socket.emit("newNotification", newMeeting);
         }
     } catch (error) {
         console.log(error);

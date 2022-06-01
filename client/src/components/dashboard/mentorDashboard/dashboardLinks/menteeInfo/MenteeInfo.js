@@ -44,14 +44,14 @@ const MenteeInfo = () => {
         temp.sort((a, b) => {
             if (term === "name") {
                 if (a.firstname === b.firstname) {
-                    return a.lastname.toLowerCase() > b.lastname.toLowerCase();
+                    return a.lastname.toLowerCase() > b.lastname.toLowerCase() ? 1 : -1;
                 } else {
-                    return a.firstname.toLowerCase() > b.firstname.toLowerCase();
+                    return a.firstname.toLowerCase() > b.firstname.toLowerCase() ? 1 : -1;
                 }
             } else if (term === "roll") {
-                return a.enrollment_no.toLowerCase() > b.enrollment_no.toLowerCase();
+                return a.enrollment_no.toLowerCase() > b.enrollment_no.toLowerCase() ? 1 : -1;
             } else {
-                return a.semester.toLowerCase() > b.semester.toLowerCase();
+                return a.semester.toLowerCase() > b.semester.toLowerCase() ? 1 : -1;
             }
         });
 

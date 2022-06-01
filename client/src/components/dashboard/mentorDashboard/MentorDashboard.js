@@ -96,7 +96,11 @@ const MentorDashboard = () => {
         }
 
         const func = async (disArray) => {
-            await Promise.all(disArray);
+            try {
+                await Promise.all(disArray);
+            } catch (e) {
+                console.log(e);
+            }
             console.log("waiting");
         };
         func(dis);
@@ -174,9 +178,7 @@ const MentorDashboard = () => {
                 // make the received notification as read
                 dispatch(markNotificationRead(history, [{ id: data._id, willReceive: false }]));
             } else {
-                if (data.event.type === "POST_CREATED") {
-                    dispatch(addGlobalNotification(data));
-                }
+                dispatch(addGlobalNotification(data));
             }
         };
 

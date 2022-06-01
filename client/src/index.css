@@ -33,6 +33,11 @@ html {
     scroll-behavior: smooth;
 }
 
+body{
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;    
+}
+
 input[type="file"]::-webkit-file-upload-button,
 input[type="file"]::file-selector-button {
     @apply text-white bg-gray-700 font-medium 

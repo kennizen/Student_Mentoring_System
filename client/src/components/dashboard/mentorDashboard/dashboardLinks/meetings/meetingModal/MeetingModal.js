@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { createMeeting, updateMeeting } from "../../../../../../actions/meeting";
 import { mentorGetAllMentees } from "../../../../../../actions/mentor";
+import { SocketContext } from "../../../../../../socket/socket";
 import MeetingChip from "../meetingChip/MeetingChip";
 
 const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting, meeting }) => {
+    // socket context
+    const { socket } = useContext(SocketContext);
+
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -47,7 +51,7 @@ const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting
         if (name === "update") {
             dispatch(updateMeeting(history, meeting));
         } else {
-            dispatch(createMeeting(history, meeting));
+            dispatch(createMeeting(history, meeting, socket));
         }
         handleHideModalOperations();
         setMeeting({
