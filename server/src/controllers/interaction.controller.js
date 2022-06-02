@@ -6,7 +6,6 @@ const roles = require("../utils/roles");
 const response = require("../utils/responses.utils");
 
 module.exports = {
-
     /**
      * @Desc create a new interaction between a mentor and mentee
      * @param {*} event Interaction event
@@ -192,13 +191,16 @@ module.exports = {
     /**
      * @Desc Fetchs all interactions for the current user
      */
-     getAllInteractions: async (req, res, next) => {
-
+    getAllInteractions: async (req, res, next) => {
         try {
-            let interactions = []
-            
-            if(req.user.role === roles.Admin) {
+            let interactions = [];
+
+            if (req.user.role === roles.Admin) {
                 interactions = await Interaction.find();
+            } else if (req.user.role === roles.Mentor) {
+                interactions = await Interaction.find({ mentor: req.user._id });
+            } else if (req.user.role === roles.Student) {
+                interactions = await Interaction.find({ student: req.user._id });
             }
 
             if(req.user.role === roles.Mentor) {
@@ -214,6 +216,5 @@ module.exports = {
         catch(err) {
             console.log(err);
         }
-    }
-
-}
+    },
+};

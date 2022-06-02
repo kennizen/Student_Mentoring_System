@@ -1,13 +1,8 @@
 import React from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Loading = ({ myStyle }) => {
-    return (
-        <div className="flex justify-center items-center">
-            <div
-                className={`spinner-border animate-spin inline-block ${myStyle} border-4 rounded-full text-blue-900`}
-            ></div>
-        </div>
-    );
+    return <CircularProgress className={`${myStyle}`} />;
 };
 
 export default Loading;

@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import MenteeTile from "./menteeTile/MenteeTile";
+import SearchIcon from "../../../../../assets/icons/SearchIcon";
+import CaretDownIcon from "../../../../../assets/icons/CaretDownIcon";
+import UnfoldMoreRoundedIcon from "@mui/icons-material/UnfoldMoreRounded";
 
 const MenteeInfo = () => {
     const history = useHistory();
@@ -43,15 +46,23 @@ const MenteeInfo = () => {
 
         temp.sort((a, b) => {
             if (term === "name") {
-                if (a.firstname === b.firstname) {
-                    return a.lastname.toLowerCase() > b.lastname.toLowerCase();
+                if (a.firstname.toLowerCase() === b.firstname.toLowerCase()) {
+                    if (a.lastname.toLowerCase() > b.lastname.toLowerCase())
+                        return a.lastname.toLowerCase() > b.lastname.toLowerCase() ? 1 : -1;
+                    return a.lastname.toLowerCase() < b.lastname.toLowerCase() ? 1 : -1;
                 } else {
-                    return a.firstname.toLowerCase() > b.firstname.toLowerCase();
+                    if (a.firstname.toLowerCase() > b.firstname.toLowerCase())
+                        return a.firstname.toLowerCase() > b.firstname.toLowerCase() ? 1 : -1;
+                    return a.firstname.toLowerCase() < b.firstname.toLowerCase() ? 1 : -1;
                 }
             } else if (term === "roll") {
-                return a.enrollment_no.toLowerCase() > b.enrollment_no.toLowerCase();
+                if (a.enrollment_no.toLowerCase() > b.enrollment_no.toLowerCase())
+                    return a.enrollment_no.toLowerCase() > b.enrollment_no.toLowerCase() ? 1 : -1;
+                return a.enrollment_no.toLowerCase() < b.enrollment_no.toLowerCase() ? 1 : -1;
             } else {
-                return a.semester.toLowerCase() > b.semester.toLowerCase();
+                if (a.semester.toLowerCase() > b.semester.toLowerCase())
+                    return a.semester.toLowerCase() > b.semester.toLowerCase() ? 1 : -1;
+                return a.semester.toLowerCase() < b.semester.toLowerCase() ? 1 : -1;
             }
         });
 
@@ -74,24 +85,11 @@ const MenteeInfo = () => {
                             <input
                                 onChange={handleSearch}
                                 type="text"
-                                className="pl-11 rounded-full xl:w-96 border-0 shadow-md"
+                                className="pl-11 rounded-md xl:w-96 border border-blueGray-300"
                                 placeholder="Search anything..."
                             />
                             <div className="absolute top-2.5 left-3">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-5 w-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                    />
-                                </svg>
+                                <SearchIcon alt={true} myStyle={"h-5 w-5"} />
                             </div>
                         </div>
                     </div>
@@ -107,21 +105,10 @@ const MenteeInfo = () => {
                             className=" flex justify-between items-center text-sm gap-1 py-1 rounded-md"
                         >
                             Name
-                            <svg
-                                aria-hidden="true"
-                                focusable="false"
-                                data-prefix="fas"
-                                data-icon="caret-down"
-                                className="svg-inline--fa fa-caret-down fa-w-10 w-4 h-4"
-                                role="img"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 320 512"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
-                                ></path>
-                            </svg>
+                            <UnfoldMoreRoundedIcon
+                                fontSize="small"
+                                className="pointer-events-none"
+                            />
                         </button>
                     </div>
                     <div className="">
@@ -131,21 +118,10 @@ const MenteeInfo = () => {
                             className=" flex justify-between items-center text-sm gap-1 py-1 rounded-md"
                         >
                             Roll No.
-                            <svg
-                                aria-hidden="true"
-                                focusable="false"
-                                data-prefix="fas"
-                                data-icon="caret-down"
-                                className="svg-inline--fa fa-caret-down fa-w-10 w-4 h-4"
-                                role="img"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 320 512"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
-                                ></path>
-                            </svg>
+                            <UnfoldMoreRoundedIcon
+                                fontSize="small"
+                                className="pointer-events-none"
+                            />
                         </button>
                     </div>
 
@@ -162,21 +138,10 @@ const MenteeInfo = () => {
                             className=" flex justify-between items-center text-sm gap-1 py-1 rounded-md"
                         >
                             Semester
-                            <svg
-                                aria-hidden="true"
-                                focusable="false"
-                                data-prefix="fas"
-                                data-icon="caret-down"
-                                className="svg-inline--fa fa-caret-down fa-w-10 w-4 h-4"
-                                role="img"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 320 512"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"
-                                ></path>
-                            </svg>
+                            <UnfoldMoreRoundedIcon
+                                fontSize="small"
+                                className="pointer-events-none"
+                            />
                         </button>
                     </div>
                     <div className="flex justify-start items-center">

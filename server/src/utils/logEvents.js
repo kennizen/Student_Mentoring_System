@@ -23,22 +23,22 @@ module.exports = {
     COMMENT_CREATED: {
         type: "COMMENT_CREATED",
         detail: "Posted a new comment",
-        model: "Comment"
+        model: "Comment",
     },
     COMMENT_DELETED: {
         type: "COMMENT_DELETED",
         detail: "Deleted a comment",
-        model: "Comment"
+        model: "Comment",
     },
     POST_CREATED: {
         type: "POST_CREATED",
         detail: "Created a new post",
-        model: "Post"
+        model: "Post",
     },
     POST_UPDATED: {
         type: "POST_UPDATED",
         detail: "Updated a new post",
-        model: "Post"
+        model: "Post",
     },
     POST_DELETED: {
         type: "POST_DELETED",
@@ -67,11 +67,11 @@ module.exports = {
     MEETING_CREATED: {
         type: "MEETING_CREATED",
         detail: "Scheduled a meeting",
-        model: "Meeting"
+        model: "Meeting",
     },
-    MEETING_DELETED: {
-        type: "MEETING_DELETED",
-        detail: "Deleted a scheduled meeting",
-        model: "Meeting"
-    } 
+    MEETING_UPDATED: {
+        type: "MEETING_UPDATED",
+        detail: "Updated a meeting",
+        model: "Meeting",
+    },
 };

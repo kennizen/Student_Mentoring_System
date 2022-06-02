@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -61,6 +61,7 @@ import UserGroupIcon from "../../../assets/icons/UserGroupIcon";
 import { adminGetDetails, logoutAdmin } from "../../../actions/admin";
 import Meetings from "./dashboardLinks/meetings/Meetings";
 import { getMeetings } from "../../../actions/meeting";
+import Loading from "../../loading/Loading";
 
 const MentorDashboard = () => {
     // getting uid of the logged in user
@@ -72,7 +73,7 @@ const MentorDashboard = () => {
     }
 
     // getting the socket context from the provider
-    const socket = React.useContext(SocketContext);
+    const socket = useContext(SocketContext);
 
     // fetching details
     useEffect(() => {
@@ -96,7 +97,12 @@ const MentorDashboard = () => {
         }
 
         const func = async (disArray) => {
-            await Promise.all(disArray);
+            try {
+                await Promise.all(disArray);
+            } catch (e) {
+                console.log(e);
+            }
+            setLoading(false);
             console.log("waiting");
         };
         func(dis);
@@ -174,9 +180,7 @@ const MentorDashboard = () => {
                 // make the received notification as read
                 dispatch(markNotificationRead(history, [{ id: data._id, willReceive: false }]));
             } else {
-                if (data.event.type === "POST_CREATED") {
-                    dispatch(addGlobalNotification(data));
-                }
+                dispatch(addGlobalNotification(history, data));
             }
         };
 
@@ -412,300 +416,320 @@ const MentorDashboard = () => {
     const overlayRef = useRef(null);
     const notificationModalRef = useRef(null);
 
+    // loading state for the dashboard
+    const [loading, setLoading] = useState(true);
+
     return (
-        <div className="h-screen flex bg-gray-50 overflow-hidden">
-            <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
-                <div className="h-1/10 flex items-center justify-center">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-7 w-7 mr-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="#2962ff"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                        />
-                    </svg>
-                    {role === Roles.MENTOR && <h1>Mentor</h1>}
-                    {role === Roles.STUDENT && <h1>Student</h1>}
-                    {role === Roles.ADMIN && <h1>Admin</h1>}
+        <>
+            {loading ? (
+                <div className="w-full h-screen flex items-center justify-center gap-x-3">
+                    <Loading />
+                    <h3>Loading user data...</h3>
                 </div>
-                {role === Roles.ADMIN && (
-                    <button
-                        id="manageGroups"
-                        onClick={handleRouteChange}
-                        className={`flex items-center justify-between text-left bg-blue-600 hover:bg-blue-800 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
-                    >
-                        Manage groups
-                        <Plus alt={true} myStyle={"h-6 w-6 text-white"} />
-                    </button>
-                )}
-                <button
-                    onClick={handleRouteChange}
-                    id="home"
-                    className={`${
-                        route.home ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                >
-                    <HomeIcon
-                        myStyle={"h-5 w-5 mr-3".concat(" ").concat(route.home && "text-blue-600")}
-                        alt={true}
-                    />
-                    Home
-                </button>
-                {role !== Roles.ADMIN && (
-                    <button
-                        onClick={handleRouteChange}
-                        id="post"
-                        className={`${
-                            route.post ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                    >
-                        <AnnotationIcon
-                            myStyle={"h-5 w-5 mr-3"
-                                .concat(" ")
-                                .concat(route.post && "text-blue-600")}
-                            alt={true}
-                        />
-                        Post
-                    </button>
-                )}
-                {role !== Roles.ADMIN && (
-                    <button
-                        onClick={handleRouteChange}
-                        id="meetings"
-                        className={`${
-                            route.meetings ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                    >
-                        <UserGroupIcon
-                            myStyle={"h-5 w-5 mr-3"
-                                .concat(" ")
-                                .concat(route.meetings && "text-blue-600")}
-                            alt={true}
-                        />
-                        Meetings
-                    </button>
-                )}
-                {role === Roles.MENTOR && (
-                    <button
-                        onClick={handleRouteChange}
-                        id="menteeInfo"
-                        className={`${
-                            route.menteeInfo ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                    >
-                        <AcademicCapIcon
-                            myStyle={"h-5 w-5 mr-3"
-                                .concat(" ")
-                                .concat(route.menteeInfo && "text-blue-600")}
-                            alt={true}
-                        />
-                        Mentees
-                    </button>
-                )}
-                {role === Roles.STUDENT && (
-                    <button
-                        onClick={handleRouteChange}
-                        id="academicDetails"
-                        className={`${
-                            route.academicDetails ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                    >
-                        <AcademicCapIcon
-                            myStyle={"h-5 w-5 mr-3"
-                                .concat(" ")
-                                .concat(route.academicDetails && "text-blue-600")}
-                            alt={true}
-                        />
-                        Academics
-                    </button>
-                )}
-                {role !== Roles.ADMIN && (
-                    <button
-                        onClick={handleRouteChange}
-                        id="chat"
-                        className={`${
-                            route.chat ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                        } flex items-center space-x-12 text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                    >
-                        <span className="flex items-center pointer-events-none">
-                            <ChatAlt2Icon
-                                alt={true}
+            ) : (
+                <div className="h-screen flex bg-gray-50 overflow-hidden">
+                    <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
+                        <div className="h-1/10 flex items-center justify-center">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-7 w-7 mr-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="#2962ff"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                                />
+                            </svg>
+                            {role === Roles.MENTOR && <h1>Mentor</h1>}
+                            {role === Roles.STUDENT && <h1>Student</h1>}
+                            {role === Roles.ADMIN && <h1>Admin</h1>}
+                        </div>
+                        {role === Roles.ADMIN && (
+                            <button
+                                id="manageGroups"
+                                onClick={handleRouteChange}
+                                className={`flex items-center justify-between text-left bg-blue-600 hover:bg-blue-800 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
+                            >
+                                Manage groups
+                                <Plus alt={true} myStyle={"h-6 w-6 text-white"} />
+                            </button>
+                        )}
+                        <button
+                            onClick={handleRouteChange}
+                            id="home"
+                            className={`${
+                                route.home ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                            } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                        >
+                            <HomeIcon
                                 myStyle={"h-5 w-5 mr-3"
                                     .concat(" ")
-                                    .concat(route.chat && "text-blue-600")}
+                                    .concat(route.home && "text-blue-600")}
+                                alt={true}
                             />
-                            Chat
-                        </span>
-                        {newMsgNotify && (
-                            <DotIcon myStyle={"h-3 w-3 bg-blue-500 rounded-full float-right"} />
-                        )}
-                    </button>
-                )}
-                {role !== Roles.ADMIN && (
-                    <button
-                        onClick={handleRouteChange}
-                        id="profile"
-                        className={`${
-                            route.profile ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                    >
-                        <UserCircleIcon
-                            alt={true}
-                            myStyle={"h-5 w-5 mr-3"
-                                .concat(" ")
-                                .concat(route.profile && "text-blue-600")}
-                        />
-                        Profile
-                    </button>
-                )}
-                {role === Roles.ADMIN && (
-                    <button
-                        onClick={handleRouteChange}
-                        id="logs"
-                        className={`${
-                            route.logs ? "text-gray-700 bg-gray-100" : "text-gray-400"
-                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                    >
-                        <DocumentTextIcon
-                            myStyle={"h-5 w-5 mr-3"
-                                .concat(" ")
-                                .concat(route.logs && "text-blue-600")}
-                            alt={true}
-                        />
-                        Logs
-                    </button>
-                )}
-                <button
-                    onClick={handleLogout}
-                    id="profile"
-                    className={`flex items-center text-left hover:bg-red-200 text-gray-800 mt-10  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md bg-red-100 transition-all`}
-                >
-                    <LogoutIcon myStyle={"h-5 w-5 mr-3 text-red-600"} alt={true} />
-                    Logout
-                </button>
-            </nav>
-            <div className="w-17/20 h-screen">
-                <CSSTransition
-                    nodeRef={overlayRef}
-                    in={showOverlay}
-                    timeout={300}
-                    classNames="overlay"
-                    unmountOnExit
-                >
-                    <ModalOverlay nodeRef={overlayRef} />
-                </CSSTransition>
-                <CSSTransition
-                    nodeRef={notificationModalRef}
-                    in={showNotificationModal}
-                    timeout={300}
-                    classNames="modal"
-                    unmountOnExit
-                >
-                    <NotificationModal
-                        nodeRef={notificationDropDownRef}
-                        setShowNotificationModal={setShowNotificationModal}
-                        setShowOverlay={setShowOverlay}
-                        notification={modalContent}
-                    />
-                </CSSTransition>
-                <div className="relative w-full h-1/10 bg-white shadow-md flex items-center justify-end">
-                    <div className="flex items-center justify-evenly w-1/5">
-                        <div className="relative">
+                            Home
+                        </button>
+                        {role !== Roles.ADMIN && (
                             <button
-                                onClick={() => {
-                                    setShowNotificationDropDown(!showNotificationDropDown);
-                                }}
-                                className="hover:bg-gray-200 transition-all p-2 rounded-full relative"
+                                onClick={handleRouteChange}
+                                id="post"
+                                className={`${
+                                    route.post ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                                } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                             >
-                                <BellIcon
-                                    myStyle={"h-7 w-7 text-blue-600"}
-                                    alt={!showNotificationDropDown}
+                                <AnnotationIcon
+                                    myStyle={"h-5 w-5 mr-3"
+                                        .concat(" ")
+                                        .concat(route.post && "text-blue-600")}
+                                    alt={true}
                                 />
-                                <NotificationCounter />
+                                Post
                             </button>
-                            <CSSTransition
-                                nodeRef={notificationDropDownRef}
-                                in={showNotificationDropDown}
-                                timeout={300}
-                                classNames="modal"
-                                unmountOnExit
+                        )}
+                        {role !== Roles.ADMIN && (
+                            <button
+                                onClick={handleRouteChange}
+                                id="meetings"
+                                className={`${
+                                    route.meetings ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                                } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                             >
-                                <Notification
-                                    nodeRef={notificationDropDownRef}
-                                    setShowNotificationModal={setShowNotificationModal}
-                                    setShowOverlay={setShowOverlay}
-                                    setModalContent={setModalContent}
+                                <UserGroupIcon
+                                    myStyle={"h-5 w-5 mr-3"
+                                        .concat(" ")
+                                        .concat(route.meetings && "text-blue-600")}
+                                    alt={true}
                                 />
-                            </CSSTransition>
-                        </div>
+                                Meetings
+                            </button>
+                        )}
+                        {role === Roles.MENTOR && (
+                            <button
+                                onClick={handleRouteChange}
+                                id="menteeInfo"
+                                className={`${
+                                    route.menteeInfo
+                                        ? "text--gray-700 bg-gray-100"
+                                        : "text-gray-400"
+                                } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                            >
+                                <AcademicCapIcon
+                                    myStyle={"h-5 w-5 mr-3"
+                                        .concat(" ")
+                                        .concat(route.menteeInfo && "text-blue-600")}
+                                    alt={true}
+                                />
+                                Mentees
+                            </button>
+                        )}
+                        {role === Roles.STUDENT && (
+                            <button
+                                onClick={handleRouteChange}
+                                id="academicDetails"
+                                className={`${
+                                    route.academicDetails
+                                        ? "text--gray-700 bg-gray-100"
+                                        : "text-gray-400"
+                                } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                            >
+                                <AcademicCapIcon
+                                    myStyle={"h-5 w-5 mr-3"
+                                        .concat(" ")
+                                        .concat(route.academicDetails && "text-blue-600")}
+                                    alt={true}
+                                />
+                                Academics
+                            </button>
+                        )}
+                        {role !== Roles.ADMIN && (
+                            <button
+                                onClick={handleRouteChange}
+                                id="chat"
+                                className={`${
+                                    route.chat ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                                } flex items-center space-x-12 text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                            >
+                                <span className="flex items-center pointer-events-none">
+                                    <ChatAlt2Icon
+                                        alt={true}
+                                        myStyle={"h-5 w-5 mr-3"
+                                            .concat(" ")
+                                            .concat(route.chat && "text-blue-600")}
+                                    />
+                                    Chat
+                                </span>
+                                {newMsgNotify && (
+                                    <DotIcon
+                                        myStyle={"h-3 w-3 bg-blue-500 rounded-full float-right"}
+                                    />
+                                )}
+                            </button>
+                        )}
+                        {role !== Roles.ADMIN && (
+                            <button
+                                onClick={handleRouteChange}
+                                id="profile"
+                                className={`${
+                                    route.profile ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                                } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                            >
+                                <UserCircleIcon
+                                    alt={true}
+                                    myStyle={"h-5 w-5 mr-3"
+                                        .concat(" ")
+                                        .concat(route.profile && "text-blue-600")}
+                                />
+                                Profile
+                            </button>
+                        )}
+                        {role === Roles.ADMIN && (
+                            <button
+                                onClick={handleRouteChange}
+                                id="logs"
+                                className={`${
+                                    route.logs ? "text-gray-700 bg-gray-100" : "text-gray-400"
+                                } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                            >
+                                <DocumentTextIcon
+                                    myStyle={"h-5 w-5 mr-3"
+                                        .concat(" ")
+                                        .concat(route.logs && "text-blue-600")}
+                                    alt={true}
+                                />
+                                Logs
+                            </button>
+                        )}
+                        <button
+                            onClick={handleLogout}
+                            id="profile"
+                            className={`flex items-center text-left hover:bg-red-200 text-gray-800 mt-10  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md bg-red-100 transition-all`}
+                        >
+                            <LogoutIcon myStyle={"h-5 w-5 mr-3 text-red-600"} alt={true} />
+                            Logout
+                        </button>
+                    </nav>
+                    <div className="w-17/20 h-screen">
+                        <CSSTransition
+                            nodeRef={overlayRef}
+                            in={showOverlay}
+                            timeout={300}
+                            classNames="overlay"
+                            unmountOnExit
+                        >
+                            <ModalOverlay nodeRef={overlayRef} />
+                        </CSSTransition>
+                        <CSSTransition
+                            nodeRef={notificationModalRef}
+                            in={showNotificationModal}
+                            timeout={300}
+                            classNames="modal"
+                            unmountOnExit
+                        >
+                            <NotificationModal
+                                nodeRef={notificationDropDownRef}
+                                setShowNotificationModal={setShowNotificationModal}
+                                setShowOverlay={setShowOverlay}
+                                notification={modalContent}
+                            />
+                        </CSSTransition>
+                        <div className="relative w-full h-1/10 bg-white shadow-md flex items-center justify-end">
+                            <div className="flex items-center justify-evenly w-1/5">
+                                <div className="relative">
+                                    <button
+                                        onClick={() => {
+                                            setShowNotificationDropDown(!showNotificationDropDown);
+                                        }}
+                                        className="hover:bg-gray-200 transition-all p-2 rounded-full relative"
+                                    >
+                                        <BellIcon
+                                            myStyle={"h-7 w-7 text-blue-600"}
+                                            alt={!showNotificationDropDown}
+                                        />
+                                        <NotificationCounter />
+                                    </button>
+                                    <CSSTransition
+                                        nodeRef={notificationDropDownRef}
+                                        in={showNotificationDropDown}
+                                        timeout={300}
+                                        classNames="modal"
+                                        unmountOnExit
+                                    >
+                                        <Notification
+                                            nodeRef={notificationDropDownRef}
+                                            setShowNotificationModal={setShowNotificationModal}
+                                            setShowOverlay={setShowOverlay}
+                                            setModalContent={setModalContent}
+                                        />
+                                    </CSSTransition>
+                                </div>
 
-                        <span className="flex items-center justify-between gap-x-3">
-                            {role === Roles.ADMIN ? (
-                                <>
-                                    <img
-                                        src={
-                                            adminData?.avatar?.url === ""
-                                                ? `https://avatars.dicebear.com/api/initials/${adminData?.name}.svg`
-                                                : adminData?.avatar?.url
-                                        }
-                                        alt="avatar"
-                                        className="w-14 h-14 rounded-full"
-                                    />
-                                    <span>
-                                        <h3>{`${adminData?.name}`}</h3>
-                                        <h6>{`${adminData?.email}`}</h6>
-                                    </span>
-                                </>
-                            ) : (
-                                <>
-                                    <img
-                                        src={
-                                            profileData?.avatar?.url === ""
-                                                ? `https://avatars.dicebear.com/api/initials/${profileData?.firstname}.svg`
-                                                : profileData?.avatar?.url
-                                        }
-                                        alt="avatar"
-                                        className="w-14 h-14 rounded-full"
-                                    />
-                                    <span>
-                                        <h3>{`${profileData?.firstname} ${profileData?.middlename} ${profileData?.lastname}`}</h3>
-                                        <h6>{`${profileData?.email}`}</h6>
-                                    </span>
-                                </>
+                                <span className="flex items-center justify-between gap-x-3">
+                                    {role === Roles.ADMIN ? (
+                                        <>
+                                            <img
+                                                src={
+                                                    adminData?.avatar?.url === ""
+                                                        ? `https://avatars.dicebear.com/api/initials/${adminData?.name}.svg`
+                                                        : adminData?.avatar?.url
+                                                }
+                                                alt="avatar"
+                                                className="w-14 h-14 rounded-full"
+                                            />
+                                            <span>
+                                                <h3>{`${adminData?.name}`}</h3>
+                                                <h6>{`${adminData?.email}`}</h6>
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <img
+                                                src={
+                                                    profileData?.avatar?.url === ""
+                                                        ? `https://avatars.dicebear.com/api/initials/${profileData?.firstname}.svg`
+                                                        : profileData?.avatar?.url
+                                                }
+                                                alt="avatar"
+                                                className="w-14 h-14 rounded-full"
+                                            />
+                                            <span>
+                                                <h3>{`${profileData?.firstname} ${profileData?.middlename} ${profileData?.lastname}`}</h3>
+                                                <h6>{`${profileData?.email}`}</h6>
+                                            </span>
+                                        </>
+                                    )}
+                                </span>
+                            </div>
+                        </div>
+                        <div className={`h-9/10 bg-gray-100 overflow-hidden}`}>
+                            {/* conditional rendering of the inner tab screens */}
+                            {route.post && (
+                                <Post
+                                    socket={socket}
+                                    streamUpdated={streamUpdated}
+                                    setStreamUpdated={setStreamUpdated}
+                                />
                             )}
-                        </span>
+                            {route.menteeInfo && <MenteeInfo />}
+                            {route.chat && <Chat />}
+                            {route.profile && <Profile profileData={profileData} />}
+                            {route.academicDetails && <AcademicDetails />}
+                            {route.home && (
+                                <Home
+                                    name={`${profileData?.firstname} ${profileData?.middlename} ${profileData?.lastname}`}
+                                />
+                            )}
+                            {route.manageGroups && <ManageGroups />}
+                            {route.logs && <Logs />}
+                            {route.meetings && <Meetings />}
+                        </div>
                     </div>
                 </div>
-                <div className={`h-9/10 bg-gray-100 overflow-hidden}`}>
-                    {/* conditional rendering of the inner tab screens */}
-                    {route.post && (
-                        <Post
-                            socket={socket}
-                            streamUpdated={streamUpdated}
-                            setStreamUpdated={setStreamUpdated}
-                        />
-                    )}
-                    {route.menteeInfo && <MenteeInfo />}
-                    {route.chat && <Chat />}
-                    {route.profile && <Profile profileData={profileData} />}
-                    {route.academicDetails && <AcademicDetails />}
-                    {route.home && (
-                        <Home
-                            name={`${profileData?.firstname} ${profileData?.middlename} ${profileData?.lastname}`}
-                        />
-                    )}
-                    {route.manageGroups && <ManageGroups />}
-                    {route.logs && <Logs />}
-                    {route.meetings && <Meetings />}
-                </div>
-            </div>
-        </div>
+            )}
+        </>
     );
 };
 

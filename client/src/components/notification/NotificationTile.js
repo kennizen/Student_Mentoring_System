@@ -6,6 +6,7 @@ import DoubleTickIcon from "../../assets/icons/DoubleTickIcon";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { markNotificationRead } from "../../actions/notification";
+import UserGroupIcon from "../../assets/icons/UserGroupIcon";
 
 const NotificationTile = ({
     content,
@@ -28,7 +29,9 @@ const NotificationTile = ({
 
     // useeffect to show the post and find the users for which notification is unread
     useEffect(() => {
-        const text = content?.body.replace(/<[^>]+>/g, "");
+        let text = "";
+        if (event.type === "MEETING_CREATED") text = content?.description;
+        else if (event.type === "POST_CREATED") text = content?.body.replace(/<[^>]+>/g, "");
         const thisUser = receivers?.find(
             (receiver) => receiver.user._id.toString() === uid.toString()
         );
@@ -80,7 +83,10 @@ const NotificationTile = ({
                 </div>
             </div>
             {event?.type === "POST_CREATED" && (
-                <AnnotationIcon myStyle={"h-10 w-10 text-blue-600 flex-shrink-0"} alt={false} />
+                <AnnotationIcon myStyle={"h-8 w-8 text-blue-500 flex-shrink-0"} alt={false} />
+            )}
+            {event?.type === "MEETING_CREATED" && (
+                <UserGroupIcon myStyle={"h-8 w-8 text-blue-500 flex-shrink-0"} alt={false} />
             )}
         </div>
     );

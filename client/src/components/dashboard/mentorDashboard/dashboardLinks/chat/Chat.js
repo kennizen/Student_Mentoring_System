@@ -61,7 +61,7 @@ const Chat = () => {
                 </CSSTransition>
 
                 <div className="bg-white flex w-full items-center justify-between p-3 mt-2 rounded-lg">
-                    <h2 className="text-gray-500">Chat with your fellow mentees...</h2>
+                    <h2 className="text-gray-500">Chat</h2>
                     <button
                         onClick={() => setShowModal(true)}
                         className="flex items-center justify-between py-2 px-4 rounded-md bg-blue-600 hover:bg-blue-800 transition-colors text-white"
