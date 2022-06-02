@@ -86,14 +86,9 @@ const createMeeting = async (req, res, next) => {
             );
 
             // generating interactions on meeting
-            for await (const mentee of receivers) {
-                interactionController.createInteraction(
-                    interactionEvents.MEETING,
-                    req.user._id,
-                    mentee._id,
-                    newMeeting
-                );
-            }
+           
+            // creating interactions
+            const interaction = await interactionController.createInteraction("Meeting", req.user, newMeeting._id);
         }
 
         next();

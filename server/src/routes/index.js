@@ -59,4 +59,6 @@ router.get("/logs", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]),
 // fetching all interactions from db
 router.get("/interactions", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), interactionsControler.getAllInteractions);
 
+router.get("/interactions/summary", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), indexController.getInteractionsSummary);
+
 module.exports = router;

@@ -233,9 +233,6 @@ module.exports = {
 
             // if mentor
             if(req.user.role === roles.Mentor) {
-                // postsCount = await Post.countDocuments({
-                //     group_id: req.user._id
-                // })
                 const posts = await Post.find({
                         group_id: req.user._id
                 })
@@ -304,6 +301,65 @@ module.exports = {
             console.log(err);
             response.error(res);
         }
-    }
+    },
 
+    getInteractionsSummary: async (req, res, next) => {
+         try {
+
+            const d = new Date();
+            // let hour = d.getHours();
+            // let min = d.getMinutes();
+            let currMonth = d.getMonth() + 1;
+            let nextMonth = d.getMonth() + 2;
+            let year = d.getFullYear();
+            // let sec = d.getSeconds();
+            // let day = d.getDate();
+            // let date = d.getDate();
+
+            const startDate = new Date(year+','+currMonth);
+            const endDate = new Date(year+','+nextMonth);
+
+            let lastDate = new Date(year+','+nextMonth);
+            lastDate = lastDate.setDate(lastDate.getDate() - 1);
+            lastDate = new Date(lastDate).getDate();
+
+            // getting data from the db 
+            const results = await Interaction.aggregate([
+                {
+                    $match: {
+                        'mentor': req.user._id,
+                        "date": {
+                            $gte: startDate,
+                            $lte: endDate
+                        }
+                    }
+                }, {
+                    $sort: {
+                        date: 1
+                    }
+                }
+            ])
+
+            console.log(results)
+
+            const dataset = new Array(lastDate);
+            const labels = new Array(lastDate);
+
+            // entering the first entry 1st date of month
+            dataset[0] = results[0]?.interactionCount || 0;
+            labels[0] = startDate.toLocaleDateString();
+
+            // entering the subsequesnt entries
+            for (let i = 1; i < lastDate; i++) {
+                const date = startDate;     
+                dataset[i] = results[i]?.interactionCount || 0;
+                labels[i] = new Date(date.setDate(date.getDate() + 1)).toLocaleDateString();
+            }
+
+            response.success(res, "", { labels, dataset });
+         }
+         catch(err) {
+             console.log(err);
+         }
+     }
 };

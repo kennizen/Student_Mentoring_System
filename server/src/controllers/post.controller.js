@@ -43,10 +43,7 @@ module.exports = {
                     req.user,
                     mentees
                 );
-
-                for await (const mentee of mentees) {
-                    const interaction = await interactionController.createInteraction(interactionEvents.POST, req.user._id, mentee._id, newPost);
-                }
+                
             }
 
             if (req.user.role === roles.Student) {
@@ -54,7 +51,7 @@ module.exports = {
                     _id: { $ne: req.user._id }
                     },{ mentoredBy: req.user.mentoredBy }
                 ]});
-                console.log("mentees", mentees);
+              
                 const mentor = await Mentor.findById(req.user.mentoredBy);
                 mentees.push(mentor);
                 // generating new post notification
@@ -64,7 +61,13 @@ module.exports = {
                     req.user,
                     mentees
                 );
+
+                // // creating interactions
+                // const interaction = await interactionController.createInteraction("Post", req.user, content._id);
             }
+
+             // creating interactions
+             const interaction = await interactionController.createInteraction("Post", req.user, newPost._id);
 
             // updating author for sending in response instead of requesting to db
             newPost.author = req.user;

@@ -86,7 +86,7 @@ module.exports = {
                         content: content._id,
                     }).populate(["content", "creator", "receivers.user"]);
 
-                    console.log("notification", notification);
+                    // console.log("notification", notification);
 
                     if (notification) {
                         notification.receivers.forEach((receiver) => {
