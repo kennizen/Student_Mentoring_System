@@ -1,23 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { createMeeting, updateMeeting } from "../../../../../../actions/meeting";
-import { mentorGetAllMentees } from "../../../../../../actions/mentor";
-import { SocketContext } from "../../../../../../socket/socket";
 import MeetingChip from "../meetingChip/MeetingChip";
 
-const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting, meeting }) => {
-    // socket context
-    const { socket } = useContext(SocketContext);
-
+const MeetingModal = ({
+    nodeRef,
+    setShowOverlay,
+    setShowMeetingModal,
+    setMeeting,
+    meeting,
+    socket,
+}) => {
     const dispatch = useDispatch();
     const history = useHistory();
-
-    const [mentees, setMentees] = useState([]);
-
-    useEffect(() => {
-        dispatch(mentorGetAllMentees(history, setMentees));
-    }, []);
 
     // function to hide modal from within the modal
     const handleHideModalOperations = () => {
@@ -45,11 +41,13 @@ const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting
         }
     };
 
+    console.log(socket);
+
     // function to schedule the meeting
     const handleCreateMeeting = (e) => {
         const name = e.target.name;
         if (name === "update") {
-            dispatch(updateMeeting(history, meeting));
+            dispatch(updateMeeting(history, meeting, socket));
         } else {
             dispatch(createMeeting(history, meeting, socket));
         }
@@ -63,7 +61,9 @@ const MeetingModal = ({ nodeRef, setShowOverlay, setShowMeetingModal, setMeeting
         });
     };
 
-    console.log(mentees);
+    const { mentees } = useSelector((state) => state.mentor);
+
+    console.log("mentees", mentees);
 
     return (
         <>

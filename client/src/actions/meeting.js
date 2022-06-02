@@ -31,7 +31,7 @@ export const getMeetings = (history) => async (dispatch) => {
     }
 };
 
-export const updateMeeting = (history, meeting) => async (dispatch) => {
+export const updateMeeting = (history, meeting, socket) => async (dispatch) => {
     try {
         const { data } = await api.updateMeeting(meeting.id, meeting);
         console.log("update meeting data in actions", data);

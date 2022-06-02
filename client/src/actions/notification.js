@@ -1,4 +1,6 @@
 import * as api from "../api/notification";
+import { getMeetings } from "./meeting";
+import { getAllPosts } from "./post";
 
 export const getAllNotifications = (history) => async (dispatch) => {
     try {
@@ -17,9 +19,11 @@ export const getAllNotifications = (history) => async (dispatch) => {
     }
 };
 
-export const addGlobalNotification = (notification) => async (dispatch) => {
+export const addGlobalNotification = (history, notification) => async (dispatch) => {
     try {
         dispatch({ type: "ADD_GLOBAL_NOTIFICATION", notification });
+        dispatch(getAllPosts(history, 1, undefined));
+        dispatch(getMeetings(history));
     } catch (error) {
         console.log(error);
     }

@@ -29,7 +29,7 @@ const NotificationCounter = () => {
             });
             setReadNotifications(count);
         }
-    }, [notifications]);
+    }, [notifications, uid]);
 
     // state to manage the unread notification count
     const [readNotifications, setReadNotifications] = useState(0);

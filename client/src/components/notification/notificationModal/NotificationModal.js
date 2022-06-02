@@ -50,6 +50,54 @@ const NotificationModal = ({ notification, nodeRef, setShowNotificationModal, se
                     ></p>
                 </div>
             );
+        } else if (notification && notification.event.type === "MEETING_CREATED") {
+            return (
+                <div
+                    className={`p-4 w-full border border-gray-300 rounded-md flex flex-col gap-y-4 text-left bg-white mb-4`}
+                >
+                    <div className="flex items-start justify-start">
+                        <img
+                            className="w-12 h-12 mr-2 rounded-full"
+                            src={notification?.creator.avatar?.url}
+                            alt="img"
+                        />
+                        <div className="flex-grow">
+                            <h5>{`${notification?.creator?.firstname} ${notification?.creator?.middlename} ${notification?.creator?.lastname}`}</h5>
+                            <h6 className="text-gray-600">
+                                {moment(notification?.content.updatedAt).format("DD/MM/yyyy")}
+                            </h6>
+                        </div>
+                    </div>
+                    <p className="">{notification?.content.description}</p>
+                    <div className="flex items-start justify-between gap-x-3 w-full">
+                        <span
+                            style={{
+                                overflowWrap: "break-word",
+                                wordWrap: "break-word",
+                                wordBreak: "break-all",
+                                WebkitHyphens: "auto",
+                                msHyphens: "auto",
+                                MozHyphens: "auto",
+                                hyphens: "auto",
+                            }}
+                            className="text-xs inline-block"
+                        >
+                            <a
+                                className="underline hover:text-blue-500"
+                                rel="noreferrer"
+                                target={"_blank"}
+                                href={notification?.content.url}
+                            >
+                                {notification?.content.url}
+                            </a>
+                        </span>
+                        <h6 className="flex-shrink-0">
+                            <span className="text-gray-500">Meeting on: </span>
+                            {moment(notification?.content.date).format("DD/MM/yyyy, h:mm a")}
+                        </h6>
+                    </div>
+                </div>
+            );
         }
     };
 

@@ -9,7 +9,15 @@ const mentor = (
         case "FETCH_MENTOR":
             return { ...state, mentorData: action.data };
         case "STORE_MENTEES":
-            return { ...state, mentees: action.mentees };
+            const tmp = action.mentees;
+            tmp.sort((a, b) => {
+                if (a.firstname === b.firstname) {
+                    return a.lastname.toLowerCase() > b.lastname.toLowerCase() ? 1 : -1;
+                } else {
+                    return a.firstname.toLowerCase() > b.firstname.toLowerCase() ? 1 : -1;
+                }
+            });
+            return { ...state, mentees: tmp };
         case "FETCH_MENTOR_PROFILE":
             return { ...state, profileData: action.profile };
         case "CONNECT_SOCKET_MENTOR":

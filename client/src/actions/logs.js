@@ -1,6 +1,6 @@
 import * as api from "../api/logs";
 
-export const getLogs = (history, setLogs) => async (dispatch) => {
+export const getLogs = (history, setLogs, setLoading) => async (dispatch) => {
     try {
         const { data } = await api.getLogs();
         console.log("logs in actions", data);
@@ -11,6 +11,7 @@ export const getLogs = (history, setLogs) => async (dispatch) => {
         } else {
             setLogs(data.data.logs);
         }
+        if (setLoading !== undefined) setLoading(false);
     } catch (error) {
         console.log(error);
     }

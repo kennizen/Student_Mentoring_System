@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import DTP from "../dtp/DTP";
 import EventIcon from "@mui/icons-material/Event";
 import LinkIcon from "@mui/icons-material/Link";
 import { CSSTransition } from "react-transition-group";
 import ModalOverlay from "../../../../../modal/ModalOverlay";
 import MeetingModal from "../meetingModal/MeetingModal";
+import { SocketContext } from "../../../../../../socket/socket";
 
 const MeetingForm = ({ meeting, setMeeting }) => {
     const [isValidDateTime, setIsValidDateTime] = useState(true);
@@ -57,6 +58,8 @@ const MeetingForm = ({ meeting, setMeeting }) => {
     const meetingModalRef = useRef(null);
     const overlayRef = useRef(null);
 
+    const socket = useContext(SocketContext);
+
     return (
         <>
             <CSSTransition
@@ -81,6 +84,7 @@ const MeetingForm = ({ meeting, setMeeting }) => {
                     setShowMeetingModal={setShowMeetingModal}
                     setMeeting={setMeeting}
                     meeting={meeting}
+                    socket={socket}
                 />
             </CSSTransition>
             <h3 className="px-4 py-3 mb-4 rounded-md bg-gray-200">Schedule a meeting</h3>

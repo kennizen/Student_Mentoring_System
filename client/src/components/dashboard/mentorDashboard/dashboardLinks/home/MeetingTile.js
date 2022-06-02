@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 
-const MeetingTile = ({ _id, host, url, createdAt, date, myStyle, myStyle2 }) => {
+const MeetingTile = ({ _id, host, url, updatedAt, date, myStyle, myStyle2 }) => {
     return (
         <div
             className={`${myStyle} flex items-center w-full px-2 py-1 mb-2 rounded-md transition-all`}
@@ -11,7 +11,7 @@ const MeetingTile = ({ _id, host, url, createdAt, date, myStyle, myStyle2 }) => 
                 <div className="flex items-center justify-between">
                     <div>
                         <h5>{`${host?.firstname} ${host?.middlename} ${host?.lastname}`}</h5>
-                        <h6 className="text-gray-600">{moment(createdAt).format("DD/MM/yyyy")}</h6>
+                        <h6 className="text-gray-600">{moment(updatedAt).format("DD/MM/yyyy")}</h6>
                     </div>
                     <h6>{moment(date).format("DD/MM/yyyy, h:mm a")}</h6>
                 </div>
