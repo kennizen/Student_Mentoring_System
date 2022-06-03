@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import MenteeTile from "./menteeTile/MenteeTile";
 import SearchIcon from "../../../../../assets/icons/SearchIcon";
-import CaretDownIcon from "../../../../../assets/icons/CaretDownIcon";
 import UnfoldMoreRoundedIcon from "@mui/icons-material/UnfoldMoreRounded";
 
 const MenteeInfo = () => {

@@ -20,7 +20,7 @@ const adminSchema = new mongoose.Schema(
             required: true,
         },
         middlename: {
-            type: String
+            type: String,
         },
         lastname: {
             type: String,
@@ -71,9 +71,7 @@ adminSchema.methods.toJSON = function () {
 // generate auth token function
 adminSchema.methods.generateAuthToken = async function () {
     const admin = this;
-    const token = jwt.sign({ _id: admin._id.toString(), role: "Admin" }, process.env.JWT_SECRET, {
-        expiresIn: "6h",
-    });
+    const token = jwt.sign({ _id: admin._id.toString(), role: "Admin" }, process.env.JWT_SECRET);
     // admin.tokens = admin.tokens.concat({ token });
     admin.tokens = { token };
     await admin.save();

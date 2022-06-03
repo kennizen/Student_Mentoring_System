@@ -79,8 +79,8 @@ const mentorSchema = new mongoose.Schema(
         emailVerifyToken: String,
         isEmailVerified: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     {
         timestamps: true,
@@ -108,9 +108,7 @@ mentorSchema.methods.toJSON = function () {
 // generate auth token function
 mentorSchema.methods.generateAuthToken = async function () {
     const mentor = this;
-    const token = jwt.sign({ _id: mentor._id.toString(), role: "Mentor" }, process.env.JWT_SECRET, {
-        expiresIn: "6h",
-    });
+    const token = jwt.sign({ _id: mentor._id.toString(), role: "Mentor" }, process.env.JWT_SECRET);
     // admin.tokens = admin.tokens.concat({ token });
     mentor.tokens = { token };
     await mentor.save();

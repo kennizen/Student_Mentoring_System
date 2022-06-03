@@ -1,4 +1,5 @@
 import * as api from "../api/admin";
+import { getLogs } from "../api/logs";
 
 export const adminSignIn = (fields, history) => async (dispatch) => {
     try {
@@ -75,7 +76,7 @@ export const adminSaveGroup = (groupData, history) => async (dispatch) => {
 
 export const adminFetchLogs = (history) => async (dispatch) => {
     try {
-        const { data } = await api.fetchLogs();
+        const { data } = await getLogs();
         console.log("logs data in actions", data);
 
         // check if the response data is error

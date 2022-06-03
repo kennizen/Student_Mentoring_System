@@ -455,7 +455,10 @@ const MentorDashboard = () => {
                                 className={`flex items-center justify-between text-left bg-blue-600 hover:bg-blue-800 text-white mt-5 mb-9 ml-8 mr-8 pt-3 pb-3 pl-8 pr-8 rounded-md`}
                             >
                                 Manage groups
-                                <Plus alt={true} myStyle={"h-6 w-6 text-white"} />
+                                <Plus
+                                    alt={true}
+                                    myStyle={"h-6 w-6 text-white pointer-events-none"}
+                                />
                             </button>
                         )}
                         <button
@@ -466,7 +469,7 @@ const MentorDashboard = () => {
                             } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                         >
                             <HomeIcon
-                                myStyle={"h-5 w-5 mr-3"
+                                myStyle={"h-5 w-5 mr-3 pointer-events-none"
                                     .concat(" ")
                                     .concat(route.home && "text-blue-600")}
                                 alt={true}
@@ -482,7 +485,7 @@ const MentorDashboard = () => {
                                 } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                             >
                                 <AnnotationIcon
-                                    myStyle={"h-5 w-5 mr-3"
+                                    myStyle={"h-5 w-5 mr-3 pointer-events-none"
                                         .concat(" ")
                                         .concat(route.post && "text-blue-600")}
                                     alt={true}
@@ -499,7 +502,7 @@ const MentorDashboard = () => {
                                 } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                             >
                                 <UserGroupIcon
-                                    myStyle={"h-5 w-5 mr-3"
+                                    myStyle={"h-5 w-5 mr-3 pointer-events-none"
                                         .concat(" ")
                                         .concat(route.meetings && "text-blue-600")}
                                     alt={true}
@@ -518,7 +521,7 @@ const MentorDashboard = () => {
                                 } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                             >
                                 <AcademicCapIcon
-                                    myStyle={"h-5 w-5 mr-3"
+                                    myStyle={"h-5 w-5 mr-3 pointer-events-none"
                                         .concat(" ")
                                         .concat(route.menteeInfo && "text-blue-600")}
                                     alt={true}
@@ -537,7 +540,7 @@ const MentorDashboard = () => {
                                 } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                             >
                                 <AcademicCapIcon
-                                    myStyle={"h-5 w-5 mr-3"
+                                    myStyle={"h-5 w-5 mr-3 pointer-events-none"
                                         .concat(" ")
                                         .concat(route.academicDetails && "text-blue-600")}
                                     alt={true}
@@ -556,7 +559,7 @@ const MentorDashboard = () => {
                                 <span className="flex items-center pointer-events-none">
                                     <ChatAlt2Icon
                                         alt={true}
-                                        myStyle={"h-5 w-5 mr-3"
+                                        myStyle={"h-5 w-5 mr-3 pointer-events-none"
                                             .concat(" ")
                                             .concat(route.chat && "text-blue-600")}
                                     />
@@ -579,7 +582,7 @@ const MentorDashboard = () => {
                             >
                                 <UserCircleIcon
                                     alt={true}
-                                    myStyle={"h-5 w-5 mr-3"
+                                    myStyle={"h-5 w-5 mr-3 pointer-events-none"
                                         .concat(" ")
                                         .concat(route.profile && "text-blue-600")}
                                 />
@@ -595,7 +598,7 @@ const MentorDashboard = () => {
                                 } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                             >
                                 <DocumentTextIcon
-                                    myStyle={"h-5 w-5 mr-3"
+                                    myStyle={"h-5 w-5 mr-3 pointer-events-none"
                                         .concat(" ")
                                         .concat(route.logs && "text-blue-600")}
                                     alt={true}
@@ -608,7 +611,10 @@ const MentorDashboard = () => {
                             id="profile"
                             className={`flex items-center text-left hover:bg-red-200 text-gray-800 mt-10  ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md bg-red-100 transition-all`}
                         >
-                            <LogoutIcon myStyle={"h-5 w-5 mr-3 text-red-600"} alt={true} />
+                            <LogoutIcon
+                                myStyle={"h-5 w-5 mr-3 text-red-600 pointer-events-none"}
+                                alt={true}
+                            />
                             Logout
                         </button>
                     </nav>

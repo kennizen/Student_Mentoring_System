@@ -65,7 +65,7 @@ const studentSchema = new mongoose.Schema(
         },
         mentoredBy: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Mentor"
+            ref: "Mentor",
         },
         avatar: {
             url: {
@@ -115,10 +115,7 @@ studentSchema.methods.generateAuthToken = async function () {
     const student = this;
     const token = jwt.sign(
         { _id: student._id.toString(), role: "Student" },
-        process.env.JWT_SECRET,
-        {
-            expiresIn: "3h",
-        }
+        process.env.JWT_SECRET
     );
     // student.tokens = student.tokens.concat({ token });
     student.tokens = { token };

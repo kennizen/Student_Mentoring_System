@@ -24,7 +24,7 @@ const Home = ({ name }) => {
 
     useEffect(() => {
         dispatch(getStats(history, setStats));
-    }, []);
+    }, [dispatch, history]);
 
     return (
         <div className="h-full relative overflow-y-auto">
