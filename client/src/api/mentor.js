@@ -1,6 +1,9 @@
 import API from "./index";
 
-export const signIn = (fields) => API.post("/mentor/login", fields);
+export const signIn = (fields) =>
+    API.post("/mentor/login", fields).catch((error) => {
+        return error.response;
+    });
 
 export const signUp = (fields) =>
     API.post("/mentor/signup", fields).catch((error) => {

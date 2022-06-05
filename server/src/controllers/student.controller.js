@@ -37,6 +37,9 @@ module.exports = {
             next();
         } catch (err) {
             console.log(err);
+            if (err.message === "Unable to login") {
+                return response.unauthorize(res, "Invalid credentials");
+            }
             response.error(res);
         }
     },

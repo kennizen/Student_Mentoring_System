@@ -8,7 +8,7 @@ const Semester = require("../models/Semester");
 const response = require("../utils/responses.utils");
 const emailService = require("../services/email.service");
 
-// env config 
+// env config
 dotenv.config();
 
 module.exports = {
@@ -37,6 +37,9 @@ module.exports = {
             next();
         } catch (err) {
             console.log(err);
+            if (err.message === "Unable to login") {
+                return response.unauthorize(res, "Invalid credentials");
+            }
             response.error(res, "Login Unsuccessfull");
         }
     },
@@ -87,25 +90,28 @@ module.exports = {
 
     // reset password handler
     resetPassword: async (req, res, next) => {
-        try{
+        try {
             const mentor = await Mentor.findOne({ email: req.body.email });
-            
-            if(!mentor){
+
+            if (!mentor) {
                 return response.notfound(res, "User not found");
             }
-            
-            const token = jwt.sign({ _id: mentor._id.toString(), role: mentor.role }, process.env.JWT_SECRET, {
-                expiresIn: "1h",
-            });
+
+            const token = jwt.sign(
+                { _id: mentor._id.toString(), role: mentor.role },
+                process.env.JWT_SECRET,
+                {
+                    expiresIn: "1h",
+                }
+            );
             mentor.passwordResetToken = token;
             await mentor.save();
-            
+
             // sending reset password link to the mentor
             await emailService.sendPasswordResetMail(token, mentor.email);
             response.success(res, "Password reset link sent");
-        }
-        catch(err){
-            console.log(err)
+        } catch (err) {
+            console.log(err);
             response.error(res);
         }
     },
@@ -113,36 +119,35 @@ module.exports = {
      * The method sets new passord of the user upon succcessful verification
      */
     setNewPassword: async (req, res, next) => {
-        try{
-            const {token, password, confirmPassword} = req.body;
+        try {
+            const { token, password, confirmPassword } = req.body;
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const mentor = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
 
             // if mentor not found
-            if(!mentor) {
+            if (!mentor) {
                 return response.error(res);
             }
 
             // checking if both password are provided
-            if(!password || !confirmPassword){
+            if (!password || !confirmPassword) {
                 return response.error(res, "Both passwords are required");
             }
-            
+
             // checking if the passwords are similar
-            if(password != confirmPassword){
+            if (password != confirmPassword) {
                 return response.error(res, "Passwords doesn't match");
             }
-            
+
             //setting new password
             const hashedPassword = await bcrypt.hash(password, 8);
             mentor.password = hashedPassword;
             await mentor.save();
             response.success(res, "Password updated", mentor);
-        }
-        catch(err){
+        } catch (err) {
             console.log(err);
             // if token expired
-            if(err.message.toString() == "jwt expired"){
+            if (err.message.toString() == "jwt expired") {
                 return response.error(res, "Token expired");
             }
             response.error(res, "Invalid token");
@@ -181,59 +186,59 @@ module.exports = {
         }
     },
 
-    // create or update profile 
-   updateProfile:  async (req, res, next) => {
-       try {
-           const { firstname, middlename, lastname, phone, address, department, designation } = req.body;
-           const mentor = req.user;
-
-           // updating data
-           mentor.firstname = firstname || mentor.firstname;
-           mentor.middlename = middlename || "";
-           mentor.lastname = lastname || mentor.lastname;
-           mentor.phone = phone || mentor.phone;
-           mentor.address = address || mentor.address;
-           mentor.department = department || mentor.department;
-           mentor.designation = designation || mentor.designation;
-
-           await mentor.save();
-           response.success(res, "Profile updated", { profileData: mentor });
-       }
-       catch(err) {
-           console.log(err);
-           response.error(res);
-       }
-   },
-
-   /**
-    * The method generates a new email verification token for a mentor
-    */
-   generateEmailVerificationToken: async (req, res, next) => {
-       try{
+    // create or update profile
+    updateProfile: async (req, res, next) => {
+        try {
+            const { firstname, middlename, lastname, phone, address, department, designation } =
+                req.body;
             const mentor = req.user;
-            const token = await jwt.sign({ _id: mentor._id.toString(), role: mentor.role }, process.env.JWT_SECRET);
-            
+
+            // updating data
+            mentor.firstname = firstname || mentor.firstname;
+            mentor.middlename = middlename || "";
+            mentor.lastname = lastname || mentor.lastname;
+            mentor.phone = phone || mentor.phone;
+            mentor.address = address || mentor.address;
+            mentor.department = department || mentor.department;
+            mentor.designation = designation || mentor.designation;
+
+            await mentor.save();
+            response.success(res, "Profile updated", { profileData: mentor });
+        } catch (err) {
+            console.log(err);
+            response.error(res);
+        }
+    },
+
+    /**
+     * The method generates a new email verification token for a mentor
+     */
+    generateEmailVerificationToken: async (req, res, next) => {
+        try {
+            const mentor = req.user;
+            const token = await jwt.sign(
+                { _id: mentor._id.toString(), role: mentor.role },
+                process.env.JWT_SECRET
+            );
+
             mentor.emailVerifyToken = token;
             await mentor.save();
-            
+
             // sending email to mentor with link
             await emailService.sendEmailVerificationMail(token, mentor.email);
             response.success(res);
+        } catch (err) {
+            console.log(err);
         }
-       catch(err){
-           console.log(err)
-       }
-   },
+    },
 
     /**
-    *  The method does the email verification for a mentor
-    */
-   emailVerification: async (req, res, next) => {
-       try{
-
-       }
-       catch(err){
-           console.log(err)
-       }
-   }
+     *  The method does the email verification for a mentor
+     */
+    emailVerification: async (req, res, next) => {
+        try {
+        } catch (err) {
+            console.log(err);
+        }
+    },
 };
