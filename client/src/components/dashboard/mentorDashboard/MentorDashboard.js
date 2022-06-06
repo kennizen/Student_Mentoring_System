@@ -12,6 +12,7 @@ import ChatAlt2Icon from "../../../assets/icons/ChatAlt2Icon";
 import HomeIcon from "../../../assets/icons/HomeIcon";
 import AnnotationIcon from "../../../assets/icons/AnnotationIcon";
 import AcademicCapIcon from "../../../assets/icons/AcademicCapIcon";
+import Code from "../../../assets/icons/Code";
 import Chat from "./dashboardLinks/chat/Chat";
 import MenteeInfo from "./dashboardLinks/menteeInfo/MenteeInfo";
 import Post from "./dashboardLinks/post/Post";
@@ -58,10 +59,11 @@ import { Roles } from "../../../utility";
 import DocumentTextIcon from "../../../assets/icons/DocumentTextIcon";
 import Plus from "../../../assets/icons/Plus";
 import UserGroupIcon from "../../../assets/icons/UserGroupIcon";
-import { adminGetDetails, logoutAdmin } from "../../../actions/admin";
+import { adminFetchLogs, adminGetDetails, logoutAdmin } from "../../../actions/admin";
 import Meetings from "./dashboardLinks/meetings/Meetings";
 import { getMeetings } from "../../../actions/meeting";
 import Loading from "../../loading/Loading";
+import AdminInteractions from "./dashboardLinks/adminInteractions/AdminInteractions";
 
 const MentorDashboard = () => {
     // getting uid of the logged in user
@@ -75,11 +77,16 @@ const MentorDashboard = () => {
     // getting the socket context from the provider
     const socket = useContext(SocketContext);
 
+    // setting the admin auth token
+    const dispatch = useDispatch();
+    const history = useHistory();
+
     // fetching details
     useEffect(() => {
         const dis = [];
         if (role === Roles.ADMIN) {
             dis.push(dispatch(adminGetDetails(history)));
+            dis.push(dispatch(adminFetchLogs(history)));
         } else {
             if (role === Roles.MENTOR) {
                 dis.push(dispatch(mentorGetDetails(history)));
@@ -124,11 +131,11 @@ const MentorDashboard = () => {
         }
         localStorage.setItem("chatRoute", JSON.stringify(false));
         localStorage.setItem("postRoute", JSON.stringify(false));
-    }, []);
+    }, [dispatch, history, role]);
 
     // state for maintaining the side nav bar
     const [route, setRoute] = useState({
-        home: true,
+        home: role === Roles.ADMIN ? false : true,
         post: false,
         menteeInfo: false,
         profile: false,
@@ -137,14 +144,11 @@ const MentorDashboard = () => {
         manageGroups: false,
         logs: false,
         meetings: false,
+        allInteractions: role === Roles.ADMIN ? true : false,
     });
 
     // state to control the chat notification on the dashboard tab
     const [newMsgNotify, setNewMsgNotify] = useState(false);
-
-    // setting the admin auth token
-    const dispatch = useDispatch();
-    const history = useHistory();
 
     // accessing profile data of the required user
     const { profileData } = useSelector((state) => {
@@ -268,6 +272,7 @@ const MentorDashboard = () => {
                     manageGroups: false,
                     logs: false,
                     meetings: false,
+                    allInteractions: false,
                 });
                 break;
             case "post":
@@ -282,6 +287,7 @@ const MentorDashboard = () => {
                     manageGroups: false,
                     logs: false,
                     meetings: false,
+                    allInteractions: false,
                 });
                 break;
             case "profile":
@@ -296,6 +302,7 @@ const MentorDashboard = () => {
                     manageGroups: false,
                     logs: false,
                     meetings: false,
+                    allInteractions: false,
                 });
                 break;
             case "menteeInfo":
@@ -310,6 +317,7 @@ const MentorDashboard = () => {
                     manageGroups: false,
                     logs: false,
                     meetings: false,
+                    allInteractions: false,
                 });
                 break;
             case "chat":
@@ -325,6 +333,7 @@ const MentorDashboard = () => {
                     manageGroups: false,
                     logs: false,
                     meetings: false,
+                    allInteractions: false,
                 });
                 break;
             case "academicDetails":
@@ -339,6 +348,7 @@ const MentorDashboard = () => {
                     manageGroups: false,
                     logs: false,
                     meetings: false,
+                    allInteractions: false,
                 });
                 break;
             case "manageGroups":
@@ -352,6 +362,7 @@ const MentorDashboard = () => {
                     manageGroups: true,
                     logs: false,
                     meetings: false,
+                    allInteractions: false,
                 });
                 break;
             case "logs":
@@ -365,6 +376,21 @@ const MentorDashboard = () => {
                     manageGroups: false,
                     logs: true,
                     meetings: false,
+                    allInteractions: false,
+                });
+                break;
+            case "allInteractions":
+                setRoute({
+                    home: false,
+                    post: false,
+                    menteeInfo: false,
+                    profile: false,
+                    chat: false,
+                    academicDetails: false,
+                    manageGroups: false,
+                    logs: false,
+                    meetings: false,
+                    allInteractions: true,
                 });
                 break;
             case "meetings":
@@ -379,6 +405,7 @@ const MentorDashboard = () => {
                     manageGroups: false,
                     logs: false,
                     meetings: true,
+                    allInteractions: false,
                 });
                 break;
             default:
@@ -430,20 +457,7 @@ const MentorDashboard = () => {
                 <div className="h-screen flex bg-gray-50 overflow-hidden">
                     <nav className="w-3/20 h-screen bg-white flex flex-col z-10">
                         <div className="h-1/10 flex items-center justify-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-7 w-7 mr-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="#2962ff"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                                />
-                            </svg>
+                            <Code alt={true} myStyle={"w-7 h-7 mr-4"} />
                             {role === Roles.MENTOR && <h1>Mentor</h1>}
                             {role === Roles.STUDENT && <h1>Student</h1>}
                             {role === Roles.ADMIN && <h1>Admin</h1>}
@@ -461,21 +475,42 @@ const MentorDashboard = () => {
                                 />
                             </button>
                         )}
-                        <button
-                            onClick={handleRouteChange}
-                            id="home"
-                            className={`${
-                                route.home ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                            } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
-                        >
-                            <HomeIcon
-                                myStyle={"h-5 w-5 mr-3 pointer-events-none"
-                                    .concat(" ")
-                                    .concat(route.home && "text-blue-600")}
-                                alt={true}
-                            />
-                            Home
-                        </button>
+                        {role !== Roles.ADMIN && (
+                            <button
+                                onClick={handleRouteChange}
+                                id="home"
+                                className={`${
+                                    route.home ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                                } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                            >
+                                <HomeIcon
+                                    myStyle={"h-5 w-5 mr-3 pointer-events-none"
+                                        .concat(" ")
+                                        .concat(route.home && "text-blue-600")}
+                                    alt={true}
+                                />
+                                Home
+                            </button>
+                        )}
+                        {role === Roles.ADMIN && (
+                            <button
+                                onClick={handleRouteChange}
+                                id="allInteractions"
+                                className={`${
+                                    route.allInteractions
+                                        ? "text--gray-700 bg-gray-100"
+                                        : "text-gray-400"
+                                } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                            >
+                                <UserGroupIcon
+                                    alt={true}
+                                    myStyle={"h-5 w-5 mr-3 pointer-events-none"
+                                        .concat(" ")
+                                        .concat(route.allInteractions && "text-blue-600")}
+                                />
+                                Users
+                            </button>
+                        )}
                         {role !== Roles.ADMIN && (
                             <button
                                 onClick={handleRouteChange}
@@ -725,12 +760,17 @@ const MentorDashboard = () => {
                             {route.academicDetails && <AcademicDetails />}
                             {route.home && (
                                 <Home
-                                    name={`${profileData?.firstname} ${profileData?.middlename} ${profileData?.lastname}`}
+                                    name={
+                                        profileData !== undefined
+                                            ? `${profileData?.firstname} ${profileData?.middlename} ${profileData?.lastname}`
+                                            : `${adminData?.firstname} ${adminData?.middlename} ${adminData?.lastname}`
+                                    }
                                 />
                             )}
                             {route.manageGroups && <ManageGroups />}
                             {route.logs && <Logs />}
                             {route.meetings && <Meetings />}
+                            {route.allInteractions && <AdminInteractions />}
                         </div>
                     </div>
                 </div>

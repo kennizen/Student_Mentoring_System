@@ -1,6 +1,6 @@
 import * as api from "../api/interactions";
 
-export const getInteractions = (history, setInteractions) => async (dispatch) => {
+export const getInteractions = (history, setData) => async (dispatch) => {
     try {
         const { data } = await api.getInteractions();
         console.log("interactions in actions", data);
@@ -9,6 +9,21 @@ export const getInteractions = (history, setInteractions) => async (dispatch) =>
         if (data.code === 403) {
             history.goBack();
         } else {
+            const date = new Date();
+            let newPostsArr = [];
+            let newMeetingsArr = [];
+
+            for (let i = 0; i < date.getDate(); ++i) {
+                newPostsArr.push(data.data.posts[i]);
+                newMeetingsArr.push(data.data.meetings[i]);
+            }
+
+            setData({
+                labels: data.data.labels,
+                posts: newPostsArr,
+                meetings: newMeetingsArr,
+                maxVal: Math.max(...newPostsArr.concat(newMeetingsArr)) + 1,
+            });
         }
     } catch (error) {
         console.log(error);

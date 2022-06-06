@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -20,29 +20,35 @@ const ChartData = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
+    const [data, setData] = useState({
+        labels: [],
+        posts: [],
+        meetings: [],
+        maxVal: 0,
+    });
+
     useEffect(() => {
-        dispatch(getInteractions(history));
+        dispatch(getInteractions(history, setData));
     }, []);
 
     return (
         <Line
             data={{
-                labels: [
-                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-                    23, 24, 25, 26, 27, 28, 29, 30, 31,
-                ],
+                labels: data.labels,
                 datasets: [
                     {
                         label: "posts",
-                        data: [0, 0, 0, 0, 12, 19, 3, 5, 2, 3],
+                        data: data.posts,
                         borderColor: "rgb(255, 99, 132)",
                         backgroundColor: "rgba(255, 99, 132, 0.5)",
+                        tension: 0.3,
                     },
                     {
                         label: "meetings",
-                        data: [0, 12, 56, 3, 50, 21, 36],
+                        data: data.meetings,
                         borderColor: "rgb(53, 162, 235)",
                         backgroundColor: "rgba(53, 162, 235, 0.5)",
+                        tension: 0.3,
                     },
                 ],
             }}
@@ -52,6 +58,10 @@ const ChartData = () => {
                 scales: {
                     y: {
                         beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                        },
+                        //max: data.maxVal,
                     },
                 },
             }}

@@ -14,6 +14,7 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const axios = require("axios");
 const emailService = require("../services/email.service");
+const { error } = require("console");
 
 // env config
 dotenv.config();
@@ -84,24 +85,28 @@ module.exports = {
     // request a reset password link
     forgotPassword: async (req, res, next) => {
         try {
-            
             const { email } = req.body;
+
+            if (!email) {
+                throw new error("email not provided");
+            }
+
             let user;
-            
-            if(!user) {
+
+            if (!user) {
                 user = await Mentor.findOne({ email });
             }
 
-            if(!user) {
+            if (!user) {
                 user = await Student.findOne({ email });
             }
-
 
             if (!user) {
                 return response.notfound(res, "User not found");
             }
 
-            const token = jwt.sign({ _id: user._id.toString(), role: user.role }, 
+            const token = jwt.sign(
+                { _id: user._id.toString(), role: user.role },
                 process.env.JWT_SECRET,
                 {
                     expiresIn: "1h",
@@ -242,79 +247,74 @@ module.exports = {
         }
     },
 
-
     // get all holidays
     getAllHolidays: async (req, res, next) => {
         try {
             const options = {
-            method: 'GET',
-            url: 'https://holidays-by-api-ninjas.p.rapidapi.com/v1/holidays',
-            params: {country: 'in', year: new Date().getFullYear().toString()},
-            headers: {
-                    'X-RapidAPI-Host': process.env.RAPID_API_HOST,
-                    'X-RapidAPI-Key': process.env.RAPID_API_KEY
-                }
+                method: "GET",
+                url: "https://holidays-by-api-ninjas.p.rapidapi.com/v1/holidays",
+                params: { country: "in", year: new Date().getFullYear().toString() },
+                headers: {
+                    "X-RapidAPI-Host": process.env.RAPID_API_HOST,
+                    "X-RapidAPI-Key": process.env.RAPID_API_KEY,
+                },
             };
 
-            const {data} = await axios.request(options);
+            const { data } = await axios.request(options);
             response.success(res, "", data);
-        }
-        catch(err){
-            console.log(err)
+        } catch (err) {
+            console.log(err);
         }
     },
 
-    // gets all the stats 
+    // gets all the stats
     getStats: async (req, res, next) => {
         try {
-
             let commentsCount = 0;
-            let postsCount = 0
+            let postsCount = 0;
             let studentsCount = 0;
 
             // if mentor
-            if(req.user.role === roles.Mentor) {
+            if (req.user.role === roles.Mentor) {
                 const posts = await Post.find({
-                        group_id: req.user._id
-                })
+                    group_id: req.user._id,
+                });
 
                 postsCount = posts.length;
-                commentsCount = posts.reduce((prev, curr) => prev + curr.commentCount, 0)
+                commentsCount = posts.reduce((prev, curr) => prev + curr.commentCount, 0);
                 studentsCount = await Student.countDocuments({
-                    mentoredBy: req.user._id
-                })
+                    mentoredBy: req.user._id,
+                });
             }
 
             // if user is student
-            if(req.user.role === roles.Student) {
+            if (req.user.role === roles.Student) {
                 // getting total posts by the user
                 const posts = await Post.find({
-                    author: req.user._id
-                })
+                    author: req.user._id,
+                });
 
                 postsCount = posts.length;
-                commentsCount = posts.reduce((prev, curr) => prev + curr.commentCount, 0)
+                commentsCount = posts.reduce((prev, curr) => prev + curr.commentCount, 0);
                 studentsCount = await Student.countDocuments({
-                    mentoredBy: req.user.mentoredBy
-                })
+                    mentoredBy: req.user.mentoredBy,
+                });
             }
 
             // if user is admin
-            if(req.user.role === roles.Admin) {
+            if (req.user.role === roles.Admin) {
                 // fetch all posts
                 const posts = await Post.find();
                 postsCount = posts.length;
-                commentsCount = posts.reduce((prev, curr) => prev + curr.commentCount, 0)
+                commentsCount = posts.reduce((prev, curr) => prev + curr.commentCount, 0);
                 studentsCount = await Student.countDocuments();
             }
 
-            response.success(res, "", {commentsCount, postsCount, studentsCount})
+            response.success(res, "", { commentsCount, postsCount, studentsCount });
 
             next();
-
-        }
-        catch(err) {
-            console.log(err)
+        } catch (err) {
+            console.log(err);
         }
     },
 
@@ -322,20 +322,23 @@ module.exports = {
     getAllLogs: async (req, res, next) => {
         try {
             // calculating the past 7th day from today
-            const startDate = new Date()
+            const startDate = new Date();
             startDate.setDate(startDate.getDate() - 6);
-            startDate.setHours(0,0,0,0);
+            startDate.setHours(0, 0, 0, 0);
 
             let allLogs = [];
-            if(req.user.role === roles.Admin) {
+            if (req.user.role === roles.Admin) {
                 allLogs = await Log.find().populate("user");
             }
 
             if (req.user.role === roles.Mentor || req.user.role === roles.Student) {
-                allLogs = await Log.find({ user: req.user._id, createdAt: { $gte: startDate } }).populate("user");
+                allLogs = await Log.find({
+                    user: req.user._id,
+                    createdAt: { $gte: startDate },
+                }).populate("user");
             }
 
-            response.success(res, "", { count: allLogs.length, logs: allLogs } );
+            response.success(res, "", { count: allLogs.length, logs: allLogs });
 
             next();
         } catch (err) {
@@ -345,8 +348,7 @@ module.exports = {
     },
 
     getInteractionsSummary: async (req, res, next) => {
-         try {
-
+        try {
             const d = new Date();
             // let hour = d.getHours();
             // let min = d.getMinutes();
@@ -357,29 +359,30 @@ module.exports = {
             // let day = d.getDate();
             // let date = d.getDate();
 
-            const startDate = new Date(year+','+currMonth);
-            const endDate = new Date(year+','+nextMonth);
+            const startDate = new Date(year + "," + currMonth);
+            const endDate = new Date(year + "," + nextMonth);
 
-            let lastDate = new Date(year+','+nextMonth);
+            let lastDate = new Date(year + "," + nextMonth);
             lastDate = lastDate.setDate(lastDate.getDate() - 1);
             lastDate = new Date(lastDate).getDate();
 
-            // getting data from the db 
+            // getting data from the db
             const results = await Interaction.aggregate([
                 {
                     $match: {
-                        'mentor': req.user._id,
-                        "date": {
+                        mentor: req.user._id,
+                        date: {
                             $gte: startDate,
-                            $lte: endDate
-                        }
-                    }
-                }, {
+                            $lte: endDate,
+                        },
+                    },
+                },
+                {
                     $sort: {
-                        date: 1
-                    }
-                }
-            ])
+                        date: 1,
+                    },
+                },
+            ]);
 
             // console.log(results)
 
@@ -394,16 +397,15 @@ module.exports = {
 
             // entering the subsequesnt entries
             for (let i = 1; i < lastDate; i++) {
-                const date = startDate;     
+                const date = startDate;
                 posts[i] = results[i]?.interactionCount.post || 0;
                 meetings[i] = results[i]?.interactionCount.meeting || 0;
                 labels[i] = new Date(date.setDate(date.getDate() + 1)).getDate();
             }
 
             response.success(res, "", { labels, posts, meetings });
-         }
-         catch(err) {
-             console.log(err);
-         }
-     }
+        } catch (err) {
+            console.log(err);
+        }
+    },
 };

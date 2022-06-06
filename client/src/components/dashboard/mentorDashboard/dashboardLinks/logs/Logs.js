@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { adminFetchLogs } from "../../../../../actions/admin";
@@ -13,11 +13,6 @@ const Logs = () => {
     // const [logs, setlogs] = useState([]);
 
     const { logs } = useSelector((state) => state.admin);
-
-    // useEffect hook as component did mount to fetch the logs from the db
-    useEffect(() => {
-        dispatch(adminFetchLogs(history));
-    }, []);
 
     // function to reload the logs
     const handleReload = () => {

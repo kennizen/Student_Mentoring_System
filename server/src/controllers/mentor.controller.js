@@ -26,7 +26,7 @@ module.exports = {
                 return res.status(404).send(Response.notfound("404 Not found", {}));
             }
             // if banned
-            if(mentor.isBanned) {
+            if (mentor.isBanned) {
                 return response.unauthorize(res, "Your account has been suspended");
             }
 
@@ -41,9 +41,8 @@ module.exports = {
             req.user = mentor;
             next();
         } catch (err) {
-            
             // if password is invalid
-            if(err.message === "Unable to login") {
+            if (err.message === "Unable to login") {
                 return response.unauthorize(res, "Invalid credentials");
             }
 
@@ -54,7 +53,15 @@ module.exports = {
     // mentor signup handler
     mentorSignupHandler: async (req, res, next) => {
         try {
-            const { email, password, confirmPassword, firstName, lastName, middleName } = req.body;
+            const {
+                email,
+                password,
+                confirmPassword,
+                firstName,
+                lastName,
+                middleName,
+                department,
+            } = req.body;
 
             if (!email || !password || !confirmPassword || !firstName) {
                 return res.status(400).send(Response.badrequest("Malformed input", {}));
@@ -70,6 +77,7 @@ module.exports = {
             mentor.firstname = firstName;
             mentor.middlename = middleName ? middleName : "";
             mentor.lastname = lastName ? lastName : "";
+            mentor.department = department;
             await mentor.save();
             response.success(res, "Mentor Signup successfull", {});
             req.user = mentor;

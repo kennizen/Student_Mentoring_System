@@ -1,25 +1,37 @@
 import * as api from "../api/student";
 import { updateProfilePicutre, deleteProfilePicutre } from "../api/profilePicture";
 
-export const studentSignIn = (fields, history) => async (dispatch) => {
+export const studentSignIn = (fields, history, showToast) => async (dispatch) => {
     try {
         const { data } = await api.signIn(fields);
-        dispatch({ type: "SIGN_IN_STUDENT", data });
-        history.push("/mentee/dashboard");
+        if (data.code === 200) {
+            dispatch({ type: "SIGN_IN_STUDENT", data });
+            history.push("/mentee/dashboard");
+        } else {
+            showToast("error", data.msg, 10000);
+        }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const studentSignUp = (fields, displaySuccessOrError) => async (dispatch) => {
+export const studentSignUp = (fields, showToast, handleToggle) => async (dispatch) => {
+    const handleActions = () => {
+        handleToggle();
+        showToast(
+            "info",
+            "We have sent a verification email to the registered email id, please verify before login",
+            false
+        );
+    };
     try {
         const { data } = await api.signUp(fields);
         console.log("student sign up data", data);
-        // if (data.code === 200) {
-        //     displaySuccessOrError(200);
-        // } else if (data.code === 500) {
-        //     displaySuccessOrError(500);
-        // }
+        if (data.code === 200) {
+            showToast("success", data.msg + ", redirecting to login", 3000, handleActions);
+        } else {
+            showToast("error", data.msg, 10000);
+        }
     } catch (error) {
         console.log(error);
     }
