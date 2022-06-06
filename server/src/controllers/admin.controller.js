@@ -266,7 +266,12 @@ module.exports = {
                 return  response.notfound(res);
             }
 
-            user.isBanned = true;
+            if(user.isBanned) {
+                user.isBanned = false;
+            } else {
+                user.isBanned = true;
+            }
+
             await user.save();
 
             response.success(res, "User has been banned");
@@ -276,5 +281,6 @@ module.exports = {
             console.log(err);
             response.error(res);
         }
-    }
+    },
+
 };

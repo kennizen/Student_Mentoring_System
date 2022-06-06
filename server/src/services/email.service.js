@@ -14,6 +14,10 @@ module.exports = {
     sendPasswordResetMail: (token, email) => {
         const resetPasswordUrl = `${process.env.PUBLIC_URL}/resetPassword/${token}`;
 
+        if(!email) {
+            throw new Error("Email not provided");
+        }
+
         const options = {
             from: process.env.NODEMAILER_SENDER_EMAIL,
             to: email,
@@ -40,6 +44,10 @@ module.exports = {
      */
     sendEmailVerificationMail: (token, email) => {
         const verifyEmailLink = `${process.env.PUBLIC_URL}/verifyEmail/${token}`;
+        
+        if(!email) {
+            throw new Error("Email not provided");
+        }
 
         const options = {
             from: process.env.NODEMAILER_SENDER_EMAIL,

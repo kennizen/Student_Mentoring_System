@@ -16,7 +16,6 @@ const events = require("../utils/logEvents");
 
 // importing multer config
 const upload = require("../config/multer");
-const { studentLoginHandler } = require("../controllers/student.controller");
 
 // student login
 router.post("/login", studentController.studentLoginHandler, Logger(events.LOGIN));

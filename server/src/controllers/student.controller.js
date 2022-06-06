@@ -8,6 +8,8 @@ const fs = require("fs");
 const response = require("../utils/responses.utils");
 const Semester = require("../models/Semester");
 const roles = require("../utils/roles");
+const emailService = require("../services/email.service");
+const jwt = require("jsonwebtoken");
 
 // including cloudinary configs
 require("../config/cloudinary");
@@ -25,6 +27,21 @@ module.exports = {
 
             if (!student) {
                 return response.notfound(res);
+            }
+
+            if(!student.isEmailVerified) {
+                const token = jwt.sign(
+                    { _id: student._id.toString(), role: roles.Student },
+                    process.env.JWT_SECRET
+                );
+    
+                student.emailVerifyToken = token;
+                await student.save();
+    
+                // sending email to mentor with link
+                await emailService.sendEmailVerificationMail(token, student.email);
+
+                return response.error(res, "Email not verified. We have sent a link. Please check your email");
             }
 
             // if banned
@@ -83,7 +100,18 @@ module.exports = {
             student.lastname = lastName;
             student.enrollment_no = enrollmentNo;
             student.semester = semester;
+
+            const token = await jwt.sign(
+                { _id: student._id.toString(), role: roles.Student },
+                process.env.JWT_SECRET
+            );
+
+            student.emailVerifyToken = token;
             await student.save();
+
+            // sending email to mentor with link
+            await emailService.sendEmailVerificationMail(token, student.email);
+
             response.success(res, "Student created successfully", {});
             req.user = student;
             next();

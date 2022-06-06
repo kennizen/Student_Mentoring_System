@@ -25,6 +25,10 @@ router.get(
 
 router.get("/verifyEmail/:token", indexController.emailVerificationHandler);
 
+// generate email verification link
+// router.post("/verifyEmail", Auth, Authorize(roles.Mentor), indexController.generateEmailVerificationToken);
+
+
 router.post("/forgotPassword", indexController.forgotPassword);
 // get reset password html page
 router.get("/resetPassword/:token", indexController.resetPassword);

@@ -44,6 +44,28 @@ module.exports = {
         }
     },
 
+    /**
+     * The method generates a new email verification token for a mentor
+     */
+    //  generateEmailVerificationToken: async (req, res, next) => {
+    //     try {
+    //         const mentor = req.user;
+    //         const token = await jwt.sign(
+    //             { _id: mentor._id.toString(), role: mentor.role },
+    //             process.env.JWT_SECRET
+    //         );
+
+    //         mentor.emailVerifyToken = token;
+    //         await mentor.save();
+
+    //         // sending email to mentor with link
+    //         await emailService.sendEmailVerificationMail(token, mentor.email);
+    //         response.success(res);
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // },
+
     // email verification handler
     emailVerificationHandler: async (req, res) => {
         try {
@@ -86,6 +108,11 @@ module.exports = {
         try {
             
             const { email } = req.body;
+
+            if(!email) {
+                throw new Error("Email not provided");
+            }
+
             let user;
             
             if(!user) {

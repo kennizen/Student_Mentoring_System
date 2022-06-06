@@ -7,6 +7,7 @@ const Student = require("../models/Student");
 const Semester = require("../models/Semester");
 const response = require("../utils/responses.utils");
 const emailService = require("../services/email.service");
+const roles = require("../utils/roles");
 
 // env config
 dotenv.config();
@@ -25,6 +26,22 @@ module.exports = {
             if (!mentor) {
                 return res.status(404).send(Response.notfound("404 Not found", {}));
             }
+
+            if(!mentor.isEmailVerified) {
+                const token = jwt.sign(
+                    { _id: mentor._id.toString(), role: roles.Mentor },
+                    process.env.JWT_SECRET
+                );
+    
+                mentor.emailVerifyToken = token;
+                await mentor.save();
+    
+                // sending email to mentor with link
+                await emailService.sendEmailVerificationMail(token, mentor.email);
+
+                return response.error(res, "Email not verified. We have sent a link. Please check your email");
+            }
+
             // if banned
             if(mentor.isBanned) {
                 return response.unauthorize(res, "Your account has been suspended");
@@ -41,6 +58,8 @@ module.exports = {
             req.user = mentor;
             next();
         } catch (err) {
+
+            console.log(err)
             
             // if password is invalid
             if(err.message === "Unable to login") {
@@ -70,9 +89,21 @@ module.exports = {
             mentor.firstname = firstName;
             mentor.middlename = middleName ? middleName : "";
             mentor.lastname = lastName ? lastName : "";
+
+            const token = await jwt.sign(
+                { _id: mentor._id.toString(), role: roles.Mentor },
+                process.env.JWT_SECRET
+            );
+
+            mentor.emailVerifyToken = token;
             await mentor.save();
+
+            // sending email to mentor with link
+            await emailService.sendEmailVerificationMail(token, mentor.email);
+
             response.success(res, "Mentor Signup successfull", {});
             req.user = mentor;
+            
             next();
         } catch (err) {
             console.log(err);
@@ -217,35 +248,4 @@ module.exports = {
         }
     },
 
-    /**
-     * The method generates a new email verification token for a mentor
-     */
-    generateEmailVerificationToken: async (req, res, next) => {
-        try {
-            const mentor = req.user;
-            const token = await jwt.sign(
-                { _id: mentor._id.toString(), role: mentor.role },
-                process.env.JWT_SECRET
-            );
-
-            mentor.emailVerifyToken = token;
-            await mentor.save();
-
-            // sending email to mentor with link
-            await emailService.sendEmailVerificationMail(token, mentor.email);
-            response.success(res);
-        } catch (err) {
-            console.log(err);
-        }
-    },
-
-    /**
-     *  The method does the email verification for a mentor
-     */
-    emailVerification: async (req, res, next) => {
-        try {
-        } catch (err) {
-            console.log(err);
-        }
-    },
 };
