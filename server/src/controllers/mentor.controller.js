@@ -27,19 +27,22 @@ module.exports = {
                 return res.status(404).send(Response.notfound("404 Not found", {}));
             }
 
-            if(!mentor.isEmailVerified) {
+            if (!mentor.isEmailVerified) {
                 const token = jwt.sign(
                     { _id: mentor._id.toString(), role: roles.Mentor },
                     process.env.JWT_SECRET
                 );
-    
+
                 mentor.emailVerifyToken = token;
                 await mentor.save();
-    
+
                 // sending email to mentor with link
                 emailService.sendEmailVerificationMail(token, mentor.email);
 
-                return response.error(res, "Email not verified. We have sent a link. Please check your email");
+                return response.error(
+                    res,
+                    "Email not verified. We have sent a link. Please check your email"
+                );
             }
 
             // if banned
@@ -58,8 +61,7 @@ module.exports = {
             req.user = mentor;
             next();
         } catch (err) {
-
-            console.log(err)
+            console.log(err);
             // if password is invalid
             if (err.message === "Unable to login") {
                 return response.unauthorize(res, "Invalid credentials");
@@ -96,7 +98,7 @@ module.exports = {
             mentor.firstname = firstName;
             mentor.middlename = middleName ? middleName : "";
             mentor.lastname = lastName ? lastName : "";
-
+            mentor.department = department;
             const token = await jwt.sign(
                 { _id: mentor._id.toString(), role: roles.Mentor },
                 process.env.JWT_SECRET
@@ -110,7 +112,7 @@ module.exports = {
 
             response.success(res, "Mentor Signup successfull", {});
             req.user = mentor;
-            
+
             next();
         } catch (err) {
             console.log(err);
@@ -254,5 +256,4 @@ module.exports = {
             response.error(res);
         }
     },
-
 };

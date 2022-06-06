@@ -29,19 +29,22 @@ module.exports = {
                 return response.notfound(res);
             }
 
-            if(!student.isEmailVerified) {
+            if (!student.isEmailVerified) {
                 const token = jwt.sign(
                     { _id: student._id.toString(), role: roles.Student },
                     process.env.JWT_SECRET
                 );
-    
+
                 student.emailVerifyToken = token;
                 await student.save();
-    
-                // sending email to mentor with link
-                await emailService.sendEmailVerificationMail(token, student.email);
 
-                return response.error(res, "Email not verified. We have sent a link. Please check your email");
+                // sending email to mentor with link
+                emailService.sendEmailVerificationMail(token, student.email);
+
+                return response.error(
+                    res,
+                    "Email not verified. We have sent a link. Please check your email"
+                );
             }
 
             // if banned
@@ -101,7 +104,7 @@ module.exports = {
             student.lastname = lastName;
             student.enrollment_no = enrollmentNo;
             student.semester = semester;
-
+            student.department = department;
             const token = await jwt.sign(
                 { _id: student._id.toString(), role: roles.Student },
                 process.env.JWT_SECRET
@@ -111,7 +114,7 @@ module.exports = {
             await student.save();
 
             // sending email to mentor with link
-            await emailService.sendEmailVerificationMail(token, student.email);
+            emailService.sendEmailVerificationMail(token, student.email);
 
             response.success(res, "Student created successfully", {});
             req.user = student;

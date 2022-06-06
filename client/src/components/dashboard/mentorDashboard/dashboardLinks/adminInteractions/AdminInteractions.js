@@ -66,7 +66,7 @@ const AdminInteractions = () => {
 
             <section className="mt-20">
                 {selected === "mentors" && (
-                    <div className="flex items-start justify-start flex-wrap gap-x-5">
+                    <div className="flex items-start justify-start flex-wrap gap-x-5 gap-y-5">
                         {mentors?.map((mentor) => {
                             return (
                                 <div
@@ -113,7 +113,7 @@ const AdminInteractions = () => {
                     </div>
                 )}
                 {selected === "mentees" && (
-                    <div className="flex items-start justify-start flex-wrap gap-x-5">
+                    <div className="flex items-start justify-start flex-wrap gap-x-5 gap-y-5">
                         {students?.map((student) => {
                             return (
                                 <div

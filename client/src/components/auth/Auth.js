@@ -15,6 +15,7 @@ import { Checkbox, FormControlLabel } from "@mui/material";
 import { CSSTransition } from "react-transition-group";
 import ModalOverlay from "../modal/ModalOverlay";
 import ForgotPasswordModal from "./ForgotPasswordModal";
+import { verifyRecaptcha } from "../../actions";
 
 const Auth = ({ location }) => {
     // state variables declaration
@@ -104,9 +105,12 @@ const Auth = ({ location }) => {
 
     console.log("fields", fields);
 
+    // state for the login button dependent on recaptcha
+    const [recaptcha, setRecaptcha] = useState(true);
+
     // function to handle captcha and send to backend
     const handleCaptchaChange = (val) => {
-        console.log(val);
+        dispatch(verifyRecaptcha(val, showToast, setRecaptcha));
     };
 
     // state to show and hide password
@@ -348,17 +352,18 @@ const Auth = ({ location }) => {
                             )}
                         </div>
 
-                        {/* {toggleLogin || (
+                        {toggleLogin || (
                             <ReCAPTCHA
                                 className="flex items-center justify-center"
                                 sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
                                 onChange={handleCaptchaChange}
                             />
-                        )} */}
+                        )}
 
                         <button
                             type="submit"
-                            className="bg-white py-2 px-3 rounded-full flex items-center justify-center gap-x-2 w-full text-gray-600 group mt-4"
+                            className="bg-white py-2 px-3 rounded-full flex items-center justify-center gap-x-2 w-full text-gray-600 group mt-4 disabled:opacity-50"
+                            disabled={toggleLogin === false && recaptcha ? true : false}
                         >
                             {toggleLogin ? "Sign up" : "Sign in"}
                             <ArrowRight
