@@ -26,6 +26,12 @@ module.exports = {
             if (!student) {
                 return response.notfound(res);
             }
+
+            // if banned
+            if(student.isBanned) {
+                return response.unauthorize(res, "Your account has been suspended");
+            }
+
             const token = await student.generateAuthToken();
 
             response.success(res, "Login successful", {
@@ -37,6 +43,12 @@ module.exports = {
             next();
         } catch (err) {
             console.log(err);
+
+            // if password is invalid
+            if(err.message === "Unable to login") {
+                return response.unauthorize(res, "Invalid credentials");
+            }
+
             response.error(res);
         }
     },

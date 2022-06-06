@@ -52,10 +52,6 @@ const mentorSchema = new mongoose.Schema(
             type: String,
             default: Role.Mentor,
         },
-        // assigned: {
-        //     type: String,
-        //     default: "unassigned",
-        // },
         studentCount: {
             type: Number,
             default: 0,
@@ -78,6 +74,10 @@ const mentorSchema = new mongoose.Schema(
         passwordResetToken: String,
         emailVerifyToken: String,
         isEmailVerified: {
+            type: Boolean,
+            default: false
+        },
+        isBanned: {
             type: Boolean,
             default: false
         }

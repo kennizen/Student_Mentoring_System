@@ -25,6 +25,11 @@ module.exports = {
             if (!mentor) {
                 return res.status(404).send(Response.notfound("404 Not found", {}));
             }
+            // if banned
+            if(mentor.isBanned) {
+                return response.unauthorize(res, "Your account has been suspended");
+            }
+
             const token = await mentor.generateAuthToken();
 
             response.success(res, "Login Successfull", {
@@ -36,7 +41,12 @@ module.exports = {
             req.user = mentor;
             next();
         } catch (err) {
-            console.log(err);
+            
+            // if password is invalid
+            if(err.message === "Unable to login") {
+                return response.unauthorize(res, "Invalid credentials");
+            }
+
             response.error(res, "Login Unsuccessfull");
         }
     },

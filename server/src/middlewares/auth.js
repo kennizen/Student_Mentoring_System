@@ -40,6 +40,10 @@ const auth = async (req, res, next) => {
             user = await Student.findOne({ _id, "tokens.token": token });
         }
 
+        if(isBanned) {
+            return response.unauthorize(res, "Your account has been suspended");
+        }
+
         if (!user) {
             return response.notfound(res, "404 User Not Found", {});
         }

@@ -82,23 +82,27 @@ const interactionSchema = new mongoose.Schema({
         ref: "Mentor"
     },
     interactionCount: {
-        type: Number,
-        default: 0
+        post: {
+            type: Number,
+            default: 0
+        },
+        meeting: {
+            type: Number,
+            default: 0
+        }
     },
     date: {
         type: Date,
         default: new Date()
     },
-    activities: [{
-        content: {
-            type: mongoose.Schema.Types.ObjectId,
-            refPath: "activities.contentModel"
-        },
-        contentModel: {
-            type: String,
-            enum: ["Post", "Meeting"]
-        } 
-    }]
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: "Post"
+    }],
+    meetings: [{
+        type: mongoose.Schema.Types.ObjectId,
+        refPath: "Meeting"
+    }],
 });
 
 const Interaction = mongoose.model("Interaction", interactionSchema);

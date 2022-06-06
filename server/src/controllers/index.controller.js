@@ -340,23 +340,26 @@ module.exports = {
                 }
             ])
 
-            console.log(results)
+            // console.log(results)
 
-            const dataset = new Array(lastDate);
+            const posts = new Array(lastDate);
+            const meetings = new Array(lastDate);
             const labels = new Array(lastDate);
 
             // entering the first entry 1st date of month
-            dataset[0] = results[0]?.interactionCount || 0;
-            labels[0] = startDate.toLocaleDateString();
+            posts[0] = results[0]?.interactionCount.post || 0;
+            meetings[0] = results[0]?.interactionCount.meeting || 0;
+            labels[0] = startDate.getDate();
 
             // entering the subsequesnt entries
             for (let i = 1; i < lastDate; i++) {
                 const date = startDate;     
-                dataset[i] = results[i]?.interactionCount || 0;
-                labels[i] = new Date(date.setDate(date.getDate() + 1)).toLocaleDateString();
+                posts[i] = results[i]?.interactionCount.post || 0;
+                meetings[i] = results[i]?.interactionCount.meeting || 0;
+                labels[i] = new Date(date.setDate(date.getDate() + 1)).getDate();
             }
 
-            response.success(res, "", { labels, dataset });
+            response.success(res, "", { labels, posts, meetings });
          }
          catch(err) {
              console.log(err);

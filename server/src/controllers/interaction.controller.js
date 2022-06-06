@@ -31,22 +31,44 @@ module.exports = {
                 })
 
                 if(interaction) {
-                    await Interaction.findOneAndUpdate({ _id: interaction._id}, {
-                        $inc: {
-                            interactionCount: 1
-                        }
-                    })
+                    if(event === "Post") {
+                        await Interaction.findOneAndUpdate({ _id: interaction._id}, {
+                            $inc: {
+                                "interactionCount.post": 1,
+
+                            },
+                            $push: {
+                                "posts": content
+                            }
+                        })
+                    }
+
+                    if(event === "Meeting") {
+                        await Interaction.findOneAndUpdate({ _id: interaction._id}, {
+                            $inc: {
+                                "interactionCount.meeting": 1
+                            },
+                            $push: {
+                                "meetings": content
+                            }
+                        })
+                    }
                 }
                 else {
                     const newInteraction = new Interaction();
                     newInteraction.mentor = user._id;
-                    newInteraction.interactionCount += 1;
-                    newInteraction.activities.push({
-                        content: content,
-                        contentModel: event
-                    })
+                    
+                    if(event === "Post") {
+                        newInteraction.interactionCount.post += 1;
+                        newInteraction.posts.push(content);
+                    }
 
-                    console.log("newInteraction", newInteraction)
+                    if(event === "Meeting") {
+                        newInteraction.interactionCount.meeting += 1;
+                        newInteraction.meetings.push(content);
+                    }
+                    
+                    // console.log("newInteraction", newInteraction)
 
                     await newInteraction.save();
                 }

@@ -61,9 +61,6 @@ module.exports = {
                     req.user,
                     mentees
                 );
-
-                // // creating interactions
-                // const interaction = await interactionController.createInteraction("Post", req.user, content._id);
             }
 
              // creating interactions
