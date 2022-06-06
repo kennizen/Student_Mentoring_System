@@ -1,6 +1,6 @@
 import API from "./index";
 
 export const getInteractions = () =>
-    API.get("/interactions").catch((error) => {
+    API.get("/interactions/summary").catch((error) => {
         return error.response;
     });

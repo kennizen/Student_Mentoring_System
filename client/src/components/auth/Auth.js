@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -12,6 +12,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { showToast } from "../toast/toast";
 import { Checkbox, FormControlLabel } from "@mui/material";
+import { CSSTransition } from "react-transition-group";
+import ModalOverlay from "../modal/ModalOverlay";
+import ForgotPasswordModal from "./ForgotPasswordModal";
 
 const Auth = ({ location }) => {
     // state variables declaration
@@ -48,6 +51,7 @@ const Auth = ({ location }) => {
             confirmPassword: "",
             enrollmentNo: "",
             semester: "",
+            department: "",
         });
     };
 
@@ -69,7 +73,7 @@ const Auth = ({ location }) => {
         e.preventDefault();
         if (location.state === "Admin") {
             // signin the admin
-            dispatch(adminSignIn(fields, history));
+            dispatch(adminSignIn(fields, history, showToast));
         } else if (location.state === "Mentor") {
             if (toggleLogin === true) {
                 if (fields.password !== fields.confirmPassword) {
@@ -100,13 +104,15 @@ const Auth = ({ location }) => {
 
     console.log("fields", fields);
 
-    // function to handle captcha and sent to backend
+    // function to handle captcha and send to backend
     const handleCaptchaChange = (val) => {
         console.log(val);
     };
 
     // state to show and hide password
     const [showPass, setShowPass] = useState("password");
+    // state for forgot passowrd email
+    const [FPEmail, setFPEmail] = useState("");
 
     // function to toggle show password state
     const handlePasswordShowToggle = () => {
@@ -114,8 +120,39 @@ const Auth = ({ location }) => {
         if (showPass === "text") setShowPass("password");
     };
 
+    // states for modal
+    // state to control the modal show and dont show
+    const [showModal, setShowModal] = useState(false);
+
+    // refs used for css transition to work for the modal and the overlay
+    const modalRef = useRef(null);
+    const overlayRef = useRef(null);
+
     return (
         <div className="w-full h-screen flex items-center">
+            <CSSTransition
+                nodeRef={overlayRef}
+                in={showModal}
+                timeout={300}
+                classNames="overlay"
+                unmountOnExit
+            >
+                <ModalOverlay nodeRef={overlayRef} />
+            </CSSTransition>
+            <CSSTransition
+                nodeRef={modalRef}
+                in={showModal}
+                timeout={300}
+                classNames="modal"
+                unmountOnExit
+            >
+                <ForgotPasswordModal
+                    nodeRef={modalRef}
+                    setShowModal={setShowModal}
+                    setFPEmail={setFPEmail}
+                    FPEmail={FPEmail}
+                />
+            </CSSTransition>
             <div className="flex-3 bg-white h-full flex flex-col items-center justify-center">
                 <div className="w-full">
                     <h1 style={{ fontSize: "50px" }} className="w-full text-center">
@@ -216,7 +253,28 @@ const Auth = ({ location }) => {
                                 </div>
                             </div>
                         ) : (
-                            <div></div>
+                            ""
+                        )}
+                        {toggleLogin && (
+                            <div className="flex flex-col mb-6">
+                                <label htmlFor="department" className="mb-2 text-white">
+                                    Department
+                                </label>
+                                <select
+                                    id="department"
+                                    name="department"
+                                    className="rounded-lg border-gray-300"
+                                    value={fields.department}
+                                    onChange={handleChange}
+                                    required
+                                    selected={fields.department}
+                                >
+                                    <option value="">Select department</option>
+                                    <option value="Computer Science & Engineering">
+                                        Computer Science & Engineering
+                                    </option>
+                                </select>
+                            </div>
                         )}
                         <div className="flex flex-col mb-6">
                             <label htmlFor="email" className="mb-2 text-white">
@@ -263,21 +321,32 @@ const Auth = ({ location }) => {
                             </div>
                         )}
 
-                        <FormControlLabel
-                            className="text-white"
-                            onChange={handlePasswordShowToggle}
-                            control={
-                                <Checkbox
-                                    sx={{
-                                        color: "white",
-                                        "&.Mui-checked": {
+                        <div className="flex items-center justify-between">
+                            <FormControlLabel
+                                className="text-white"
+                                onChange={handlePasswordShowToggle}
+                                control={
+                                    <Checkbox
+                                        sx={{
                                             color: "white",
-                                        },
-                                    }}
-                                />
-                            }
-                            label="Show password"
-                        />
+                                            "&.Mui-checked": {
+                                                color: "white",
+                                            },
+                                        }}
+                                    />
+                                }
+                                label="Show password"
+                            />
+                            {toggleLogin || (
+                                <button
+                                    type="button"
+                                    onClick={() => setShowModal(true)}
+                                    className="text-white hover:underline"
+                                >
+                                    Forgot password
+                                </button>
+                            )}
+                        </div>
 
                         {/* {toggleLogin || (
                             <ReCAPTCHA

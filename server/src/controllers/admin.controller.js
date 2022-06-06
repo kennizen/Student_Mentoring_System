@@ -217,7 +217,6 @@ module.exports = {
         }
     },
 
-
     // get admin profile
     getProfile: async (req, res, next) => {
         try {
@@ -253,20 +252,20 @@ module.exports = {
         try {
             const { id } = req.body;
             let user;
-            
-            if(!user) {
+
+            if (!user) {
                 user = await Mentor.findById(id);
             }
 
-            if(!user) {
+            if (!user) {
                 user = await Student.findById({ id });
             }
 
-            if(!user) {
-                return  response.notfound(res);
+            if (!user) {
+                return response.notfound(res);
             }
 
-            if(user.isBanned) {
+            if (user.isBanned) {
                 user.isBanned = false;
             } else {
                 user.isBanned = true;
@@ -274,13 +273,12 @@ module.exports = {
 
             await user.save();
 
-            response.success(res, "User has been banned");
+            if (user.isBanned) response.success(res, "User has been banned");
+            else response.success(res, "User has been unbanned");
             next();
-        }
-        catch(err) {
+        } catch (err) {
             console.log(err);
             response.error(res);
         }
     },
-
 };

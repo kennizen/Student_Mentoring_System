@@ -54,16 +54,41 @@ router.delete(
     Logger(events.AVATAR_UPDATED)
 );
 
-router.get("/holidays", Auth, Authorize([roles.Mentor, roles.Student]), indexController.getAllHolidays);
+router.get(
+    "/holidays",
+    Auth,
+    Authorize([roles.Mentor, roles.Student]),
+    indexController.getAllHolidays
+);
 
-router.get("/getStats", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), indexController.getStats);
+router.get(
+    "/getStats",
+    Auth,
+    Authorize([roles.Admin, roles.Mentor, roles.Student]),
+    indexController.getStats
+);
 
 // fetching all logs from db
-router.get("/logs", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), indexController.getAllLogs);
+router.get(
+    "/logs",
+    Auth,
+    Authorize([roles.Admin, roles.Mentor, roles.Student]),
+    indexController.getAllLogs
+);
 
 // fetching all interactions from db
-router.get("/interactions", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), interactionsControler.getAllInteractions);
+router.get(
+    "/interactions",
+    Auth,
+    Authorize([roles.Admin, roles.Mentor, roles.Student]),
+    interactionsControler.getAllInteractions
+);
 
-router.get("/interactions/summary", Auth, Authorize([roles.Admin, roles.Mentor, roles.Student]), indexController.getInteractionsSummary);
+router.get(
+    "/interactions/summary",
+    Auth,
+    Authorize([roles.Admin, roles.Mentor, roles.Student]),
+    indexController.getInteractionsSummary
+);
 
 module.exports = router;

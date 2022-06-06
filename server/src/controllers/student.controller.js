@@ -45,7 +45,7 @@ module.exports = {
             }
 
             // if banned
-            if(student.isBanned) {
+            if (student.isBanned) {
                 return response.unauthorize(res, "Your account has been suspended");
             }
 
@@ -62,7 +62,7 @@ module.exports = {
             console.log(err);
 
             // if password is invalid
-            if(err.message === "Unable to login") {
+            if (err.message === "Unable to login") {
                 return response.unauthorize(res, "Invalid credentials");
             }
 
@@ -82,6 +82,7 @@ module.exports = {
                 middleName,
                 enrollmentNo,
                 semester,
+                department,
             } = req.body;
 
             if (!email || !password || !firstName || !semester || !enrollmentNo) {
