@@ -25,6 +25,7 @@ router.get(
 
 router.get("/verifyEmail/:token", indexController.emailVerificationHandler);
 
+router.post("/forgotPassword", indexController.forgotPassword);
 // get reset password html page
 router.get("/resetPassword/:token", indexController.resetPassword);
 // set new password with link

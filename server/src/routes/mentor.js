@@ -24,10 +24,10 @@ router.post("/signup", mentorController.mentorSignupHandler, Logger(events.SIGNU
 router.get("/dashboard", Auth, Authorize(Role.Mentor), mentorController.mentorDashboardHandler);
 
 // reset password
-router.post("/resetPassword", mentorController.resetPassword);
+// router.post("/resetPassword", mentorController.resetPassword);
 
-// setting new password
-router.put("/resetPassword", mentorController.setNewPassword);
+// // setting new password
+// router.put("/resetPassword", mentorController.setNewPassword);
 
 //get all students of mentored
 router.get("/getAllMentees", Auth, Authorize(Role.Mentor), mentorController.fetchAllMentees);

@@ -96,70 +96,70 @@ module.exports = {
     },
 
     // reset password handler
-    resetPassword: async (req, res, next) => {
-        try {
-            const mentor = await Mentor.findOne({ email: req.body.email });
+    // resetPassword: async (req, res, next) => {
+    //     try {
+    //         const mentor = await Mentor.findOne({ email: req.body.email });
 
-            if (!mentor) {
-                return response.notfound(res, "User not found");
-            }
+    //         if (!mentor) {
+    //             return response.notfound(res, "User not found");
+    //         }
 
-            const token = jwt.sign(
-                { _id: mentor._id.toString(), role: mentor.role },
-                process.env.JWT_SECRET,
-                {
-                    expiresIn: "1h",
-                }
-            );
-            mentor.passwordResetToken = token;
-            await mentor.save();
+    //         const token = jwt.sign(
+    //             { _id: mentor._id.toString(), role: mentor.role },
+    //             process.env.JWT_SECRET,
+    //             {
+    //                 expiresIn: "1h",
+    //             }
+    //         );
+    //         mentor.passwordResetToken = token;
+    //         await mentor.save();
 
-            // sending reset password link to the mentor
-            await emailService.sendPasswordResetMail(token, mentor.email);
-            response.success(res, "Password reset link sent");
-        } catch (err) {
-            console.log(err);
-            response.error(res);
-        }
-    },
+    //         // sending reset password link to the mentor
+    //         await emailService.sendPasswordResetMail(token, mentor.email);
+    //         response.success(res, "Password reset link sent");
+    //     } catch (err) {
+    //         console.log(err);
+    //         response.error(res);
+    //     }
+    // },
     /**
      * The method sets new passord of the user upon succcessful verification
      */
-    setNewPassword: async (req, res, next) => {
-        try {
-            const { token, password, confirmPassword } = req.body;
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const mentor = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
+    // setNewPassword: async (req, res, next) => {
+    //     try {
+    //         const { token, password, confirmPassword } = req.body;
+    //         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    //         const mentor = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
 
-            // if mentor not found
-            if (!mentor) {
-                return response.error(res);
-            }
+    //         // if mentor not found
+    //         if (!mentor) {
+    //             return response.error(res);
+    //         }
 
-            // checking if both password are provided
-            if (!password || !confirmPassword) {
-                return response.error(res, "Both passwords are required");
-            }
+    //         // checking if both password are provided
+    //         if (!password || !confirmPassword) {
+    //             return response.error(res, "Both passwords are required");
+    //         }
 
-            // checking if the passwords are similar
-            if (password != confirmPassword) {
-                return response.error(res, "Passwords doesn't match");
-            }
+    //         // checking if the passwords are similar
+    //         if (password != confirmPassword) {
+    //             return response.error(res, "Passwords doesn't match");
+    //         }
 
-            //setting new password
-            const hashedPassword = await bcrypt.hash(password, 8);
-            mentor.password = hashedPassword;
-            await mentor.save();
-            response.success(res, "Password updated", mentor);
-        } catch (err) {
-            console.log(err);
-            // if token expired
-            if (err.message.toString() == "jwt expired") {
-                return response.error(res, "Token expired");
-            }
-            response.error(res, "Invalid token");
-        }
-    },
+    //         //setting new password
+    //         const hashedPassword = await bcrypt.hash(password, 8);
+    //         mentor.password = hashedPassword;
+    //         await mentor.save();
+    //         response.success(res, "Password updated", mentor);
+    //     } catch (err) {
+    //         console.log(err);
+    //         // if token expired
+    //         if (err.message.toString() == "jwt expired") {
+    //             return response.error(res, "Token expired");
+    //         }
+    //         response.error(res, "Invalid token");
+    //     }
+    // },
 
     fetchAllMentees: async (req, res, next) => {
         try {

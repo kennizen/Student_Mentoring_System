@@ -42,4 +42,6 @@ router.get("/profile", Auth, Authorize(Role.Admin), adminController.getProfile);
 
 router.post("/profile", Auth, Authorize(Role.Admin), adminController.updateProfile);
 
+router.patch("/banUser", Auth, Authorize(Role.Admin), adminController.banUser);
+
 module.exports = router;

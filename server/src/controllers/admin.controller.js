@@ -247,4 +247,34 @@ module.exports = {
             response.error(res);
         }
     },
+
+    // user banning handler
+    banUser: async (req, res, next) => {
+        try {
+            const { id } = req.body;
+            let user;
+            
+            if(!user) {
+                user = await Mentor.findById(id);
+            }
+
+            if(!user) {
+                user = await Student.findById({ id });
+            }
+
+            if(!user) {
+                return  response.notfound(res);
+            }
+
+            user.isBanned = true;
+            await user.save();
+
+            response.success(res, "User has been banned");
+            next();
+        }
+        catch(err) {
+            console.log(err);
+            response.error(res);
+        }
+    }
 };

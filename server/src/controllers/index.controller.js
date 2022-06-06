@@ -13,6 +13,7 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const axios = require("axios");
+const emailService = require("../services/email.service");
 
 // env config
 dotenv.config();
@@ -77,6 +78,46 @@ module.exports = {
         } catch (err) {
             console.log(err);
             res.render("emailVerifyFailed");
+        }
+    },
+
+    // request a reset password link
+    forgotPassword: async (req, res, next) => {
+        try {
+            
+            const { email } = req.body;
+            let user;
+            
+            if(!user) {
+                user = await Mentor.findOne({ email });
+            }
+
+            if(!user) {
+                user = await Student.findOne({ email });
+            }
+
+
+            if (!user) {
+                return response.notfound(res, "User not found");
+            }
+
+            const token = jwt.sign({ _id: user._id.toString(), role: user.role }, 
+                process.env.JWT_SECRET,
+                {
+                    expiresIn: "1h",
+                }
+            );
+
+            user.passwordResetToken = token;
+            await user.save();
+
+            // sending reset password link to the mentor
+            await emailService.sendPasswordResetMail(token, user.email);
+
+            response.success(res, "Password reset link sent");
+        } catch (err) {
+            console.log(err);
+            response.error(res);
         }
     },
 
