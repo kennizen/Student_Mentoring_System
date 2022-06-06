@@ -14,7 +14,6 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const axios = require("axios");
 const emailService = require("../services/email.service");
-const { error } = require("console");
 
 // env config
 dotenv.config();
@@ -430,4 +429,19 @@ module.exports = {
             console.log(err);
         }
     },
+
+    // captcha verification handler
+    verifyCaptcha: async (req, res, next) => {
+        try {
+            const { token } = req.body;
+            const { data } = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_PRIVATE_KEY}&response=${token}`);
+            
+            console.log(data);
+            response.success(res, "", { success: data.success });
+        }
+        catch(err) {
+            console.log(err);
+            response.error(res);
+        }
+    }
 };

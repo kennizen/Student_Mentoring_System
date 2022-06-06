@@ -91,4 +91,6 @@ router.get(
     indexController.getInteractionsSummary
 );
 
+router.post("/verifyCaptcha",  indexController.verifyCaptcha);
+
 module.exports = router;

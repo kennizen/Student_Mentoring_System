@@ -37,7 +37,7 @@ module.exports = {
                 await mentor.save();
     
                 // sending email to mentor with link
-                await emailService.sendEmailVerificationMail(token, mentor.email);
+                emailService.sendEmailVerificationMail(token, mentor.email);
 
                 return response.error(res, "Email not verified. We have sent a link. Please check your email");
             }
@@ -106,7 +106,7 @@ module.exports = {
             await mentor.save();
 
             // sending email to mentor with link
-            await emailService.sendEmailVerificationMail(token, mentor.email);
+            emailService.sendEmailVerificationMail(token, mentor.email);
 
             response.success(res, "Mentor Signup successfull", {});
             req.user = mentor;
