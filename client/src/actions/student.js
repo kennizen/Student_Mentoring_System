@@ -15,11 +15,11 @@ export const studentSignUp = (fields, displaySuccessOrError) => async (dispatch)
     try {
         const { data } = await api.signUp(fields);
         console.log("student sign up data", data);
-        if (data.code === 200) {
-            displaySuccessOrError(200);
-        } else if (data.code === 500) {
-            displaySuccessOrError(500);
-        }
+        // if (data.code === 200) {
+        //     displaySuccessOrError(200);
+        // } else if (data.code === 500) {
+        //     displaySuccessOrError(500);
+        // }
     } catch (error) {
         console.log(error);
     }

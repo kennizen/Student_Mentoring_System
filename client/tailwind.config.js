@@ -95,11 +95,14 @@ module.exports = {
     },
     variants: {
         extend: {
+            transform: ["hover", "focus", "group-hover"],
+            translate: ["active", "group-hover"],
             display: ["group-hover"],
             opacity: ["disabled"],
-            backgroundColor: ["active"],
-            textColor: ["active"],
+            backgroundColor: ["active", "group-hover", "hover"],
+            textColor: ["active", "hover", "group-hover"],
             fontSize: ["hover", "focus"],
+            transitionTimingFunction: ["hover", "focus", "group-hover"],
         },
     },
     plugins: [require("@tailwindcss/forms")],

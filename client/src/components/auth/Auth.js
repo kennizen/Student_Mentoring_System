@@ -5,6 +5,13 @@ import { useHistory } from "react-router";
 import { adminSignIn } from "../../actions/admin";
 import { mentorSignIn, mentorSignUp } from "../../actions/mentor";
 import { studentSignIn, studentSignUp } from "../../actions/student";
+import ArrowRight from "../../assets/icons/ArrowRight";
+import loginBg from "../../assets/images/login.png";
+import ReCAPTCHA from "react-google-recaptcha";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { showToast } from "../toast/toast";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 const Auth = ({ location }) => {
     // state variables declaration
@@ -19,8 +26,6 @@ const Auth = ({ location }) => {
         enrollmentNo: "",
         semester: "",
     });
-    const [isSuccess, setIsSuccess] = useState(false);
-    const [isError, setIsError] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -46,22 +51,6 @@ const Auth = ({ location }) => {
         });
     };
 
-    const displaySuccessOrError = (val) => {
-        if (val === 200) {
-            setIsSuccess(true);
-            setTimeout(() => {
-                setIsSuccess(false);
-                handleToggle();
-            }, 2000);
-        } else if (val === 500) {
-            setIsError(true);
-            setFields({ ...fields, email: "" });
-            setTimeout(() => {
-                setIsError(false);
-            }, 5000);
-        }
-    };
-
     const handleToggle = () => {
         // this function is used to toggle between signin and signup
         setToggleLogin(!toggleLogin);
@@ -78,26 +67,32 @@ const Auth = ({ location }) => {
     const handleSubmit = (e) => {
         // this function is used to handle the form submission
         e.preventDefault();
-        if (toggleLogin === false && location.state === "Admin") {
+        if (location.state === "Admin") {
             // signin the admin
             dispatch(adminSignIn(fields, history));
-        }
-        if (location.state === "Mentor") {
+        } else if (location.state === "Mentor") {
             if (toggleLogin === true) {
+                if (fields.password !== fields.confirmPassword) {
+                    showToast("error", "passwords doesn't match", 5000);
+                    return;
+                }
                 // signup mentor
-                dispatch(mentorSignUp(fields, displaySuccessOrError));
+                dispatch(mentorSignUp(fields, showToast, handleToggle));
             } else {
                 // signin mentor
-                dispatch(mentorSignIn(fields, history));
+                dispatch(mentorSignIn(fields, history, showToast));
             }
-        }
-        if (location.state === "Mentee") {
+        } else if (location.state === "Mentee") {
             if (toggleLogin === true) {
+                if (fields.password !== fields.confirmPassword) {
+                    showToast("error", "passwords doesn't match", 5000);
+                    return;
+                }
                 // signup mentee
-                dispatch(studentSignUp(fields, displaySuccessOrError));
+                dispatch(studentSignUp(fields, showToast, handleToggle));
             } else {
                 // signin mentee
-                dispatch(studentSignIn(fields, history));
+                dispatch(studentSignIn(fields, history, showToast));
             }
         }
         resetFields();
@@ -105,171 +100,225 @@ const Auth = ({ location }) => {
 
     console.log("fields", fields);
 
+    // function to handle captcha and sent to backend
+    const handleCaptchaChange = (val) => {
+        console.log(val);
+    };
+
+    // state to show and hide password
+    const [showPass, setShowPass] = useState("password");
+
+    // function to toggle show password state
+    const handlePasswordShowToggle = () => {
+        if (showPass === "password") setShowPass("text");
+        if (showPass === "text") setShowPass("password");
+    };
+
     return (
-        <div className="bg-gray-100 h-screen flex flex-col items-center justify-center">
-            <h1>{isSuccess && "acc created successfully login to continue"}</h1>
-            <h1>{isError && "Email already exist"}</h1>
-            <h1 className="mb-10 text-center">{location.state}</h1>
-            <div className="container bg-white sm:w-2/3 lg:w-4/12 py-5 px-10 rounded-lg shadow-lg">
-                <form className="font-semibold" onSubmit={handleSubmit}>
-                    {toggleLogin && (
-                        <div className="grid grid-cols-3 gap-2">
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="firstName" className="mb-2">
-                                    First Name
-                                </label>
-                                <input
-                                    id="firstName"
-                                    name="firstName"
-                                    type="text"
-                                    value={fields.firstName}
-                                    onChange={handleChange}
-                                    required
-                                    className="rounded-lg border-gray-300"
-                                />
+        <div className="w-full h-screen flex items-center">
+            <div className="flex-3 bg-white h-full flex flex-col items-center justify-center">
+                <div className="w-full">
+                    <h1 style={{ fontSize: "50px" }} className="w-full text-center">
+                        <span className="text-blue-500">{location.state}</span>{" "}
+                        {toggleLogin ? "sign-up" : "sign-in"}
+                    </h1>
+                </div>
+                <img src={loginBg} alt="" className="w-1/2" />
+            </div>
+            <div className="flex-2 bg-gray-600 h-full flex items-center justify-center">
+                <div className="w-96">
+                    <form className="" onSubmit={handleSubmit}>
+                        {toggleLogin && (
+                            <div className="grid grid-cols-3 gap-2">
+                                <div className="flex flex-col mb-6">
+                                    <label htmlFor="firstName" className="mb-2 text-white">
+                                        First name
+                                    </label>
+                                    <input
+                                        id="firstName"
+                                        name="firstName"
+                                        type="text"
+                                        value={fields.firstName}
+                                        onChange={handleChange}
+                                        required
+                                        className="rounded-md border-none"
+                                    />
+                                </div>
+                                <div className="flex flex-col mb-6">
+                                    <label htmlFor="middleName" className="mb-2 text-white">
+                                        Middle name
+                                    </label>
+                                    <input
+                                        id="middleName"
+                                        name="middleName"
+                                        type="text"
+                                        value={fields.middleName}
+                                        onChange={handleChange}
+                                        className="rounded-lg border-none"
+                                    />
+                                </div>
+                                <div className="flex flex-col mb-6">
+                                    <label htmlFor="lastName" className="mb-2 text-white">
+                                        Last name
+                                    </label>
+                                    <input
+                                        id="lastName"
+                                        name="lastName"
+                                        type="text"
+                                        value={fields.lastName}
+                                        onChange={handleChange}
+                                        required
+                                        className="rounded-lg border-none"
+                                    />
+                                </div>
                             </div>
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="middleName" className="mb-2">
-                                    Middle Name
-                                </label>
-                                <input
-                                    id="middleName"
-                                    name="middleName"
-                                    type="text"
-                                    value={fields.middleName}
-                                    onChange={handleChange}
-                                    className="rounded-lg border-gray-300"
-                                />
+                        )}
+                        {toggleLogin && location.state === "Mentee" ? (
+                            <div className="grid grid-cols-2 gap-2">
+                                <div className="flex flex-col mb-6">
+                                    <label htmlFor="enrollmentNo" className="mb-2 text-white">
+                                        Enrollment No.
+                                    </label>
+                                    <input
+                                        id="enrollmentNo"
+                                        name="enrollmentNo"
+                                        type="text"
+                                        value={fields.enrollmentNo.toUpperCase()}
+                                        onChange={handleChange}
+                                        required
+                                        className="rounded-lg border-none"
+                                    />
+                                </div>
+                                <div className="flex flex-col mb-6">
+                                    <label htmlFor="semester" className="mb-2 text-white">
+                                        Semester
+                                    </label>
+                                    <select
+                                        id="semester"
+                                        name="semester"
+                                        className="rounded-lg border-none"
+                                        value={fields.semester}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="">Select semester</option>
+                                        <option value="1st semester">1st semester</option>
+                                        <option value="2nd semester">2nd semester</option>
+                                        <option value="3rd semester">3rd semester</option>
+                                        <option value="4th semester">4th semester</option>
+                                        <option value="5th semester">5th semester</option>
+                                        <option value="6th semester">6th semester</option>
+                                        <option value="7th semester">7th semester</option>
+                                        <option value="8th semester">8th semester</option>
+                                        <option value="9th semester">9th semester</option>
+                                        <option value="10th semester">10th semester</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="lastName" className="mb-2">
-                                    Last Name
-                                </label>
-                                <input
-                                    id="lastName"
-                                    name="lastName"
-                                    type="text"
-                                    value={fields.lastName}
-                                    onChange={handleChange}
-                                    required
-                                    className="rounded-lg border-gray-300"
-                                />
-                            </div>
-                        </div>
-                    )}
-                    {toggleLogin && location.state === "Mentee" ? (
-                        <div className="grid grid-cols-2 gap-2">
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="enrollmentNo" className="mb-2">
-                                    Enrollment No.
-                                </label>
-                                <input
-                                    id="enrollmentNo"
-                                    name="enrollmentNo"
-                                    type="text"
-                                    value={fields.enrollmentNo.toUpperCase()}
-                                    onChange={handleChange}
-                                    required
-                                    className="rounded-lg border-gray-300"
-                                />
-                            </div>
-                            <div className="flex flex-col mb-6">
-                                <label htmlFor="semester" className="mb-2">
-                                    Semester
-                                </label>
-                                <select
-                                    id="semester"
-                                    name="semester"
-                                    className="rounded-lg border-gray-300"
-                                    value={fields.semester}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">Select semester</option>
-                                    <option value="1st semester">1st semester</option>
-                                    <option value="2nd semester">2nd semester</option>
-                                    <option value="3rd semester">3rd semester</option>
-                                    <option value="4th semester">4th semester</option>
-                                    <option value="5th semester">5th semester</option>
-                                    <option value="6th semester">6th semester</option>
-                                    <option value="7th semester">7th semester</option>
-                                    <option value="8th semester">8th semester</option>
-                                    <option value="9th semester">9th semester</option>
-                                    <option value="10th semester">10th semester</option>
-                                </select>
-                            </div>
-                        </div>
-                    ) : (
-                        <div></div>
-                    )}
-                    <div className="flex flex-col mb-6">
-                        <label htmlFor="email" className="mb-2">
-                            Email address
-                        </label>
-                        <input
-                            id="email"
-                            type="text"
-                            name="email"
-                            value={fields.email}
-                            onChange={handleChange}
-                            required
-                            className="rounded-lg border-gray-300"
-                        />
-                    </div>
-                    <div className="flex flex-col mb-6">
-                        <label htmlFor="password" className="mb-2">
-                            Password
-                        </label>
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            value={fields.password}
-                            onChange={handleChange}
-                            required
-                            className="rounded-lg border-gray-300"
-                        />
-                    </div>
-                    {toggleLogin && (
+                        ) : (
+                            <div></div>
+                        )}
                         <div className="flex flex-col mb-6">
-                            <label htmlFor="confirmPassword" className="mb-2">
-                                Confirm password
+                            <label htmlFor="email" className="mb-2 text-white">
+                                Email address
                             </label>
                             <input
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                type="password"
-                                value={fields.confirmPassword}
+                                id="email"
+                                type="text"
+                                name="email"
+                                value={fields.email}
                                 onChange={handleChange}
                                 required
-                                className="rounded-lg border-gray-300"
+                                className="rounded-lg border-none"
                             />
                         </div>
-                    )}
-                    <button
-                        type="submit"
-                        className="bg-blue-400 hover:bg-blue-600 text-white font-semibold w-full p-2 rounded-lg mt-3"
-                    >
-                        {toggleLogin ? "Sign up" : "Sign in"}
-                    </button>
-                </form>
-                {location.state === "Admin" ? (
-                    <div></div>
-                ) : (
-                    <div className="flex flex-col justify-center items-center">
-                        <h4 className="mt-5 font-semibold">
-                            {toggleLogin ? "Already have an account?" : "Don't have an account?"}
-                        </h4>
+                        <div className="flex flex-col mb-1">
+                            <label htmlFor="password" className="mb-2 text-white">
+                                Password
+                            </label>
+                            <input
+                                id="password"
+                                name="password"
+                                type={showPass}
+                                value={fields.password}
+                                onChange={handleChange}
+                                required
+                                className="rounded-lg border-none"
+                            />
+                        </div>
+                        {toggleLogin && (
+                            <div className="flex flex-col mb-1">
+                                <label htmlFor="confirmPassword" className="mb-2 text-white">
+                                    Confirm password
+                                </label>
+                                <input
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type={showPass}
+                                    value={fields.confirmPassword}
+                                    onChange={handleChange}
+                                    required
+                                    className="rounded-lg border-none"
+                                />
+                            </div>
+                        )}
+
+                        <FormControlLabel
+                            className="text-white"
+                            onChange={handlePasswordShowToggle}
+                            control={
+                                <Checkbox
+                                    sx={{
+                                        color: "white",
+                                        "&.Mui-checked": {
+                                            color: "white",
+                                        },
+                                    }}
+                                />
+                            }
+                            label="Show password"
+                        />
+
+                        {/* {toggleLogin || (
+                            <ReCAPTCHA
+                                className="flex items-center justify-center"
+                                sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
+                                onChange={handleCaptchaChange}
+                            />
+                        )} */}
 
                         <button
-                            onClick={handleToggle}
-                            className="rounded-md px-2 py-1 text-blue-400 hover:text-blue-700"
+                            type="submit"
+                            className="bg-white py-2 px-3 rounded-full flex items-center justify-center gap-x-2 w-full text-gray-600 group mt-4"
                         >
-                            {toggleLogin ? "Sign in" : "Sign up"}
+                            {toggleLogin ? "Sign up" : "Sign in"}
+                            <ArrowRight
+                                alt={false}
+                                myStyle={"h-4 w-4 group-hover:translate-x-2 transform transition"}
+                            />
                         </button>
-                    </div>
-                )}
+                    </form>
+                    {location.state === "Admin" ? (
+                        ""
+                    ) : (
+                        <div className="flex flex-col justify-center items-center">
+                            <h4 className="mt-5 text-white">
+                                {toggleLogin
+                                    ? "Already have an account?"
+                                    : "Don't have an account?"}
+                            </h4>
+
+                            <button
+                                onClick={handleToggle}
+                                className="rounded-md px-2 py-1 text-white hover:underline"
+                            >
+                                {toggleLogin ? "Sign in" : "Sign up"}
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
+            <ToastContainer limit={5} draggable={false} />
         </div>
     );
 };

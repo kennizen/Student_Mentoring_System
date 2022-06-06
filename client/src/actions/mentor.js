@@ -1,24 +1,38 @@
 import * as api from "../api/mentor";
 import { deleteProfilePicutre, updateProfilePicutre } from "../api/profilePicture";
 
-export const mentorSignIn = (fields, history) => async (dispatch) => {
+export const mentorSignIn = (fields, history, showToast) => async (dispatch) => {
     try {
         const { data } = await api.signIn(fields);
-        dispatch({ type: "SIGN_IN_MENTOR", data });
-        history.push("/mentor/dashboard");
+        console.log("mentor sign in data", data);
+        if (data.code === 200) {
+            dispatch({ type: "SIGN_IN_MENTOR", data });
+            history.push("/mentor/dashboard");
+        } else {
+            showToast("error", data.msg, 10000);
+        }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const mentorSignUp = (fields, displaySuccessOrError) => async (dispatch) => {
+export const mentorSignUp = (fields, showToast, handleToggle) => async (dispatch) => {
+    const handleActions = () => {
+        handleToggle();
+        showToast(
+            "info",
+            "We have sent a verification email to the registered email id, please verify before login",
+            false
+        );
+    };
+
     try {
         const { data } = await api.signUp(fields);
         console.log("mentor sign up data", data);
         if (data.code === 200) {
-            displaySuccessOrError(200);
-        } else if (data.code === 500) {
-            displaySuccessOrError(500);
+            showToast("success", data.msg + ", redirecting to login", 3000, handleActions);
+        } else {
+            showToast("error", data.msg, 10000);
         }
     } catch (error) {
         console.log(error);
