@@ -436,12 +436,15 @@ module.exports = {
             const { token } = req.body;
             const { data } = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_PRIVATE_KEY}&response=${token}`);
             
-            console.log(data);
-            response.success(res, "", { success: data.success });
+            if(data.success) {
+                return response.success(res, "", { success: data.success });
+            }
+
+            throw new Error();
         }
         catch(err) {
-            console.log(err);
-            response.error(res);
+            // console.log(err);
+            response.error(res, "Captcha verification failed");
         }
     }
 };
