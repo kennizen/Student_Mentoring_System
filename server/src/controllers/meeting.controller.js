@@ -101,7 +101,7 @@ const createMeeting = async (req, res, next) => {
 const updateMeeting = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { participants, date, description, url } = req.body;
+        const { participants, date, description, url, minutes } = req.body;
 
         const meeting = await Meeting.findById(id);
 
@@ -121,6 +121,7 @@ const updateMeeting = async (req, res, next) => {
         meeting.date = date || meeting.date;
         meeting.description = description || meeting.description;
         meeting.url = url || meeting.url;
+        meeting.minutes = minutes || meeting.minutes;
 
         await (await meeting.save()).populate("participants.user").populate("host").execPopulate();
         response.success(res, "Meeting updated", meeting);

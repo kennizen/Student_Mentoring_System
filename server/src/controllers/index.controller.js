@@ -368,6 +368,7 @@ module.exports = {
         }
     },
 
+    // generating interactions summary
     getInteractionsSummary: async (req, res, next) => {
         try {
             const d = new Date();
@@ -388,13 +389,14 @@ module.exports = {
             lastDate = new Date(lastDate).getDate();
 
             // getting data from the db
-            const results = await Interaction.aggregate([
+            const firstDay = startDate
+            const firstDayResult = await Interaction.aggregate([
                 {
                     $match: {
                         mentor: req.user._id,
                         date: {
-                            $gte: startDate,
-                            $lte: endDate,
+                            $gte: new Date(firstDay.setHours(0,0,0,0)),
+                            $lte: new Date(firstDay.setHours(23,59,59,999))
                         },
                     },
                 },
@@ -405,28 +407,47 @@ module.exports = {
                 },
             ]);
 
-            // console.log(results)
-
+            // init variables to store data
             const posts = new Array(lastDate);
             const meetings = new Array(lastDate);
             const labels = new Array(lastDate);
 
-            // entering the first entry 1st date of month
-            posts[0] = results[0]?.interactionCount.post || 0;
-            meetings[0] = results[0]?.interactionCount.meeting || 0;
+            // entering the first entry 1st day of month
+            posts[0] = firstDayResult[0]?.interactionCount.post || 0;
+            meetings[0] = firstDayResult[0]?.interactionCount.meeting || 0;
             labels[0] = startDate.getDate();
 
-            // entering the subsequesnt entries
+            // entering the subsequesnt entries i.e. from 2nd day till last day of month
             for (let i = 1; i < lastDate; i++) {
+                
                 const date = startDate;
-                posts[i] = results[i]?.interactionCount.post || 0;
-                meetings[i] = results[i]?.interactionCount.meeting || 0;
                 labels[i] = new Date(date.setDate(date.getDate() + 1)).getDate();
+
+                const result = await Interaction.aggregate([
+                    {
+                        $match: {
+                            mentor: req.user._id,
+                            date: {
+                                $gte: new Date(date.setHours(0,0,0,0)),
+                                $lte: new Date(date.setHours(23,59,59,999)),
+                            },
+                        },
+                    },
+                    {
+                        $sort: {
+                            date: 1,
+                        },
+                    },
+                ]);
+
+                posts[i] = result[0]?.interactionCount.post || 0;
+                meetings[i] = result[0]?.interactionCount.meeting || 0;
             }
 
             response.success(res, "", { labels, posts, meetings });
         } catch (err) {
             console.log(err);
+            response.error(res);
         }
     },
 

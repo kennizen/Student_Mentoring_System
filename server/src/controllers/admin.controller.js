@@ -258,7 +258,7 @@ module.exports = {
             }
 
             if (!user) {
-                user = await Student.findById({ id });
+                user = await Student.findById(id);
             }
 
             if (!user) {

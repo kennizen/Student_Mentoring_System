@@ -22,6 +22,9 @@ const meetingSchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
+        minutes: {
+            type: String
+        }
     },
     {
         timestamps: true,
