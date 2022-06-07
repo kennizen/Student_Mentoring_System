@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 const Admin = require("../models/Admin");
 const Mentor = require("../models/Mentor");
 const Student = require("../models/Student");
+const Meeting = require("../models/Meeting");
+const Post = require("../models/Post");
 const Log = require("../models/Log");
 const dotenv = require("dotenv");
 
@@ -281,4 +283,31 @@ module.exports = {
             response.error(res);
         }
     },
+
+    // get all interactions for admin
+    getAllInteractions: async (req, res, next) => {
+        try {
+            
+            const mentors = await Mentor.find();
+            const result = [];
+
+            for await (const mentor of mentors) {
+                
+                const posts = await Post.find({group_id: mentor._id}).populate("author");
+                const meetings = await Meeting.find({ host: mentor._id}).populate("host").populate("participants.user");
+
+                result.push({
+                    mentor,
+                    posts,
+                    meetings
+                })
+            }
+
+            response.success(res, "", { count: result.length, interactions: result })
+        }
+        catch(err) {
+            console.log(err);
+            response.error(res);
+        }
+    }
 };

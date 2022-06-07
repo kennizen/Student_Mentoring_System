@@ -38,10 +38,16 @@ router.post("/assignMentees", Auth, Authorize(Role.Admin), adminController.assig
 // assign mentees 
 router.post("/removeMentees", Auth, Authorize(Role.Admin), adminController.removeMentees, Logger(events.GROUP_UPDATE));
 
+// get admin profile route
 router.get("/profile", Auth, Authorize(Role.Admin), adminController.getProfile);
 
+// admin profile update route
 router.post("/profile", Auth, Authorize(Role.Admin), adminController.updateProfile);
 
+// banning user route
 router.patch("/banUser", Auth, Authorize(Role.Admin), adminController.banUser);
+
+// get all interactions
+router.get("/interactions", Auth, Authorize(Role.Admin), adminController.getAllInteractions);
 
 module.exports = router;
