@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { CSSTransition } from "react-transition-group";
@@ -20,13 +20,11 @@ import ProfilePicModal from "./profilePicModal/ProfilePicModal";
 import ProfileModal from "./ProfileModal";
 import StuModal from "./stuModal/StuModal";
 import { Roles } from "../../../../../utility";
+import { authContext } from "../../../../../contexts/authContext";
 
 const Profile = ({ profileData }) => {
     // getting uid of the logged in user
-    let role = "";
-    if (localStorage.getItem("authData")) {
-        role = JSON.parse(localStorage.getItem("authData"))["role"];
-    }
+    const { role } = useContext(authContext);
 
     const dispatch = useDispatch();
     const history = useHistory();

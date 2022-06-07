@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { markNotificationRead } from "../../actions/notification";
 import DoubleTickIcon from "../../assets/icons/DoubleTickIcon";
 import NotificationTile from "./NotificationTile";
 import Loading from "../loading/Loading";
+import { authContext } from "../../contexts/authContext";
 
 const Notification = ({
     myStyle,
@@ -14,10 +15,7 @@ const Notification = ({
     setModalContent,
 }) => {
     // getting uid of the logged in user
-    let uid = "";
-    if (localStorage.getItem("authData")) {
-        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-    }
+    const { uid } = useContext(authContext);
 
     const dispatch = useDispatch();
     const history = useHistory();

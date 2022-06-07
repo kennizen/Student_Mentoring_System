@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { adminBanUser, adminGetMentorMentee } from "../../../../../actions/admin";
+import { ToastContainer } from "react-toastify";
+import {
+    adminBanUser,
+    adminGetInteractions,
+    adminGetMentorMentee,
+} from "../../../../../actions/admin";
 
 const AdminInteractions = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
     const [selected, setSelected] = useState("mentors");
+    const [interactions, setInteractions] = useState([]);
 
     // accessing global state for fetching the list of mentors and mentees
     const {
@@ -17,6 +23,7 @@ const AdminInteractions = () => {
     // fetching mentor mentee details
     useEffect(() => {
         dispatch(adminGetMentorMentee(history));
+        dispatch(adminGetInteractions(history, setInteractions));
     }, [dispatch, history]);
 
     // function to handle the tab selection
@@ -160,6 +167,7 @@ const AdminInteractions = () => {
                     </div>
                 )}
             </section>
+            <ToastContainer limit={5} draggable={false} pauseOnFocusLoss={false} />
         </div>
     );
 };

@@ -53,7 +53,9 @@ const ManageGroups = () => {
     // function to handle assign
     const handleAssign = () => {
         let newMentees = [];
-        newMentees = students.filter((student) => student.mentoredBy === "");
+        newMentees = students.filter(
+            (student) => student.mentoredBy === "" || student.mentoredBy === undefined
+        );
         setAssignMentees(newMentees);
         setShowOverlay(true);
         setShowAssignModal(true);

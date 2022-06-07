@@ -1,7 +1,9 @@
+import { toast } from "react-toastify";
 import * as api from "../api/mentor";
 import { deleteProfilePicutre, updateProfilePicutre } from "../api/profilePicture";
+import { showToast } from "../components/toast/toast";
 
-export const mentorSignIn = (fields, history, showToast) => async (dispatch) => {
+export const mentorSignIn = (fields, history) => async (dispatch) => {
     try {
         const { data } = await api.signIn(fields);
         console.log("mentor sign in data", data);
@@ -9,14 +11,14 @@ export const mentorSignIn = (fields, history, showToast) => async (dispatch) => 
             dispatch({ type: "SIGN_IN_MENTOR", data });
             history.push("/mentor/dashboard");
         } else {
-            showToast("error", data.msg, 10000);
+            showToast("error", data.msg, 10000, toast.POSITION.TOP_RIGHT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const mentorSignUp = (fields, showToast, handleToggle) => async (dispatch) => {
+export const mentorSignUp = (fields, handleToggle) => async (dispatch) => {
     const handleActions = () => {
         handleToggle();
         showToast(
@@ -30,9 +32,15 @@ export const mentorSignUp = (fields, showToast, handleToggle) => async (dispatch
         const { data } = await api.signUp(fields);
         console.log("mentor sign up data", data);
         if (data.code === 200) {
-            showToast("success", data.msg + ", redirecting to login", 3000, handleActions);
+            showToast(
+                "success",
+                data.msg + ", redirecting to login",
+                3000,
+                toast.POSITION.TOP_RIGHT,
+                handleActions
+            );
         } else {
-            showToast("error", data.msg, 10000);
+            showToast("error", data.msg, 10000, toast.POSITION.TOP_RIGHT);
         }
     } catch (error) {
         console.log(error);

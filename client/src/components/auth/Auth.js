@@ -74,7 +74,7 @@ const Auth = ({ location }) => {
         e.preventDefault();
         if (location.state === "Admin") {
             // signin the admin
-            dispatch(adminSignIn(fields, history, showToast));
+            dispatch(adminSignIn(fields, history));
         } else if (location.state === "Mentor") {
             if (toggleLogin === true) {
                 if (fields.password !== fields.confirmPassword) {
@@ -82,10 +82,10 @@ const Auth = ({ location }) => {
                     return;
                 }
                 // signup mentor
-                dispatch(mentorSignUp(fields, showToast, handleToggle));
+                dispatch(mentorSignUp(fields, handleToggle));
             } else {
                 // signin mentor
-                dispatch(mentorSignIn(fields, history, showToast));
+                dispatch(mentorSignIn(fields, history));
             }
         } else if (location.state === "Mentee") {
             if (toggleLogin === true) {
@@ -94,10 +94,10 @@ const Auth = ({ location }) => {
                     return;
                 }
                 // signup mentee
-                dispatch(studentSignUp(fields, showToast, handleToggle));
+                dispatch(studentSignUp(fields, handleToggle));
             } else {
                 // signin mentee
-                dispatch(studentSignIn(fields, history, showToast));
+                dispatch(studentSignIn(fields, history));
             }
         }
         resetFields();
@@ -392,7 +392,7 @@ const Auth = ({ location }) => {
                     )}
                 </div>
             </div>
-            <ToastContainer limit={5} draggable={false} />
+            <ToastContainer limit={5} draggable={false} pauseOnFocusLoss={false} />
         </div>
     );
 };

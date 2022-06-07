@@ -1,21 +1,23 @@
 import * as api from "../api/student";
 import { updateProfilePicutre, deleteProfilePicutre } from "../api/profilePicture";
+import { showToast } from "../components/toast/toast";
+import { toast } from "react-toastify";
 
-export const studentSignIn = (fields, history, showToast) => async (dispatch) => {
+export const studentSignIn = (fields, history) => async (dispatch) => {
     try {
         const { data } = await api.signIn(fields);
         if (data.code === 200) {
             dispatch({ type: "SIGN_IN_STUDENT", data });
             history.push("/mentee/dashboard");
         } else {
-            showToast("error", data.msg, 10000);
+            showToast("error", data.msg, 10000, toast.POSITION.TOP_RIGHT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const studentSignUp = (fields, showToast, handleToggle) => async (dispatch) => {
+export const studentSignUp = (fields, handleToggle) => async (dispatch) => {
     const handleActions = () => {
         handleToggle();
         showToast(
@@ -28,9 +30,15 @@ export const studentSignUp = (fields, showToast, handleToggle) => async (dispatc
         const { data } = await api.signUp(fields);
         console.log("student sign up data", data);
         if (data.code === 200) {
-            showToast("success", data.msg + ", redirecting to login", 3000, handleActions);
+            showToast(
+                "success",
+                data.msg + ", redirecting to login",
+                3000,
+                toast.POSITION.TOP_RIGHT,
+                handleActions
+            );
         } else {
-            showToast("error", data.msg, 10000);
+            showToast("error", data.msg, 10000, toast.POSITION.TOP_RIGHT);
         }
     } catch (error) {
         console.log(error);

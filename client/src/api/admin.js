@@ -22,6 +22,11 @@ export const fetchLogs = () =>
         return error.response;
     });
 
+export const getInteractions = () =>
+    API.get("/admin/interactions").catch((error) => {
+        return error.response;
+    });
+
 export const banUser = (id) =>
     API.patch("/admin/banUser", { id: id }).catch((error) => {
         return error.response;

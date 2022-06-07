@@ -1,22 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { mentorDeleteProfilePicture } from "../../../../../../actions/mentor";
 import { studentDeleteProfilePicture } from "../../../../../../actions/student";
+import { authContext } from "../../../../../../contexts/authContext";
+import { Roles } from "../../../../../../utility";
 
 const ProfilePicDelModal = ({ nodeRef, setHiddenProfilePicDelModal, setShowOverlay }) => {
     // getting role of the logged in user
-    let role = "";
-    if (localStorage.getItem("authData")) {
-        role = JSON.parse(localStorage.getItem("authData"))["role"];
-    }
+    const { role } = useContext(authContext);
 
     const dispatch = useDispatch();
     const history = useHistory();
 
     // function to delete the object with the given id
     const handleDelete = () => {
-        if (role === "MENTOR") {
+        if (role === Roles.MENTOR) {
             dispatch(mentorDeleteProfilePicture(history));
         } else {
             dispatch(studentDeleteProfilePicture(history));

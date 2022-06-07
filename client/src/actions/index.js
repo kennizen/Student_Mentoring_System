@@ -23,6 +23,7 @@ export const verifyRecaptcha = (token, showToast, setRecaptcha) => async (dispat
             setRecaptcha(!data.data.success);
         } else {
             showToast("error", data.msg, 10000);
+            setRecaptcha(true);
         }
         console.log("data in recaptcha", data);
     } catch (error) {

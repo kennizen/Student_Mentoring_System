@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DotIcon from "../../assets/icons/DotIcon";
 import moment from "moment";
 import AnnotationIcon from "../../assets/icons/AnnotationIcon";
@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { markNotificationRead } from "../../actions/notification";
 import UserGroupIcon from "../../assets/icons/UserGroupIcon";
+import { authContext } from "../../contexts/authContext";
 
 const NotificationTile = ({
     content,
@@ -19,10 +20,7 @@ const NotificationTile = ({
     setModalContent,
 }) => {
     // getting uid of the logged in user
-    let uid = "";
-    if (localStorage.getItem("authData")) {
-        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-    }
+    const { uid } = useContext(authContext);
 
     const dispatch = useDispatch();
     const history = useHistory();

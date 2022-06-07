@@ -6,9 +6,7 @@ export const getInteractions = (history, setData) => async (dispatch) => {
         console.log("interactions in actions", data);
 
         //check if the response data is error
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             const date = new Date();
             let newPostsArr = [];
             let newMeetingsArr = [];
@@ -24,6 +22,7 @@ export const getInteractions = (history, setData) => async (dispatch) => {
                 meetings: newMeetingsArr,
                 maxVal: Math.max(...newPostsArr.concat(newMeetingsArr)) + 1,
             });
+        } else {
         }
     } catch (error) {
         console.log(error);

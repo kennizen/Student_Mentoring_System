@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -15,15 +15,13 @@ import Loading from "../../../../../loading/Loading";
 import ScrollToBottom from "./ScrollToBottom";
 import Message from "./Message";
 import { SocketContext } from "../../../../../../socket/socket";
+import { authContext } from "../../../../../../contexts/authContext";
 
 const ChatWindow = ({ selectedChat, curChat }) => {
     const socket = React.useContext(SocketContext);
 
     // getting uid of the logged in user
-    let uid = "";
-    if (localStorage.getItem("authData")) {
-        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-    }
+    const { uid } = useContext(authContext);
 
     // accesing global state to fetch the chats
     const { chats } = useSelector((state) => state.chat);

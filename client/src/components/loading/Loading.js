@@ -1,8 +1,19 @@
 import React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import { LinearProgress } from "@mui/material";
 
-const Loading = ({ myStyle }) => {
-    return <CircularProgress className={`${myStyle}`} />;
+const Loading = ({ width, height, alt }) => {
+    if (alt) {
+        return <LinearProgress />;
+    }
+    return (
+        <CircularProgress
+            sx={{
+                width: width,
+                height: height,
+            }}
+        />
+    );
 };
 
 export default Loading;

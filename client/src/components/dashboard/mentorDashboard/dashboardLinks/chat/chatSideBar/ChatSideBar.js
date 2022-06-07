@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SearchIcon from "../../../../../../assets/icons/SearchIcon";
 import ChatTile from "./ChatTile";
 import { useSelector } from "react-redux";
 import SearchChatTile from "./SearchChatTile";
+import { authContext } from "../../../../../../contexts/authContext";
 
 const ChatSideBar = ({ setChatSelection, setCurChat }) => {
     // getting uid of the logged in user
-    const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+    const { uid } = useContext(authContext);
 
     // accesing global state to fetch the chats
     const { chats } = useSelector((state) => state.chat);

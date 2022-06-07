@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useContext, useRef, useState } from "react";
 import moment from "moment";
 import EditIcon from "@mui/icons-material/Edit";
 import { Chip, Tooltip } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { CSSTransition } from "react-transition-group";
+import ModalOverlay from "../../../../../modal/ModalOverlay";
+import MeetingMinutesModal from "../meetingModal/MeetingMinutesModal";
+import { authContext } from "../../../../../../contexts/authContext";
+import { Roles } from "../../../../../../utility";
+import { useDispatch } from "react-redux";
+import { updateMeeting } from "../../../../../../actions/meeting";
+import { useHistory } from "react-router-dom";
 
 const curDate = new Date();
 
@@ -13,7 +22,9 @@ const MeetingTile = ({
     date,
     description,
     participants,
+    minutes,
     setMeeting,
+    meeting,
 }) => {
     const handleSelectedMeeting = () => {
         let part = [];
@@ -26,7 +37,37 @@ const MeetingTile = ({
             url: url,
             date: date,
             participants: part,
+            minutes: minutes === undefined ? "" : minutes,
         });
+    };
+
+    // getting user role
+    const { role } = useContext(authContext);
+
+    // state to control the modal show and dont show
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [showMeetingMinutesModal, setShowMeetingMinutesModal] = useState(false);
+
+    // node refs for the modals
+    const meetingMinutesModalRef = useRef(null);
+    const overlayRef = useRef(null);
+
+    // function to show minutes meeting modal
+    const handleMinutesMeetingModal = () => {
+        setShowOverlay(true);
+        setShowMeetingMinutesModal(true);
+        handleSelectedMeeting();
+    };
+
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    // function to handle minute submit
+    const handleMinutesSubmit = () => {
+        dispatch(updateMeeting(history, meeting));
+        setMeeting({ ...meeting, minutes: "" });
+        setShowOverlay(false);
+        setShowMeetingMinutesModal(false);
     };
 
     return (
@@ -35,18 +76,58 @@ const MeetingTile = ({
                 curDate.toISOString() > date ? "bg-gray-200" : "bg-white"
             } mb-4`}
         >
+            <CSSTransition
+                nodeRef={overlayRef}
+                in={showOverlay}
+                timeout={300}
+                classNames="overlay"
+                unmountOnExit
+            >
+                <ModalOverlay nodeRef={overlayRef} />
+            </CSSTransition>
+            <CSSTransition
+                nodeRef={meetingMinutesModalRef}
+                in={showMeetingMinutesModal}
+                timeout={300}
+                classNames="modal"
+                unmountOnExit
+            >
+                <MeetingMinutesModal
+                    nodeRef={meetingMinutesModalRef}
+                    setShowOverlay={setShowOverlay}
+                    setShowMeetingMinutesModal={setShowMeetingMinutesModal}
+                    handleMinutesSubmit={handleMinutesSubmit}
+                    meeting={meeting}
+                    setMeeting={setMeeting}
+                />
+            </CSSTransition>
             <div className="flex items-start justify-start">
                 <img className="w-12 h-12 mr-2 rounded-full" src={host?.avatar?.url} alt="img" />
                 <div className="flex-grow">
                     <h5>{`${host?.firstname} ${host?.middlename} ${host?.lastname}`}</h5>
                     <h6 className="text-gray-600">{moment(updatedAt).format("DD/MM/yyyy")}</h6>
                 </div>
-                <button
-                    onClick={handleSelectedMeeting}
-                    className="hover:bg-gray-600 hover:text-white text-gray-600 transition-all rounded-full w-8 h-8 text-center"
-                >
-                    <EditIcon fontSize="small" />
-                </button>
+                {role === Roles.MENTOR && (
+                    <>
+                        <Tooltip arrow title="add meeting minutes" enterDelay={500}>
+                            <button
+                                onClick={handleMinutesMeetingModal}
+                                className="hover:bg-gray-600 hover:text-white text-gray-600 transition-all rounded-full w-8 h-8 text-center mr-3"
+                            >
+                                <AddIcon fontSize="medium" />
+                            </button>
+                        </Tooltip>
+
+                        <Tooltip arrow title="edit meeting" enterDelay={500}>
+                            <button
+                                onClick={handleSelectedMeeting}
+                                className="hover:bg-gray-600 hover:text-white text-gray-600 transition-all rounded-full w-8 h-8 text-center"
+                            >
+                                <EditIcon fontSize="small" />
+                            </button>
+                        </Tooltip>
+                    </>
+                )}
             </div>
             <p className="">{description}</p>
             <div className="flex items-start justify-between gap-x-3 w-full">
@@ -99,6 +180,7 @@ const MeetingTile = ({
                     );
                 })}
             </div>
+            {minutes ? <h5>{minutes}</h5> : ""}
         </div>
     );
 };

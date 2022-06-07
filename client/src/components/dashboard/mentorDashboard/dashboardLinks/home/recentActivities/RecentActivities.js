@@ -11,6 +11,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Loading from "../../../../../loading/Loading";
 import FeedIcon from "@mui/icons-material/Feed";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
 
 const RecentActivities = () => {
     const dispatch = useDispatch();
@@ -39,6 +40,7 @@ const RecentActivities = () => {
                                 <div className="w-11 h-11 bg-gray-600 text-blue-300 rounded-full flex items-center justify-center">
                                     {log?.event_type === "LOGIN" && <LoginIcon />}
                                     {log?.event_type === "LOGOUT" && <LogoutIcon />}
+                                    {log?.event_type === "SIGNUP" && <HowToRegIcon />}
                                     {(log?.event_type === "COMMENT_CREATED" ||
                                         log?.event_type === "COMMENT_DELETED") && (
                                         <ChatIcon alt={true} myStyle={"h-6 w-6"} />

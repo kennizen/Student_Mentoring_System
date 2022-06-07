@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { authContext } from "../../contexts/authContext";
 
 const NotificationCounter = () => {
     // getting uid of the logged in user
-    let uid = "";
-    if (localStorage.getItem("authData")) {
-        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-    }
+    const { uid } = useContext(authContext);
 
     // accessing the global notification store
     const { notifications } = useSelector((state) => state.notification);
@@ -37,11 +35,15 @@ const NotificationCounter = () => {
     return (
         <>
             {readNotifications > 0 ? (
-                <h5 className="bg-red-500 text-center w-5 h-5 rounded-full text-white flex items-center justify-center absolute top-0 right-0">
-                    {readNotifications}
+                <h5
+                    className={`bg-red-500 text-center w-6 h-6 rounded-full text-white flex items-center justify-center absolute -top-1 right-0 ${
+                        readNotifications > 99 ? "text-xs" : ""
+                    }`}
+                >
+                    {readNotifications > 99 ? "99+" : readNotifications}
                 </h5>
             ) : (
-                <></>
+                ""
             )}
         </>
     );

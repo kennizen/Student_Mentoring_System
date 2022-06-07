@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import moment from "moment";
 import ReplyIcon from "../../../../../../assets/icons/ReplyIcon";
 import ChatIcon from "../../../../../../assets/icons/ChatIcon";
@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { fetchPostComments } from "../../../../../../actions/post";
 import { useHistory } from "react-router-dom";
 import DotIcon from "../../../../../../assets/icons/DotIcon";
+import { authContext } from "../../../../../../contexts/authContext";
 
 const SinglePost = ({
     post,
@@ -23,10 +24,7 @@ const SinglePost = ({
     index,
 }) => {
     // getting uid of the logged in user
-    let uid = "";
-    if (localStorage.getItem("authData")) {
-        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-    }
+    const { uid } = useContext(authContext);
 
     const dispatch = useDispatch();
     const history = useHistory();

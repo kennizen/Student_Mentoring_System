@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import moment from "moment";
 import TrashIcon from "../../../../../../assets/icons/TrashIcon";
+import { authContext } from "../../../../../../contexts/authContext";
 
 const SingleComment = ({
     comment,
@@ -10,10 +11,7 @@ const SingleComment = ({
     setSelectedComment,
 }) => {
     // getting uid of the logged in user
-    let uid = "";
-    if (localStorage.getItem("authData")) {
-        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-    }
+    const { uid } = useContext(authContext);
 
     return (
         <div className="p-2 bg-white rounded-md place-self-start mb-3 mr-2 flex">

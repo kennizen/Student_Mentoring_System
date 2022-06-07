@@ -227,7 +227,9 @@ const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
                 >
                     <div ref={scrollPost}></div>
                     {postLoading ? (
-                        <Loading myStyle={"w-10 h-10"} />
+                        <div className="flex items-center justify-center">
+                            <Loading width="40px" height="40px" />
+                        </div>
                     ) : (
                         posts
                             .sort((a, b) => {
@@ -255,7 +257,9 @@ const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
                     )}
                     {!postLoading ? (
                         oldPostLoading ? (
-                            <Loading myStyle={"w-6 h-6 mb-1"} />
+                            <div className="w-full">
+                                <Loading alt={true} />
+                            </div>
                         ) : (
                             <button
                                 onClick={loadOlderPosts}

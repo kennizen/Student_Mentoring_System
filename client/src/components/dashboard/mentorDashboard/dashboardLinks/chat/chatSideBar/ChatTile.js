@@ -1,15 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import DotIcon from "../../../../../../assets/icons/DotIcon";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
+import { authContext } from "../../../../../../contexts/authContext";
 
 const ChatTile = ({ chat, index, setChatSelection, thatUser, setCurChat, setTmpList }) => {
-    // getting uid of the logged in user
-    let uid = "";
-    if (localStorage.getItem("authData") !== null) {
-        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-    }
-
+    const { uid } = useContext(authContext);
     const dispatch = useDispatch();
 
     // accessing global store for the notification array to show notifications

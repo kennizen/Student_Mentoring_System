@@ -87,7 +87,7 @@ const MeetingForm = ({ meeting, setMeeting }) => {
                     socket={socket}
                 />
             </CSSTransition>
-            <h3 className="px-4 py-3 mb-4 rounded-md bg-gray-200">Schedule a meeting</h3>
+            <h3 className="px-4 py-3 mb-4 rounded-md bg-white shadow">Schedule a meeting</h3>
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-col mb-3">
                     <textarea
@@ -103,7 +103,7 @@ const MeetingForm = ({ meeting, setMeeting }) => {
                     {meeting.description ? (
                         <h6 className="ml-2 text-gray-500">Meeting description</h6>
                     ) : (
-                        <></>
+                        ""
                     )}
                 </div>
 
@@ -115,13 +115,13 @@ const MeetingForm = ({ meeting, setMeeting }) => {
                         id="url"
                         name="url"
                         type="text"
-                        placeholder="Meeting link if any"
+                        placeholder="Meeting link"
                         className="rounded-lg border-blueGray-300 border focus:ring-0 pr-10"
                     />
                     <div className="absolute top-2.5 right-3">
                         <LinkIcon className="text-gray-500" />
                     </div>
-                    {meeting.url ? <h6 className="ml-2 text-gray-500">Meeting url</h6> : <></>}
+                    {meeting.url ? <h6 className="ml-2 text-gray-500">Meeting url</h6> : ""}
                 </div>
 
                 <DTP date={meeting.date} handleDateChange={handleDateChange} />

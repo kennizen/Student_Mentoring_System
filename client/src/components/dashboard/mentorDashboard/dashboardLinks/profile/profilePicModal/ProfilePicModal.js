@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { mentorUpdateProfilePicture } from "../../../../../../actions/mentor";
@@ -6,13 +6,12 @@ import { studentUpdateProfilePicture } from "../../../../../../actions/student";
 import UploadIcon from "../../../../../../assets/icons/UploadIcon";
 
 import Resizer from "react-image-file-resizer";
+import { authContext } from "../../../../../../contexts/authContext";
+import { Roles } from "../../../../../../utility";
 
 const ProfilePicModal = ({ setHiddenProfilePicModal, setShowOverlay, nodeRef }) => {
     // getting role of the logged in user
-    let role = "";
-    if (localStorage.getItem("authData")) {
-        role = JSON.parse(localStorage.getItem("authData"))["role"];
-    }
+    const { role } = useContext(authContext);
 
     // state to set the image to be displayed
     const [image, setImage] = useState(null);
@@ -42,7 +41,7 @@ const ProfilePicModal = ({ setHiddenProfilePicModal, setShowOverlay, nodeRef }) 
         event.preventDefault();
         const formData = new FormData();
         formData.append("avatar", imageToBeSent);
-        if (role === "MENTOR") {
+        if (role === Roles.MENTOR) {
             dispatch(mentorUpdateProfilePicture(history, formData));
         } else {
             dispatch(studentUpdateProfilePicture(history, formData));
