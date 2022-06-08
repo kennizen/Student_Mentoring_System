@@ -7,6 +7,7 @@ import thunk from "redux-thunk";
 // import "tw-elements";
 import reducers from "./reducers/index";
 import "./index.css";
+import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
 
 const store = createStore(reducers, compose(applyMiddleware(thunk)));

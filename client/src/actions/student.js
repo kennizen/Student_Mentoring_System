@@ -45,39 +45,30 @@ export const studentSignUp = (fields, handleToggle) => async (dispatch) => {
     }
 };
 
-export const studentGetDetails = (history) => async (dispatch) => {
+export const studentGetDetails = () => async (dispatch) => {
     try {
         const { data } = await api.fetchStudent();
         console.log("student data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 401) {
-            dispatch({ type: "LOGOUT_STUDENT" });
-            history.push("/");
-        } else if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             return dispatch({ type: "FETCH_STUDENT", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const studentGetProfileDetails = (history) => async (dispatch) => {
+export const studentGetProfileDetails = () => async (dispatch) => {
     try {
         const { data } = await api.fetchStudentProfile();
         console.log("student profile data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             return dispatch({ type: "FETCH_PROFILE", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -90,13 +81,10 @@ export const studentUpdateProfileDetails = (history, fields) => async (dispatch)
         const { data } = await api.updateStudentProfile(fields);
         console.log("student profile data in actions from update", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "FETCH_PROFILE", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -108,14 +96,11 @@ export const studentUpdateProfilePicture = (history, image) => async (dispatch) 
         const { data } = await updateProfilePicutre(image);
         console.log("student profile picture data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             // again calling fetch student profile so that we get the updated avatar url
-            dispatch(studentGetProfileDetails(history));
+            dispatch(studentGetProfileDetails());
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -127,32 +112,26 @@ export const studentDeleteProfilePicture = (history) => async (dispatch) => {
         const { data } = await deleteProfilePicutre();
         console.log("student deleted profile picture data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             // again calling fetch student profile so that we get the updated avatar url
-            dispatch(studentGetProfileDetails(history));
+            dispatch(studentGetProfileDetails());
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const studentGetSemesterDetails = (history) => async (dispatch) => {
+export const studentGetSemesterDetails = () => async (dispatch) => {
     try {
         const { data } = await api.fetchStudentSemesterDetails();
         console.log("student semester data in actions from get", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "SAVE_SEM_DATA", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -165,13 +144,10 @@ export const studentAddSemesterDetails = (history, fields, setIsLoading) => asyn
         const { data } = await api.addStudentSemesterDetails(fields);
         console.log("student semester data in actions from add", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "ADD_SEM_DATA", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
         setIsLoading(false);
     } catch (error) {
@@ -185,13 +161,10 @@ export const studentUpdateSemesterDetails = (history, fields) => async (dispatch
         const { data } = await api.updateStudentSemesterDetails(fields);
         console.log("student semester data in actions from update", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "UPDATE_SEM_DATA", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -204,31 +177,25 @@ export const studentDeleteSemesterDetails = (history, fields) => async (dispatch
         const { data } = await api.deleteStudentSemesterDetails(fields);
         console.log("student semester data in actions from delete", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "DELETE_SEM_DATA", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const studentGetPastEduDetails = (history) => async (dispatch) => {
+export const studentGetPastEduDetails = () => async (dispatch) => {
     try {
         const { data } = await api.getStudentPastEduDetails();
         console.log("student past edu data in actions from get", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "SAVE_PAST_EDU_DATA", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -241,13 +208,10 @@ export const studentUpdatePastEduDetails = (history, fields) => async (dispatch)
         const { data } = await api.updateStudentPastEduDetails(fields);
         console.log("student past edu data in actions from update", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "SAVE_PAST_EDU_DATA", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -259,13 +223,10 @@ export const studentGetAllStudentsOfMentor = (history, setAllMentees) => async (
         const { data } = await api.getStudentsOfMentor();
         console.log("students of mentor", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             setAllMentees(data.data.students);
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);

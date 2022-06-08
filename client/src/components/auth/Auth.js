@@ -9,7 +9,6 @@ import ArrowRight from "../../assets/icons/ArrowRight";
 import loginBg from "../../assets/images/login.png";
 import ReCAPTCHA from "react-google-recaptcha";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { showToast } from "../toast/toast";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { CSSTransition } from "react-transition-group";

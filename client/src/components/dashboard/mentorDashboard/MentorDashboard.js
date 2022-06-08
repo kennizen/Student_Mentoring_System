@@ -65,6 +65,7 @@ import { getMeetings } from "../../../actions/meeting";
 import Loading from "../../loading/Loading";
 import AdminInteractions from "./dashboardLinks/adminInteractions/AdminInteractions";
 import { authContext } from "../../../contexts/authContext";
+import { ToastContainer } from "react-toastify";
 
 const MentorDashboard = () => {
     // getting uid and role of the logged in user
@@ -781,6 +782,7 @@ const MentorDashboard = () => {
                     </div>
                 </authContext.Provider>
             )}
+            <ToastContainer limit={5} draggable={false} pauseOnFocusLoss={false} />
         </>
     );
 };

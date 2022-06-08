@@ -47,38 +47,31 @@ export const mentorSignUp = (fields, handleToggle) => async (dispatch) => {
     }
 };
 
-export const mentorGetDetails = (history) => async (dispatch) => {
+export const mentorGetDetails = () => async (dispatch) => {
     try {
         const { data } = await api.fetchMentor();
         console.log("mentor data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 401) {
-            dispatch({ type: "LOGOUT_MENTOR" });
-            history.push("/");
-        } else if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             return dispatch({ type: "FETCH_MENTOR", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const mentorGetAllMentees = (history) => async (dispatch) => {
+export const mentorGetAllMentees = () => async (dispatch) => {
     try {
         const { data } = await api.getAllMentees();
         console.log("mentor all mentees in actions", data);
 
-        //check if the response data is error
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             const mentees = data.data.mentees;
             return dispatch({ type: "STORE_MENTEES", mentees });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -92,27 +85,27 @@ export const mentorGetAllMenteeSemesters =
             console.log("mentee all semesters in actions", data);
 
             //check if the response data is error
-            if (data.code === 403) {
-                history.goBack();
-            } else {
+            if (data.code === 200) {
                 setSemesters(data.data.semesters);
+            } else {
+                showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
             }
         } catch (error) {
             console.log(error);
         }
     };
 
-export const mentorGetProfile = (history) => async (dispatch) => {
+export const mentorGetProfile = () => async (dispatch) => {
     try {
         const { data } = await api.getProfile();
         console.log("mentor profile in actions", data);
 
         //check if the response data is error
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             const profile = data.data.profileData;
             return dispatch({ type: "FETCH_MENTOR_PROFILE", profile });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -125,11 +118,11 @@ export const mentorUpdateProfile = (history, formData) => async (dispatch) => {
         console.log("mentor updated profile in actions", data);
 
         //check if the response data is error
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             const profile = data.data.profileData;
             dispatch({ type: "FETCH_MENTOR_PROFILE", profile });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -141,33 +134,27 @@ export const mentorUpdateProfilePicture = (history, image) => async (dispatch) =
         const { data } = await updateProfilePicutre(image);
         console.log("mentor profile picture data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             // again calling fetch student profile so that we get the updated avatar url
-            dispatch(mentorGetProfile(history));
+            dispatch(mentorGetProfile());
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const mentorDeleteProfilePicture = (history) => async (dispatch) => {
+export const mentorDeleteProfilePicture = () => async (dispatch) => {
     try {
         const { data } = await deleteProfilePicutre();
         console.log("mentor deleted profile picture data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             // again calling fetch student profile so that we get the updated avatar url
-            dispatch(mentorGetProfile(history));
+            dispatch(mentorGetProfile());
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);

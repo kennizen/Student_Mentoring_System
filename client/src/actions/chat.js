@@ -1,4 +1,6 @@
+import { toast } from "react-toastify";
 import * as api from "../api/chat";
+import { showToast } from "../components/toast/toast";
 
 export const createChat = (history, setShowModal, chatIds) => async (dispatch) => {
     try {
@@ -6,13 +8,12 @@ export const createChat = (history, setShowModal, chatIds) => async (dispatch) =
         console.log("chat created data", data);
         setShowModal(false);
 
-        //check if the response data is error
         if (data.code === 409) {
-            dispatch(getAllChat(history));
-        } else if (data.code === 403) {
-            history.goBack();
-        } else {
+            dispatch(getAllChat());
+        } else if (data.code === 200) {
             dispatch({ type: "ADD_CHATS", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -52,16 +53,15 @@ export const updateLatestMessage = (data) => async (dispatch) => {
     }
 };
 
-export const getAllChat = (history) => async (dispatch) => {
+export const getAllChat = () => async (dispatch) => {
     try {
         const { data } = await api.fetchChat();
         console.log("chat data", data);
 
-        //check if the response data is error
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             return dispatch({ type: "FETCH_CHATS", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -73,15 +73,14 @@ export const createMessage = (history, message, socket, executeScroll) => async 
         const { data } = await api.createMessage(message);
         console.log("message created data", data);
 
-        //check if the response data is error
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch(addMessages(data));
             executeScroll();
             dispatch(updateLatestMessage(data));
             dispatch(reorderChats(message.chat));
             socket.emit("newMessage", data);
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -93,13 +92,12 @@ export const getMessages = (history, chatId, page, setIsLoading) => async (dispa
         setIsLoading(true);
         const { data } = await api.getMessages(chatId, page);
         console.log("message get data", data);
-        // setMessages(data.data);
-        //check if the response data is error
-        if (data.code === 403) {
-            history.goBack();
-        } else {
+        setIsLoading(false);
+
+        if (data.code === 200) {
             dispatch({ type: "FETCH_MESSAGES", data });
-            setIsLoading(false);
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -119,12 +117,11 @@ export const getOlderMessages =
         try {
             const { data } = await api.getMessages(chatId, page);
             console.log("older message get data", data);
-            // setMessages(data.data);
-            //check if the response data is error
-            if (data.code === 403) {
-                history.goBack();
-            } else {
+
+            if (data.code === 200) {
                 dispatch({ type: "FETCH_OLDER_MESSAGES", data });
+            } else {
+                showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
             }
             setOldMessageLoading(false);
         } catch (error) {

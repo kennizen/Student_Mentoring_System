@@ -1,4 +1,6 @@
+import { toast } from "react-toastify";
 import * as api from "../api/interactions";
+import { showToast } from "../components/toast/toast";
 
 export const getInteractions = (history, setData) => async (dispatch) => {
     try {
@@ -23,6 +25,7 @@ export const getInteractions = (history, setData) => async (dispatch) => {
                 maxVal: Math.max(...newPostsArr.concat(newMeetingsArr)) + 1,
             });
         } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);

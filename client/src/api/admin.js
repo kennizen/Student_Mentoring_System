@@ -1,6 +1,9 @@
 import API from "./index";
 
-export const signIn = (fields) => API.post("/admin/login", fields);
+export const signIn = (fields) =>
+    API.post("/admin/login", fields).catch((error) => {
+        return error.response;
+    });
 
 export const fetchAdmin = () =>
     API.get("/admin/dashboard").catch((error) => {

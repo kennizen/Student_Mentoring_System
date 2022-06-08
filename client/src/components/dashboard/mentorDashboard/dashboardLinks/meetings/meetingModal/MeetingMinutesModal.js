@@ -12,7 +12,7 @@ const MeetingMinutesModal = ({
     const handleHideModalOperations = () => {
         setShowOverlay(false);
         setShowMeetingMinutesModal(false);
-        setMeeting({ ...meeting, minutes: "" });
+        setMeeting({ id: "", participants: [], description: "", url: "", date: null, minutes: "" });
     };
 
     // function to handle onchange

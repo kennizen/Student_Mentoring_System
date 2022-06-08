@@ -17,84 +17,60 @@ export const adminSignIn = (fields, history) => async (dispatch) => {
     }
 };
 
-export const adminGetDetails = (history) => async (dispatch) => {
+export const adminGetDetails = () => async (dispatch) => {
     try {
         const { data } = await api.fetchAdmin();
         console.log("admin data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 401) {
-            dispatch({ type: "LOGOUT_ADMIN" });
-            history.push("/");
-        } else if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             return dispatch({ type: "FETCH_ADMIN", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const adminGetMentorMentee = (history) => async (dispatch) => {
+export const adminGetMentorMentee = () => async (dispatch) => {
     try {
         const { data } = await api.fetchMentorMentee();
         console.log("Mentor Mentee data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 401) {
-            dispatch({ type: "LOGOUT_ADMIN" });
-            history.push("/");
-        } else if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "FETCH_MENTOR_MENTEE", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const adminSaveGroup = (groupData, history) => async (dispatch) => {
+export const adminSaveGroup = (groupData) => async (dispatch) => {
     try {
         const { data } = await api.saveGroup(groupData);
         console.log("group res data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 401) {
-            dispatch({ type: "LOGOUT_ADMIN" });
-            history.push("/");
-        } else if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "FETCH_MENTOR_MENTEE", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
     }
 };
 
-export const adminFetchLogs = (history) => async (dispatch) => {
+export const adminFetchLogs = () => async (dispatch) => {
     try {
         const { data } = await getLogs();
         console.log("logs data in actions", data);
 
-        // check if the response data is error
-        // if yes then call dispatch logout
-        // and redirect to "/"
-        if (data.code === 401) {
-            dispatch({ type: "LOGOUT_ADMIN" });
-            history.push("/");
-        } else if (data.code === 403) {
-            history.goBack();
-        } else {
+        if (data.code === 200) {
             dispatch({ type: "FETCH_LOGS", data });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
     } catch (error) {
         console.log(error);
@@ -131,7 +107,7 @@ export const adminGetInteractions = (history, setInteractions) => async (dispatc
         console.log("interactions data in actions", data);
 
         if (data.code === 200) {
-            //setInteractions(data)
+            setInteractions(data.data.interactions);
         } else {
             showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }

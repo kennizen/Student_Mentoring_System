@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
-import { adminGetMentorMentee } from "../../../../../actions/admin";
+import { adminGetMentorMentee, adminSaveGroup } from "../../../../../actions/admin";
 
 import MentorTile from "./MentorTile";
 import SearchIcon from "../../../../../assets/icons/SearchIcon";
@@ -86,6 +86,11 @@ const ManageGroups = () => {
         }
     };
 
+    // function to handle save group
+    const handleSaveGroup = () => {
+        dispatch(adminSaveGroup(group));
+    };
+
     return (
         <div className="h-full w-full px-5 py-5 relative">
             <CSSTransition
@@ -113,6 +118,7 @@ const ManageGroups = () => {
                     group={group}
                     handleSelection={handleSelection}
                     setGroup={setGroup}
+                    handleSaveGroup={handleSaveGroup}
                 />
             </CSSTransition>
             <CSSTransition
