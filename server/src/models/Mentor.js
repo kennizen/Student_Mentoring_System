@@ -97,6 +97,8 @@ mentorSchema.methods.toJSON = function () {
     // delete mentorObject.role;
     delete mentorObject.passwordResetToken;
     delete mentorObject.emailVerifyToken;
+    delete mentorObject.isEmailVerified;
+    delete mentorObject.isBanned;
 
     return mentorObject;
 };

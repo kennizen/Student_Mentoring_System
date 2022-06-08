@@ -16,4 +16,7 @@ router.post("/", Auth, Authorize([roles.Mentor]), meetingController.createMeetin
 // update a new meeting
 router.patch("/:id", Auth, Authorize([roles.Mentor]), meetingController.updateMeeting);
 
+// update minutes
+router.patch("/:id/minutes", Auth, Authorize([roles.Mentor]), meetingController.updateMinutes);
+
 module.exports = router;
