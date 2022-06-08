@@ -15,8 +15,13 @@ export const fetchMentorMentee = () =>
         return error.response;
     });
 
-export const saveGroup = (groupData) =>
-    API.post("/admin/saveGroup", groupData).catch((error) => {
+export const assignMentees = (groupData) =>
+    API.post("/admin/assignMentees", groupData).catch((error) => {
+        return error.response;
+    });
+
+export const removeMentees = (groupData) =>
+    API.post("/admin/removeMentees", groupData).catch((error) => {
         return error.response;
     });
 
