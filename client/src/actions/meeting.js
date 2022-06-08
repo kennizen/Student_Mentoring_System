@@ -50,3 +50,19 @@ export const updateMeeting = (history, meeting, socket) => async (dispatch) => {
         console.log(error);
     }
 };
+
+export const updateMinutes = (meetMinutes) => async (dispatch) => {
+    try {
+        const { data } = await api.updateMinutes(meetMinutes.id, meetMinutes.minutes);
+        console.log("update minutes data in actions", data);
+
+        if (data.code === 200) {
+            const meeting = data.data;
+            dispatch({ type: "UPDATE_MEETING", meeting });
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};

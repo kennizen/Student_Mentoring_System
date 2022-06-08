@@ -36,14 +36,7 @@ const Meetings = () => {
                         return a.createdAt < b.createdAt ? 1 : -1;
                     })
                     ?.map((meet) => {
-                        return (
-                            <MeetingTile
-                                key={meet._id}
-                                {...meet}
-                                setMeeting={setMeeting}
-                                meeting={meeting}
-                            />
-                        );
+                        return <MeetingTile key={meet._id} {...meet} setMeeting={setMeeting} />;
                     })}
             </div>
             {role === Roles.MENTOR ? (

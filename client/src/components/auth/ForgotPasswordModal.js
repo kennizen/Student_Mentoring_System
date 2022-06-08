@@ -7,13 +7,13 @@ const ForgotPasswordModal = ({ nodeRef, setShowModal, setFPEmail, FPEmail }) => 
     const dispatch = useDispatch();
 
     const handleChange = (e) => {
-        setFPEmail(e.target.value);
+        setFPEmail({ ...FPEmail, [e.target.name]: e.target.value });
     };
 
     // funtion to set the email for forgot passowrd
     const handleForgotPassword = () => {
         dispatch(sendForgotPassword(FPEmail, showToast, setShowModal));
-        setFPEmail("");
+        setFPEmail({ ...FPEmail, email: "" });
     };
 
     return (
@@ -28,7 +28,7 @@ const ForgotPasswordModal = ({ nodeRef, setShowModal, setFPEmail, FPEmail }) => 
                         <button
                             onClick={() => {
                                 setShowModal(false);
-                                setFPEmail("");
+                                setFPEmail({ ...FPEmail, email: "" });
                             }}
                             className="text-2xl"
                         >
@@ -37,7 +37,7 @@ const ForgotPasswordModal = ({ nodeRef, setShowModal, setFPEmail, FPEmail }) => 
                     </div>
 
                     <input
-                        name="FPEmail"
+                        name="email"
                         onChange={handleChange}
                         type="text"
                         className="rounded-md border border-blue-500"

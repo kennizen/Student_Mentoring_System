@@ -14,3 +14,8 @@ export const updateMeeting = (id, meeting) =>
     API.patch(`/meetings/${id}`, meeting).catch((error) => {
         return error.response;
     });
+
+export const updateMinutes = (id, minutes) =>
+    API.patch(`/meetings/${id}/minutes`, { minutes: minutes }).catch((error) => {
+        return error.response;
+    });

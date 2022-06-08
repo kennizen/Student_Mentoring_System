@@ -115,7 +115,10 @@ const Auth = ({ location }) => {
     // state to show and hide password
     const [showPass, setShowPass] = useState("password");
     // state for forgot passowrd email
-    const [FPEmail, setFPEmail] = useState("");
+    const [FPEmail, setFPEmail] = useState({
+        role: location.state,
+        email: "",
+    });
 
     // function to toggle show password state
     const handlePasswordShowToggle = () => {
@@ -130,6 +133,8 @@ const Auth = ({ location }) => {
     // refs used for css transition to work for the modal and the overlay
     const modalRef = useRef(null);
     const overlayRef = useRef(null);
+
+    console.log(FPEmail);
 
     return (
         <div className="w-full h-screen flex items-center">

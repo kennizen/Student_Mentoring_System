@@ -41,8 +41,6 @@ const MeetingModal = ({
         }
     };
 
-    console.log(socket);
-
     // function to schedule the meeting
     const handleCreateMeeting = (e) => {
         const name = e.target.name;

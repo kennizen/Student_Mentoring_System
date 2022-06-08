@@ -9,7 +9,7 @@ import MeetingMinutesModal from "../meetingModal/MeetingMinutesModal";
 import { authContext } from "../../../../../../contexts/authContext";
 import { Roles } from "../../../../../../utility";
 import { useDispatch } from "react-redux";
-import { updateMeeting } from "../../../../../../actions/meeting";
+import { updateMeeting, updateMinutes } from "../../../../../../actions/meeting";
 import { useHistory } from "react-router-dom";
 
 const curDate = new Date();
@@ -24,7 +24,6 @@ const MeetingTile = ({
     participants,
     minutes,
     setMeeting,
-    meeting,
 }) => {
     const handleSelectedMeeting = () => {
         let part = [];
@@ -47,6 +46,8 @@ const MeetingTile = ({
     // state to control the modal show and dont show
     const [showOverlay, setShowOverlay] = useState(false);
     const [showMeetingMinutesModal, setShowMeetingMinutesModal] = useState(false);
+    // minutes state
+    const [meetMinutes, setMeetMinutes] = useState({ id: "", minutes: "" });
 
     // node refs for the modals
     const meetingMinutesModalRef = useRef(null);
@@ -56,19 +57,20 @@ const MeetingTile = ({
     const handleMinutesMeetingModal = () => {
         setShowOverlay(true);
         setShowMeetingMinutesModal(true);
-        handleSelectedMeeting();
+        setMeetMinutes({ id: _id, minutes: minutes === undefined ? "" : minutes });
     };
 
     const dispatch = useDispatch();
-    const history = useHistory();
 
     // function to handle minute submit
     const handleMinutesSubmit = () => {
-        dispatch(updateMeeting(history, meeting));
-        setMeeting({ ...meeting, minutes: "" });
+        dispatch(updateMinutes(meetMinutes));
+        setMeetMinutes({ id: "", minutes: "" });
         setShowOverlay(false);
         setShowMeetingMinutesModal(false);
     };
+
+    console.log("meet minutes", meetMinutes);
 
     return (
         <div
@@ -97,8 +99,8 @@ const MeetingTile = ({
                     setShowOverlay={setShowOverlay}
                     setShowMeetingMinutesModal={setShowMeetingMinutesModal}
                     handleMinutesSubmit={handleMinutesSubmit}
-                    meeting={meeting}
-                    setMeeting={setMeeting}
+                    meetMinutes={meetMinutes}
+                    setMeetMinutes={setMeetMinutes}
                 />
             </CSSTransition>
             <div className="flex items-start justify-start">
@@ -170,7 +172,7 @@ const MeetingTile = ({
                                     <img
                                         className="rounded-full"
                                         alt="img"
-                                        src={p?.user?.avatar.url}
+                                        src={p?.user?.avatar?.url}
                                     />
                                 }
                                 label={p?.user?.enrollment_no}

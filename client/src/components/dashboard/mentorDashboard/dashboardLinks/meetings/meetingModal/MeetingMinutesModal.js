@@ -5,19 +5,19 @@ const MeetingMinutesModal = ({
     setShowOverlay,
     setShowMeetingMinutesModal,
     handleMinutesSubmit,
-    meeting,
-    setMeeting,
+    meetMinutes,
+    setMeetMinutes,
 }) => {
     // function to handle the modal hide ops
     const handleHideModalOperations = () => {
         setShowOverlay(false);
         setShowMeetingMinutesModal(false);
-        setMeeting({ id: "", participants: [], description: "", url: "", date: null, minutes: "" });
+        setMeetMinutes({ id: "", minutes: "" });
     };
 
     // function to handle onchange
     const handleChange = (e) => {
-        setMeeting({ ...meeting, [e.target.name]: e.target.value });
+        setMeetMinutes({ ...meetMinutes, [e.target.name]: e.target.value });
     };
 
     return (
@@ -37,7 +37,7 @@ const MeetingMinutesModal = ({
                     <div className="flex items-center flex-wrap justify-start gap-x-3">
                         <textarea
                             onChange={handleChange}
-                            value={meeting.minutes}
+                            value={meetMinutes.minutes}
                             required
                             name="minutes"
                             id="minutes"
@@ -50,7 +50,7 @@ const MeetingMinutesModal = ({
                     <div className="w-full flex items-center justify-end gap-x-4">
                         <button
                             name="createNew"
-                            disabled={meeting.minutes.length > 0 ? false : true}
+                            disabled={meetMinutes.minutes.length > 0 ? false : true}
                             onClick={handleMinutesSubmit}
                             type="submit"
                             className="mt-3 py-1 px-2 hover:bg-blue-600 rounded-md text-white bg-blue-500 transition-all disabled:opacity-50"

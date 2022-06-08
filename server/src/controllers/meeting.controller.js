@@ -86,9 +86,13 @@ const createMeeting = async (req, res, next) => {
             );
 
             // generating interactions on meeting
-           
+
             // creating interactions
-            const interaction = await interactionController.createInteraction("Meeting", req.user, newMeeting._id);
+            const interaction = await interactionController.createInteraction(
+                "Meeting",
+                req.user,
+                newMeeting._id
+            );
         }
 
         next();
@@ -133,22 +137,27 @@ const updateMeeting = async (req, res, next) => {
 
 const updateMinutes = async (req, res, next) => {
     try {
-        const { id } = req.params;  
+        const { id } = req.params;
         const { minutes } = req.body;
-        
-        const meeting = await Meeting.findByIdAndUpdate(id, {
-            $set: { 
-                minutes: minutes
-            }
-        }, { new: true});
+
+        const meeting = await Meeting.findByIdAndUpdate(
+            id,
+            {
+                $set: {
+                    minutes: minutes,
+                },
+            },
+            { new: true }
+        )
+            .populate("host")
+            .populate("participants.user");
 
         response.success(res, "Minutes updated", meeting);
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err);
         response.error(res);
     }
-}
+};
 
 module.exports = {
     createMeeting,
