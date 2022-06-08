@@ -54,6 +54,7 @@ export const adminAssignMentees = (groupData) => async (dispatch) => {
 
         if (data.code === 200) {
             dispatch(adminGetMentorMentee());
+            showToast("success", data.msg, 3000, toast.POSITION.BOTTOM_LEFT);
         } else {
             showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
@@ -69,6 +70,7 @@ export const adminRemoveMentees = (groupData) => async (dispatch) => {
 
         if (data.code === 200) {
             dispatch(adminGetMentorMentee());
+            showToast("success", data.msg, 3000, toast.POSITION.BOTTOM_LEFT);
         } else {
             showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }
