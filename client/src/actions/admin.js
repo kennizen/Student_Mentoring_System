@@ -47,13 +47,28 @@ export const adminGetMentorMentee = () => async (dispatch) => {
     }
 };
 
-export const adminSaveGroup = (groupData) => async (dispatch) => {
+export const adminAssignMentees = (groupData) => async (dispatch) => {
     try {
-        const { data } = await api.saveGroup(groupData);
-        console.log("group res data in actions", data);
+        const { data } = await api.assignMentees(groupData);
+        console.log("assign mentess data in actions", data);
 
         if (data.code === 200) {
-            dispatch({ type: "FETCH_MENTOR_MENTEE", data });
+            dispatch(adminGetMentorMentee());
+        } else {
+            showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const adminRemoveMentees = (groupData) => async (dispatch) => {
+    try {
+        const { data } = await api.removeMentees(groupData);
+        console.log("remove mentess data in actions", data);
+
+        if (data.code === 200) {
+            dispatch(adminGetMentorMentee());
         } else {
             showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }

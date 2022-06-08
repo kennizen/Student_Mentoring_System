@@ -10,7 +10,7 @@ const AssignModal = ({
     group,
     handleSelection,
     setGroup,
-    handleSaveGroup,
+    handleAssignMentees,
 }) => {
     const handleActions = () => {
         setShowOverlay(false);
@@ -59,7 +59,7 @@ const AssignModal = ({
 
                 <div className="w-full mt-2 flex items-center justify-end">
                     <button
-                        onClick={handleSaveGroup}
+                        onClick={handleAssignMentees}
                         disabled={group.studentIds.length === 0 ? true : false}
                         className="flex items-center justify-between py-2 px-4 rounded-md bg-blue-600 hover:bg-blue-800 transition-colors text-white disabled:opacity-50"
                     >

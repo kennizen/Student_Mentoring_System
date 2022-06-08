@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
 
-import { adminGetMentorMentee, adminSaveGroup } from "../../../../../actions/admin";
+import {
+    adminAssignMentees,
+    adminGetMentorMentee,
+    adminRemoveMentees,
+    adminSaveGroup,
+} from "../../../../../actions/admin";
 
 import MentorTile from "./MentorTile";
 import SearchIcon from "../../../../../assets/icons/SearchIcon";
@@ -15,7 +19,6 @@ import ViewModal from "./manageGroupModals/ViewModal";
 
 const ManageGroups = () => {
     const dispatch = useDispatch();
-    const history = useHistory();
 
     // accessing global state for fetching the list of mentors and mentees
     const {
@@ -24,8 +27,8 @@ const ManageGroups = () => {
 
     // fetching mentor mentee details
     useEffect(() => {
-        dispatch(adminGetMentorMentee(history));
-    }, []);
+        dispatch(adminGetMentorMentee());
+    }, [dispatch]);
 
     console.log("mentor mentee data in manage groups", mentors, students);
 
@@ -87,8 +90,13 @@ const ManageGroups = () => {
     };
 
     // function to handle save group
-    const handleSaveGroup = () => {
-        dispatch(adminSaveGroup(group));
+    const handleAssignMentees = () => {
+        dispatch(adminAssignMentees(group));
+    };
+
+    // function to handle save group
+    const handleRemoveMentees = () => {
+        dispatch(adminRemoveMentees(group));
     };
 
     return (
@@ -118,7 +126,7 @@ const ManageGroups = () => {
                     group={group}
                     handleSelection={handleSelection}
                     setGroup={setGroup}
-                    handleSaveGroup={handleSaveGroup}
+                    handleAssignMentees={handleAssignMentees}
                 />
             </CSSTransition>
             <CSSTransition
@@ -137,6 +145,7 @@ const ManageGroups = () => {
                     group={group}
                     handleSelection={handleSelection}
                     setGroup={setGroup}
+                    handleRemoveMentees={handleRemoveMentees}
                 />
             </CSSTransition>
             <div className="w-full p-3 rounded-md h-full">

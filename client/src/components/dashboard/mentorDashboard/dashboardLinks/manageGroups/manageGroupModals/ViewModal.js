@@ -10,6 +10,7 @@ const ViewModal = ({
     group,
     handleSelection,
     setGroup,
+    handleRemoveMentees,
 }) => {
     const handleActions = () => {
         setShowOverlay(false);
@@ -58,7 +59,7 @@ const ViewModal = ({
 
                 <div className="w-full mt-2 flex items-center justify-end">
                     <button
-                        //onClick={handleSubmit}
+                        onClick={handleRemoveMentees}
                         disabled={group.studentIds.length === 0 ? true : false}
                         className="flex items-center justify-between py-2 px-4 rounded-md bg-red-600 hover:bg-red-800 transition-colors text-white disabled:opacity-50"
                     >
