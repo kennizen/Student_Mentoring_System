@@ -203,7 +203,7 @@ module.exports = {
 
                 // checking if mentor is already assigned to a mentor
                 if (student.mentoredBy) {
-                    student.mentoredBy = "";
+                    student.mentoredBy = undefined;
                     await student.save();
                 }
             }

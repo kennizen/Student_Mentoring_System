@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Student = require("../models/Student");
 const Mentor = require("../models/Mentor");
+const Admin = require("../models/Admin");
 const Post = require("../models/Post");
 const Log = require("../models/Log");
 const Interaction = require("../models/Interaction");
@@ -106,19 +107,23 @@ module.exports = {
     // request a reset password link
     forgotPassword: async (req, res, next) => {
         try {
-            const { email } = req.body;
+            const { email, role } = req.body;
 
-            if(!email) {
+            if(!email || !role) {
                 throw new Error("Email not provided");
             }
 
             let user;
+            
+            if (role === roles.Admin) {
+                user = await Admin.findOne({ email });
+            }
 
-            if (!user) {
+            if (role === roles.Mentor) {
                 user = await Mentor.findOne({ email });
             }
 
-            if (!user) {
+            if (role === roles.Student) {
                 user = await Student.findOne({ email });
             }
 
@@ -155,6 +160,11 @@ module.exports = {
 
             let user;
 
+            // if user is admin
+            if (decoded.role === roles.Admin) {
+                user = await Admin.findOne({ _id: decoded._id, passwordResetToken: token });
+            }
+
             // if user is mentor
             if (decoded.role === roles.Mentor) {
                 user = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
@@ -181,6 +191,11 @@ module.exports = {
             const { password, confirmPassword } = req.body;
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+            // if user is admin
+            if (decoded.role === roles.Admin) {
+                user = await Admin.findOne({ _id: decoded._id, passwordResetToken: token });
+            }
+            
             if (decoded.role === roles.Mentor) {
                 user = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
             }

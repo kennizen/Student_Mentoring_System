@@ -46,6 +46,12 @@ const adminSchema = new mongoose.Schema(
                 },
             },
         ],
+        passwordResetToken: String,
+        emailVerifyToken: String,
+        isEmailVerified: {
+            type: Boolean,
+            default: false
+        },
     },
     {
         timestamps: true,
@@ -60,6 +66,9 @@ adminSchema.methods.toJSON = function () {
     delete adminObject.password;
     delete adminObject.tokens;
     delete adminObject.role;
+    delete adminObject.passwordResetToken;
+    delete adminObject.emailVerifyToken;
+    delete adminObject.isEmailVerified;
 
     return adminObject;
 };
