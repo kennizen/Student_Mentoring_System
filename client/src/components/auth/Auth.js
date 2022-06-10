@@ -8,7 +8,7 @@ import { studentSignIn, studentSignUp } from "../../actions/student";
 import ArrowRight from "../../assets/icons/ArrowRight";
 import loginBg from "../../assets/images/login.png";
 import ReCAPTCHA from "react-google-recaptcha";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { showToast } from "../toast/toast";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { CSSTransition } from "react-transition-group";
@@ -28,6 +28,7 @@ const Auth = ({ location }) => {
         confirmPassword: "",
         enrollmentNo: "",
         semester: "",
+        department: "",
     });
     const dispatch = useDispatch();
     const history = useHistory();
@@ -77,7 +78,7 @@ const Auth = ({ location }) => {
         } else if (location.state === "Mentor") {
             if (toggleLogin === true) {
                 if (fields.password !== fields.confirmPassword) {
-                    showToast("error", "passwords doesn't match", 5000);
+                    showToast("error", "passwords doesn't match", 5000, toast.POSITION.TOP_RIGHT);
                     return;
                 }
                 // signup mentor
@@ -89,7 +90,7 @@ const Auth = ({ location }) => {
         } else if (location.state === "Mentee") {
             if (toggleLogin === true) {
                 if (fields.password !== fields.confirmPassword) {
-                    showToast("error", "passwords doesn't match", 5000);
+                    showToast("error", "passwords doesn't match", 5000, toast.POSITION.TOP_RIGHT);
                     return;
                 }
                 // signup mentee
@@ -109,7 +110,7 @@ const Auth = ({ location }) => {
 
     // function to handle captcha and send to backend
     const handleCaptchaChange = (val) => {
-        dispatch(verifyRecaptcha(val, showToast, setRecaptcha));
+        dispatch(verifyRecaptcha(val, setRecaptcha));
     };
 
     // state to show and hide password

@@ -92,11 +92,15 @@ const ManageGroups = () => {
     // function to handle save group
     const handleAssignMentees = () => {
         dispatch(adminAssignMentees(group));
+        setShowOverlay(false);
+        setShowAssignModal(false);
     };
 
     // function to handle save group
     const handleRemoveMentees = () => {
         dispatch(adminRemoveMentees(group));
+        setShowOverlay(false);
+        setShowViewModal(false);
     };
 
     return (

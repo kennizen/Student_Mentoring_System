@@ -36,7 +36,7 @@ const AdminInteractions = () => {
 
     // function to handle block user
     const blockUser = (e) => {
-        dispatch(adminBanUser(e.target.name, history));
+        dispatch(adminBanUser(e.target.name));
     };
 
     console.log("mentor mentee in interactions", mentors, students);
