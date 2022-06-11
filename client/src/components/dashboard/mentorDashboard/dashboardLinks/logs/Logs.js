@@ -94,7 +94,7 @@ const Logs = () => {
                                 </thead>
                                 <tbody>
                                     {logs
-                                        .sort((a, b) => a.createdAt < b.createdAt)
+                                        .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
                                         .map((log) => {
                                             return (
                                                 <tr key={log._id} className="bg-white border-b">

@@ -64,11 +64,11 @@ const NotificationModal = ({ notification, nodeRef, setShowNotificationModal, se
                         <div className="flex-grow">
                             <h5>{`${notification?.creator?.firstname} ${notification?.creator?.middlename} ${notification?.creator?.lastname}`}</h5>
                             <h6 className="text-gray-600">
-                                {moment(notification?.content.updatedAt).format("DD/MM/yyyy")}
+                                {moment(notification?.content?.updatedAt).format("DD/MM/yyyy")}
                             </h6>
                         </div>
                     </div>
-                    <p className="">{notification?.content.description}</p>
+                    <p className="">{notification?.content?.description}</p>
                     <div className="flex items-start justify-between gap-x-3 w-full">
                         <span
                             style={{
@@ -86,9 +86,9 @@ const NotificationModal = ({ notification, nodeRef, setShowNotificationModal, se
                                 className="underline hover:text-blue-500"
                                 rel="noreferrer"
                                 target={"_blank"}
-                                href={notification?.content.url}
+                                href={notification?.content?.url}
                             >
-                                {notification?.content.url}
+                                {notification?.content?.url}
                             </a>
                         </span>
                         <h6 className="flex-shrink-0">

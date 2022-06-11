@@ -6,7 +6,8 @@ const semesterSchema = new mongoose.Schema(
             type: Number,
         },
         student_id: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Student",
         },
         courses: [Object],
     },

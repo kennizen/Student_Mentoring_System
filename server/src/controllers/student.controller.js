@@ -204,7 +204,7 @@ module.exports = {
                 throw new Error();
             }
 
-            student.mentor = mentor.name;
+            // student.mentor = mentor.name;
 
             response.success(res, "Profile Updated", { profileData: student });
             next();
@@ -215,9 +215,11 @@ module.exports = {
 
     getSemesterInfo: async (req, res, next) => {
         try {
-            const semesters = await Semester.find({ student_id: req.user._id }).sort({
-                semester: 1,
-            });
+            const semesters = await Semester.find({ student_id: req.user._id })
+                .sort({
+                    semester: 1,
+                })
+                .populate("student_id");
 
             response.success(res, "", { semesters });
             next();
@@ -239,7 +241,7 @@ module.exports = {
             if (semester) {
                 semester.courses = req.body.courses;
                 newSem = semester;
-                newSem.save();
+                await newSem.save();
             } else {
                 // else create a new semester and save to db
                 newSem = new Semester();
@@ -248,7 +250,10 @@ module.exports = {
                 newSem.courses = req.body.courses;
                 await newSem.save();
             }
-            response.success(res, "", { semesters: newSem });
+
+            const result = await newSem.populate("student_id").execPopulate();
+
+            response.success(res, "", { semesters: result });
             next();
         } catch (err) {
             console.log(err);
