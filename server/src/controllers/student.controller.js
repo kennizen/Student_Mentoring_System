@@ -175,10 +175,10 @@ module.exports = {
             student.guardian_address = req.body.guardian_address;
             student.family_details = req.body.family_details;
             student.hobbies = req.body.hobbies;
-            student.class_10_board = req.body.class_10_board;
-            student.class_10_percentage = req.body.class_10_percentage;
-            student.class_12_board = req.body.class_12_board;
-            student.class_12_percentage = req.body.class_12_percentage;
+            // student.class_10_board = req.body.class_10_board;
+            // student.class_10_percentage = req.body.class_10_percentage;
+            // student.class_12_board = req.body.class_12_board;
+            // student.class_12_percentage = req.body.class_12_percentage;
             student.enrollment_no = req.body.enrollment_no;
             student.programme = req.body.programme;
             student.enrollment_year = req.body.enrollment_year;
@@ -195,20 +195,23 @@ module.exports = {
             student.contact_no_of_contact_person = req.body.contact_no_of_contact_person;
             student.responsible_contact_address = req.body.responsible_contact_address;
 
-            await student.save();
+            const newStudentData = await (await student.save())
+                .populate("mentoredBy")
+                .execPopulate();
 
-            // getting mentor data here
-            const mentor = await Mentor.findById(student.mentoredBy);
+            // // getting mentor data here
+            // const mentor = await Mentor.findById(student.mentoredBy);
 
-            if (!mentor) {
-                throw new Error();
-            }
+            // if (!mentor) {
+            //     throw new Error();
+            // }
 
             // student.mentor = mentor.name;
 
-            response.success(res, "Profile Updated", { profileData: student });
+            response.success(res, "Profile Updated", { profileData: newStudentData });
             next();
         } catch (err) {
+            console.log(err);
             response.error(res);
         }
     },
@@ -336,7 +339,7 @@ module.exports = {
             });
 
             const mentor = await Mentor.findById(req.user.mentoredBy);
-            students.push(mentor);
+            if (mentor != null) students.push(mentor);
 
             response.success(res, "", { count: students.length, students });
             next();

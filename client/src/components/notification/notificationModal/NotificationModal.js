@@ -58,7 +58,11 @@ const NotificationModal = ({ notification, nodeRef, setShowNotificationModal, se
                     <div className="flex items-start justify-start">
                         <img
                             className="w-12 h-12 mr-2 rounded-full"
-                            src={notification?.creator.avatar?.url}
+                            src={
+                                notification?.creator.avatar.url === ""
+                                    ? `https://avatars.dicebear.com/api/initials/${notification?.creator.firstname}.svg`
+                                    : notification?.creator.avatar.url
+                            }
                             alt="img"
                         />
                         <div className="flex-grow">

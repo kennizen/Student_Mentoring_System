@@ -168,9 +168,9 @@ module.exports = {
                 const student = await Student.findById(studentId);
 
                 // checking if mentee is already assigned to another mentor
-                if (student.mentoredBy) {
-                    return response.error(res, "Mentee already assigned to another mentor");
-                }
+                // if (student.mentoredBy) {
+                //     return response.error(res, "Mentee already assigned to another mentor");
+                // }
                 student.mentoredBy = mentor._id;
                 await student.save();
             }

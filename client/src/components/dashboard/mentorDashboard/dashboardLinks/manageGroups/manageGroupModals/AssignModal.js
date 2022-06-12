@@ -25,8 +25,6 @@ const AssignModal = ({
         handleSelection(selectedMentor._id, e.target.id);
     };
 
-    console.log(group);
-
     return (
         <div className="w-full h-full bg-transparent absolute top-0 left-0 flex items-center justify-center">
             <div

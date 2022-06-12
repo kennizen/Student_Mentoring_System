@@ -104,7 +104,15 @@ const MeetingTile = ({
                 />
             </CSSTransition>
             <div className="flex items-start justify-start">
-                <img className="w-12 h-12 mr-2 rounded-full" src={host?.avatar?.url} alt="img" />
+                <img
+                    className="w-12 h-12 mr-2 rounded-full"
+                    src={
+                        host?.avatar?.url === ""
+                            ? `https://avatars.dicebear.com/api/initials/${host?.firstname}.svg`
+                            : host?.avatar?.url
+                    }
+                    alt="img"
+                />
                 <div className="flex-grow">
                     <h5>{`${host?.firstname} ${host?.middlename} ${host?.lastname}`}</h5>
                     <h6 className="text-gray-600">{moment(updatedAt).format("DD/MM/yyyy")}</h6>
@@ -172,7 +180,11 @@ const MeetingTile = ({
                                     <img
                                         className="rounded-full"
                                         alt="img"
-                                        src={p?.user?.avatar?.url}
+                                        src={
+                                            p?.user?.avatar?.url === ""
+                                                ? `https://avatars.dicebear.com/api/initials/${p?.user?.firstname}.svg`
+                                                : p?.user?.avatar?.url
+                                        }
                                     />
                                 }
                                 label={p?.user?.enrollment_no}

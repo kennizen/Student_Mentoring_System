@@ -183,7 +183,14 @@ const ChatWindow = ({ selectedChat, curChat }) => {
                     <div className="w-full bg-gray-600 rounded-t-md">
                         <div className="flex items-center justify-start h-full px-5 py-2.5 gap-x-4 text-white">
                             <img
-                                src={curChat.avatar}
+                                src={
+                                    curChat.avatar === ""
+                                        ? `https://avatars.dicebear.com/api/initials/${curChat.name.split(
+                                              " ",
+                                              1
+                                          )}.svg`
+                                        : curChat.avatar
+                                }
                                 alt="IMG"
                                 className="h-12 w-12 rounded-full"
                             />

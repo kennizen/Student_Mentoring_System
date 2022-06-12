@@ -213,6 +213,10 @@ const AdminInteractions = () => {
                                                     key={meet._id}
                                                     className={`flex-grow p-4 w-1/5 border border-gray-500 rounded-md flex flex-col gap-y-4 text-left bg-white`}
                                                 >
+                                                    <p className="text-gray-600">
+                                                        created on -{" "}
+                                                        {moment(meet?.createdAt).format("LLL")}
+                                                    </p>
                                                     <p className="">{meet?.description}</p>
                                                     <div className="flex items-start justify-between gap-x-3 w-full">
                                                         <span
@@ -260,7 +264,11 @@ const AdminInteractions = () => {
                                                                                 alt="img"
                                                                                 src={
                                                                                     p?.user?.avatar
-                                                                                        .url
+                                                                                        .url === ""
+                                                                                        ? `https://avatars.dicebear.com/api/initials/${p?.user?.firstname}.svg`
+                                                                                        : p?.user
+                                                                                              ?.avatar
+                                                                                              .url
                                                                                 }
                                                                             />
                                                                         }
@@ -294,6 +302,10 @@ const AdminInteractions = () => {
                                                     key={post._id}
                                                     className="bg-white mb-5 py-3 px-4 rounded-md border border-gray-500 flex flex-col flex-grow w-1/5"
                                                 >
+                                                    <p className="mb-3 text-gray-600">
+                                                        created on -{" "}
+                                                        {moment(post.createdAt).format("LLL")}
+                                                    </p>
                                                     <p
                                                         className="mb-4 a-tag"
                                                         dangerouslySetInnerHTML={{

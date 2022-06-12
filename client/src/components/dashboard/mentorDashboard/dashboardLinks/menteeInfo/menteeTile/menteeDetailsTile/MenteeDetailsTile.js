@@ -10,7 +10,11 @@ const MenteeDetailsTile = ({ mentee, semesters }) => {
                         <div className="mr-7">
                             <img
                                 className="w-24 h-24 rounded-full"
-                                src={mentee.avatar.url}
+                                src={
+                                    mentee.avatar.url === ""
+                                        ? `https://avatars.dicebear.com/api/initials/${mentee.firstname}.svg`
+                                        : mentee.avatar.url
+                                }
                                 alt=""
                             />
                         </div>
