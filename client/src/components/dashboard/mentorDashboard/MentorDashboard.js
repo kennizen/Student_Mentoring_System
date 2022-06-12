@@ -182,8 +182,9 @@ const MentorDashboard = () => {
         const handleNewNoti = (data) => {
             console.log("new socket Notification", data);
             if (
+                data.event.type === "POST_CREATED" &&
                 localStorage.getItem("postRoute") !== null &&
-                JSON.parse(localStorage.getItem("postRoute") && data.event.type === "POST_CREATED")
+                JSON.parse(localStorage.getItem("postRoute"))
             ) {
                 setStreamUpdated(true);
                 // make the received notification as read
