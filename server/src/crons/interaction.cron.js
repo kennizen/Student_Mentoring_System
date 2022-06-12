@@ -1,9 +1,11 @@
-// const cron = require('node-cron');
-// const Chat = require("../models/Chat");
-// const Post = require("../models/Post");
-// const Comment = require("../models/Comment");
-// const Student = require("../models/Student");
-// const Mentor = require("../models/Mentor");
+const cron = require("node-cron");
+const Chat = require("../models/Chat");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+const Student = require("../models/Student");
+const Mentor = require("../models/Mentor");
+const Interaction = require("../models/Interaction");
+const emailService = require("../services/email.service");
 
 // //   * * * * * *
 // //   | | | | | |
@@ -14,59 +16,35 @@
 // //   | minute
 // //   second ( optional )
 
-// /**
-//  *  This scheduler runs at specific time and check if there we interactions
-//  *  between mentor and mentee in the past week.
-//  *
-//  *  it checks for messages, posts, comments of the mentor and mentee;
-//  */
-// cron.schedule('* * * * *', async () => {
-//     console.log('running a task every minute');
+/**
+ *  This scheduler runs at specific time and check if there we interactions
+ *  between mentor and mentee in the past week.
+ *
+ *  it checks for messages, posts, comments of the mentor and mentee;
+ */
 
-//     try {
-//         const mentors = await Mentor.find();
+cron.schedule("0 0 * * 0", async () => {
+  try {
+    console.log("running a task every minute");
+    const today = new Date();
+    const lastWeek = new Date(today.getTime() - 604800000);
 
-//         // looping for each mentor
-//         mentors.forEach(async (mentor) => {
-//             // if mentor has no assigned students
-//             if(mentor.assigned === "unassigned"){
-//                 return;
-//             }
+    const mentors = await Mentor.find({});
 
-//             try {
-//                 // find students assigned to the mentor
-//                 const students = await Student.find({ mentoredBy: mentor._id });
+    for await (const mentor of mentors) {
+      const interaction = await Interaction.findOne({
+        mentor: mentor._id,
+        date: { $gte: lastWeek },
+      });
+      
+      if(interaction === null && new Date(mentor.createdAt) < new Date() && mentor.isEmailVerified) {
+        console.log("Send notification");
+        await emailService.sendInactivityEmail(mentor.email);
+      }
+      
+    }
 
-//                 // looping through each student
-//                 students.forEach(async (student) => {
-//                     const today = new Date();
-//                     const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
-
-//                     // find that chat of the current mentor and student
-//                     const chat = await Chat.findOne({
-//                         $and: [{ "users.user": mentor._id }, { "users.user": student._id}],
-//                     }).populate("latestMessage");
-
-//                     // if the new message is older that of lastweek
-//                     if(chat.latestMessage.createdAt < lastWeek) {
-//                         console.log("No interacction");
-//                         // send mail to both mentor and mentee
-//                     }
-
-//                     // else {
-//                     //     console.log("last interaction was at", chat.latestMessage.createdAt);
-//                     // }
-//                 })
-
-//             }
-//             catch(err){
-//                 console.log(err);
-//             }
-
-//         })
-
-//     }
-//     catch(err){
-//         console.log("Cron err", err);
-//     }
-// });
+  } catch (err) {
+    console.log(err);
+  }
+});

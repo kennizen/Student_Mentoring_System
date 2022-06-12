@@ -88,7 +88,7 @@ router.get(
     "/interactions/summary",
     Auth,
     Authorize([roles.Admin, roles.Mentor, roles.Student]),
-    indexController.getInteractionsSummary
+    indexController.getInteractionsSummary_v2
 );
 
 router.post("/verifyCaptcha",  indexController.verifyCaptcha);

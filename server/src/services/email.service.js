@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 // email templates
 const resetPasswordTemplate = require("../utils/email-templates/resetPassword");
 const verifyEmailTemplate = require("../utils/email-templates/verifyEmail");
+const inActivityEmailTemplate = require('../utils/email-templates/inactivityMail');
 module.exports = {
 
     /**
@@ -66,8 +67,38 @@ module.exports = {
                 resolve(info);
             })
         })
-    }
+    },
 
+    sendInactivityEmail: async (email) => {
+        try {
+        
+        if(!email) {
+            throw new Error("Email not provided");
+        }
+
+        const options = {
+            from: process.env.NODEMAILER_SENDER_EMAIL,
+            to: email,
+            subject: "Less Activity Detected",
+            html: inActivityEmailTemplate()
+        }
+
+        return new Promise((resolve, reject) => {
+            transporter.sendMail(options, (err, info) => {
+                if(err){
+                    console.log(err)
+                    reject(err);
+                }
+                console.log("done", info)
+                resolve(info);
+            })
+        })
+        }
+        catch(err){
+            console.log(err);
+
+        }
+    }
     // email for new post
     // email for new comment
     // When mentor is assigned

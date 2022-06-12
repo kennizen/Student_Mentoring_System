@@ -466,6 +466,79 @@ module.exports = {
         }
     },
 
+    getInteractionsSummary_v2: async (req, res, next) => {
+        try {
+            let labels = [];
+            let meetings = [];
+            let posts = [];
+
+            const daysInMonth = {
+                "0": 31,
+                "1": 28,
+                "2": 31,
+                "3": 30,
+                "4": 31,
+                "5": 30,
+                "6": 31,
+                "7": 31,
+                "8": 30,
+                "9": 31,
+                "10": 30,
+                "11": 31  
+            }
+
+            const currYear = new Date().getFullYear();
+            const currMonth = new Date().getMonth();
+            let isLeapYear = false;
+
+            if(currYear % 400 === 0 && currYear % 4 === 0){
+                isLeapYear = true
+            } 
+
+            if(isLeapYear && currMonth === 1) {
+                labels = new Array(daysInMonth[currMonth]+1);
+                meetings = new Array(daysInMonth[currMonth]+1);
+                posts = new Array(daysInMonth[currMonth]+1);
+            }
+            else {
+                labels = new Array(daysInMonth[currMonth]);
+                meetings = new Array(daysInMonth[currMonth]);
+                posts = new Array(daysInMonth[currMonth]);
+            }
+
+            labels.fill(0,0);
+            meetings.fill(0,0);
+            posts.fill(0,0);
+
+            const interactions = await Interaction.find({
+                mentor: req.user._id,
+                date: {
+                    $gte: new Date(`${currMonth+1}-01-${currYear}`).setHours(0,0,0,0)
+                }
+            })
+
+            // console.log("interactions", interactions)
+
+            if(interactions.length > 0) {
+                for (const interaction of interactions) {
+                    const idx = new Date(interaction.date).getDate() - 1 ;
+
+                    meetings[idx] = interaction.interactionCount.meeting;
+                    posts[idx] = interaction.interactionCount.post;
+                }
+            }
+
+            for( let i=0; i< labels.length; ++i) {
+                labels[i] = i+1;
+            }
+
+            response.success(res, "", { labels, posts, meetings });            
+        }
+        catch(err) {
+            console.log(err)
+        }
+    },
+
     // captcha verification handler
     verifyCaptcha: async (req, res, next) => {
         try {
