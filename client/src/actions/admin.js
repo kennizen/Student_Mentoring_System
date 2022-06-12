@@ -102,13 +102,13 @@ export const logoutAdmin = () => async (dispatch) => {
     }
 };
 
-export const adminBanUser = (id, history) => async (dispatch) => {
+export const adminBanUser = (id) => async (dispatch) => {
     try {
         const { data } = await api.banUser(id);
         console.log("ban user data in actions", data);
 
         if (data.code === 200) {
-            dispatch(adminGetMentorMentee(history));
+            dispatch(adminGetMentorMentee());
             showToast("success", data.msg, 2000, toast.POSITION.BOTTOM_LEFT);
         } else {
             showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);

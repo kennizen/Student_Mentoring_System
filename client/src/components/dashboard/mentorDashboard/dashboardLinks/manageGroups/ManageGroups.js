@@ -30,8 +30,6 @@ const ManageGroups = () => {
         dispatch(adminGetMentorMentee());
     }, [dispatch]);
 
-    console.log("mentor mentee data in manage groups", mentors, students);
-
     // state variable to save the group state and send to the backend
     const [group, setGroup] = useState({
         mentorId: "",
@@ -67,7 +65,11 @@ const ManageGroups = () => {
     // function to handle view
     const handleView = (mentorId) => {
         let newMentees = [];
-        newMentees = students.filter((student) => student.mentoredBy === mentorId.toString());
+        newMentees = students.filter(
+            (student) =>
+                student.mentoredBy !== undefined &&
+                student.mentoredBy.toString() === mentorId.toString()
+        );
         setViewMentees(newMentees);
         setShowOverlay(true);
         setShowViewModal(true);
@@ -92,12 +94,28 @@ const ManageGroups = () => {
     // function to handle save group
     const handleAssignMentees = () => {
         dispatch(adminAssignMentees(group));
+        setShowOverlay(false);
+        setShowAssignModal(false);
+        setGroup({
+            mentorId: "",
+            studentIds: [],
+        });
     };
 
     // function to handle save group
     const handleRemoveMentees = () => {
         dispatch(adminRemoveMentees(group));
+        setShowOverlay(false);
+        setShowViewModal(false);
+        setGroup({
+            mentorId: "",
+            studentIds: [],
+        });
     };
+
+    console.log("mentors in manage group", mentors);
+    console.log("mentees in manage group", students);
+    console.log("group in manage group", group);
 
     return (
         <div className="h-full w-full px-5 py-5 relative">

@@ -106,7 +106,12 @@ const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
         } else {
             dispatch(updatePost(history, postId, postContent));
         }
+        setSelectedPost(null);
+        setSelectedPostIndex(-1);
     };
+
+    console.log("selected post", selectedPost);
+    console.log("selected index", selectedPostIndex);
 
     // function to update the state for the comment body
     const handleCommentChange = (e) => {
@@ -213,6 +218,8 @@ const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
                         setPostLoading(true);
                         setStreamUpdated(false);
                         dispatch(getAllPosts(history, 1, setPostLoading));
+                        setSelectedPost(null);
+                        setSelectedPostIndex(-1);
                     }}
                     className={`py-1 px-3 bg-white rounded-md text-blue-600 shadow-m32 hover:shadow-md transition-all flex items-center justify-between absolute left-1/2 transform -translate-x-1/2 -top-10 ${
                         streamUpdated ? "translate-y-24" : ""
@@ -221,7 +228,7 @@ const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
                     Stream updated
                 </button>
                 <div
-                    className={`h-3/4 overflow-y-auto mb-3 pr-2 flex flex-col-reverse ${
+                    className={`h-3/4 overflow-y-auto mb-3 pr-2 flex flex-col-reverse underlineLink ${
                         postLoading && "justify-center"
                     }`}
                 >

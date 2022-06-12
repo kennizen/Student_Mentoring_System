@@ -70,9 +70,11 @@ const NotificationTile = ({
                 ) : (
                     <DoubleTickIcon myStyle={"h-4 w-4 text-blue-500 flex-shrink-0"} />
                 )}
-                <div className="text-white w-full overflow-hidden">
+                <div className="text-white w-full">
                     <h4 className="text-left">{event?.detail}</h4>
-                    <h5 className="w-56 text-truncate">{text}</h5>
+                    <p className="w-56 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                        {text}
+                    </p>
                     <div className="text-gray-400 flex items-center justify-start">
                         <h6 className="text-left">{`${creator?.firstname} ${creator?.middlename} ${creator?.lastname}`}</h6>
                         <div className="mx-2 w-1.5 h-1.5 rounded-full bg-gray-400"></div>

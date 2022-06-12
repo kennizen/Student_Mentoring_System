@@ -168,9 +168,9 @@ module.exports = {
                 const student = await Student.findById(studentId);
 
                 // checking if mentee is already assigned to another mentor
-                if (student.mentoredBy) {
-                    return response.error(res, "Mentee already assigned to another mentor");
-                }
+                // if (student.mentoredBy) {
+                //     return response.error(res, "Mentee already assigned to another mentor");
+                // }
                 student.mentoredBy = mentor._id;
                 await student.save();
             }
@@ -287,27 +287,26 @@ module.exports = {
     // get all interactions for admin
     getAllInteractions: async (req, res, next) => {
         try {
-            
             const mentors = await Mentor.find();
             const result = [];
 
             for await (const mentor of mentors) {
-                
-                const posts = await Post.find({group_id: mentor._id}).populate("author");
-                const meetings = await Meeting.find({ host: mentor._id}).populate("host").populate("participants.user");
+                const posts = await Post.find({ group_id: mentor._id }).populate("author");
+                const meetings = await Meeting.find({ host: mentor._id })
+                    .populate("host")
+                    .populate("participants.user");
 
                 result.push({
                     mentor,
                     posts,
-                    meetings
-                })
+                    meetings,
+                });
             }
 
-            response.success(res, "", { count: result.length, interactions: result })
-        }
-        catch(err) {
+            response.success(res, "", { count: result.length, interactions: result });
+        } catch (err) {
             console.log(err);
             response.error(res);
         }
-    }
+    },
 };

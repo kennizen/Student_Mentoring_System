@@ -6,7 +6,15 @@ const MeetingTile = ({ _id, host, url, updatedAt, date, myStyle, myStyle2 }) => 
         <div
             className={`${myStyle} flex items-center w-full px-2 py-1 mb-2 rounded-md transition-all`}
         >
-            <img className="w-12 h-12 mr-2 rounded-full" src={host?.avatar?.url} alt="" />
+            <img
+                className="w-12 h-12 mr-2 rounded-full"
+                src={
+                    host?.avatar?.url === ""
+                        ? `https://avatars.dicebear.com/api/initials/${host?.firstname}.svg`
+                        : host?.avatar?.url
+                }
+                alt=""
+            />
             <div className={`${myStyle2} pb-1 w-full`}>
                 <div className="flex items-center justify-between">
                     <div>

@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { sendForgotPassword } from "../../actions";
-import { showToast } from "../toast/toast";
 
 const ForgotPasswordModal = ({ nodeRef, setShowModal, setFPEmail, FPEmail }) => {
     const dispatch = useDispatch();
@@ -12,7 +11,7 @@ const ForgotPasswordModal = ({ nodeRef, setShowModal, setFPEmail, FPEmail }) => 
 
     // funtion to set the email for forgot passowrd
     const handleForgotPassword = () => {
-        dispatch(sendForgotPassword(FPEmail, showToast, setShowModal));
+        dispatch(sendForgotPassword(FPEmail, setShowModal));
         setFPEmail({ ...FPEmail, email: "" });
     };
 

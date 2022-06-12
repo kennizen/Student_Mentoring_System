@@ -11,12 +11,9 @@ const mentor = (
         case "STORE_MENTEES":
             const tmp = action.mentees;
             tmp.sort((a, b) => {
-                if (a.firstname === b.firstname) {
-                    return a.lastname.toLowerCase() > b.lastname.toLowerCase() ? 1 : -1;
-                } else {
-                    return a.firstname.toLowerCase() > b.firstname.toLowerCase() ? 1 : -1;
-                }
+                return a.firstname.toLowerCase() > b.firstname.toLowerCase() ? 1 : -1;
             });
+            console.log("tmp", tmp);
             return { ...state, mentees: tmp };
         case "FETCH_MENTOR_PROFILE":
             return { ...state, profileData: action.profile };

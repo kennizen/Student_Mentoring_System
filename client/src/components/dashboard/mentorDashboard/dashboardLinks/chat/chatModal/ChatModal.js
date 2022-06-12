@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { mentorGetAllMentees } from "../../../../../../actions/mentor";
 import { createChat } from "../../../../../../actions/chat";
 import ChatTiles from "./ChatTiles";
 
@@ -12,10 +11,11 @@ import { Roles } from "../../../../../../utility";
 
 const ChatModal = ({ setShowModal, nodeRef }) => {
     // state variable to store the fetched mentees from the api
-    const [mentees, setMentees] = useState([]);
+    const [myMentees, setMyMentees] = useState([]);
 
     // accesing global state to fetch the chats
     const { chats } = useSelector((state) => state.chat);
+    const { mentees } = useSelector((state) => state.mentor);
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -28,8 +28,8 @@ const ChatModal = ({ setShowModal, nodeRef }) => {
     // useEffect as component did mount to fetch the mentee for the mentor
     useEffect(() => {
         // checking to see if the logged in user in student or mentor
-        if (role === Roles.STUDENT) dispatch(studentGetAllStudentsOfMentor(history, setMentees));
-        else dispatch(mentorGetAllMentees(history, setMentees));
+        if (role === Roles.STUDENT) dispatch(studentGetAllStudentsOfMentor(history, setMyMentees));
+        else setMyMentees(mentees);
     }, [dispatch, history, role]);
 
     // function to add and remove the chat ids from the state variable chatIds
@@ -76,7 +76,7 @@ const ChatModal = ({ setShowModal, nodeRef }) => {
                     </div>
 
                     <div className="flex items-center flex-wrap justify-start gap-x-3">
-                        {mentees.map((mentee) => {
+                        {myMentees.map((mentee) => {
                             if (
                                 chats.find((chat) =>
                                     chat.users.find(

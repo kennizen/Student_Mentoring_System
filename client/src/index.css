@@ -38,6 +38,11 @@ body{
     -moz-osx-font-smoothing: grayscale;    
 }
 
+.underlineLink a{
+    text-decoration: underline;
+    color: rgb(54, 113, 241);
+}
+
 input[type="file"]::-webkit-file-upload-button,
 input[type="file"]::file-selector-button {
     @apply text-white bg-gray-700 font-medium 

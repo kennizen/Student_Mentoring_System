@@ -11,6 +11,9 @@ const MenteeInfo = () => {
     // temporary array to store the filtered results of the search
     const [tempList, setTempList] = useState([]);
 
+    // state to sort based on term
+    const [term, setTerm] = useState("name");
+
     const { mentees } = useSelector((state) => state.mentor);
 
     // search function to search for mentees
@@ -40,34 +43,29 @@ const MenteeInfo = () => {
 
     // sorting function to sort according to name, roll and semester
     const sortBasedOnTerm = (e) => {
-        let term = e.target.name;
+        let selTerm = e.target.name;
         let temp = mentees;
 
-        temp.sort((a, b) => {
-            if (term === "name") {
-                if (a.firstname.toLowerCase() === b.firstname.toLowerCase()) {
-                    if (a.lastname.toLowerCase() > b.lastname.toLowerCase())
-                        return a.lastname.toLowerCase() > b.lastname.toLowerCase() ? 1 : -1;
-                    return a.lastname.toLowerCase() < b.lastname.toLowerCase() ? 1 : -1;
-                } else {
-                    if (a.firstname.toLowerCase() > b.firstname.toLowerCase())
-                        return a.firstname.toLowerCase() > b.firstname.toLowerCase() ? 1 : -1;
-                    return a.firstname.toLowerCase() < b.firstname.toLowerCase() ? 1 : -1;
-                }
-            } else if (term === "roll") {
-                if (a.enrollment_no.toLowerCase() > b.enrollment_no.toLowerCase())
-                    return a.enrollment_no.toLowerCase() > b.enrollment_no.toLowerCase() ? 1 : -1;
-                return a.enrollment_no.toLowerCase() < b.enrollment_no.toLowerCase() ? 1 : -1;
-            } else {
-                if (a.semester.toLowerCase() > b.semester.toLowerCase())
-                    return a.semester.toLowerCase() > b.semester.toLowerCase() ? 1 : -1;
-                return a.semester.toLowerCase() < b.semester.toLowerCase() ? 1 : -1;
-            }
-        });
+        if (term === selTerm) {
+            temp.reverse();
+        } else if (selTerm === "roll") {
+            temp.sort((a, b) => {
+                return a.enrollment_no.toLowerCase() > b.enrollment_no.toLowerCase() ? 1 : -1;
+            });
+            setTerm(selTerm);
+        } else {
+            temp.sort((a, b) => {
+                return a.semester.toLowerCase() > b.semester.toLowerCase() ? 1 : -1;
+            });
+            setTerm(selTerm);
+        }
 
         // setting the tempList to the sorted mentee list
         setTempList([...temp]);
     };
+
+    console.log("mentees in mentee info", mentees);
+    console.log("mentees in mentee info", term);
 
     return (
         <div className="h-full w-full px-5 py-5">

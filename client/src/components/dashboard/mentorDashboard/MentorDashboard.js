@@ -68,9 +68,8 @@ import { authContext } from "../../../contexts/authContext";
 import { ToastContainer } from "react-toastify";
 
 const MentorDashboard = () => {
-    // getting uid and role of the logged in user
-    const uid = JSON.parse(localStorage.getItem("authData"))["uid"];
-    const role = JSON.parse(localStorage.getItem("authData"))["role"];
+    let uid = "";
+    let role = "";
 
     // getting the socket context from the provider
     const socket = useContext(SocketContext);
@@ -78,6 +77,14 @@ const MentorDashboard = () => {
     // setting the admin auth token
     const dispatch = useDispatch();
     const history = useHistory();
+
+    // getting uid and role of the logged in user
+    if (localStorage.getItem("authData") == null) {
+        history.push("/");
+    } else {
+        uid = JSON.parse(localStorage.getItem("authData"))["uid"];
+        role = JSON.parse(localStorage.getItem("authData"))["role"];
+    }
 
     // fetching details
     useEffect(() => {
@@ -175,6 +182,7 @@ const MentorDashboard = () => {
         const handleNewNoti = (data) => {
             console.log("new socket Notification", data);
             if (
+                data.event.type === "POST_CREATED" &&
                 localStorage.getItem("postRoute") !== null &&
                 JSON.parse(localStorage.getItem("postRoute"))
             ) {

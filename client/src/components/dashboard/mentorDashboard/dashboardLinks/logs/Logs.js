@@ -94,13 +94,17 @@ const Logs = () => {
                                 </thead>
                                 <tbody>
                                     {logs
-                                        .sort((a, b) => a.createdAt < b.createdAt)
+                                        .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
                                         .map((log) => {
                                             return (
                                                 <tr key={log._id} className="bg-white border-b">
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center justify-center">
                                                         <img
-                                                            src={log?.user?.avatar?.url}
+                                                            src={
+                                                                log?.user?.avatar?.url === ""
+                                                                    ? `https://avatars.dicebear.com/api/initials/${log?.user?.firstname}.svg`
+                                                                    : log?.user?.avatar?.url
+                                                            }
                                                             alt=""
                                                             className="h-8 w-8 rounded-full"
                                                         />
@@ -115,7 +119,7 @@ const Logs = () => {
                                                         {log?.user?.email}
                                                     </td>
                                                     <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                        {log?.event_type}
+                                                        {log?.event_type.replace(/_/g, " ")}
                                                     </td>
                                                     <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                                         {log?.event_detail}

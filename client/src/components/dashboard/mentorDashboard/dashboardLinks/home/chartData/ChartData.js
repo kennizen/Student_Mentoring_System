@@ -64,7 +64,7 @@ const ChartData = () => {
                         maintainAspectRatio: false,
                         scales: {
                             y: {
-                                beginAtZero: false,
+                                beginAtZero: true,
                                 ticks: {
                                     stepSize: 1,
                                 },

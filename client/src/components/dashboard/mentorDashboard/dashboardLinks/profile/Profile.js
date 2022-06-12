@@ -223,12 +223,12 @@ const Profile = ({ profileData }) => {
                     <div className="flex gap-x-2 mb-3">
                         <div className="bg-white px-5 py-10 shadow-md rounded-md">
                             <h3 className="mb-5 flex items-center">
-                                Profile Photo{" "}
+                                Profile Photo
                                 <UserCircleIcon alt={false} myStyle={"h-5 w-5 ml-2"} />
                             </h3>
-                            <div className="flex items-center">
+                            <div className="flex items-center gap-x-3">
                                 <img
-                                    className="w-32 h-32 rounded-md mr-5"
+                                    className="w-32 h-32 rounded-md"
                                     src={
                                         profileData?.avatar?.url === ""
                                             ? `https://avatars.dicebear.com/api/initials/${profileData?.firstname}.svg`
@@ -236,7 +236,7 @@ const Profile = ({ profileData }) => {
                                     }
                                     alt="menteeName"
                                 />
-                                <div className="flex flex-col items-center justify-between">
+                                <div className="flex flex-col items-center justify-between w-full">
                                     <button
                                         onClick={() => {
                                             setHiddenProfilePicModal(true);
@@ -260,7 +260,7 @@ const Profile = ({ profileData }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-white px-5 py-10 rounded-md flex-grow shadow-md">
+                        <div className="bg-white px-5 py-10 rounded-md shadow-md flex-grow">
                             <h3 className="mb-5 flex items-center">
                                 Personal Information
                                 <UserGroupIcon alt={false} myStyle={"h-5 w-5 ml-2"} />
@@ -279,10 +279,6 @@ const Profile = ({ profileData }) => {
                                     <h4>{profileData?.lastname}</h4>
                                 </div>
                                 <div className="flex items-start justify-center flex-col">
-                                    <h4 className="text-gray-400">Email</h4>
-                                    <h4>{profileData?.email}</h4>
-                                </div>
-                                <div className="flex items-start justify-center flex-col">
                                     <h4 className="text-gray-400">Phone No.</h4>
                                     <h4>{profileData?.phone}</h4>
                                 </div>
@@ -290,6 +286,10 @@ const Profile = ({ profileData }) => {
                                     <h4 className="text-gray-400">Address</h4>
                                     <h4>{profileData?.address}</h4>
                                 </div>
+                            </div>
+                            <div className="flex items-start justify-center flex-col break-words break-all mt-5">
+                                <h4 className="text-gray-400">Email</h4>
+                                <h4>{profileData?.email}</h4>
                             </div>
                         </div>
                     </div>

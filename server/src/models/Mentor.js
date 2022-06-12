@@ -75,12 +75,12 @@ const mentorSchema = new mongoose.Schema(
         emailVerifyToken: String,
         isEmailVerified: {
             type: Boolean,
-            default: false
+            default: false,
         },
         isBanned: {
             type: Boolean,
-            default: false
-        }
+            default: false,
+        },
     },
     {
         timestamps: true,
@@ -98,7 +98,6 @@ mentorSchema.methods.toJSON = function () {
     delete mentorObject.passwordResetToken;
     delete mentorObject.emailVerifyToken;
     delete mentorObject.isEmailVerified;
-    delete mentorObject.isBanned;
 
     return mentorObject;
 };

@@ -218,13 +218,13 @@ export const studentUpdatePastEduDetails = (history, fields) => async (dispatch)
     }
 };
 
-export const studentGetAllStudentsOfMentor = (history, setAllMentees) => async (dispatch) => {
+export const studentGetAllStudentsOfMentor = (history, setMyMentees) => async (dispatch) => {
     try {
         const { data } = await api.getStudentsOfMentor();
         console.log("students of mentor", data);
 
         if (data.code === 200) {
-            setAllMentees(data.data.students);
+            setMyMentees(data.data.students);
         } else {
             showToast("error", data.msg, 10000, toast.POSITION.BOTTOM_LEFT);
         }

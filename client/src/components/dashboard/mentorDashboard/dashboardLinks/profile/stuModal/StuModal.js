@@ -64,7 +64,7 @@ const StuModal = ({
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.department}
                                         onChange={handleChange}
-                                        required
+                                        // required
                                         selected={stuProfileData.department}
                                     >
                                         <option value="">Select department</option>
@@ -83,7 +83,7 @@ const StuModal = ({
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.programme}
                                         onChange={handleChange}
-                                        required
+                                        // required
                                         selected={stuProfileData.programme}
                                     >
                                         <option value="">Select programme</option>
@@ -103,7 +103,7 @@ const StuModal = ({
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.semester}
                                         onChange={handleChange}
-                                        required
+                                        // required
                                         selected={stuProfileData.semester}
                                     >
                                         <option value="">Select semester</option>
@@ -125,7 +125,7 @@ const StuModal = ({
                                         id="enrollment_no"
                                         type="text"
                                         name="enrollment_no"
-                                        required
+                                        // required
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.enrollment_no}
                                         onChange={handleChange}
@@ -139,7 +139,7 @@ const StuModal = ({
                                         id="enrollment_year"
                                         type="text"
                                         name="enrollment_year"
-                                        required
+                                        // required
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.enrollment_year}
                                         onChange={handleChange}
@@ -158,7 +158,7 @@ const StuModal = ({
                                         id="phone_no"
                                         type="text"
                                         name="phone_no"
-                                        required
+                                        // required
                                         maxLength="10"
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.phone_no}
@@ -173,7 +173,7 @@ const StuModal = ({
                                         id="address"
                                         type="text"
                                         name="address"
-                                        required
+                                        // required
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.address}
                                         onChange={handleChange}
@@ -192,7 +192,7 @@ const StuModal = ({
                                         id="firstname"
                                         type="text"
                                         name="firstname"
-                                        required
+                                        // required
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.firstname}
                                         onChange={handleChange}
@@ -234,7 +234,7 @@ const StuModal = ({
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.gender}
                                         onChange={handleChange}
-                                        required
+                                        // required
                                         selected={stuProfileData.gender}
                                     >
                                         <option value="">Select gender</option>
@@ -253,7 +253,7 @@ const StuModal = ({
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.blood_group}
                                         onChange={handleChange}
-                                        required
+                                        // required
                                         selected={stuProfileData.blood_group}
                                     >
                                         <option value="">Select group</option>
@@ -288,7 +288,7 @@ const StuModal = ({
                                         id="guardian_name"
                                         type="text"
                                         name="guardian_name"
-                                        required
+                                        // required
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.guardian_name}
                                         onChange={handleChange}
@@ -302,7 +302,7 @@ const StuModal = ({
                                         id="guardian_ph_no"
                                         type="text"
                                         name="guardian_ph_no"
-                                        required
+                                        // required
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.guardian_ph_no}
                                         onChange={handleChange}
@@ -316,7 +316,7 @@ const StuModal = ({
                                         id="guardian_address"
                                         type="text"
                                         name="guardian_address"
-                                        required
+                                        // required
                                         className="rounded-lg border-gray-300"
                                         value={stuProfileData.guardian_address}
                                         onChange={handleChange}
