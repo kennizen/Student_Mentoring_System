@@ -9,7 +9,25 @@ const semesterSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Student",
         },
-        courses: [Object],
+        courses: [
+            {
+            code: {
+                type: String,
+            },
+            title: {
+                type: String,
+            },
+            credit: {
+                type: Number,
+            },
+            type: {
+                type: String,
+            },
+            grade: {
+                type: String,
+            },
+        }
+    ],
     },
     {
         timestamps: true,

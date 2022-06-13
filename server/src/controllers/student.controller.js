@@ -231,6 +231,7 @@ module.exports = {
         }
     },
     addSemesterInfo: async (req, res, next) => {
+        
         /** both the add and update semester is handled by this route   */
         try {
             let newSem;
