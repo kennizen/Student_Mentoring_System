@@ -194,7 +194,7 @@ const MeetingTile = ({
                     );
                 })}
             </div>
-            {minutes ? <h5>{minutes}</h5> : ""}
+            {minutes ? <h5 className="whitespace-pre">{minutes}</h5> : ""}
         </div>
     );
 };
