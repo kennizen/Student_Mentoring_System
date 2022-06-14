@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import {
@@ -50,6 +50,10 @@ const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
     const postDeleteModalRef = useRef(null);
     const commentDeleteModalRef = useRef(null);
     const overlayRef = useRef(null);
+
+    useEffect(() => {
+        dispatch(getAllPosts(history, 1));
+    }, [dispatch, history]);
 
     // fetching posts from the global state
     const { posts } = useSelector((state) => state.post);
@@ -106,8 +110,8 @@ const Post = ({ socket, streamUpdated, setStreamUpdated }) => {
         } else {
             dispatch(updatePost(history, postId, postContent));
         }
-        setSelectedPost(null);
-        setSelectedPostIndex(-1);
+        // setSelectedPost(null);
+        // setSelectedPostIndex(-1);
     };
 
     console.log("selected post", selectedPost);

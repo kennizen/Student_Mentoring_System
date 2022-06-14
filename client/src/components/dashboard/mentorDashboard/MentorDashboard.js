@@ -102,7 +102,7 @@ const MentorDashboard = () => {
                 dis.push(dispatch(studentGetProfileDetails(history)));
             }
 
-            dis.push(dispatch(getAllPosts(history, 1)));
+            //dis.push(dispatch(getAllPosts(history, 1)));
             dis.push(dispatch(getAllChat(history)));
             dis.push(dispatch(getAllNotifications(history)));
             dis.push(dispatch(getMeetings(history)));
@@ -198,6 +198,7 @@ const MentorDashboard = () => {
 
         return () => {
             socket.off("new Notification", handleNewNoti);
+            //socket.disconnect();
         };
     }, []);
 
@@ -253,6 +254,7 @@ const MentorDashboard = () => {
 
         return () => {
             socket.off("message received", handleMsgRec);
+            //socket.disconnect();
         };
     }, []);
 
@@ -427,6 +429,7 @@ const MentorDashboard = () => {
         dispatch(logoutChats());
         dispatch(logoutNotifications());
         dispatch(logoutPosts());
+        //socket.disconnect();
         history.push("/");
     };
 

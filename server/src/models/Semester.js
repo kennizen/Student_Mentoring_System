@@ -11,29 +11,18 @@ const semesterSchema = new mongoose.Schema(
         },
         courses: [
             {
-            code: {
-                type: String,
+                code: { type: String },
+                title: { type: String },
+                credit: { type: Number },
+                type: { type: String },
+                grade: { type: String },
             },
-            title: {
-                type: String,
-            },
-            credit: {
-                type: Number,
-            },
-            type: {
-                type: String,
-            },
-            grade: {
-                type: String,
-            },
-        }
-    ],
+        ],
     },
     {
         timestamps: true,
     }
 );
-
 /**
  *  A course is represented as an object with the following properties.
  *  So courses in a semester is represented as an array of all the individual courses

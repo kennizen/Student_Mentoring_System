@@ -109,12 +109,12 @@ module.exports = {
         try {
             const { email, role } = req.body;
 
-            if(!email || !role) {
+            if (!email || !role) {
                 throw new Error("Email not provided");
             }
 
             let user;
-            
+
             if (role === roles.Admin) {
                 user = await Admin.findOne({ email });
             }
@@ -195,7 +195,7 @@ module.exports = {
             if (decoded.role === roles.Admin) {
                 user = await Admin.findOne({ _id: decoded._id, passwordResetToken: token });
             }
-            
+
             if (decoded.role === roles.Mentor) {
                 user = await Mentor.findOne({ _id: decoded._id, passwordResetToken: token });
             }
@@ -404,14 +404,14 @@ module.exports = {
             lastDate = new Date(lastDate).getDate();
 
             // getting data from the db
-            const firstDay = startDate
+            const firstDay = startDate;
             const firstDayResult = await Interaction.aggregate([
                 {
                     $match: {
                         mentor: req.user._id,
                         date: {
-                            $gte: new Date(firstDay.setHours(0,0,0,0)),
-                            $lte: new Date(firstDay.setHours(23,59,59,999))
+                            $gte: new Date(firstDay.setHours(0, 0, 0, 0)),
+                            $lte: new Date(firstDay.setHours(23, 59, 59, 999)),
                         },
                     },
                 },
@@ -434,7 +434,6 @@ module.exports = {
 
             // entering the subsequesnt entries i.e. from 2nd day till last day of month
             for (let i = 1; i < lastDate; i++) {
-                
                 const date = startDate;
                 labels[i] = new Date(date.setDate(date.getDate() + 1)).getDate();
 
@@ -443,8 +442,8 @@ module.exports = {
                         $match: {
                             mentor: req.user._id,
                             date: {
-                                $gte: new Date(date.setHours(0,0,0,0)),
-                                $lte: new Date(date.setHours(23,59,59,999)),
+                                $gte: new Date(date.setHours(0, 0, 0, 0)),
+                                $lte: new Date(date.setHours(23, 59, 59, 999)),
                             },
                         },
                     },
@@ -473,69 +472,78 @@ module.exports = {
             let posts = [];
 
             const daysInMonth = {
-                "0": 31,
-                "1": 28,
-                "2": 31,
-                "3": 30,
-                "4": 31,
-                "5": 30,
-                "6": 31,
-                "7": 31,
-                "8": 30,
-                "9": 31,
-                "10": 30,
-                "11": 31  
-            }
+                0: 31,
+                1: 28,
+                2: 31,
+                3: 30,
+                4: 31,
+                5: 30,
+                6: 31,
+                7: 31,
+                8: 30,
+                9: 31,
+                10: 30,
+                11: 31,
+            };
 
             const currYear = new Date().getFullYear();
             const currMonth = new Date().getMonth();
             let isLeapYear = false;
 
-            if(currYear % 400 === 0 && currYear % 4 === 0){
-                isLeapYear = true
-            } 
-
-            if(isLeapYear && currMonth === 1) {
-                labels = new Array(daysInMonth[currMonth]+1);
-                meetings = new Array(daysInMonth[currMonth]+1);
-                posts = new Array(daysInMonth[currMonth]+1);
+            if (currYear % 400 === 0 && currYear % 4 === 0) {
+                isLeapYear = true;
             }
-            else {
+
+            if (isLeapYear && currMonth === 1) {
+                labels = new Array(daysInMonth[currMonth] + 1);
+                meetings = new Array(daysInMonth[currMonth] + 1);
+                posts = new Array(daysInMonth[currMonth] + 1);
+            } else {
                 labels = new Array(daysInMonth[currMonth]);
                 meetings = new Array(daysInMonth[currMonth]);
                 posts = new Array(daysInMonth[currMonth]);
             }
 
-            labels.fill(0,0);
-            meetings.fill(0,0);
-            posts.fill(0,0);
+            labels.fill(0, 0);
+            meetings.fill(0, 0);
+            posts.fill(0, 0);
 
-            const interactions = await Interaction.find({
-                mentor: req.user._id,
-                date: {
-                    $gte: new Date(`${currMonth+1}-01-${currYear}`).setHours(0,0,0,0)
-                }
-            })
+            let interactions;
+
+            if (req.user.role === roles.Mentor) {
+                interactions = await Interaction.find({
+                    mentor: req.user._id,
+                    date: {
+                        $gte: new Date(`${currMonth + 1}-01-${currYear}`).setHours(0, 0, 0, 0),
+                    },
+                });
+            } else if (req.user.role === roles.Student) {
+                interactions = await Interaction.find({
+                    mentor: req.user.mentoredBy,
+                    date: {
+                        $gte: new Date(`${currMonth + 1}-01-${currYear}`).setHours(0, 0, 0, 0),
+                    },
+                });
+            }
 
             // console.log("interactions", interactions)
 
-            if(interactions.length > 0) {
+            if (interactions.length > 0) {
                 for (const interaction of interactions) {
-                    const idx = new Date(interaction.date).getDate() - 1 ;
+                    const idx = new Date(interaction.date).getDate() - 1;
 
                     meetings[idx] = interaction.interactionCount.meeting;
                     posts[idx] = interaction.interactionCount.post;
                 }
             }
 
-            for( let i=0; i< labels.length; ++i) {
-                labels[i] = i+1;
+            for (let i = 0; i < labels.length; ++i) {
+                labels[i] = i + 1;
             }
 
-            response.success(res, "", { labels, posts, meetings });            
-        }
-        catch(err) {
-            console.log(err)
+            response.success(res, "", { labels, posts, meetings });
+        } catch (err) {
+            console.log(err);
         }
     },
 
@@ -543,17 +551,18 @@ module.exports = {
     verifyCaptcha: async (req, res, next) => {
         try {
             const { token } = req.body;
-            const { data } = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_PRIVATE_KEY}&response=${token}`);
-            
-            if(data.success) {
+            const { data } = await axios.post(
+                `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_PRIVATE_KEY}&response=${token}`
+            );
+
+            if (data.success) {
                 return response.success(res, "", { success: data.success });
             }
 
             throw new Error();
-        }
-        catch(err) {
+        } catch (err) {
             // console.log(err);
             response.error(res, "Captcha verification failed");
         }
-    }
+    },
 };

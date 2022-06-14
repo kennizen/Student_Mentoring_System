@@ -113,7 +113,7 @@ const SinglePost = ({
                                 >
                                     Edit
                                 </h5>
-                                <h5
+                                {/* <h5
                                     onClick={() => {
                                         handlePostActions();
                                         setShowPostDeleteModal(true);
@@ -121,7 +121,7 @@ const SinglePost = ({
                                     className="hover:bg-gray-200 px-4 py-1 flex"
                                 >
                                     Delete
-                                </h5>
+                                </h5> */}
                             </div>
                         </button>
                     ) : (

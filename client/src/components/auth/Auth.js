@@ -72,6 +72,7 @@ const Auth = ({ location }) => {
     const handleSubmit = (e) => {
         // this function is used to handle the form submission
         e.preventDefault();
+        if (toggleLogin === false && recaptcha) return;
         if (location.state === "Admin") {
             // signin the admin
             dispatch(adminSignIn(fields, history));

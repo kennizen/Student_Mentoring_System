@@ -307,7 +307,7 @@ const AdminInteractions = () => {
                                                         {moment(post.createdAt).format("LLL")}
                                                     </p>
                                                     <p
-                                                        className="mb-4 a-tag"
+                                                        className="mb-4 a-tag break-normal break-words"
                                                         dangerouslySetInnerHTML={{
                                                             __html: `${post.body}`,
                                                         }}

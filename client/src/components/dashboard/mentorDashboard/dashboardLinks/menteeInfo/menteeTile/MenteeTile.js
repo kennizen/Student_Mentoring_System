@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { mentorGetAllMenteeSemesters } from "../../../../../../actions/mentor";
+import { mentorGetAllMentees, mentorGetAllMenteeSemesters } from "../../../../../../actions/mentor";
 import MenteeDetailsTile from "./menteeDetailsTile/MenteeDetailsTile";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -66,6 +66,7 @@ const MenteeTile = ({ slno, mentee, history }) => {
                                 dispatch(
                                     mentorGetAllMenteeSemesters(history, setSemesters, mentee._id)
                                 );
+                                dispatch(mentorGetAllMentees());
                             }}
                             className="p-1 bg-gray-100 rounded-lg"
                         >

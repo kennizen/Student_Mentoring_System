@@ -53,7 +53,7 @@ const ChatTile = ({ chat, index, setChatSelection, thatUser, setCurChat, setTmpL
                     }
                     alt="img"
                 />
-                <div className="flex w-full mx-6 flex-col items-start justify-evenly overflow-hidden">
+                <div className="flex w-full mx-6 flex-col items-start justify-evenly overflow-hidden whitespace-nowrap">
                     <h3>{`${thatUser?.user?.firstname} ${thatUser?.user?.middlename} ${thatUser?.user?.lastname}`}</h3>
                     <h6>{chat?.latestMessage?.content}</h6>
                 </div>

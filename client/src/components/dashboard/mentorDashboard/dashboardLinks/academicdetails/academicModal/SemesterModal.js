@@ -133,7 +133,7 @@ const SemesterModal = ({
                                             </label>
                                             <input
                                                 id="credit"
-                                                type="text"
+                                                type="number"
                                                 name="credit"
                                                 required
                                                 className="rounded-lg border-gray-300"
