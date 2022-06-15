@@ -5,4 +5,7 @@ management. Used Express and Node for the backend. REST API for data communicati
 server, Database used is Mongo DB. Real time chat capabilities with chat notifications with Socket IO, email verification,
 system wide notifications JWT for authentication, posts and comments section, dynamic form generation, etc.
 
-![image](https://user-images.githubusercontent.com/57834820/173880467-9ce57407-3214-48c1-8cc2-f8441e0d8c4c.png)
+
+
+
+<img src="https://user-images.githubusercontent.com/57834820/173881474-e41d21ce-56b6-473a-bb65-d9556e115765.png" width="200" height="380">
