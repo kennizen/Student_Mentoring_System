@@ -8,4 +8,4 @@ system wide notifications JWT for authentication, posts and comments section, dy
 
 
 
-<img src="https://user-images.githubusercontent.com/57834820/173881474-e41d21ce-56b6-473a-bb65-d9556e115765.png" width="200" height="380">
+<img src="https://user-images.githubusercontent.com/57834820/173881474-e41d21ce-56b6-473a-bb65-d9556e115765.png" width="100%" height="100%">
