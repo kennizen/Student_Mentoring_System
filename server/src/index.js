@@ -6,10 +6,10 @@ const morgan = require("morgan");
 const { Server } = require("socket.io");
 const socket = require("./socket/socket");
 const dotenv = require("dotenv");
-const Chat = require("./models/Chat"); 
+const Chat = require("./models/Chat");
 
 // middlewares
-const { rateLimiter } = require("./middlewares/rateLimiter"); 
+const { rateLimiter } = require("./middlewares/rateLimiter");
 
 // mongoose config
 require("./config/mongoose");
@@ -30,11 +30,11 @@ app.set("view engine", "hbs");
  * :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"
  * */
 //logging HTTP requests to logs/access.log file
-app.use(
-    morgan("combined", {
-        stream: fs.createWriteStream("./logs/access.log", { flags: "a" }),
-    })
-);
+// app.use(
+//     morgan("combined", {
+//         stream: fs.createWriteStream("./logs/access.log", { flags: "a" }),
+//     })
+// );
 
 app.use(rateLimiter);
 

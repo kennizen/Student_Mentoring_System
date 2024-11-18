@@ -358,13 +358,13 @@ const Auth = ({ location }) => {
                             )}
                         </div>
 
-                        {toggleLogin || (
+                        {/* {toggleLogin || (
                             <ReCAPTCHA
                                 className="flex items-center justify-center"
                                 sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
                                 onChange={handleCaptchaChange}
                             />
-                        )}
+                        )} */}
 
                         <button
                             type="submit"
