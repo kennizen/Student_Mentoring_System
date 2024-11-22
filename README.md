@@ -30,5 +30,3 @@ system wide notifications JWT for authentication, posts and comments section, dy
 <img src="https://user-images.githubusercontent.com/57834820/173882252-634b4207-cbc5-4e9b-a2af-9b060a03aa96.png" width="100%" height="100%">
 
 <img src="https://user-images.githubusercontent.com/57834820/173882283-45ac576c-ca57-4c43-9669-50cb8b00e7f0.png" width="100%" height="100%">
-
-Currently the main branch does not run properly due to deprecated packages. So I have created a dev branch that starts up successfully but still requires db credentials and some missing data to run the application properly. For now to get started with the application try running it with node version < v18, preferrably v16. 
