@@ -1,3 +1,5 @@
+Currently the main branch does not run properly due to deprecated packages. So I have created a dev branch that starts up successfully but still requires db credentials and some missing data to run the application properly. For now to get started with the application try running it with node version < v18, preferrably v16.
+
 Student Mentoring System
 
 An online student mentoring system. Built using React JS for the frontend, used Redux for frontend state
