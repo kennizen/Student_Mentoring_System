@@ -489,9 +489,8 @@ const MentorDashboard = () => {
                                 <button
                                     onClick={handleRouteChange}
                                     id="home"
-                                    className={`${
-                                        route.home ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                                    className={`${route.home ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                                 >
                                     <HomeIcon
                                         myStyle={"h-5 w-5 mr-3 pointer-events-none"
@@ -506,11 +505,10 @@ const MentorDashboard = () => {
                                 <button
                                     onClick={handleRouteChange}
                                     id="allInteractions"
-                                    className={`${
-                                        route.allInteractions
-                                            ? "text--gray-700 bg-gray-100"
-                                            : "text-gray-400"
-                                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                                    className={`${route.allInteractions
+                                        ? "text--gray-700 bg-gray-100"
+                                        : "text-gray-400"
+                                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                                 >
                                     <UserGroupIcon
                                         alt={true}
@@ -525,9 +523,8 @@ const MentorDashboard = () => {
                                 <button
                                     onClick={handleRouteChange}
                                     id="post"
-                                    className={`${
-                                        route.post ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                                    className={`${route.post ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                                 >
                                     <AnnotationIcon
                                         myStyle={"h-5 w-5 mr-3 pointer-events-none"
@@ -542,11 +539,10 @@ const MentorDashboard = () => {
                                 <button
                                     onClick={handleRouteChange}
                                     id="meetings"
-                                    className={`${
-                                        route.meetings
-                                            ? "text--gray-700 bg-gray-100"
-                                            : "text-gray-400"
-                                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                                    className={`${route.meetings
+                                        ? "text--gray-700 bg-gray-100"
+                                        : "text-gray-400"
+                                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                                 >
                                     <UserGroupIcon
                                         myStyle={"h-5 w-5 mr-3 pointer-events-none"
@@ -561,11 +557,10 @@ const MentorDashboard = () => {
                                 <button
                                     onClick={handleRouteChange}
                                     id="menteeInfo"
-                                    className={`${
-                                        route.menteeInfo
-                                            ? "text--gray-700 bg-gray-100"
-                                            : "text-gray-400"
-                                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                                    className={`${route.menteeInfo
+                                        ? "text--gray-700 bg-gray-100"
+                                        : "text-gray-400"
+                                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                                 >
                                     <AcademicCapIcon
                                         myStyle={"h-5 w-5 mr-3 pointer-events-none"
@@ -580,11 +575,10 @@ const MentorDashboard = () => {
                                 <button
                                     onClick={handleRouteChange}
                                     id="academicDetails"
-                                    className={`${
-                                        route.academicDetails
-                                            ? "text--gray-700 bg-gray-100"
-                                            : "text-gray-400"
-                                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                                    className={`${route.academicDetails
+                                        ? "text--gray-700 bg-gray-100"
+                                        : "text-gray-400"
+                                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                                 >
                                     <AcademicCapIcon
                                         myStyle={"h-5 w-5 mr-3 pointer-events-none"
@@ -599,9 +593,8 @@ const MentorDashboard = () => {
                                 <button
                                     onClick={handleRouteChange}
                                     id="chat"
-                                    className={`${
-                                        route.chat ? "text--gray-700 bg-gray-100" : "text-gray-400"
-                                    } flex items-center space-x-12 text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                                    className={`${route.chat ? "text--gray-700 bg-gray-100" : "text-gray-400"
+                                        } flex items-center space-x-12 text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                                 >
                                     <span className="flex items-center pointer-events-none">
                                         <ChatAlt2Icon
@@ -623,11 +616,10 @@ const MentorDashboard = () => {
                                 <button
                                     onClick={handleRouteChange}
                                     id="profile"
-                                    className={`${
-                                        route.profile
-                                            ? "text--gray-700 bg-gray-100"
-                                            : "text-gray-400"
-                                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                                    className={`${route.profile
+                                        ? "text--gray-700 bg-gray-100"
+                                        : "text-gray-400"
+                                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                                 >
                                     <UserCircleIcon
                                         alt={true}
@@ -642,9 +634,8 @@ const MentorDashboard = () => {
                                 <button
                                     onClick={handleRouteChange}
                                     id="logs"
-                                    className={`${
-                                        route.logs ? "text-gray-700 bg-gray-100" : "text-gray-400"
-                                    } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
+                                    className={`${route.logs ? "text-gray-700 bg-gray-100" : "text-gray-400"
+                                        } flex items-center text-left hover:bg-gray-100 mt-5 ml-8 mr-8 pt-3 pb-3 pl-10 rounded-md`}
                                 >
                                     <DocumentTextIcon
                                         myStyle={"h-5 w-5 mr-3 pointer-events-none"
@@ -730,14 +721,14 @@ const MentorDashboard = () => {
                                                 <img
                                                     src={
                                                         adminData?.avatar?.url === ""
-                                                            ? `https://avatars.dicebear.com/api/initials/${adminData?.name}.svg`
+                                                            ? `https://api.dicebear.com/9.x/personas/svg`
                                                             : adminData?.avatar?.url
                                                     }
                                                     alt="avatar"
                                                     className="w-14 h-14 rounded-full"
                                                 />
                                                 <span>
-                                                    <h3>{`${adminData?.name}`}</h3>
+                                                    <h3>{`${adminData?.firstname} ${adminData?.middlename} ${adminData?.lastname}`}</h3>
                                                     <h6>{`${adminData?.email}`}</h6>
                                                 </span>
                                             </>

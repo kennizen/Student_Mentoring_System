@@ -72,7 +72,7 @@ const Auth = ({ location }) => {
     const handleSubmit = (e) => {
         // this function is used to handle the form submission
         e.preventDefault();
-        if (toggleLogin === false && recaptcha) return;
+        // if (toggleLogin === false && recaptcha) return;
         if (location.state === "Admin") {
             // signin the admin
             dispatch(adminSignIn(fields, history));
@@ -140,34 +140,16 @@ const Auth = ({ location }) => {
 
     return (
         <div className="w-full h-screen flex items-center">
-            <CSSTransition
-                nodeRef={overlayRef}
-                in={showModal}
-                timeout={300}
-                classNames="overlay"
-                unmountOnExit
-            >
+            <CSSTransition nodeRef={overlayRef} in={showModal} timeout={300} classNames="overlay" unmountOnExit>
                 <ModalOverlay nodeRef={overlayRef} />
             </CSSTransition>
-            <CSSTransition
-                nodeRef={modalRef}
-                in={showModal}
-                timeout={300}
-                classNames="modal"
-                unmountOnExit
-            >
-                <ForgotPasswordModal
-                    nodeRef={modalRef}
-                    setShowModal={setShowModal}
-                    setFPEmail={setFPEmail}
-                    FPEmail={FPEmail}
-                />
+            <CSSTransition nodeRef={modalRef} in={showModal} timeout={300} classNames="modal" unmountOnExit>
+                <ForgotPasswordModal nodeRef={modalRef} setShowModal={setShowModal} setFPEmail={setFPEmail} FPEmail={FPEmail} />
             </CSSTransition>
             <div className="flex-3 bg-white h-full flex flex-col items-center justify-center">
                 <div className="w-full">
                     <h1 style={{ fontSize: "50px" }} className="w-full text-center">
-                        <span className="text-blue-500">{location.state}</span>{" "}
-                        {toggleLogin ? "sign-up" : "sign-in"}
+                        <span className="text-blue-500">{location.state}</span> {toggleLogin ? "sign-up" : "sign-in"}
                     </h1>
                 </div>
                 <img src={loginBg} alt="" className="w-1/2" />
@@ -280,9 +262,7 @@ const Auth = ({ location }) => {
                                     selected={fields.department}
                                 >
                                     <option value="">Select department</option>
-                                    <option value="Computer Science & Engineering">
-                                        Computer Science & Engineering
-                                    </option>
+                                    <option value="Computer Science & Engineering">Computer Science & Engineering</option>
                                 </select>
                             </div>
                         )}
@@ -348,11 +328,7 @@ const Auth = ({ location }) => {
                                 label="Show password"
                             />
                             {toggleLogin || (
-                                <button
-                                    type="button"
-                                    onClick={() => setShowModal(true)}
-                                    className="text-white hover:underline"
-                                >
+                                <button type="button" onClick={() => setShowModal(true)} className="text-white hover:underline">
                                     Forgot password
                                 </button>
                             )}
@@ -369,29 +345,18 @@ const Auth = ({ location }) => {
                         <button
                             type="submit"
                             className="bg-white py-2 px-3 rounded-full flex items-center justify-center gap-x-2 w-full text-gray-600 group mt-4 disabled:opacity-50"
-                            disabled={toggleLogin === false && recaptcha ? true : false}
                         >
                             {toggleLogin ? "Sign up" : "Sign in"}
-                            <ArrowRight
-                                alt={false}
-                                myStyle={"h-4 w-4 group-hover:translate-x-2 transform transition"}
-                            />
+                            <ArrowRight alt={false} myStyle={"h-4 w-4 group-hover:translate-x-2 transform transition"} />
                         </button>
                     </form>
                     {location.state === "Admin" ? (
                         ""
                     ) : (
                         <div className="flex flex-col justify-center items-center">
-                            <h4 className="mt-5 text-white">
-                                {toggleLogin
-                                    ? "Already have an account?"
-                                    : "Don't have an account?"}
-                            </h4>
+                            <h4 className="mt-5 text-white">{toggleLogin ? "Already have an account?" : "Don't have an account?"}</h4>
 
-                            <button
-                                onClick={handleToggle}
-                                className="rounded-md px-2 py-1 text-white hover:underline"
-                            >
+                            <button onClick={handleToggle} className="rounded-md px-2 py-1 text-white hover:underline">
                                 {toggleLogin ? "Sign in" : "Sign up"}
                             </button>
                         </div>

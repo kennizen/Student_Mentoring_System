@@ -24,7 +24,6 @@ const adminSchema = new mongoose.Schema(
         },
         lastname: {
             type: String,
-            required: true,
         },
         avatar: {
             url: {
@@ -103,6 +102,8 @@ adminSchema.methods.generateAuthToken = async function () {
  */
 adminSchema.statics.findByCredentials = async (email, password) => {
     const admin = await Admin.findOne({ email });
+
+    console.log({ admin })
 
     if (!admin) {
         throw new Error("Unable to login");

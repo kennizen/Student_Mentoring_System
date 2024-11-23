@@ -6,6 +6,7 @@ const Meeting = require("../models/Meeting");
 const Post = require("../models/Post");
 const Log = require("../models/Log");
 const dotenv = require("dotenv");
+const bcrypt = require("bcryptjs")
 
 // importing utils
 const response = require("../utils/responses.utils");
