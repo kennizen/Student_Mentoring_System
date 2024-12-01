@@ -99,16 +99,18 @@ module.exports = {
             mentor.middlename = middleName ? middleName : "";
             mentor.lastname = lastName ? lastName : "";
             mentor.department = department;
-            const token = await jwt.sign(
-                { _id: mentor._id.toString(), role: roles.Mentor },
-                process.env.JWT_SECRET
-            );
+            mentor.isEmailVerified = true
+            // const token = await jwt.sign(
+            //     { _id: mentor._id.toString(), role: roles.Mentor },
+            //     process.env.JWT_SECRET
+            // );
 
-            mentor.emailVerifyToken = token;
+            // mentor.emailVerifyToken = token;
+            mentor.emailVerifyToken = "";
             await mentor.save();
 
             // sending email to mentor with link
-            emailService.sendEmailVerificationMail(token, mentor.email);
+            // emailService.sendEmailVerificationMail(token, mentor.email);
 
             response.success(res, "Mentor Signup successfull", {});
             req.user = mentor;

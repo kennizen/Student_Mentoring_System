@@ -105,16 +105,18 @@ module.exports = {
             student.enrollment_no = enrollmentNo;
             student.semester = semester;
             student.department = department;
-            const token = await jwt.sign(
-                { _id: student._id.toString(), role: roles.Student },
-                process.env.JWT_SECRET
-            );
+            student.isEmailVerified = true
+            // const token = await jwt.sign(
+            //     { _id: student._id.toString(), role: roles.Student },
+            //     process.env.JWT_SECRET
+            // );
 
-            student.emailVerifyToken = token;
+            // student.emailVerifyToken = token;
+            student.emailVerifyToken = "";
             await student.save();
 
             // sending email to mentor with link
-            emailService.sendEmailVerificationMail(token, student.email);
+            // emailService.sendEmailVerificationMail(token, student.email);
 
             response.success(res, "Student created successfully", {});
             req.user = student;
@@ -231,7 +233,7 @@ module.exports = {
         }
     },
     addSemesterInfo: async (req, res, next) => {
-        
+
         /** both the add and update semester is handled by this route   */
         try {
             let newSem;

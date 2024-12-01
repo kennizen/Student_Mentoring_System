@@ -10,7 +10,7 @@ const MeetingTile = ({ _id, host, url, updatedAt, date, myStyle, myStyle2 }) => 
                 className="w-12 h-12 mr-2 rounded-full"
                 src={
                     host?.avatar?.url === ""
-                        ? `https://avatars.dicebear.com/api/initials/${host?.firstname}.svg`
+                        ? `https://api.dicebear.com/9.x/personas/svg`
                         : host?.avatar?.url
                 }
                 alt=""

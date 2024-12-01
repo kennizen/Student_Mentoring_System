@@ -59,7 +59,7 @@ const SinglePost = ({
                         className="h-12 w-12 rounded-full mr-5"
                         src={
                             author.avatar.url === ""
-                                ? `https://avatars.dicebear.com/api/initials/${author.firstname}.svg`
+                                ? `https://api.dicebear.com/9.x/personas/svg`
                                 : author.avatar.url
                         }
                         alt="authorImage"

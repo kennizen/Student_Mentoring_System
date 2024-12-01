@@ -36,7 +36,7 @@ app.set("view engine", "hbs");
 //     })
 // );
 
-app.use(rateLimiter);
+// app.use(rateLimiter);
 
 // logging to console
 app.use(morgan("dev"));

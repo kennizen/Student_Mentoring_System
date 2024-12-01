@@ -12,7 +12,7 @@ const MenteeDetailsTile = ({ mentee, semesters }) => {
                                 className="w-24 h-24 rounded-full"
                                 src={
                                     mentee.avatar.url === ""
-                                        ? `https://avatars.dicebear.com/api/initials/${mentee.firstname}.svg`
+                                        ? `https://api.dicebear.com/9.x/personas/svg`
                                         : mentee.avatar.url
                                 }
                                 alt=""

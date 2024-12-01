@@ -185,10 +185,7 @@ const ChatWindow = ({ selectedChat, curChat }) => {
                             <img
                                 src={
                                     curChat.avatar === ""
-                                        ? `https://avatars.dicebear.com/api/initials/${curChat.name.split(
-                                              " ",
-                                              1
-                                          )}.svg`
+                                        ? `https://api.dicebear.com/9.x/personas/svg`
                                         : curChat.avatar
                                 }
                                 alt="IMG"

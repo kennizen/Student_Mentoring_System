@@ -10,7 +10,7 @@ const MenteeTile = ({ mentee, handleChange }) => {
                     className="h-10 w-10 rounded-full mr-3"
                     src={
                         mentee.avatar.url === ""
-                            ? `https://avatars.dicebear.com/api/initials/${mentee.firstname}.svg`
+                            ? `https://api.dicebear.com/9.x/personas/svg`
                             : mentee.avatar.url
                     }
                     alt=""

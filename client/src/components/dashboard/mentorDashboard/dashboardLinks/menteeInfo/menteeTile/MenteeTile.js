@@ -30,7 +30,7 @@ const MenteeTile = ({ slno, mentee, history }) => {
                             className="h-9 w-9 rounded-full"
                             src={
                                 mentee.avatar.url === ""
-                                    ? `https://avatars.dicebear.com/api/initials/${mentee.firstname}.svg`
+                                    ? `https://api.dicebear.com/9.x/personas/svg`
                                     : mentee.avatar.url
                             }
                             alt="img"

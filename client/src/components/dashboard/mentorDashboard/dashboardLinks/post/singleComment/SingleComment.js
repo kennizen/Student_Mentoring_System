@@ -19,7 +19,7 @@ const SingleComment = ({
                 className="h-8 w-8 rounded-full mr-3 flex-shrink-0"
                 src={
                     author.avatar.url === ""
-                        ? `https://avatars.dicebear.com/api/initials/${author.firstname}.svg`
+                        ? `https://api.dicebear.com/9.x/personas/svg`
                         : author.avatar.url
                 }
                 alt="commentorImage"

@@ -48,7 +48,7 @@ const ChatTile = ({ chat, index, setChatSelection, thatUser, setCurChat, setTmpL
                     className="h-12 w-12 rounded-full"
                     src={
                         thatUser?.user?.avatar?.url === ""
-                            ? `https://avatars.dicebear.com/api/initials/${thatUser?.user?.firstname}.svg`
+                            ? `https://api.dicebear.com/9.x/personas/svg`
                             : thatUser?.user?.avatar?.url
                     }
                     alt="img"

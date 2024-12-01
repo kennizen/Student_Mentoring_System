@@ -102,7 +102,7 @@ const Logs = () => {
                                                         <img
                                                             src={
                                                                 log?.user?.avatar?.url === ""
-                                                                    ? `https://avatars.dicebear.com/api/initials/${log?.user?.firstname}.svg`
+                                                                    ? `https://api.dicebear.com/9.x/personas/svg`
                                                                     : log?.user?.avatar?.url
                                                             }
                                                             alt=""

@@ -737,7 +737,7 @@ const MentorDashboard = () => {
                                                 <img
                                                     src={
                                                         profileData?.avatar?.url === ""
-                                                            ? `https://avatars.dicebear.com/api/initials/${profileData?.firstname}.svg`
+                                                            ? `https://api.dicebear.com/9.x/personas/svg`
                                                             : profileData?.avatar?.url
                                                     }
                                                     alt="avatar"

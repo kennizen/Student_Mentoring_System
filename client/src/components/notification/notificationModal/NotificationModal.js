@@ -14,7 +14,7 @@ const NotificationModal = ({ notification, nodeRef, setShowNotificationModal, se
                                 className="h-12 w-12 rounded-full mr-5"
                                 src={
                                     notification?.creator.avatar.url === ""
-                                        ? `https://avatars.dicebear.com/api/initials/${notification?.creator.firstname}.svg`
+                                        ? `https://api.dicebear.com/9.x/personas/svg`
                                         : notification?.creator.avatar.url
                                 }
                                 alt="authorImage"
@@ -60,7 +60,7 @@ const NotificationModal = ({ notification, nodeRef, setShowNotificationModal, se
                             className="w-12 h-12 mr-2 rounded-full"
                             src={
                                 notification?.creator.avatar.url === ""
-                                    ? `https://avatars.dicebear.com/api/initials/${notification?.creator.firstname}.svg`
+                                    ? `https://api.dicebear.com/9.x/personas/svg`
                                     : notification?.creator.avatar.url
                             }
                             alt="img"

@@ -30,7 +30,7 @@ const ChartData = () => {
 
     useEffect(() => {
         dispatch(getInteractions(history, setData));
-    }, [dispatch, history]);
+    }, []);
 
     return (
         <>

@@ -20,7 +20,7 @@ const MentorTile = ({ mentor, handleAssign, setSelectedMentor, handleView }) => 
                     className="h-24 w-24 rounded-full"
                     src={
                         mentor.avatar.url === ""
-                            ? `https://avatars.dicebear.com/api/initials/${mentor.firstname}.svg`
+                            ? `https://api.dicebear.com/9.x/personas/svg`
                             : mentor.avatar.url
                     }
                     alt="img"

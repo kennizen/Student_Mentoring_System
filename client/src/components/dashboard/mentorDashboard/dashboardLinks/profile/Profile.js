@@ -161,9 +161,8 @@ const Profile = ({ profileData }) => {
 
     return (
         <div
-            className={`w-full h-full ${
-                role === Roles.MENTOR && "flex items-center justify-center"
-            } ${role === Roles.STUDENT && "p2"} relative`}
+            className={`w-full h-full ${role === Roles.MENTOR && "flex items-center justify-center"
+                } ${role === Roles.STUDENT && "p2"} relative`}
         >
             <CSSTransition
                 nodeRef={overlayRef}
@@ -231,7 +230,7 @@ const Profile = ({ profileData }) => {
                                     className="w-32 h-32 rounded-md"
                                     src={
                                         profileData?.avatar?.url === ""
-                                            ? `https://avatars.dicebear.com/api/initials/${profileData?.firstname}.svg`
+                                            ? `https://api.dicebear.com/9.x/personas/svg`
                                             : profileData?.avatar?.url
                                     }
                                     alt="menteeName"
@@ -362,7 +361,7 @@ const Profile = ({ profileData }) => {
                                     className="w-32 h-32 rounded-md mr-5"
                                     src={
                                         profileData?.avatar?.url === ""
-                                            ? `https://avatars.dicebear.com/api/initials/${profileData?.firstname}.svg`
+                                            ? `https://api.dicebear.com/9.x/personas/svg`
                                             : profileData?.avatar?.url
                                     }
                                     alt="menteeName"

@@ -47,27 +47,24 @@ const AdminInteractions = () => {
                 <button
                     name="mentors"
                     onClick={handleSelection}
-                    className={`border-2 border-blue-600 py-2 px-3 w-full rounded-full ${
-                        selected === "mentors" ? "bg-blue-600 text-white" : "bg-white"
-                    }`}
+                    className={`border-2 border-blue-600 py-2 px-3 w-full rounded-full ${selected === "mentors" ? "bg-blue-600 text-white" : "bg-white"
+                        }`}
                 >
                     Mentors
                 </button>
                 <button
                     name="mentees"
                     onClick={handleSelection}
-                    className={` border-2 border-blue-600 py-2 px-3 w-full rounded-full ${
-                        selected === "mentees" ? "bg-blue-600 text-white" : "bg-white"
-                    }`}
+                    className={` border-2 border-blue-600 py-2 px-3 w-full rounded-full ${selected === "mentees" ? "bg-blue-600 text-white" : "bg-white"
+                        }`}
                 >
                     Mentees
                 </button>
                 <button
                     name="interactions"
                     onClick={handleSelection}
-                    className={` border-2 border-blue-600 py-2 px-3 w-full rounded-full ${
-                        selected === "interactions" ? "bg-blue-600 text-white" : "bg-white"
-                    }`}
+                    className={` border-2 border-blue-600 py-2 px-3 w-full rounded-full ${selected === "interactions" ? "bg-blue-600 text-white" : "bg-white"
+                        }`}
                 >
                     Interactions
                 </button>
@@ -89,7 +86,7 @@ const AdminInteractions = () => {
                                             className="h-24 w-24 rounded-full"
                                             src={
                                                 mentor.avatar.url === ""
-                                                    ? `https://avatars.dicebear.com/api/initials/${mentor.firstname}.svg`
+                                                    ? `https://api.dicebear.com/9.x/personas/svg`
                                                     : mentor.avatar.url
                                             }
                                             alt="img"
@@ -137,7 +134,7 @@ const AdminInteractions = () => {
                                             className="h-24 w-24 rounded-full"
                                             src={
                                                 student.avatar.url === ""
-                                                    ? `https://avatars.dicebear.com/api/initials/${student.firstname}.svg`
+                                                    ? `https://api.dicebear.com/9.x/personas/svg`
                                                     : student.avatar.url
                                             }
                                             alt="img"
@@ -181,7 +178,7 @@ const AdminInteractions = () => {
                                         <img
                                             src={
                                                 int?.mentor?.avatar?.url === ""
-                                                    ? `https://avatars.dicebear.com/api/initials/${int?.mentor?.firstname}.svg`
+                                                    ? `https://api.dicebear.com/9.x/personas/svg`
                                                     : int?.mentor?.avatar?.url
                                             }
                                             alt="img"
@@ -265,10 +262,10 @@ const AdminInteractions = () => {
                                                                                 src={
                                                                                     p?.user?.avatar
                                                                                         .url === ""
-                                                                                        ? `https://avatars.dicebear.com/api/initials/${p?.user?.firstname}.svg`
+                                                                                        ? `https://api.dicebear.com/9.x/personas/svg`
                                                                                         : p?.user
-                                                                                              ?.avatar
-                                                                                              .url
+                                                                                            ?.avatar
+                                                                                            .url
                                                                                 }
                                                                             />
                                                                         }
